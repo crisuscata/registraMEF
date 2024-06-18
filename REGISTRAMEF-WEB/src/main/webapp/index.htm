@@ -1,0 +1,106 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<%
+ //String viewuri = request.getContextPath()+"/paginas/landingInicio.html";
+ //System.out.println(viewuri);
+ //response.sendRedirect(viewuri);
+ //request.getRequestDispatcher(viewuri).forward(request, response);
+ 
+/* String pagina ="/paginas/listatConstruccion.html"; */
+ //MPINARES 29092023 - INICIO - SE CAMBIA LINEA 11
+ /*if (request.isUserInRole("KAMACHIQ_ADMINISTRADOR") || request.isUserInRole("KAMACHIQ_ALERTAS")) {
+     pagina = "/paginas/landingInicio.html";
+ }else if (request.isUserInRole("KAMACHIQ_PRTPARAMETROS_CREA")  || 
+           request.isUserInRole("KAMACHIQ_PRTPARAMETROS_VE")) {
+     pagina = "/adminis/listaprtParametros.html";
+ }else if (request.isUserInRole("KAMACHIQ_MSINSTITUCIONES_CREA")  || 
+           request.isUserInRole("KAMACHIQ_MSINSTITUCIONES_VE")) {
+     pagina = "/adminis/listamsInstituciones.html";
+ }else if (request.isUserInRole("KAMACHIQ_MSUBIGEO_CREA")  || 
+           request.isUserInRole("KAMACHIQ_MSUBIGEO_VE")) {
+     pagina = "/adminis/listamsUbigeo.html";
+ }else if (request.isUserInRole("KAMACHIQ_MSUSUARIOS_CREA")  || 
+           request.isUserInRole("KAMACHIQ_MSUSUARIOS_VE")) {
+     pagina = "/adminis/listamsUsuarios.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDCAJACHICARENDICION_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDCAJACHICARENDICION_VE")) {
+     pagina = "/cajachica/listatdCajachicaRendicion.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDCAJACHICASUSTENTORENDIC_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDCAJACHICASUSTENTORENDIC_VE")) {
+     pagina = "/cajachica/listatdCajachicaSustentorendic.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDLOGISTICACONFORMIDAD_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDLOGISTICACONFORMIDAD_VE")) {
+     pagina = "/logistica/listatdLogisticaConformidad.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDLOGISTICACONTRATOS_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDLOGISTICACONTRATOS_VE")) {
+     pagina = "/logistica/listatdLogisticaContratos.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDLOGISTICACONVENIOSMARCO_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDLOGISTICACONVENIOSMARCO_VE")) {
+     pagina = "/logistica/listatdLogisticaConveniosmarco.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDLOGISTICACONVENIOS_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDLOGISTICACONVENIOS_VE")) {
+     pagina = "/logistica/listatdLogisticaConvenios.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDLOGISTICAGASTOSCONVENIO_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDLOGISTICAGASTOSCONVENIO_VE")) {
+     pagina = "/logistica/listatdLogisticaGastosconvenio.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDLOGISTICAGASTOSLIQUID_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDLOGISTICAGASTOSLIQUID_VE")) {
+     pagina = "/logistica/listatdLogisticaGastosliquid.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDLOGISTICALIQUIDACION_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDLOGISTICALIQUIDACION_VE")) {
+     pagina = "/logistica/listatdLogisticaLiquidacion.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDLOGISTICAPENALIDADCONFOR_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDLOGISTICAPENALIDADCONFOR_VE")) {
+     pagina = "/logistica/listatdLogisticaPenalidadconfor.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDPERSONALBAJAS_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDPERSONALBAJAS_VE")) {
+     pagina = "/personal/listatdPersonalBajas.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDPERSONALLICENCIAS_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDPERSONALLICENCIAS_VE")) {
+     pagina = "/personal/listatdPersonalLicencias.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDPERSONALPERSONAL_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDPERSONALPERSONAL_VE")) {
+     pagina = "/personal/listatdPersonalPersonal.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDPERSONALPLAZACAS_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDPERSONALPLAZACAS_VE")) {
+     pagina = "/personal/listatdPersonalPlazacas.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDPERSONALVACACIONES_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDPERSONALVACACIONES_VE")) {
+     pagina = "/personal/listatdPersonalVacaciones.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDSEDESAUTORIZACIONLOCAL_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDSEDESAUTORIZACIONLOCAL_VE")) {
+     pagina = "/personal/listatdSedesAutorizacionlocal.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDSEDESLOCAL_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDSEDESLOCAL_VE")) {
+     pagina = "/sedes/listatdSedesLocal.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDSEDESSEDE_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDSEDESSEDE_VE")) {
+     pagina = "/sedes/listatdSedesSede.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDVIATICOSRENDICION_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDVIATICOSRENDICION_VE")) {
+     pagina = "/viaticos/listatdViaticosRendicion.html";
+ }else if (request.isUserInRole("KAMACHIQ_TDVIATICOSVIATICO_CREA")  || 
+           request.isUserInRole("KAMACHIQ_TDVIATICOSVIATICO_VE")) {
+     pagina = "/viaticos/listatdViaticosViatico.html";
+ }*/
+  
+//PURIBE 25012024 - INICIO
+System.out.println("Entre al login");
+session.setAttribute("usuario", "1");
+//PURIBE 25012024 - FIN
+ 
+  //PURIBE 25012024 - INICIO
+ String pagina ="/paginas/landingInicio.html"; 
+ //PURIBE 25012024 - FIN 
+ %>
+<html>
+	<head>
+		<title>SISTEMA DE PROGRAMACI&Oacute;N, REGISTRO Y REPORTES DE INFORMACI&Oacute;N DE LOS CONECTAMEF</title>
+      <script type="text/javascript"> 
+      console.log( "REDIRECCIONANDO A: <%= request.getContextPath() %><%=pagina %>);
+      </script> 
+	</head>
+	<body>
+   <jsp:forward page="<%=pagina %>" /> 
+    <h1>Bien venido....</h1>
+	</body>
+</html>

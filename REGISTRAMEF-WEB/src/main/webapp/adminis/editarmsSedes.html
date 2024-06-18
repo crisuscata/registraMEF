@@ -1,0 +1,286 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editmsSedes()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Sedes</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{msSedesModelo.XXXX}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarMsSedes()" aria-label="Salir">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">undo</md-icon>
+         <span ng-if="nuevo" hide-xs show-gt-sm>Salir</span>
+         <span ng-if="!nuevo" hide-xs show-gt-sm>Salir</span>
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarMsSedes($event)" ng-if="msSedesModelo.editopcion==1" aria-label="Grabar">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">save</md-icon>
+         <span hide-xs show-gt-sm>Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+    
+<div layout="column">
+<fieldset>
+<legend>Datos de Sedes</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Sede</label>    
+            <input type="text" md-maxlength="100" required name="sede" ng-model="msSedesModelo.sede"
+                   >
+           <div ng-messages="msSedesForm.sede.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Sede.</div>
+            <div ng-message="maxlength">El Sede tiene un m&aacute;ximo de 100 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Sede:</div>
+            <div class="letraTexto">{{msSedesModelo.sede}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Grupo</label>
+            <md-select ng-model="msSedesModelo.idGrupo" ng-change="changeIdGrupo()" required
+                       name="idGrupo"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdGrupo" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="msSedesForm.idGrupo.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Grupo:</div>
+            <div class="letraTexto">{{msSedesModelo.idGrupoTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Macroregión</label>
+            <md-select ng-model="msSedesModelo.idMacregion" ng-change="changeIdMacregion()" required
+                       name="idMacregion"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdMacregion" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="msSedesForm.idMacregion.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Macroregión:</div>
+            <div class="letraTexto">{{msSedesModelo.idMacregionTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Siglas</label>    
+            <input type="text" md-maxlength="10" required name="sigla" ng-model="msSedesModelo.sigla"
+                   >
+           <div ng-messages="msSedesForm.sigla.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Siglas.</div>
+            <div ng-message="maxlength">El Siglas tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Siglas:</div>
+            <div class="letraTexto">{{msSedesModelo.sigla}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Departamento</label>    
+            <input type="text" md-maxlength="2" required name="codDpto" ng-model="msSedesModelo.codDpto"
+                   >
+           <div ng-messages="msSedesForm.codDpto.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Departamento.</div>
+            <div ng-message="maxlength">El Departamento tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Departamento:</div>
+            <div class="letraTexto">{{msSedesModelo.codDpto}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex>
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Dirección</label>            
+            <textarea ng-model="msSedesModelo.direccion" md-maxlength="1000" rows="5" md-select-on-focus
+                      ></textarea>
+            <div ng-messages="msSedesForm.direccion.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Dirección.</div>
+            <div ng-message="maxlength">El Dirección tiene un m&aacute;ximo de 1000 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel">Dirección:</div>
+            <div class="letraTexto">{{msSedesModelo.direccion}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Número De Orden</label>    
+            <input type="number" md-maxlength="10" required name="orden" ng-model="msSedesModelo.orden"
+                   >
+           <div ng-messages="msSedesForm.orden.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Número De Orden.</div>
+            <div ng-message="maxlength">El Número De Orden tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Número De Orden:</div>
+            <div class="letraTexto">{{msSedesModelo.orden}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Modificación</label>
+            <md-datepicker required ng-model="msSedesModelo.fechaModifJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Modificación:</div>
+            <div class="letraTexto">{{msSedesModelo.fechaModif}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Estado</label>    
+            <input type="number" md-maxlength="10" required name="estado" ng-model="msSedesModelo.estado"
+                   >
+           <div ng-messages="msSedesForm.estado.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Estado.</div>
+            <div ng-message="maxlength">El Estado tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Estado:</div>
+            <div class="letraTexto">{{msSedesModelo.estado}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Provincia</label>    
+            <input type="text" md-maxlength="2" required name="codProv" ng-model="msSedesModelo.codProv"
+                   >
+           <div ng-messages="msSedesForm.codProv.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Provincia.</div>
+            <div ng-message="maxlength">El Provincia tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Provincia:</div>
+            <div class="letraTexto">{{msSedesModelo.codProv}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Distrito</label>    
+            <input type="text" md-maxlength="2" required name="codDistr" ng-model="msSedesModelo.codDistr"
+                   >
+           <div ng-messages="msSedesForm.codDistr.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Distrito.</div>
+            <div ng-message="maxlength">El Distrito tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Distrito:</div>
+            <div class="letraTexto">{{msSedesModelo.codDistr}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>País</label>    
+            <input type="number" md-maxlength="10" required name="idpais" ng-model="msSedesModelo.idpais"
+                   >
+           <div ng-messages="msSedesForm.idpais.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el País.</div>
+            <div ng-message="maxlength">El País tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">País:</div>
+            <div class="letraTexto">{{msSedesModelo.idpais}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Es Visible En El Portal</label>    
+            <input type="text" md-maxlength="1" required name="flagvisible" ng-model="msSedesModelo.flagvisible"
+                   >
+           <div ng-messages="msSedesForm.flagvisible.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Es Visible En El Portal.</div>
+            <div ng-message="maxlength">El Es Visible En El Portal tiene un m&aacute;ximo de 1 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Es Visible En El Portal:</div>
+            <div class="letraTexto">{{msSedesModelo.flagvisible}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msSedesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Se Lista En Los Reportes</label>    
+            <input type="text" md-maxlength="1" required name="flagvisiblerpte" ng-model="msSedesModelo.flagvisiblerpte"
+                   >
+           <div ng-messages="msSedesForm.flagvisiblerpte.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Se Lista En Los Reportes.</div>
+            <div ng-message="maxlength">El Se Lista En Los Reportes tiene un m&aacute;ximo de 1 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Se Lista En Los Reportes:</div>
+            <div class="letraTexto">{{msSedesModelo.flagvisiblerpte}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

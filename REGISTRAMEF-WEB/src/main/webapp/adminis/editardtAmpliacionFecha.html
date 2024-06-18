@@ -1,0 +1,165 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editdtAmpliacionFecha()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Ampliaciones</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{dtAmpliacionFechaModelo.XXXX}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarDtAmpliacionFecha()" aria-label="Salir">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">undo</md-icon>
+         <span ng-if="nuevo" hide-xs show-gt-sm>Salir</span>
+         <span ng-if="!nuevo" hide-xs show-gt-sm>Salir</span>
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarDtAmpliacionFecha($event)" ng-if="dtAmpliacionFechaModelo.editopcion==1" aria-label="Grabar">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">save</md-icon>
+         <span hide-xs show-gt-sm>Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+    
+<div layout="column">
+<fieldset>
+<legend>Datos de Ampliaciones</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>1: Fecha De Ampliacion De Programacion</label>
+            <md-select ng-model="dtAmpliacionFechaModelo.tipoFechaCorte" ng-change="changeTipoFechaCorte()" required
+                       name="tipoFechaCorte"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosTipoFechaCorte" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtAmpliacionFechaForm.tipoFechaCorte.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">1: Fecha De Ampliacion De Programacion:</div>
+            <div class="letraTexto">{{dtAmpliacionFechaModelo.tipoFechaCorteTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Sede</label>
+            <md-select ng-model="dtAmpliacionFechaModelo.idSede" ng-change="changeIdSede()" required
+                       name="idSede"
+                       >
+             <md-option ng-repeat="item in listaMsSedesIdSede" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtAmpliacionFechaForm.idSede.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Sede:</div>
+            <div class="letraTexto">{{dtAmpliacionFechaModelo.idSedeTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Sistema Administrativo</label>
+            <md-select ng-model="dtAmpliacionFechaModelo.idSistAdmi" ng-change="changeIdSistAdmi()" required
+                       name="idSistAdmi"
+                       >
+             <md-option ng-repeat="item in listaMsSisAdmistrativoIdSistAdmi" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtAmpliacionFechaForm.idSistAdmi.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Sistema Administrativo:</div>
+            <div class="letraTexto">{{dtAmpliacionFechaModelo.idSistAdmiTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Inicio</label>
+            <md-datepicker required ng-model="dtAmpliacionFechaModelo.fechaInicioJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Inicio:</div>
+            <div class="letraTexto">{{dtAmpliacionFechaModelo.fechaInicio}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Fin</label>
+            <md-datepicker required ng-model="dtAmpliacionFechaModelo.fechaFinJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Fin:</div>
+            <div class="letraTexto">{{dtAmpliacionFechaModelo.fechaFin}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Modificación</label>
+            <md-datepicker required ng-model="dtAmpliacionFechaModelo.fechaModifJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Modificación:</div>
+            <div class="letraTexto">{{dtAmpliacionFechaModelo.fechaModif}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Estado</label>    
+            <input type="number" md-maxlength="10" required name="estado" ng-model="dtAmpliacionFechaModelo.estado"
+                   >
+           <div ng-messages="dtAmpliacionFechaForm.estado.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Estado.</div>
+            <div ng-message="maxlength">El Estado tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtAmpliacionFechaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Estado:</div>
+            <div class="letraTexto">{{dtAmpliacionFechaModelo.estado}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

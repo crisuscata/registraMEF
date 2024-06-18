@@ -1,0 +1,46 @@
+<md-dialog layout-padding flex>
+<!-- //MPINARES 14022024 - INICIO - NUEVO HTML-->
+<md-dialog-content md-whiteframe="1" class="overflowEsconder" md-colors="{background: 'background-A100'}">
+ <form name="dtCapacitacionForm3">
+ 
+ <div layout="row" layout-aling="center start" flex
+				style="font-size: 14px;">      
+        
+       		 <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex >
+					<md-input-container class="input-container-margen letraTexto">
+						<md-select ng-model="capaTemasmodelo.idTema" ng-change="changeIdTema(capaTemasmodelo.idTema)"
+							required placeholder="Seleccionar Tema" name="idTema">
+						<md-option ng-repeat="item in listaMsTemaIdTema"
+							ng-value="item.id"> {{item.valor}} </md-option> </md-select> </md-input-container>
+						
+				</div>
+				
+
+					 
+ </div>
+ 
+  <div layout="row" layout-aling="center start" flex style="font-size: 14px;">  
+				<div class="letraenvoltura" flex 
+									ng-if="dtCapacitacionModelo.editopcion < 2">
+				<md-input-container class="input-container-margen letraTexto">
+									<md-select ng-model="capaTemasmodelo.idSubtema" required
+									ng-change="changeIdSubtema(capaTemasmodelo.idSubtema)"
+										placeholder="Seleccionar Subtema" name="idSubtema">
+									<md-option ng-repeat="item in listaMsSubtemaIdSubtema"
+										ng-value="item.id"> {{item.valor}} </md-option> </md-select> </md-input-container>
+									
+				</div>
+	</div>			
+ 
+ </form>
+</md-dialog-content>
+<md-dialog-actions layout="row" layout-align="center end">
+    <md-button class="md-raised md-primary alargarBoton" ng-click="cancel()">
+      Cancelar
+    </md-button>
+    <!-- ng-disabled="tdLogisticaConformidadForm2.$invalid" -->
+    <md-button class="md-raised md-primary alargarBoton" ng-click="nuevoCapaTemasmodelo($event)" >
+      Aceptar
+    </md-button>
+</md-dialog-actions>   
+</md-dialog>

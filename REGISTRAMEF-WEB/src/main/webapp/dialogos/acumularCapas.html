@@ -1,0 +1,169 @@
+<md-dialog layout-padding flex>
+<!-- //MPINARES 14022024 - INICIO - NUEVO HTML-->
+<md-dialog-content md-whiteframe="1" class="overflowEsconder" style="font-size: 14px;">
+
+<md-toolbar style="background: rgb(255,255,255);"
+		class="md-toolbar-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size">
+		<md-button class="md-icon-button" ng-click="cancel()"
+			style="margin-left: -19px;margin-bottom: 11px;"> <md-icon
+			md-font-set="material-icons" aria-label="Close dialog"
+			style="font-size: 29px;color: rgb(189,189,189);">close</md-icon>
+		</md-button>
+		<div flex="auto" >
+			<h2 md-truncate 
+				style="font-size: 17px;color: rgba(0,0,0,0.87);">Acumular Capacitaciones</h2>
+		</div>
+		<md-button class="md-button-entidad md-sm" ng-click="salvarDtCapacitacionAcumula($event)" style="margin-bottom: 8px;color: black;border: rgb(189,189,189) 1px solid !important;" 
+			aria-label="Acumular">
+		<span>Acumular</span> </md-button>
+
+		
+	</div>
+	</md-toolbar>
+
+<fieldset >
+<legend>Datos de la capacitaci&oacute;n</legend>
+	<md-content md-whiteframe="1" class="overflowEsconder noshadow"
+				md-colors="{background: 'background-A100'}">
+				
+				<div layout="row" layout-aling="center start"> 
+					<md-input-container class="md-block input-container-margen" flex > 
+						<label style="font-size: 15px;">Fecha de solicitud</label>
+						<md-datepicker required
+						ng-model="dtCapacitacionAcumulaModelo.fechaSoliJUD"
+						md-placeholder="Fecha de solicitud"
+						input-aria-describedby="datepicker-description"
+						input-aria-labelledby="datepicker-header "> </md-datepicker> </md-input-container>
+				</div>
+				
+				<div layout="row" layout-aling="center start"> 
+					<md-input-container class="md-block input-container-margen" flex > 
+						<label style="font-size: 15px;">Fecha y hora de inicio</label>
+						<md-datepicker required
+						ng-model="dtCapacitacionAcumulaModelo.fechaInicJUD"
+						md-placeholder="Fecha y hora de inicio"
+						input-aria-describedby="datepicker-description"
+						input-aria-labelledby="datepicker-header "> </md-datepicker>
+					</md-input-container>
+				</div>
+				
+				<div layout="row" layout-aling="center start"> 
+					<md-input-container class="md-block input-container-margen" flex > 
+						<label style="font-size: 15px;">Fecha y hora fin</label>
+						<md-datepicker required
+						ng-model="dtCapacitacionAcumulaModelo.fechaFinJUD"
+						md-placeholder="Fecha y hora fin"
+						input-aria-describedby="datepicker-description"
+						input-aria-labelledby="datepicker-header "> </md-datepicker> 
+					</md-input-container>
+				</div>
+				
+				<div layout="row" layout-aling="center start"> 
+					<md-input-container class="md-block input-container-margen" flex > 
+						<label style="margin-bottom: 27px;font-size: 12px;">Modalidad</label>
+						<md-radio-group ng-model="dtCapacitacionAcumulaModelo.idModalidad" aria-labelledby="favoriteFruit" layout="row">
+							<md-radio-button ng-repeat="datox in listaPrtParametrosIdModalidad"
+			                       ng-value="datox.id"
+			                       aria-label="{{it.title}}">{{datox.valor}}
+					      </md-radio-button>		
+				         </md-radio-group> 
+						
+					</md-input-container>
+				</div>
+				
+				<div layout="row" layout-aling="center start"> 
+					<md-input-container class="md-block input-container-margen" flex > 
+						<label>Lugar de capacitaci&oacute;n</label>
+						<md-select
+						ng-model="dtCapacitacionAcumulaModelo.idLocal" required placeholder="Lugar de capacitaci&oacute;n"
+						name="idModo"> <md-option
+						ng-repeat="item in listaMsLocalIdLocal"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+					<div ng-messages="dtCapacitacionForm.idModo.$error">
+						<div ng-message="required">Seleccione el Lugar.</div>
+					</div>
+					</md-input-container>
+				</div>
+				
+				<div layout="row" layout-aling="center start"> 
+					<md-input-container class="md-block input-container-margen" flex="50" > 
+						<label>CANT. participantes</label>
+						<input id="cantPartic" ng-model="dtCapacitacionAcumulaModelo.cantPartic"
+						type="number"
+							style="margin-bottom: -24px;font-size: 13px;" >
+					</md-input-container>
+				</div>
+				
+				<div layout="row" layout-aling="center start"> 
+					<md-input-container class="md-block input-container-margen" flex > 
+						<label>Nombre del evento</label>
+						<input id="nomEvento" ng-model="dtCapacitacionAcumulaModelo.nomEvento">
+					</md-input-container>
+				</div>
+				
+				<div layout="row" layout-aling="center start"> 
+					<md-input-container class="md-block input-container-margen" flex > 
+						<label>Nivel</label>
+						<md-select
+						ng-model="dtCapacitacionAcumulaModelo.idNivel" required placeholder="Nivel"
+						name="idModo"> <md-option
+						ng-repeat="item in listaPrtParametrosIdNivel"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+						<div ng-messages="dtCapacitacionForm.idModo.$error">
+							<div ng-message="required">Seleccione el Nivel.</div>
+						</div>
+						
+					</md-input-container>
+				</div>
+				
+				<div layout="row" layout-aling="center start"> 
+					<md-input-container class="md-block input-container-margen" flex > 
+						<label>Prestaci&oacute;n</label>
+						<md-select
+						ng-model="dtCapacitacionAcumulaModelo.idPrestacion" required placeholder="Prestaci&oacute;n"
+						name="idModo"> <md-option
+						ng-repeat="item in listaPrtParametrosIdPrestacion"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+						<div ng-messages="dtCapacitacionForm.idModo.$error">
+							<div ng-message="required">Seleccione la Prestaci&oacute;n.</div>
+						</div>
+					</md-input-container>
+				</div>
+				
+				<div layout="row" layout-aling="center start"> 
+					<md-input-container class="md-block input-container-margen" flex > 
+						<label>Tipo</label>
+						<md-select
+						ng-model="dtCapacitacionAcumulaModelo.idTipo" required placeholder="Tipo"
+						name="idModo"> <md-option
+						ng-repeat="item in listaPrtParametrosIdTipo"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+						<div ng-messages="dtCapacitacionForm.idModo.$error">
+							<div ng-message="required">Seleccione el Tipo.</div>
+						</div>
+					</md-input-container>
+				</div>
+				
+				<div layout="row" layout-aling="center start"> 
+					<md-input-container class="md-block input-container-margen" flex > 
+						<label>Tipo de financiamiento</label>
+						<md-select
+						ng-model="dtCapacitacionAcumulaModelo.idFinancia" required placeholder="Tipo de financiamiento"
+						name="idFinancia"> <md-option
+						ng-repeat="item in listaPrtParametrosIdFinancia"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+						<div ng-messages="dtCapacitacionForm.idModo.$error">
+							<div ng-message="required">Seleccione el Financiamiento.</div>
+						</div>
+					</md-input-container>
+				</div>
+	        
+		
+ 
+				
+	</md-content>
+</fieldset>
+</md-dialog-content>
+ 
+</md-dialog>

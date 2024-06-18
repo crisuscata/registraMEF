@@ -1,0 +1,80 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editmsRoles()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Roles</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{msRolesModelo.XXX}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarMsRoles()" aria-label="Salir">
+<!--          <md-icon md-font-set="material-icons">undo</md-icon>  -->
+         <span ng-if="nuevo">Salir</span>
+         <span ng-if="!nuevo">Salir</span>   
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarMsRoles($event)" 
+       ng-if="msRolesModelo.editopcion==1" aria-label="Grabar">
+<!--          <md-icon md-font-set="material-icons">save</md-icon>  -->
+         <span >Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+
+<div layout="column">
+<fieldset>
+<legend>Datos de Roles</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-aling="center start"> 
+        <div class="letraenvoltura" ng-if="msRolesModelo.editopcion < 2" flex="auto">
+        <label class="letraLabel" flex>Nombre Corto De Usuario</label>    
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
+            <input type="text" md-maxlength="50" required name="username" ng-model="msRolesModelo.username"
+                   placeholder="Ingresar Nombre corto de usuario"
+                   >
+           <div ng-messages="msRolesForm.username.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Nombre Corto De Usuario.</div>
+            <div ng-message="maxlength">El Nombre Corto De Usuario tiene un m&aacute;ximo de 50 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msRolesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Nombre Corto De Usuario:</div>
+            <div class="letraTexto">{{msRolesModelo.username}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start"> 
+        <div class="letraenvoltura" ng-if="msRolesModelo.editopcion < 2" flex="auto">
+        <label class="letraLabel" flex>Rol</label>    
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
+            <input type="text" md-maxlength="100" required name="rol" ng-model="msRolesModelo.rol"
+                   placeholder="Ingresar Rol"
+                   >
+           <div ng-messages="msRolesForm.rol.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Rol.</div>
+            <div ng-message="maxlength">El Rol tiene un m&aacute;ximo de 100 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msRolesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Rol:</div>
+            <div class="letraTexto">{{msRolesModelo.rol}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

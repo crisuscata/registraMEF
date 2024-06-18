@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html ng-app="MyApp">
+<head>
+<base href="/registramef/" />
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="viewport"
+	content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+<meta name="viewport" content="width=device-width">
+
+<title>COLOR TEST</title>
+<link href="resources/css/angular-material.css" rel="stylesheet" type="text/css" />
+<link href="resources/css/md-data-table.css" rel="stylesheet" type="text/css" />
+<link href="resources/font/robotFont.css" rel="stylesheet" type="text/css" />
+<link href="resources/font/material-icons.css" rel="stylesheet" type="text/css" />
+<link href="resources/css/figuras.css" rel="stylesheet" type="text/css" />
+
+<script src="resources/js/angular.js"></script>
+<script src="resources/js/angular-animate.js"></script>
+<script src="resources/js/angular-aria.js"></script>
+<script src="resources/js/angular-material.js"></script>
+<script src="resources/js/angular-messages.js"></script>
+<script src="resources/js/md-data-table.js"></script>
+
+<script src="resources/appjs/appini.js"></script>
+<script src="resources/js/angular-route.js"></script>
+<script src="color/testcolor.js"></script>
+
+<style type="text/css">
+.colorsdemoThemePicker .section {
+	font-size: 12px;
+	padding: 16px;
+	font-weight: bold;
+}
+
+.colorsdemoThemePicker .line {
+	padding: 16px;
+}
+
+.colorsdemoThemePicker .primary, .colorsdemoThemePicker .accent {
+	margin: 4px 0;
+	height: 120px;
+}
+
+.colorsdemoThemePicker [md-colors] {
+	transition: all 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+.colorsdemoThemePicker p.footnote {
+	font-size: 0.85em;
+	margin: 30px 8px;
+	padding: 16px;
+	background-color: rgba(205, 205, 205, 0.45);
+}
+
+.colorsdemoThemePicker .componentTag {
+	font-weight: bolder;
+	font-size: 1.2em;
+	padding-left: 10px;
+}
+
+.checkboxdemoSyncing .checkboxDemo1 div {
+	clear: both;
+}
+
+.checkboxdemoSyncing legend {
+	color: #3F51B5;
+}
+
+.checkboxdemoSyncing p {
+	padding-left: 8px;
+}
+
+.checkboxdemoSyncing .info {
+	padding-left: 13px;
+}
+
+.checkboxdemoSyncing div.standard {
+	padding: 8px 8px 8px 15px;
+}
+
+.checkboxdemoSyncing fieldset.standard {
+	border-style: solid;
+	border-width: 1px;
+}
+</style>
+</head>
+<body layout="column">
+
+	<!-- BODY -->
+	<div layout="column" ng-cloak ng-controller="ThemeDemoCtrl"
+		class="md-padding">
+		<form name="userForm">
+			<p>
+				Select two of the <a href="{{mdURL}}">Material Palettes</a> below:
+			</p>
+			<!-- Theme Options -->
+			<div layout="row" layout-wrap layout-align="center center">
+				<md-button ng-repeat="color in colors" flex-gt-md="15" flex="30"
+					md-colors="{background: '{{color}}-400'}" md-colors-watch="false"
+					ng-disabled="primary === color && !isPrimary"
+					ng-click="selectTheme(color)"> {{color}} </md-button>
+			</div>
+			<!-- Footnote -->
+			<p style="padding-top: 20px;">
+				Shown below are the colors of the custom
+				<code>&lt;theme-preview&gt;</code>
+				component that were updated by
+				<code>&lt;md-colors&gt;</code>
+			</p>
+			<!-- Theme Preview -->
+			<div layout="row" class="section" layout-align="center center">
+				<div layout="column" flex="50">
+					<span class="componentTag">&lt;theme-preview&gt;</span>
+					<theme-preview primary="primary" accent="accent"></theme-preview>
+				</div>
+			</div>
+			<!-- Footnote -->
+			<p class="footnote">Notice that the foreground colors are
+				automatically determined (from the theme configurations) based on
+				the specified background palette selection. You can also override
+				the foreground color, if desired.</p>
+
+
+			<div>
+				<md-button ng-click="dynamicTheme = 'default'">Default</md-button>
+				<md-button ng-click="dynamicTheme = 'altTheme'">altTheme</md-button>
+				<md-button ng-click="dynamicTheme = 'mythema'">mythema</md-button>
+				<div md-theme="{{ dynamicTheme }}" md-theme-watch="">
+					<md-button class="md-primary">I'm dynamic</md-button>
+					<div layout="row" layout-align="space-between stretch">
+						<div flex>
+							<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+							<div md-colors="{background: 'primary-50'}">primary-50</div>
+							<div md-colors="{background: 'primary-100'}">primary-100</div>
+							<div md-colors="{background: 'primary-200'}">primary-200</div>
+							<div md-colors="{background: 'primary-300'}">primary-300</div>
+							<div md-colors="{background: 'primary-400'}">primary-400</div>
+							<div md-colors="{background: 'primary-500'}">primary-500</div>
+							<div md-colors="{background: 'primary-600'}">primary-600</div>
+							<div md-colors="{background: 'primary-700'}">primary-700</div>
+							<div md-colors="{background: 'primary-800'}">primary-800</div>
+							<div md-colors="{background: 'primary-900'}">primary-900</div>
+							<div md-colors="{background: 'primary-A100'}">primary-A100</div>
+							<div md-colors="{background: 'primary-A200'}">primary-A200</div>
+							<div md-colors="{background: 'primary-A400'}">primary-A400</div>
+							<div md-colors="{background: 'primary-A700'}">primary-A700</div>
+						</div>
+						<div flex>
+							<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+							<div md-colors="{background: 'accent-50'}">accent-50</div>
+							<div md-colors="{background: 'accent-100'}">accent-100</div>
+							<div md-colors="{background: 'accent-200'}">accent-200</div>
+							<div md-colors="{background: 'accent-300'}">accent-300</div>
+							<div md-colors="{background: 'accent-400'}">accent-400</div>
+							<div md-colors="{background: 'accent-500'}">accent-500</div>
+							<div md-colors="{background: 'accent-600'}">accent-600</div>
+							<div md-colors="{background: 'accent-700'}">accent-700</div>
+							<div md-colors="{background: 'accent-800'}">accent-800</div>
+							<div md-colors="{background: 'accent-900'}">accent-900</div>
+							<div md-colors="{background: 'accent-A100'}">accent-A100</div>
+							<div md-colors="{background: 'accent-A200'}">accent-A200</div>
+							<div md-colors="{background: 'accent-A400'}">accent-A400</div>
+							<div md-colors="{background: 'accent-A700'}">accent-A700</div>
+						</div>
+						<div flex>
+							<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+							<div md-colors="{background: 'warn-50'}">warn-50</div>
+							<div md-colors="{background: 'warn-100'}">warn-100</div>
+							<div md-colors="{background: 'warn-200'}">warn-200</div>
+							<div md-colors="{background: 'warn-300'}">warn-300</div>
+							<div md-colors="{background: 'warn-400'}">warn-400</div>
+							<div md-colors="{background: 'warn-500'}">warn-500</div>
+							<div md-colors="{background: 'warn-600'}">warn-600</div>
+							<div md-colors="{background: 'warn-700'}">warn-700</div>
+							<div md-colors="{background: 'warn-800'}">warn-800</div>
+							<div md-colors="{background: 'warn-900'}">warn-900</div>
+							<div md-colors="{background: 'warn-A100'}">warn-A100</div>
+							<div md-colors="{background: 'warn-A200'}">warn-A200</div>
+							<div md-colors="{background: 'warn-A400'}">warn-A400</div>
+							<div md-colors="{background: 'warn-A700'}">warn-A700</div>
+						</div>
+						<div flex>
+							<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+							<div md-colors="{background: 'background-50'}">background-50</div>
+							<div md-colors="{background: 'background-100'}">background-100</div>
+							<div md-colors="{background: 'background-200'}">background-200</div>
+							<div md-colors="{background: 'background-300'}">background-300</div>
+							<div md-colors="{background: 'background-400'}">background-400</div>
+							<div md-colors="{background: 'background-500'}">background-500</div>
+							<div md-colors="{background: 'background-600'}">background-600</div>
+							<div md-colors="{background: 'background-700'}">background-700</div>
+							<div md-colors="{background: 'background-800'}">background-800</div>
+							<div md-colors="{background: 'background-900'}">background-900</div>
+							<div md-colors="{background: 'background-A100'}">background-A100</div>
+							<div md-colors="{background: 'background-A200'}">background-A200</div>
+							<div md-colors="{background: 'background-A400'}">background-A400</div>
+							<div md-colors="{background: 'background-A700'}">background-A700</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+      <md-button class="md-raised">Button</md-button>
+      <md-button class="md-raised md-primary">Primary</md-button>
+      <md-button ng-disabled="true" class="md-raised md-primary">Disabled</md-button>
+      <md-button class="md-raised md-accent">Accent</md-button>
+      <div class="label">Raised</div>
+    </section>
+    <md-divider></md-divider>
+
+
+			<div ng-controller="AppCtrl" class="md-padding" ng-cloak
+				style="min-height: 270px" md-theme="{{tema}}" md-theme-watch="true">
+
+				<span>{{propiedadesdelostemas.temapordefecto}}</span>
+
+				<md-button class="md-primary" ng-click="setTema($event)">Cambiar paleta</md-button>
+				<md-button class="md-primary" ng-click="setDefineTema($event)">Definir tema</md-button>
+				<md-input-container> <label>Change theme</label> 
+				<md-select ng-model="selectedTheme" ng-change="changeTheme()">
+				<md-option ng-value="theme" ng-repeat="theme in themes">{{theme}}</md-option> 
+				</md-select> 
+				</md-input-container>
+				<div>
+					<div>
+						<md-button class="md-primary">I'm dynamic</md-button>
+						<div layout="row" layout-align="space-between stretch">
+							<div flex>
+								<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+								<div md-colors="{background: 'primary-50'}" md-justified="row">
+							      <span>primary-50</span>
+                                  <span>{{getColor('primary','50')}}</span>                                  
+							    </div>
+								<div md-colors="{background: 'primary-100'}" md-justified="row">
+							      <span>primary-100</span>
+                                  <span>{{getColor('primary','100')}}</span>
+                                </div>
+								<div md-colors="{background: 'primary-200'}" md-justified="row">
+							      <span>primary-200</span>
+                                  <span>{{getColor('primary','200')}}</span>
+                                </div>
+								<div md-colors="{background: 'primary-300'}" md-justified="row">
+							      <span>primary-300</span>
+                                  <span>{{getColor('primary','300')}}</span>
+                                </div>
+								<div md-colors="{background: 'primary-400'}" md-justified="row">
+							      <span>primary-400</span>
+                                  <span>{{getColor('primary','400')}}</span>
+                                </div>
+								<div md-colors="{background: 'primary-500'}" md-justified="row">
+							      <span>primary-500</span>
+                                  <span>{{getColor('primary','500')}}</span>
+                                </div>
+								<div md-colors="{background: 'primary-600'}" md-justified="row">
+							      <span>primary-600</span>
+                                  <span>{{getColor('primary','600')}}</span>
+                                </div>
+								<div md-colors="{background: 'primary-700'}" md-justified="row">
+							      <span>primary-700</span>
+                                  <span>{{getColor('primary','700')}}</span>
+                                </div>
+								<div md-colors="{background: 'primary-800'}" md-justified="row">
+							      <span>primary-800</span>
+                                  <span>{{getColor('primary','800')}}</span>
+                                </div>
+								<div md-colors="{background: 'primary-900'}" md-justified="row">
+							      <span>primary-900</span>
+                                  <span>{{getColor('primary','900')}}</span>
+                                </div>
+								<div md-colors="{background: 'primary-A100'}" md-justified="row">
+							      <span>primary-A100</span>
+                                  <span>{{getColor('primary','A100')}}</span>
+                                </div>
+								<div md-colors="{background: 'primary-A200'}" md-justified="row">
+							      <span>primary-A200</span>
+                                  <span>{{getColor('primary','A200')}}</span>
+                                </div>
+								<div md-colors="{background: 'primary-A400'}" md-justified="row">
+							      <span>primary-A400</span>
+                                  <span>{{getColor('primary','A400')}}</span>
+                                </div>
+								<div md-colors="{background: 'primary-A700'}" md-justified="row">
+							      <span>primary-A700</span>
+                                  <span>{{getColor('primary','A700')}}</span>
+                                </div>
+							</div>
+							<div flex>
+								<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+								<div md-colors="{background: 'accent-50'}" md-justified="row">
+							      <span>accent-50</span>
+                                  <span>{{getColor('accent','50')}}</span>                                  
+							    </div>
+								<div md-colors="{background: 'accent-100'}" md-justified="row">
+							      <span>accent-100</span>
+                                  <span>{{getColor('accent','100')}}</span>
+                                </div>
+								<div md-colors="{background: 'accent-200'}" md-justified="row">
+							      <span>accent-200</span>
+                                  <span>{{getColor('accent','200')}}</span>
+                                </div>
+								<div md-colors="{background: 'accent-300'}" md-justified="row">
+							      <span>accent-300</span>
+                                  <span>{{getColor('accent','300')}}</span>
+                                </div>
+								<div md-colors="{background: 'accent-400'}" md-justified="row">
+							      <span>accent-400</span>
+                                  <span>{{getColor('accent','400')}}</span>
+                                </div>
+								<div md-colors="{background: 'accent-500'}" md-justified="row">
+							      <span>accent-500</span>
+                                  <span>{{getColor('accent','500')}}</span>
+                                </div>
+								<div md-colors="{background: 'accent-600'}" md-justified="row">
+							      <span>accent-600</span>
+                                  <span>{{getColor('accent','600')}}</span>
+                                </div>
+								<div md-colors="{background: 'accent-700'}" md-justified="row">
+							      <span>accent-700</span>
+                                  <span>{{getColor('accent','700')}}</span>
+                                </div>
+								<div md-colors="{background: 'accent-800'}" md-justified="row">
+							      <span>accent-800</span>
+                                  <span>{{getColor('accent','800')}}</span>
+                                </div>
+								<div md-colors="{background: 'accent-900'}" md-justified="row">
+							      <span>accent-900</span>
+                                  <span>{{getColor('accent','900')}}</span>
+                                </div>
+								<div md-colors="{background: 'accent-A100'}" md-justified="row">
+							      <span>accent-A100</span>
+                                  <span>{{getColor('accent','A100')}}</span>
+                                </div>
+								<div md-colors="{background: 'accent-A200'}" md-justified="row">
+							      <span>accent-A200</span>
+                                  <span>{{getColor('accent','A200')}}</span>
+                                </div>
+								<div md-colors="{background: 'accent-A400'}" md-justified="row">
+							      <span>accent-A400</span>
+                                  <span>{{getColor('accent','A400')}}</span>
+                                </div>
+								<div md-colors="{background: 'accent-A700'}" md-justified="row">
+							      <span>accent-A700</span>
+                                  <span>{{getColor('accent','A700')}}</span>
+                                </div>
+							</div>
+							<div flex>
+								<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+								<div md-colors="{background: 'warn-50'}" md-justified="row">
+							      <span>warn-50</span>
+                                  <span>{{getColor('warn','50')}}</span>                                  
+							    </div>
+								<div md-colors="{background: 'warn-100'}" md-justified="row">
+							      <span>warn-100</span>
+                                  <span>{{getColor('warn','100')}}</span>
+                                </div>
+								<div md-colors="{background: 'warn-200'}" md-justified="row">
+							      <span>warn-200</span>
+                                  <span>{{getColor('warn','200')}}</span>
+                                </div>
+								<div md-colors="{background: 'warn-300'}" md-justified="row">
+							      <span>warn-300</span>
+                                  <span>{{getColor('warn','300')}}</span>
+                                </div>
+								<div md-colors="{background: 'warn-400'}" md-justified="row">
+							      <span>warn-400</span>
+                                  <span>{{getColor('warn','400')}}</span>
+                                </div>
+								<div md-colors="{background: 'warn-500'}" md-justified="row">
+							      <span>warn-500</span>
+                                  <span>{{getColor('warn','500')}}</span>
+                                </div>
+								<div md-colors="{background: 'warn-600'}" md-justified="row">
+							      <span>warn-600</span>
+                                  <span>{{getColor('warn','600')}}</span>
+                                </div>
+								<div md-colors="{background: 'warn-700'}" md-justified="row">
+							      <span>warn-700</span>
+                                  <span>{{getColor('warn','700')}}</span>
+                                </div>
+								<div md-colors="{background: 'warn-800'}" md-justified="row">
+							      <span>warn-800</span>
+                                  <span>{{getColor('warn','800')}}</span>
+                                </div>
+								<div md-colors="{background: 'warn-900'}" md-justified="row">
+							      <span>warn-900</span>
+                                  <span>{{getColor('warn','900')}}</span>
+                                </div>
+								<div md-colors="{background: 'warn-A100'}" md-justified="row">
+							      <span>warn-A100</span>
+                                  <span>{{getColor('warn','A100')}}</span>
+                                </div>
+								<div md-colors="{background: 'warn-A200'}" md-justified="row">
+							      <span>warn-A200</span>
+                                  <span>{{getColor('warn','A200')}}</span>
+                                </div>
+								<div md-colors="{background: 'warn-A400'}" md-justified="row">
+							      <span>warn-A400</span>
+                                  <span>{{getColor('warn','A400')}}</span>
+                                </div>
+								<div md-colors="{background: 'warn-A700'}" md-justified="row">
+							      <span>warn-A700</span>
+                                  <span>{{getColor('warn','A700')}}</span>
+                                </div>
+							</div>
+							<div flex>
+								<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+								<div md-colors="{background: 'background-50'}" md-justified="row">
+							      <span>background-50</span>
+                                  <span>{{getColor('background','50')}}</span>                                  
+							    </div>
+								<div md-colors="{background: 'background-100'}" md-justified="row">
+							      <span>background-100</span>
+                                  <span>{{getColor('background','100')}}</span>
+                                </div>
+								<div md-colors="{background: 'background-200'}" md-justified="row">
+							      <span>background-200</span>
+                                  <span>{{getColor('background','200')}}</span>
+                                </div>
+								<div md-colors="{background: 'background-300'}" md-justified="row">
+							      <span>background-300</span>
+                                  <span>{{getColor('background','300')}}</span>
+                                </div>
+								<div md-colors="{background: 'background-400'}" md-justified="row">
+							      <span>background-400</span>
+                                  <span>{{getColor('background','400')}}</span>
+                                </div>
+								<div md-colors="{background: 'background-500'}" md-justified="row">
+							      <span>background-500</span>
+                                  <span>{{getColor('background','500')}}</span>
+                                </div>
+								<div md-colors="{background: 'background-600'}" md-justified="row">
+							      <span>background-600</span>
+                                  <span>{{getColor('background','600')}}</span>
+                                </div>
+								<div md-colors="{background: 'background-700'}" md-justified="row">
+							      <span>background-700</span>
+                                  <span>{{getColor('background','700')}}</span>
+                                </div>
+								<div md-colors="{background: 'background-800'}" md-justified="row">
+							      <span>background-800</span>
+                                  <span>{{getColor('background','800')}}</span>
+                                </div>
+								<div md-colors="{background: 'background-900'}" md-justified="row">
+							      <span>background-900</span>
+                                  <span>{{getColor('background','900')}}</span>
+                                </div>
+								<div md-colors="{background: 'background-A100'}" md-justified="row">
+							      <span>background-A100</span>
+                                  <span>{{getColor('background','A100')}}</span>
+                                </div>
+								<div md-colors="{background: 'background-A200'}" md-justified="row">
+							      <span>background-A200</span>
+                                  <span>{{getColor('background','A200')}}</span>
+                                </div>
+								<div md-colors="{background: 'background-A400'}" md-justified="row">
+							      <span>background-A400</span>
+                                  <span>{{getColor('background','A400')}}</span>
+                                </div>
+								<div md-colors="{background: 'background-A700'}" md-justified="row">
+							      <span>background-A700</span>
+                                  <span>{{getColor('background','A700')}}</span>
+                                </div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div layout="row" layout-wrap>
+					<div flex="100" flex-gt-sm="50" layout="column">
+						<!--
+        In IE, we cannot apply flex directly to <fieldset>
+        @see https://github.com/philipwalton/flexbugs#9-some-html-elements-cant-be-flex-containers
+      -->
+						<fieldset class="standard">
+							<legend>Using &lt;md-checkbox&gt; with
+								&lt;ng-checked&gt;</legend>
+							<div layout="row" layout-wrap flex>
+								<div flex="50" ng-repeat="item in items">
+									<md-checkbox ng-checked="exists(item, selected)"
+										ng-click="toggle(item, selected)"> {{ item }} <span
+										ng-if="exists(item, selected)">selected</span> </md-checkbox>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+
+					<div flex="100" flex-gt-sm="50" layout="column">
+						<fieldset class="standard">
+							<legend>Using &lt;input type="checkbox"&gt;</legend>
+							<div layout="row" layout-wrap flex>
+								<div ng-repeat="item in items" class="standard" flex="50">
+									<label> <input type="checkbox"
+										ng-checked="exists(item, selected)"
+										ng-click="toggle(item, selected)" /> {{ item }}
+									</label>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+
+					<div flex="100">
+						<h2 class="md-title">Selected Items</h2>
+						<code style="display: block; padding: 8px;">{{selected |
+							json}}</code>
+					</div>
+				</div>
+			</div>
+
+			<div ng-controller="AppCtrl" class="md-padding" ng-cloak
+				style="min-height: 270px">
+				<div layout="row" layout-wrap>
+					<div flex="100" flex-gt-sm="50" layout="column">
+						<h3>FIGURAS</h3>
+
+						<div>cuadrado Shape</div>
+						<div class="cuadrado"></div>
+						<div>cuadrado-2 Shape</div>
+						<div class="cuadrado-2"></div>
+						<div>cuadrado-3 Shape</div>
+						<div class="cuadrado-3"></div>
+						<div>rectangulo Shape</div>
+						<div class="rectangulo"></div>
+						<div>rombo Shape</div>
+						<div class="rombo"></div>
+						<div>rombo-2 Shape</div>
+						<div class="rombo-2"></div>
+						<div>paralelogramo Shape</div>
+						<div class="paralelogramo"></div>
+						<div>trapecio Shape</div>
+						<div class="trapecio"></div>
+						<div>trapecio-top Shape</div>
+						<div class="trapecio-top"></div>
+						<div>triangulo Shape</div>
+						<div class="triangulo"></div>
+						<div>triangulo-2 Shape</div>
+						<div class="triangulo-2"></div>
+						<div>triangulo-tricolor Shape</div>
+						<div class="triangulo-tricolor"></div>
+						<div>triangulo-equilatero-bottom-left Shape</div>
+						<div class="triangulo-equilatero-bottom-left"></div>
+						<div>triangulo-equilatero-bottom Shape</div>
+						<div class="triangulo-equilatero-bottom"></div>
+						<div>circulo Shape</div>
+						<div class="circulo"></div>
+						<div>oval Shape</div>
+						<div class="oval"></div>
+						<div>oval-half-red Shape</div>
+						<div class="oval-half-red"></div>
+						<div>huevo Shape</div>
+						<div class="huevo"></div>
+						<div>cuarto-circulo Shape</div>
+						<div class="cuarto-circulo"></div>
+						<div>semi-circulo Shape</div>
+						<div class="semi-circulo"></div>
+						<div>semi-circulo-2 Shape</div>
+						<div class="semi-circulo-2"></div>
+						<div>pac-man Shape</div>
+						<div class="pac-man"></div>
+						<div>color-chart Shape</div>
+						<div class="color-chart"></div>
+						<div>cono Shape</div>
+						<div class="cono"></div>
+						<div>ribbon Shape</div>
+						<div class="ribbon"></div>
+						<div>luna Shape</div>
+						<div class="luna"></div>
+						<div>square Shape</div>
+						<div class="square"></div>
+						<div>rectangle Shape</div>
+						<div class="rectangle"></div>
+						<div>circle Shape</div>
+						<div class="circle"></div>
+						<div>oval Shape</div>
+						<div class="oval"></div>
+						<div>triangle-up Shape</div>
+						<div class="triangle-up"></div>
+						<div>triangle-down Shape</div>
+						<div class="triangle-down"></div>
+						<div>triangle-left Shape</div>
+						<div class="triangle-left"></div>
+						<div>triangle-right Shape</div>
+						<div class="triangle-right"></div>
+						<div>triangle-topleft Shape</div>
+						<div class="triangle-topleft"></div>
+						<div>triangle-topright Shape</div>
+						<div class="triangle-topright"></div>
+						<div>triangle-bottomleft Shape</div>
+						<div class="triangle-bottomleft"></div>
+						<div>triangle-bottomright Shape</div>
+						<div class="triangle-bottomright"></div>
+						<div>curvedarrow Shape</div>
+						<div class="curvedarrow"></div>
+						<div>trapezoid Shape</div>
+						<div class="trapezoid"></div>
+						<div>parallelogram Shape</div>
+						<div class="parallelogram"></div>
+						<div>star-six Shape</div>
+						<div class="star-six"></div>
+						<div>star-five Shape</div>
+						<div class="star-five"></div>
+						<div>pentagon Shape</div>
+						<div class="pentagon"></div>
+						<div>hexagon Shape</div>
+						<div class="hexagon"></div>
+						<div>octagon Shape</div>
+						<div class="octagon"></div>
+						<div>heart Shape</div>
+						<div class="heart"></div>
+						<div>infinity Shape</div>
+						<div class="infinity"></div>
+						<div>diamond Shape</div>
+						<div class="diamond"></div>
+						<div>diamond-shield Shape</div>
+						<div class="diamond-shield"></div>
+						<div>diamond-narrow Shape</div>
+						<div class="diamond-narrow"></div>
+						<div>cut-diamond Shape</div>
+						<div class="cut-diamond"></div>
+						<div>egg Shape</div>
+						<div class="egg"></div>
+						<div>pacman Shape</div>
+						<div class="pacman"></div>
+						<div>talkbubble Shape</div>
+						<div class="talkbubble"></div>
+						<div>rss Shape</div>
+						<div class="rss"></div>
+						<div>burst-12 Shape</div>
+						<div class="burst-12"></div>
+						<div>burst-8 Shape</div>
+						<div class="burst-8"></div>
+						<div>yin-yang Shape</div>
+						<div class="yin-yang"></div>
+						<div>badge-ribbon Shape</div>
+						<div class="badge-ribbon"></div>
+						<div>space-invader Shape</div>
+						<div class="space-invader"></div>
+						<div>tv Shape</div>
+						<div class="tv"></div>
+						<div>chevron Shape</div>
+						<div class="chevron"></div>
+						<div>magnifying-glass Shape</div>
+						<div class="magnifying-glass"></div>
+						<div>facebook-icon Shape</div>
+						<div class="facebook-icon"></div>
+						<div>moon Shape</div>
+						<div class="moon"></div>
+						<div>flag Shape</div>
+						<div class="flag"></div>
+						<div>cone Shape</div>
+						<div class="cone"></div>
+						<div>cross Shape</div>
+						<div class="cross"></div>
+						<div>base Shape</div>
+						<div class="base"></div>
+						<div>pointer Shape</div>
+						<div class="pointer"></div>
+						<div>lock Shape</div>
+						<div class="lock"></div>
+						<div>curvedarrow Shape</div>
+						<div class="curvedarrow"></div>
+					</div>
+
+				</div>
+			</div>
+		</form>
+
+<md-button class="md-primary">primary</md-button>
+<md-button class="md-accent">accent</md-button>
+<md-button class="md-warn">warn</md-button>
+<md-button class="md-primary md-hue-1">primary hue-1</md-button>
+<md-button class="md-primary md-hue-2">primary hue-2</md-button>
+
+<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+      <md-button>Button</md-button>
+      <md-button md-no-ink class="md-primary">Primary (md-noink)</md-button>
+      <md-button ng-disabled="true" class="md-primary">Disabled</md-button>
+      <md-button class="md-warn">Warn</md-button>
+      <div class="label">Flat</div>
+    </section>
+    <md-divider></md-divider>
+
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+      <md-button class="md-raised">Button</md-button>
+      <md-button class="md-raised md-primary">Primary</md-button>
+      <md-button ng-disabled="true" class="md-raised md-primary">Disabled</md-button>
+      <md-button class="md-raised md-accent">Accent</md-button>
+      <div class="label">Raised</div>
+    </section>
+    <md-divider></md-divider>
+
+		<!-- FIN BODY -->
+
+
+		<!-- footer -->
+		<md-content class="footer" flex="100"> <span
+			class="md-caption" style="width: 100%; text-align: center;">Copyright
+			&copy; 2020 &reg; Ministerio de Econom&iacute;a y Finanzas - MEF.
+			Todos los derechos reservados </span> </md-content>
+		<!-- Fin footer -->
+
+
+	</div>
+</body>
+</html>

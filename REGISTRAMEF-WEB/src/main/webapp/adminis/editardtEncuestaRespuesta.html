@@ -1,0 +1,180 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editdtEncuestaRespuesta()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Respuestas De Encuestas</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{dtEncuestaRespuestaModelo.XXX}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarDtEncuestaRespuesta()" aria-label="Salir">
+<!--          <md-icon md-font-set="material-icons">undo</md-icon>  -->
+         <span ng-if="nuevo">Salir</span>
+         <span ng-if="!nuevo">Salir</span>   
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarDtEncuestaRespuesta($event)" 
+       ng-if="dtEncuestaRespuestaModelo.editopcion==1" aria-label="Grabar">
+<!--          <md-icon md-font-set="material-icons">save</md-icon>  -->
+         <span >Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+
+<div layout="column">
+<fieldset>
+<legend>Datos de Respuestas De Encuestas</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Usuario Externo</label>    
+            <input type="number" md-maxlength="10" required name="idUsuexterno" ng-model="dtEncuestaRespuestaModelo.idUsuexterno"
+                   >
+           <div ng-messages="dtEncuestaRespuestaForm.idUsuexterno.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Usuario Externo.</div>
+            <div ng-message="maxlength">El Usuario Externo tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Usuario Externo:</div>
+            <div class="letraTexto">{{dtEncuestaRespuestaModelo.idUsuexterno}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Encuesta</label>    
+            <input type="number" md-maxlength="5" required name="idEncuesta" ng-model="dtEncuestaRespuestaModelo.idEncuesta"
+                   >
+           <div ng-messages="dtEncuestaRespuestaForm.idEncuesta.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Encuesta.</div>
+            <div ng-message="maxlength">El Encuesta tiene un m&aacute;ximo de 5 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Encuesta:</div>
+            <div class="letraTexto">{{dtEncuestaRespuestaModelo.idEncuesta}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Tipo De Servicio</label>    
+            <input type="number" md-maxlength="10" required name="idServicio" ng-model="dtEncuestaRespuestaModelo.idServicio"
+                   >
+           <div ng-messages="dtEncuestaRespuestaForm.idServicio.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Tipo De Servicio.</div>
+            <div ng-message="maxlength">El Tipo De Servicio tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Tipo De Servicio:</div>
+            <div class="letraTexto">{{dtEncuestaRespuestaModelo.idServicio}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Tipo De Control</label>    
+            <input type="text" md-maxlength="20" required name="tipoPregunta" ng-model="dtEncuestaRespuestaModelo.tipoPregunta"
+                   >
+           <div ng-messages="dtEncuestaRespuestaForm.tipoPregunta.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Tipo De Control.</div>
+            <div ng-message="maxlength">El Tipo De Control tiene un m&aacute;ximo de 20 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Tipo De Control:</div>
+            <div class="letraTexto">{{dtEncuestaRespuestaModelo.tipoPregunta}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Pregunta U Opción</label>    
+            <input type="text" md-maxlength="50" required name="idPregunta" ng-model="dtEncuestaRespuestaModelo.idPregunta"
+                   >
+           <div ng-messages="dtEncuestaRespuestaForm.idPregunta.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Pregunta U Opción.</div>
+            <div ng-message="maxlength">El Pregunta U Opción tiene un m&aacute;ximo de 50 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Pregunta U Opción:</div>
+            <div class="letraTexto">{{dtEncuestaRespuestaModelo.idPregunta}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Respuesta O Selección</label>    
+            <input type="text" md-maxlength="600" required name="respuesta" ng-model="dtEncuestaRespuestaModelo.respuesta"
+                   >
+           <div ng-messages="dtEncuestaRespuestaForm.respuesta.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Respuesta O Selección.</div>
+            <div ng-message="maxlength">El Respuesta O Selección tiene un m&aacute;ximo de 600 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Respuesta O Selección:</div>
+            <div class="letraTexto">{{dtEncuestaRespuestaModelo.respuesta}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Expositor</label>    
+            <input type="number" md-maxlength="10" required name="idExpositor" ng-model="dtEncuestaRespuestaModelo.idExpositor"
+                   >
+           <div ng-messages="dtEncuestaRespuestaForm.idExpositor.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Expositor.</div>
+            <div ng-message="maxlength">El Expositor tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Expositor:</div>
+            <div class="letraTexto">{{dtEncuestaRespuestaModelo.idExpositor}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" flex>
+        <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Pregunta</label>            
+            <textarea ng-model="dtEncuestaRespuestaModelo.pregunta" md-maxlength="3000" rows="5" md-select-on-focus
+                      ></textarea>
+            <div ng-messages="dtEncuestaRespuestaForm.pregunta.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Pregunta.</div>
+            <div ng-message="maxlength">El Pregunta tiene un m&aacute;ximo de 3000 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEncuestaRespuestaModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel">Pregunta:</div>
+            <div class="letraTexto">{{dtEncuestaRespuestaModelo.pregunta}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

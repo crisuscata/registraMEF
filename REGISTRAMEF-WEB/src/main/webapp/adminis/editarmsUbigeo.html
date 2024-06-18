@@ -1,0 +1,124 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editmsUbigeo()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo {{msUbigeoModelo.tipoTxt}}</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{msUbigeoModelo.tipoTxt}} {{msUbigeoModelo.descripcion}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarMsUbigeo()" aria-label="Salir">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">undo</md-icon>
+         <span ng-if="nuevo" hide-xs show-gt-sm>Salir</span>
+         <span ng-if="!nuevo" hide-xs show-gt-sm>Salir</span>
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarMsUbigeo($event)" ng-if="msUbigeoModelo.editopcion==1" aria-label="Grabar">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">save</md-icon>
+         <span hide-xs show-gt-sm>Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+    
+<div layout="column">
+<fieldset>
+<legend>Datos del UBIGEO</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-aling="center start" layout-xs="column">       
+        
+        <div class="letraenvoltura" ng-if="msUbigeoModelo.editopcion < 2 && msUbigeoModelo.tipo>1" flex="auto">
+         <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Departamento</label>
+            <md-select ng-model="msUbigeoModelo.codDpto" ng-change="changeCoddpto()" required
+                       >
+             <md-option ng-repeat="item in listaMsUbigeoCoddpto" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="msUsuariosForm.codDpto.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Departamento.</div>
+            <div ng-message="maxlength">El Departamento tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msUbigeoModelo.editopcion > 1" layout="row" flex="auto">  
+            <div class="letraLabel">Departamento:</div>
+            <div class="letraTexto">{{msUbigeoModelo.codDptoTxt}}</div>
+         </div>
+         
+         <div class="letraenvoltura" ng-if="msUbigeoModelo.editopcion < 2 && msUbigeoModelo.tipo>2" layout="row" flex="auto">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Provincia</label>
+            <md-select ng-model="msUbigeoModelo.codProv" ng-change="changeCodprov()" required
+                       >
+             <md-option ng-repeat="item in listaMsUbigeoCodprov" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="msUsuariosForm.codProv.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Provincia.</div>
+            <div ng-message="maxlength">El Provincia tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msUbigeoModelo.editopcion > 1" layout="row" flex="auto">  
+            <div class="letraLabel">Provincia:</div>
+            <div class="letraTexto">{{msUbigeoModelo.codProvTxt}}</div>
+         </div>
+          
+        <div class="letraenvoltura" ng-if="msUbigeoModelo.editopcion < 2 && msUbigeoModelo.tipo>3" layout="row" flex="auto">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Distrito</label>
+            <md-select ng-model="msUbigeoModelo.codDistr" ng-change="changeCoddist()" required
+                       >
+             <md-option ng-repeat="item in listaMsUbigeoCoddist" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+             <div ng-messages="msUsuariosForm.codDistr.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Distrito.</div>
+            <div ng-message="maxlength">El Distrito tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msUbigeoModelo.editopcion > 1" layout="row" flex="auto">  
+            <div class="letraLabel">Distrito:</div>
+            <div class="letraTexto">{{msUbigeoModelo.codDistrTxt}}</div>
+         </div>
+          
+        <div class="letraenvoltura" ng-if="msUbigeoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Descripción</label>    
+            <input type="text" md-maxlength="50" required name="descripcion" ng-model="msUbigeoModelo.descripcion"
+                   >
+           <div ng-messages="msUbigeoForm.descripcion.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Descripción.</div>
+            <div ng-message="maxlength">El Descripción tiene un m&aacute;ximo de 50 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>        
+         <div class="letraenvoltura" ng-if="msUbigeoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Descripción:</div>
+            <div class="letraTexto">{{msUbigeoModelo.descripcion}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

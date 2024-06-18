@@ -1,0 +1,168 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editmsAlerta()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Alertas</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{msAlertaModelo.XXXX}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarMsAlerta()" aria-label="Salir">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">undo</md-icon>
+         <span ng-if="nuevo" hide-xs show-gt-sm>Salir</span>
+         <span ng-if="!nuevo" hide-xs show-gt-sm>Salir</span>
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarMsAlerta($event)" ng-if="msAlertaModelo.editopcion==1" aria-label="Grabar">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">save</md-icon>
+         <span hide-xs show-gt-sm>Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+    
+<div layout="column">
+<fieldset>
+<legend>Datos de Alertas</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Característica</label>
+            <md-select ng-model="msAlertaModelo.idCaracterst" ng-change="changeIdCaracterst()" required
+                       name="idCaracterst"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdCaracterst" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="msAlertaForm.idCaracterst.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Característica:</div>
+            <div class="letraTexto">{{msAlertaModelo.idCaracterstTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Otros Destinatarios</label>    
+            <input type="text" md-maxlength="100" required name="otrosDestin" ng-model="msAlertaModelo.otrosDestin"
+                   >
+           <div ng-messages="msAlertaForm.otrosDestin.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Otros Destinatarios.</div>
+            <div ng-message="maxlength">El Otros Destinatarios tiene un m&aacute;ximo de 100 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Otros Destinatarios:</div>
+            <div class="letraTexto">{{msAlertaModelo.otrosDestin}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Día</label>
+            <md-select ng-model="msAlertaModelo.dia" ng-change="changeDia()" required
+                       name="dia"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosDia" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="msAlertaForm.dia.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Día:</div>
+            <div class="letraTexto">{{msAlertaModelo.diaTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Hora</label>
+            <md-select ng-model="msAlertaModelo.hora" ng-change="changeHora()" required
+                       name="hora"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosHora" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="msAlertaForm.hora.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Hora:</div>
+            <div class="letraTexto">{{msAlertaModelo.horaTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Creación</label>
+            <md-datepicker required ng-model="msAlertaModelo.fechaCreaJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Creación:</div>
+            <div class="letraTexto">{{msAlertaModelo.fechaCrea}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Modificación</label>
+            <md-datepicker required ng-model="msAlertaModelo.fechaModifJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Modificación:</div>
+            <div class="letraTexto">{{msAlertaModelo.fechaModif}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Estado</label>    
+            <input type="number" md-maxlength="10" required name="estado" ng-model="msAlertaModelo.estado"
+                   >
+           <div ng-messages="msAlertaForm.estado.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Estado.</div>
+            <div ng-message="maxlength">El Estado tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msAlertaModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Estado:</div>
+            <div class="letraTexto">{{msAlertaModelo.estado}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

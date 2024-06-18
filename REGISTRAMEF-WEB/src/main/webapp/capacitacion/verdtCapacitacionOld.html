@@ -1,0 +1,230 @@
+<div layout="column" layout-align="start stretch" data-ng-init="loaddtCapacitacions()">
+
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size">
+	 <h2 flex md-truncate md-colors="{color: 'background-A100'}">Lista De Los Datos Registrados En Una Capacitación</h2>
+         <md-button class="md-button-borde md-sm"
+			ng-click="showConfirmLista($event)" aria-label="Anular">
+         <md-icon md-svg-icon="resources/icons/delete_forever.svg"
+            class="md-icon-color" aria-label="Delete Forever"></md-icon> 
+            <span hide-xs show-gt-sm>Anular</span>
+         </md-button>
+         <md-button class="md-button-borde md-sm" 
+            ng-href="{{descargar()}}" target="_blank" aria-label="Exportar"> 
+            <md-icon md-svg-icon="resources/icons/system_update_alt.svg"
+            class="md-icon-color" aria-label="System Update Alt"></md-icon> 
+            <span hide-xs show-gt-sm>Exportar</span>
+         </md-button>
+	</div>
+</md-toolbar>
+    
+<!-- Filtro -->
+<md-toolbar md-colors="{background: 'background-50'}" class="md-toolbar-filtro-size">
+	
+        <div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="start center"
+          ng-hide="showSearchBarDiv"
+         >
+            
+            <div class="tamaDivFiltro">
+            <md-button aria-label="Nuevo Capacitaciones" ng-click="nuevoDtCapacitacion()" ng-if="creadtCapacitacion" 
+              class="md-button-borde" md-colors="{background: 'primary-900'}">
+              <md-icon md-svg-icon="resources/icons/docs_add_on.svg" 
+              class="md-icon-color" aria-label="Docs Add On"></md-icon>  
+              <span hide-xs show-gt-sm>Crear Capacitaciones</span>
+            </md-button>
+            </div>
+            
+            <div class="tamaDivFiltro" hide-xs show-gt-sm>
+            <label>N° de Capacitaciones:</label>
+            <md-input-container class="container_margen-top"> 
+               <input type="text" name="idCapacitacion" ng-model="filtro.idCapacitacion" /> 
+            </md-input-container>
+            </div>
+            
+            <div class="tamaDivFiltro" hide-xs show-gt-sm> 
+            <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                       ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
+                <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">search</md-icon>
+                <span>Buscar</span>
+            </md-button>
+            </div>
+    
+            <div class="tamaDivFiltro" show-xs hide-gt-xs> 
+            <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                       ng-click="showSearchBarDiv = true" aria-label="BUSCAR"> 
+                <md-icon md-svg-icon="resources/icons/tornado.svg" ng-class="md-icon-color" class="md-icon-color" aria-label="tornado"></md-icon> 
+            </md-button>
+            </div>
+        </div>
+    
+        <div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" 
+	layout="row" layout-align="start center" ng-show="showSearchBarDiv" 
+	show-sm show-md hide-gt-md
+	>
+	
+            <div class="tamaDivFiltro">
+            <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                    ng-click="showSearchBarDiv = false" aria-label="RETROCEDER"> 
+                <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">back</md-icon>
+            </md-button>
+            </div>
+    
+            <div class="tamaDivFiltro">
+            <label>N° de Capacitaciones:</label>
+            <md-input-container class="container_margen-top"> 
+               <input type="text" name="idCapacitacion" ng-model="filtro.idCapacitacion" /> 
+            </md-input-container>
+            </div>
+    
+            <div class="tamaDivFiltro"> 
+                <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                           ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
+                    <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">search</md-icon>
+                </md-button>
+            </div>
+
+	</div>
+</md-toolbar>
+<!-- FIN Filtro -->
+<md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                  md-total="{{total}}" md-page-select="options.pageSelect" 
+                  md-boundary-links="options.boundaryLinks"
+                  md-on-paginate="logPagination"
+                  style="margin-bottom: -20px !important;"
+                  > 
+            </md-table-pagination>
+<md-divider></md-divider>
+  <md-table-container>
+    <table resize md-table md-row-select="options.rowSelection" multiple="{{options.multiSelect}}" 
+           ng-model="selected" md-progress="promise">
+      <thead id="tablewidth" ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="logOrder">
+         <tr md-row class="md-table-head-label">
+           <th class="md-title ttamnumero" md-column><span>N&deg;</span></th>
+           <th md-column class="md-title ttamnumero">&nbsp;</th>
+           <th class="md-title ttamdtCapacitacionidCapacitacion" md-column md-order-by="idCapacitacion">
+           <span>ID</span></th>  
+           <th class="md-title ttamdtCapacitacionfechaInic" md-column md-order-by="fechaInic" hide-xs show-gt-sm>
+           <span>Fecha De Inicio</span></th>
+           <th class="md-title ttamdtCapacitacionfechaFin" md-column md-order-by="fechaFin" hide-xs show-gt-sm>
+           <span>Fecha Fin</span></th>
+           <th class="md-title ttamdtCapacitacionnomEvento" md-column md-order-by="nomEvento" hide-xs show-gt-sm>
+           <span>Nombre Del Evento</span></th>
+           <th class="md-title ttamdtCapacitacionidSistAdm" md-column md-order-by="idSistAdm" hide-xs show-gt-sm>
+           <span>Sistema Administrativo</span></th>
+           <th class="md-title ttamdtCapacitacionidUsuinterno" md-column md-order-by="idUsuinterno" hide-xs show-gt-sm>
+           <span>Usuario Interno</span></th>
+           <th class="md-title ttamdtCapacitacionflagPubli" md-column md-order-by="flagPubli" hide-xs show-gt-sm>
+           <span>Esta Publicado</span></th>
+           <th class="md-title ttamdtCapacitacionidModalidadTxt" md-column md-order-by="idModalidadTxt" hide-xs show-gt-sm>
+           <span>Modalidad</span></th>
+           <th class="md-title ttamdtCapacitacionidProgramacion" md-column md-order-by="idProgramacion" hide-xs show-gt-sm>
+           <span>Programación</span></th>
+           <th class="md-title ttamdtCapacitacionestado" md-column md-order-by="estado" hide-xs show-gt-sm>
+           <span>Estado</span></th>
+           <th class="md-title ttamdtCapacitacioncantPartic" md-column md-order-by="cantPartic" hide-xs show-gt-sm>
+           <span>Cantidad De Participantes</span></th>
+                      
+         </tr>
+         <tr md-row class="md-table-head-order">
+         <th md-column>&nbsp;</th>
+         <th md-column>&nbsp;</th>
+         <th md-column> 
+            <input type="text" name="ID" ng-model="filtro.idCapacitacion" placeholder="ID" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtCapacitacionidCapacitacion"/>
+         </th>
+           <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="fechaInic" ng-model="filtro.fechaInic" placeholder="yyyy-mm-dd" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtCapacitacionfechaInic"/>
+         </th><th md-column hide-xs show-gt-sm> 
+            <input type="text" name="fechaFin" ng-model="filtro.fechaFin" placeholder="yyyy-mm-dd" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtCapacitacionfechaFin"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="nomEvento" ng-model="filtro.nomEvento" placeholder="Nombre Del Evento" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtCapacitacionnomEvento"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="idSistAdm" ng-model="filtro.idSistAdm" placeholder="Sistema Administrativo" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtCapacitacionidSistAdm"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="idUsuinterno" ng-model="filtro.idUsuinterno" placeholder="Usuario Interno" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtCapacitacionidUsuinterno"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="flagPubli" ng-model="filtro.flagPubli" placeholder="Esta Publicado" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtCapacitacionflagPubli"/>
+         </th>
+           <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="idModalidadTxt" ng-model="filtro.idModalidadTxt" placeholder="Modalidad" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtCapacitacionidModalidadTxt"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="idProgramacion" ng-model="filtro.idProgramacion" placeholder="Programación" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtCapacitacionidProgramacion"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="estado" ng-model="filtro.estado" placeholder="Estado" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtCapacitacionestado"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="cantPartic" ng-model="filtro.cantPartic" placeholder="Cantidad De Participantes" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtCapacitacioncantPartic"/>
+         </th>                    
+         </tr>
+      </thead>
+      <tbody md-body>
+         <tr class="primary triddtCapacitacion md-table-cuerpo" md-row md-select="dato" md-on-select="logItem" md-auto-select="options.autoSelect"   
+             ng-disabled="!dato.dtCapacitacionACL.eliminar" ng-repeat-start="dato in datos">
+          <td md-cell>{{$index + 1}}</td>
+          <td class="md-title ttamnumero" data-title="Acciones" md-cell>
+             <div layout="row" layout-xs="column" layout-align="center center">
+                <md-button 
+                        ng-click="editarDtCapacitacion($event, dato)"
+                        ng-if="dato.dtCapacitacionACL.esEditable"> 
+                    <md-icon class="md-icon-tabla-accion" md-font-set="material-icons">edit</md-icon> 
+                </md-button>
+                <md-button class="{{dato.cestado}}" ng-click="showConfirmActivar($event, dato)"
+                 ng-if="dato.dtCapacitacionACL.eliminar  && dato.esEliminado">
+                    <md-icon class="md-icon-tabla-accion" md-font-set="material-icons">redo</md-icon>
+                </md-button>                 
+             </div>
+          </td>
+          <td class="tdaa1 md-table-cuerpo" data-title="ID" md-cell>
+          {{dato.idCapacitacion}}
+          </td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Fecha De Inicio" md-cell hide-xs show-gt-sm>
+          {{formatDMY(dato.fechaInic)}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Fecha Fin" md-cell hide-xs show-gt-sm>
+          {{formatDMY(dato.fechaFin)}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Nombre Del Evento" md-cell hide-xs show-gt-sm>
+          {{dato.nomEvento}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Sistema Administrativo" md-cell hide-xs show-gt-sm>
+          {{dato.idSistAdm}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Usuario Interno" md-cell hide-xs show-gt-sm>
+          {{dato.idUsuinterno}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Esta Publicado" md-cell hide-xs show-gt-sm>
+          {{dato.flagPubli}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Modalidad" md-cell hide-xs show-gt-sm>
+          {{dato.idModalidadTxt}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Programación" md-cell hide-xs show-gt-sm>
+          {{dato.idProgramacion}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Estado" md-cell hide-xs show-gt-sm>
+          {{dato.estado}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Cantidad De Participantes" md-cell hide-xs show-gt-sm>
+          {{dato.cantPartic}}</td>
+                     
+           </tr>
+           <tr class="secondary childiddtCapacitacion" ng-repeat-end></tr>
+       </tbody>
+    </table>
+  </md-table-container>
+  </div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+    <!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

@@ -1,0 +1,182 @@
+<div layout="column" layout-align="start stretch" data-ng-init="loadmsSisAdmistrativos()">
+
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size">
+	 <h2 flex md-truncate md-colors="{color: 'background-A100'}">Lista De Los Sistemas Administrativos Registrados En El Sistema</h2>
+         <md-button class="md-button-borde md-sm"
+			ng-click="showConfirmLista($event)" aria-label="Anular">
+         <md-icon md-svg-icon="resources/icons/delete_forever.svg"
+            class="md-icon-color" aria-label="Delete Forever"></md-icon> 
+            <span hide-xs show-gt-sm>Anular</span>
+         </md-button>
+         <md-button class="md-button-borde md-sm" 
+            ng-href="{{descargar()}}" target="_blank" aria-label="Exportar"> 
+            <md-icon md-svg-icon="resources/icons/system_update_alt.svg"
+            class="md-icon-color" aria-label="System Update Alt"></md-icon> 
+            <span hide-xs show-gt-sm>Exportar</span>
+         </md-button>
+	</div>
+</md-toolbar>
+    
+<!-- Filtro -->
+<md-toolbar md-colors="{background: 'background-50'}" class="md-toolbar-filtro-size">
+	
+        <div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="start center"
+          ng-hide="showSearchBarDiv"
+         >
+            
+            <div class="tamaDivFiltro">
+            <md-button aria-label="Nuevo Sistemas Administrativos" ng-click="nuevoMsSisAdmistrativo()" ng-if="creamsSisAdmistrativo" 
+              class="md-button-borde" md-colors="{background: 'primary-900'}">
+              <md-icon md-svg-icon="resources/icons/docs_add_on.svg" 
+              class="md-icon-color" aria-label="Docs Add On"></md-icon>  
+              <span hide-xs show-gt-sm>Crear Sistemas administrativos</span>
+            </md-button>
+            </div>
+            
+            <div class="tamaDivFiltro" hide-xs show-gt-sm>
+            <label>N° de Sistemas administrativos:</label>
+            <md-input-container class="container_margen-top"> 
+               <input type="text" name="idSistAdmi" ng-model="filtro.idSistAdmi" /> 
+            </md-input-container>
+            </div>
+            
+            <div class="tamaDivFiltro" hide-xs show-gt-sm> 
+            <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                       ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
+                <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">search</md-icon>
+                <span>Buscar</span>
+            </md-button>
+            </div>
+    
+            <div class="tamaDivFiltro" show-xs hide-gt-xs> 
+            <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                       ng-click="showSearchBarDiv = true" aria-label="BUSCAR"> 
+                <md-icon md-svg-icon="resources/icons/tornado.svg" ng-class="md-icon-color" class="md-icon-color" aria-label="tornado"></md-icon> 
+            </md-button>
+            </div>
+        </div>
+    
+        <div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" 
+	layout="row" layout-align="start center" ng-show="showSearchBarDiv" 
+	show-sm show-md hide-gt-md
+	>
+	
+            <div class="tamaDivFiltro">
+            <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                    ng-click="showSearchBarDiv = false" aria-label="RETROCEDER"> 
+                <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">back</md-icon>
+            </md-button>
+            </div>
+    
+            <div class="tamaDivFiltro">
+            <label>N° de Sistemas administrativos:</label>
+            <md-input-container class="container_margen-top"> 
+               <input type="text" name="idSistAdmi" ng-model="filtro.idSistAdmi" /> 
+            </md-input-container>
+            </div>
+    
+            <div class="tamaDivFiltro"> 
+                <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                           ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
+                    <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">search</md-icon>
+                </md-button>
+            </div>
+
+	</div>
+</md-toolbar>
+<!-- FIN Filtro -->
+<md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                  md-total="{{total}}" md-page-select="options.pageSelect" 
+                  md-boundary-links="options.boundaryLinks"
+                  md-on-paginate="logPagination"
+                  style="margin-bottom: -20px !important;"
+                  > 
+            </md-table-pagination>
+<md-divider></md-divider>
+  <md-table-container>
+    <table resize md-table md-row-select="options.rowSelection" multiple="{{options.multiSelect}}" 
+           ng-model="selected" md-progress="promise">
+      <thead id="tablewidth" ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="logOrder">
+         <tr md-row class="md-table-head-label">
+           <th class="md-title ttamnumero" md-column><span>N&deg;</span></th>
+           <th md-column class="md-title ttamnumero">&nbsp;</th>
+           <th class="md-title ttammsSisAdmistrativoidSistAdmi" md-column md-order-by="idSistAdmi">
+           <span>ID</span></th>  
+           <th class="md-title ttammsSisAdmistrativodescripcion" md-column md-order-by="descripcion" hide-xs show-gt-sm>
+           <span>Descripción</span></th>
+           <th class="md-title ttammsSisAdmistrativofechaCrea" md-column md-order-by="fechaCrea" hide-xs show-gt-sm>
+           <span>Fecha De Creación</span></th>
+           <th class="md-title ttammsSisAdmistrativofechaModif" md-column md-order-by="fechaModif" hide-xs show-gt-sm>
+           <span>Fecha De Modificación</span></th>
+           <th class="md-title ttammsSisAdmistrativoestado" md-column md-order-by="estado" hide-xs show-gt-sm>
+           <span>Estado</span></th>
+                      
+         </tr>
+         <tr md-row class="md-table-head-order">
+         <th md-column>&nbsp;</th>
+         <th md-column>&nbsp;</th>
+         <th md-column> 
+            <input type="text" name="ID" ng-model="filtro.idSistAdmi" placeholder="ID" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttammsSisAdmistrativoidSistAdmi"/>
+         </th>
+           
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="descripcion" ng-model="filtro.descripcion" placeholder="Descripción" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttammsSisAdmistrativodescripcion"/>
+         </th><th md-column hide-xs show-gt-sm> 
+            <input type="text" name="fechaCrea" ng-model="filtro.fechaCrea" placeholder="yyyy-mm-dd" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttammsSisAdmistrativofechaCrea"/>
+         </th><th md-column hide-xs show-gt-sm> 
+            <input type="text" name="fechaModif" ng-model="filtro.fechaModif" placeholder="yyyy-mm-dd" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttammsSisAdmistrativofechaModif"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="estado" ng-model="filtro.estado" placeholder="Estado" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttammsSisAdmistrativoestado"/>
+         </th>                    
+         </tr>
+      </thead>
+      <tbody md-body>
+         <tr class="primary tridmsSisAdmistrativo md-table-cuerpo" md-row md-select="dato" md-on-select="logItem" md-auto-select="options.autoSelect"   
+             ng-disabled="!dato.msSisAdmistrativoACL.eliminar" ng-repeat-start="dato in datos">
+          <td md-cell>{{$index + 1}}</td>
+          <td class="md-title ttamnumero" data-title="Acciones" md-cell>
+             <div layout="row" layout-xs="column" layout-align="center center">
+                <md-button 
+                        ng-click="editarMsSisAdmistrativo($event, dato)"
+                        ng-if="dato.msSisAdmistrativoACL.esEditable"> 
+                    <md-icon class="md-icon-tabla-accion" md-font-set="material-icons">edit</md-icon> 
+                </md-button>
+                <md-button class="{{dato.cestado}}" ng-click="showConfirmActivar($event, dato)"
+                 ng-if="dato.msSisAdmistrativoACL.eliminar  && dato.esEliminado">
+                    <md-icon class="md-icon-tabla-accion" md-font-set="material-icons">redo</md-icon>
+                </md-button>                 
+             </div>
+          </td>
+          <td class="tdaa1 md-table-cuerpo" data-title="ID" md-cell>
+          {{dato.idSistAdmi}}
+          </td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Descripción" md-cell hide-xs show-gt-sm>
+          {{dato.descripcion}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Fecha De Creación" md-cell hide-xs show-gt-sm>
+          {{formatDMY(dato.fechaCrea)}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Fecha De Modificación" md-cell hide-xs show-gt-sm>
+          {{formatDMY(dato.fechaModif)}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Estado" md-cell hide-xs show-gt-sm>
+          {{dato.estado}}</td>
+                     
+           </tr>
+           <tr class="secondary childidmsSisAdmistrativo" ng-repeat-end></tr>
+       </tbody>
+    </table>
+  </md-table-container>
+  </div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+    <!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

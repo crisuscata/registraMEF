@@ -1,0 +1,181 @@
+package pe.gob.mef.registramef.bs.domain;
+
+import static javax.persistence.GenerationType.SEQUENCE;
+
+import java.sql.Timestamp;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import pe.gob.mef.registramef.bs.utils.PropertiesMg;
+
+/**
+ * MS_SUBTEMA ENTIDAD: ALMACENA LOS SUBTEMAS REGISTRADOS EN EL SISTEMA "SUBTEMAS"
+ * 
+ * @author Carlos Aguilar
+ * @version 2.0, 18/12/2023 18:48
+ * 
+ *   /----------Nombre------------------------/-------------fecha-----------/---------------Motivo------------/
+ *   /Carlos Aguilar Chamochumbi/ 18/12/2023 18:48   / Creación de la clase    /
+ * 
+ */
+@Entity
+@Table(name = "MS_SUBTEMA")
+public class MsSubtema implements java.io.Serializable {
+
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8023819005673578083L;
+
+	// ID
+	private Long idSubtema = null;
+
+	// PROPIEDADES
+	private String descripcion = null;
+	private Long idusserCrea = null;
+	private Long idusserModif = null;
+	private Timestamp fechaCrea = null;
+	private Timestamp fechaModif = null;
+	private Long idTema = null;
+	private Long estado = null;
+	private Long idIndicador = null;
+	private String rtmaddress = null;
+	private String rtmaddressrst = null;
+	
+
+	public MsSubtema() {
+	}
+
+	@SequenceGenerator(name = "G_MS_SUBTEMA", sequenceName = PropertiesMg.ESQUEMA + "SQ_MS_SUBTEMA", allocationSize = 1)
+@GeneratedValue(strategy = SEQUENCE, generator = "G_MS_SUBTEMA")
+@Id
+@Column(name = "ID_SUBTEMA", unique = true, nullable = false, precision = 10, scale = 0)
+public Long  getIdSubtema()
+{
+		return this.idSubtema;
+}
+
+public void setIdSubtema(Long idSubtema)
+{
+		this.idSubtema = idSubtema;
+}
+
+@Column(name = "DESCRIPCION", length = 200)
+public String  getDescripcion()
+{
+		return this.descripcion;
+}
+
+public void setDescripcion(String descripcion)
+{
+		this.descripcion = descripcion;
+}
+
+@Column(name = "IDUSSER_CREA", precision = 10, scale = 0)
+public Long  getIdusserCrea()
+{
+		return this.idusserCrea;
+}
+
+public void setIdusserCrea(Long idusserCrea)
+{
+		this.idusserCrea = idusserCrea;
+}
+
+@Column(name = "IDUSSER_MODIF", precision = 10, scale = 0)
+public Long  getIdusserModif()
+{
+		return this.idusserModif;
+}
+
+public void setIdusserModif(Long idusserModif)
+{
+		this.idusserModif = idusserModif;
+}
+
+@Column(name = "FECHA_CREA", length = 7)
+public Timestamp  getFechaCrea()
+{
+		return this.fechaCrea;
+}
+
+public void setFechaCrea(Timestamp fechaCrea)
+{
+		this.fechaCrea = fechaCrea;
+}
+
+@Column(name = "FECHA_MODIF", length = 7)
+public Timestamp  getFechaModif()
+{
+		return this.fechaModif;
+}
+
+public void setFechaModif(Timestamp fechaModif)
+{
+		this.fechaModif = fechaModif;
+}
+
+@Column(name = "ID_TEMA", precision = 10, scale = 0)
+public Long  getIdTema()
+{
+		return this.idTema;
+}
+
+public void setIdTema(Long idTema)
+{
+		this.idTema = idTema;
+}
+
+@Column(name = "ESTADO", precision = 10, scale = 0)
+public Long  getEstado()
+{
+		return this.estado;
+}
+
+public void setEstado(Long estado)
+{
+		this.estado = estado;
+}
+
+@Column(name = "ID_INDICADOR", precision = 10, scale = 0)
+public Long  getIdIndicador()
+{
+		return this.idIndicador;
+}
+
+public void setIdIndicador(Long idIndicador)
+{
+		this.idIndicador = idIndicador;
+}
+
+@Column(name = "RTMADDRESS", length = 50)
+public String  getRtmaddress()
+{
+		return this.rtmaddress;
+}
+
+public void setRtmaddress(String rtmaddress)
+{
+		this.rtmaddress = rtmaddress;
+}
+
+@Column(name = "RTMADDRESSRST", length = 50)
+public String  getRtmaddressrst()
+{
+		return this.rtmaddressrst;
+}
+
+public void setRtmaddressrst(String rtmaddressrst)
+{
+		this.rtmaddressrst = rtmaddressrst;
+}
+
+
+			
+}

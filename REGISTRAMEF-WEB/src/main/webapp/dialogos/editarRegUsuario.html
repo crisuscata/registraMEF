@@ -1,0 +1,192 @@
+<md-dialog aria-label="Lista de Usuarios que brinda atención" class="modal-width-900">
+    
+    <md-progress-linear md-mode="determinate" value="{{determinateValue}}"></md-progress-linear>
+    <form ng-cloak name="dtVisitasUsuariosForm" ng-submit="dtVisitasUsuariosForm.$valid && hide()" novalidate>
+        <md-toolbar style="background-color: rgb(255,255,255);">
+            <div class="md-toolbar-tools">
+                <h2 style="color: #1E82AD; font-weight: bold;">Agregar Usuarios al que se le brinda atenci&oacute;n</h2>
+                <span flex></span>
+                <md-button ng-click="cancel()" style="color: rgb(255,87,34);"  >
+                    Cancelar
+                </md-button>    
+                <md-button style="color: rgb(255,87,34);" type="submit" ng-if="activar"  >
+                    Agregar
+                </md-button>
+                
+                <!-- 
+                <md-button style="color: rgb(255,87,34);" type="submit" ng-if="activar" ng-click="agregarUsuario($event)" >
+                    Agregar
+                </md-button>
+                 -->
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}"
+                        style="margin: 0px 30px;">
+
+					<div layout="row" layout-align="start start">
+						<div class="letraenvoltura" style="width: 400px;">
+						
+							<label class="letraLabel" flex>DNI:</label>    
+		                  	<md-input-container md-no-float="true"
+								class="input-container-margen letraTexto" flex="85"
+								style="width: 63%;"> 
+								<label>Ingresar DNI</label> 
+								
+								<input type="text" md-maxlength="8" maxlength="8" md-minlength=8 minlength=8 required name="dni"
+								ng-model="usuarioModelo.numDocu" >
+								
+									<div ng-messages="dtVisitasUsuariosForm.dni.$error" ng-if="dtVisitasUsuariosForm.dni.$touched">
+										<div ng-message="required">Se requiere el DNI.</div>
+										<div ng-message="md-minlength">El DNI tiene 8 caracteres.</div>
+										<div ng-message="md-maxlength">El DNI tiene 8 caracteres.</div>
+										<div ng-message="maxlength">El DNI tiene 8 caracteres.</div>
+									</div>
+							</md-input-container>
+							<md-button class="md-icon-button md-mini iconoEnLinea"
+								id="idbuscardni" aria-label="Buscar por el DNI"
+								ng-click="buscarxdni(usuarioModelo)"> <md-icon
+								md-font-set="material-icons">search</md-icon> </md-button>
+						
+						</div>
+					</div>
+
+                        
+                  
+				   
+				<div layout="row" layout-align="start start">
+						<div class="letraenvoltura" style="width: 400px;">
+						
+							<label class="letraLabel" flex>Apellidos y Nombres:</label>    
+		                  	<md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85" style="width: 63%;"> 
+								<md-autocomplete
+									required md-input-name="nameMSUserExter"
+									md-input-minlength="3"
+									md-input-maxlength="100"
+									ng-disabled="ctrlMsUSuariosExterxNombApe.isDisabled"
+									md-no-cache="ctrlMsUSuariosExterxNombApe.noCache"
+									md-selected-item="ctrlMsUSuariosExterxNombApe.selectedItem"
+									md-search-text-change="searchTextChange(usuarioModelo.nombresApellidos)"
+									md-search-text="usuarioModelo.nombresApellidos"
+									md-selected-item-change="selectedItemChange(item)"
+									md-items="item in querySearch(usuarioModelo.nombresApellidos)"
+									md-item-text="item.nombresCompletos"
+									md-min-length="3"
+									input-aria-labelledby="Apellidos y Nombres"
+									md-delay="300"
+									placeholder="Nombres y apellidos">
+								    <md-item-template>
+					                    <span md-highlight-text="usuarioModelo.nombresApellidos"
+					                          md-highlight-flags="^i">{{item.nombresCompletos}}</span>
+					                </md-item-template>
+									<md-not-found>
+					                    No hay coincidencias para "{{usuarioModelo.nombresApellidos}}". 
+					                    <a ng-click="addNew(tdUsuarioReuTrabajo.nombresApellidos)">
+					                        No existe o no está vinculado a su sistema administrativo.
+					                    </a>
+					                </md-not-found>
+					                <div ng-messages="dtVisitasUsuariosForm.nameMSUserExter.$error" ng-if="dtVisitasUsuariosForm.nameMSUserExter.$touched">
+					                    <div ng-message="required">Se requiere Apellidos y Nombres</div>
+					                    <div ng-message="md-require-match">Por favor seleccione un item.</div>
+					                    <div ng-message="minlength">Tu entrada no es lo suficientemente larga.</div>
+					                    <div ng-message="maxlength">Tu entrada es demasiado larga.</div>
+					                </div>
+								
+								</md-autocomplete>
+							</md-input-container>
+						
+						</div>
+				</div>        
+               <div layout="row" layout-align="start start">
+                    <div class="letraenvoltura" style="width: 400px;">
+                        <label class="letraLabel" flex>Cargo:</label>    
+                        <md-input-container md-no-float="true" class="input-container-margen letraTexto"  flex="100" style="width: 80%;">
+                            <md-select ng-model="usuarioModelo.idCargoUsuext"   ng-change="changeIdCargo(usuarioModelo.idCargoUsuext)" required
+                                       placeholder="Seleccionar cargo"
+                                       name="idparametrolugar"
+                                       >
+                             <!--   <md-option ng-value="0">Sin Cargo</md-option>  -->  
+                             <md-option ng-repeat="item in listaCargos"
+												   ng-value="item.idCargo"> {{item.idCargoTxt}} </md-option> 
+                            </md-select>
+                            <div ng-messages="dtVisitasUsuariosForm.idparametrolugar.$error">
+                              <div ng-message="required">Se requiere seleccionar el cargo.</div>
+                           </div>
+                         </md-input-container>
+                        </div>
+                      
+                </div>
+                
+                <div layout="row" layout-align="start start">
+						<div class="letraenvoltura" style="width: 400px;">
+						
+							<label class="letraLabel" flex>Correo:</label>    
+		                  	
+							
+							<md-input-container md-no-float="true"
+								class="input-container-margen letraTexto" flex="85"
+								style="width: 63%;"> 
+								<label>Ingresar Correo</label> 
+								<input type="email" md-maxlength="50" required name="correo"
+								ng-model="usuarioModelo.correoUsuext"
+								 ng-pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/">
+									<div ng-messages="dtVisitasUsuariosForm.correo.$error">
+										<div ng-message="required">Se requiere el Correo.</div>
+										<div ng-message="email">Formato incorrecto.</div>
+										<div ng-message="pattern">Formato de correo no v&aacute;lido.</div>
+									</div>
+							</md-input-container>
+						
+						</div>
+					</div>
+					
+					
+					<div layout="row" layout-align="start start">
+						<div class="letraenvoltura" style="width: 400px;">
+						
+							<label class="letraLabel" flex>Telefono Fijo:</label>    
+		                  	<md-input-container md-no-float="true"
+								class="input-container-margen letraTexto" flex="85"
+								style="width: 63%;"> 
+								<label>Ingresar Telefono Fijo</label> 
+								<input type="text" md-maxlength="10" name="telefonoFijo"
+								ng-pattern="/^\d{7,10}$/"
+								ng-model="usuarioModelo.fijoUsuext">
+							</md-input-container>
+						
+						</div>
+					</div>
+					
+					<div layout="row" layout-align="start start">
+						<div class="letraenvoltura" style="width: 400px;">
+						
+							<label class="letraLabel" flex>Celular:</label>    
+		                  	<md-input-container md-no-float="true"
+								class="input-container-margen letraTexto" flex="85"
+								style="width: 63%;"> 
+								<label>Ingresar Celular</label> 
+								<input type="text" md-maxlength="9" required name="celular"
+								ng-pattern="/^\d{9,9}$/"
+								ng-model="usuarioModelo.celularUsuext">
+									<div ng-messages="dtVisitasUsuariosForm.celular.$error">
+										<div ng-message="required">Se requiere el Celular.</div>
+										<div ng-message="pattern">El n&uacute;mero de celular debe tener 9 d&iacute;gitos. Y n&uacute;mero</div>
+									</div>
+							</md-input-container>
+						
+						</div>
+					</div>
+					
+
+              
+
+                <div layout="row" layout-wrap class="modal-wrapped">
+
+                </div>
+
+            </md-content>
+        </md-dialog-content>
+    </form>
+     
+</md-dialog>

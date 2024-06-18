@@ -1,0 +1,232 @@
+<div layout="column" layout-align="start stretch" data-ng-init="loaddtEntidadess()">
+
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size">
+	 <h2 flex md-truncate md-colors="{color: 'background-A100'}">Lista De Las Entidades Registradas En El Sistema</h2>
+         <md-button class="md-button-borde md-sm"
+			ng-click="showConfirmLista($event)" aria-label="Anular">
+         <md-icon md-svg-icon="resources/icons/delete_forever.svg"
+            class="md-icon-color" aria-label="Delete Forever"></md-icon> 
+            <span hide-xs show-gt-sm>Anular</span>
+         </md-button>
+         <md-button class="md-button-borde md-sm" 
+            ng-href="{{descargar()}}" target="_blank" aria-label="Exportar"> 
+            <md-icon md-svg-icon="resources/icons/system_update_alt.svg"
+            class="md-icon-color" aria-label="System Update Alt"></md-icon> 
+            <span hide-xs show-gt-sm>Exportar</span>
+         </md-button>
+	</div>
+</md-toolbar>
+    
+<!-- Filtro -->
+<md-toolbar md-colors="{background: 'background-50'}" class="md-toolbar-filtro-size">
+	
+        <div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="start center"
+          ng-hide="showSearchBarDiv"
+         >
+            
+            <div class="tamaDivFiltro">
+            <md-button aria-label="Nuevo Entidades" ng-click="nuevoDtEntidades()" ng-if="creadtEntidades" 
+              class="md-button-borde" md-colors="{background: 'primary-900'}">
+              <md-icon md-svg-icon="resources/icons/docs_add_on.svg" 
+              class="md-icon-color" aria-label="Docs Add On"></md-icon>  
+              <span hide-xs show-gt-sm>Crear Entidades</span>
+            </md-button>
+            </div>
+            
+            <div class="tamaDivFiltro" hide-xs show-gt-sm>
+            <label>N° de Entidades:</label>
+            <md-input-container class="container_margen-top"> 
+               <input type="text" name="idEntidad" ng-model="filtro.idEntidad" /> 
+            </md-input-container>
+            </div>
+            
+            <div class="tamaDivFiltro" hide-xs show-gt-sm> 
+            <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                       ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
+                <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">search</md-icon>
+                <span>Buscar</span>
+            </md-button>
+            </div>
+    
+            <div class="tamaDivFiltro" show-xs hide-gt-xs> 
+            <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                       ng-click="showSearchBarDiv = true" aria-label="BUSCAR"> 
+                <md-icon md-svg-icon="resources/icons/tornado.svg" ng-class="md-icon-color" class="md-icon-color" aria-label="tornado"></md-icon> 
+            </md-button>
+            </div>
+        </div>
+    
+        <div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" 
+	layout="row" layout-align="start center" ng-show="showSearchBarDiv" 
+	show-sm show-md hide-gt-md
+	>
+	
+            <div class="tamaDivFiltro">
+            <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                    ng-click="showSearchBarDiv = false" aria-label="RETROCEDER"> 
+                <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">back</md-icon>
+            </md-button>
+            </div>
+    
+            <div class="tamaDivFiltro">
+            <label>N° de Entidades:</label>
+            <md-input-container class="container_margen-top"> 
+               <input type="text" name="idEntidad" ng-model="filtro.idEntidad" /> 
+            </md-input-container>
+            </div>
+    
+            <div class="tamaDivFiltro"> 
+                <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                           ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
+                    <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">search</md-icon>
+                </md-button>
+            </div>
+
+	</div>
+</md-toolbar>
+<!-- FIN Filtro -->
+<md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                  md-total="{{total}}" md-page-select="options.pageSelect" 
+                  md-boundary-links="options.boundaryLinks"
+                  md-on-paginate="logPagination"
+                  style="margin-bottom: -20px !important;"
+                  > 
+            </md-table-pagination>
+<md-divider></md-divider>
+  <md-table-container>
+    <table resize md-table md-row-select="options.rowSelection" multiple="{{options.multiSelect}}" 
+           ng-model="selected" md-progress="promise">
+      <thead id="tablewidth" ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="logOrder">
+         <tr md-row class="md-table-head-label">
+           <th class="md-title ttamnumero" md-column><span>N&deg;</span></th>
+           <th md-column class="md-title ttamnumero">&nbsp;</th>
+           <th class="md-title ttamdtEntidadesidEntidad" md-column md-order-by="idEntidad">
+           <span>ID</span></th>  
+           <th class="md-title ttamdtEntidadescodEjec" md-column md-order-by="codEjec" hide-xs show-gt-sm>
+           <span>Unidad Ejecutora</span></th>
+           <th class="md-title ttamdtEntidadesrazSocial" md-column md-order-by="razSocial" hide-xs show-gt-sm>
+           <span>Razón Social</span></th>
+           <th class="md-title ttamdtEntidadesruc" md-column md-order-by="ruc" hide-xs show-gt-sm>
+           <span>Número De Ruc</span></th>
+           <th class="md-title ttamdtEntidadesidTipoTxt" md-column md-order-by="idTipoTxt" hide-xs show-gt-sm>
+           <span>Tipo</span></th>
+           <th class="md-title ttamdtEntidadescodDpto" md-column md-order-by="codDpto" hide-xs show-gt-sm>
+           <span>Departamento</span></th>
+           <th class="md-title ttamdtEntidadescodProv" md-column md-order-by="codProv" hide-xs show-gt-sm>
+           <span>Provincia</span></th>
+           <th class="md-title ttamdtEntidadescodDistr" md-column md-order-by="codDistr" hide-xs show-gt-sm>
+           <span>Distrito</span></th>
+           <th class="md-title ttamdtEntidadesidCaractTxt" md-column md-order-by="idCaractTxt" hide-xs show-gt-sm>
+           <span>Característica</span></th>
+           <th class="md-title ttamdtEntidadesidSistAdmiTxt" md-column md-order-by="idSistAdmiTxt" hide-xs show-gt-sm>
+           <span>Sistema Administrativo</span></th>
+           <th class="md-title ttamdtEntidadesestado" md-column md-order-by="estado" hide-xs show-gt-sm>
+           <span>Estado</span></th>
+                      
+         </tr>
+         <tr md-row class="md-table-head-order">
+         <th md-column>&nbsp;</th>
+         <th md-column>&nbsp;</th>
+         <th md-column> 
+            <input type="text" name="ID" ng-model="filtro.idEntidad" placeholder="ID" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEntidadesidEntidad"/>
+         </th>
+           
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="codEjec" ng-model="filtro.codEjec" placeholder="Unidad Ejecutora" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEntidadescodEjec"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="razSocial" ng-model="filtro.razSocial" placeholder="Razón Social" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEntidadesrazSocial"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="ruc" ng-model="filtro.ruc" placeholder="Número De Ruc" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEntidadesruc"/>
+         </th>
+           <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="idTipoTxt" ng-model="filtro.idTipoTxt" placeholder="Tipo" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEntidadesidTipoTxt"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="codDpto" ng-model="filtro.codDpto" placeholder="Departamento" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEntidadescodDpto"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="codProv" ng-model="filtro.codProv" placeholder="Provincia" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEntidadescodProv"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="codDistr" ng-model="filtro.codDistr" placeholder="Distrito" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEntidadescodDistr"/>
+         </th>
+           <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="idCaractTxt" ng-model="filtro.idCaractTxt" placeholder="Característica" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEntidadesidCaractTxt"/>
+         </th>
+           <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="idSistAdmiTxt" ng-model="filtro.idSistAdmiTxt" placeholder="Sistema Administrativo" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEntidadesidSistAdmiTxt"/>
+         </th>
+         <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="estado" ng-model="filtro.estado" placeholder="Estado" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEntidadesestado"/>
+         </th>                    
+         </tr>
+      </thead>
+      <tbody md-body>
+         <tr class="primary triddtEntidades md-table-cuerpo" md-row md-select="dato" md-on-select="logItem" md-auto-select="options.autoSelect"   
+             ng-disabled="!dato.dtEntidadesACL.eliminar" ng-repeat-start="dato in datos">
+          <td md-cell>{{$index + 1}}</td>
+          <td class="md-title ttamnumero" data-title="Acciones" md-cell>
+             <div layout="row" layout-xs="column" layout-align="center center">
+                <md-button 
+                        ng-click="editarDtEntidades($event, dato)"
+                        ng-if="dato.dtEntidadesACL.esEditable"> 
+                    <md-icon class="md-icon-tabla-accion" md-font-set="material-icons">edit</md-icon> 
+                </md-button>
+                <md-button class="{{dato.cestado}}" ng-click="showConfirmActivar($event, dato)"
+                 ng-if="dato.dtEntidadesACL.eliminar  && dato.esEliminado">
+                    <md-icon class="md-icon-tabla-accion" md-font-set="material-icons">redo</md-icon>
+                </md-button>                 
+             </div>
+          </td>
+          <td class="tdaa1 md-table-cuerpo" data-title="ID" md-cell>
+          {{dato.idEntidad}}
+          </td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Unidad Ejecutora" md-cell hide-xs show-gt-sm>
+          {{dato.codEjec}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Razón Social" md-cell hide-xs show-gt-sm>
+          {{dato.razSocial}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Número De Ruc" md-cell hide-xs show-gt-sm>
+          {{dato.ruc}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Tipo" md-cell hide-xs show-gt-sm>
+          {{dato.idTipoTxt}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Departamento" md-cell hide-xs show-gt-sm>
+          {{dato.codDpto}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Provincia" md-cell hide-xs show-gt-sm>
+          {{dato.codProv}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Distrito" md-cell hide-xs show-gt-sm>
+          {{dato.codDistr}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Característica" md-cell hide-xs show-gt-sm>
+          {{dato.idCaractTxt}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Sistema Administrativo" md-cell hide-xs show-gt-sm>
+          {{dato.idSistAdmiTxt}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Estado" md-cell hide-xs show-gt-sm>
+          {{dato.estado}}</td>
+                     
+           </tr>
+           <tr class="secondary childiddtEntidades" ng-repeat-end></tr>
+       </tbody>
+    </table>
+  </md-table-container>
+  </div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+    <!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

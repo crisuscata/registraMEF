@@ -1,0 +1,58 @@
+<md-dialog layout-padding >
+<!-- //MPINARES 14022024 - INICIO - NUEVO HTML-->
+<md-dialog-content md-whiteframe="1" class="overflowEsconder" md-colors="{background: 'background-A100'}">
+ <form name="dtAsistenciaForm2">
+ 
+ <div layout="row" layout-aling="center start" 
+				style="font-size: 14px;">      
+        
+       		 <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2"  >
+					<md-input-container class="input-container-margen letraTexto">
+						<label>Tema</label>
+						<md-select ng-model="asistenciaTemasmodelo.idTema" ng-change="changeIdTema(asistenciaTemasmodelo.idTema)"
+							required placeholder="Seleccionar Tema" name="idTema">
+						<md-option ng-repeat="item in listaMsTemaIdTema"
+							ng-value="item.id"> {{item.valor}} </md-option> </md-select> </md-input-container>
+						
+				</div>
+					 
+ </div>
+ 
+ <div layout="row" layout-aling="center start" style="font-size: 14px;"> 
+				<div class="letraenvoltura"  
+									ng-if="dtAsistenciaModelo.editopcion < 2">
+				<md-input-container class="input-container-margen letraTexto">
+									<label>Subtema</label>
+									<md-select ng-model="asistenciaTemasmodelo.idSubtema" required
+									ng-change="changeIdSubtema(asistenciaTemasmodelo.idSubtema)"
+										placeholder="Seleccionar Subtema" name="idSubtema">
+									<md-option ng-repeat="item in listaMsSubtemaIdSubtema"
+										ng-value="item.id"> {{item.valor}} </md-option> </md-select> </md-input-container>
+									
+				</div>			
+</div>
+
+ <div layout="row" layout-aling="center start" style="font-size: 14px;"> 
+ 
+ 				<div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2"  >
+					<md-input-container class="input-container-margen letraTexto">
+					<label>Detalle</label>
+						<input id="concepto" ng-model="asistenciaTemasmodelo.detalle" required
+							style="margin-bottom: -24px;" >
+					</md-input-container>
+				</div>
+				
+</div>
+ 
+ </form>
+</md-dialog-content>
+<md-dialog-actions layout="row" layout-align="center end">
+    <md-button class="md-raised md-primary alargarBoton" ng-click="cancel()">
+      Cancelar
+    </md-button>
+    <!-- ng-disabled="tdLogisticaConformidadForm2.$invalid" -->
+    <md-button class="md-raised md-primary alargarBoton" ng-click="nuevoAsistenciaTemasmodelo($event)" >
+      Aceptar
+    </md-button>
+</md-dialog-actions>   
+</md-dialog>

@@ -1,0 +1,63 @@
+<md-dialog layout-padding flex>
+<!-- //MPINARES 14022024 - INICIO - NUEVO HTML-->
+<md-dialog-content md-whiteframe="1" class="overflowEsconder" md-colors="{background: 'background-A100'}">
+
+<md-toolbar style="background: rgb(255,255,255);" class="md-toolbar-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size">
+		<div flex="auto" >
+			<h2 md-truncate style="font-size: 17px;font-weight: 700;color: #009688;">B&uacute;squeda general</h2>
+			<h2 md-truncate style="font-size: 17px;color: rgba(0,0,0,0.87);">Ingresar el ID de registro y el tipo de servicio:</h2>
+		</div>
+	</div>
+	</md-toolbar>
+	
+ <form name="busquedaForm">
+ 
+ <div layout="row" layout-aling="center start" flex
+				style="font-size: 14px;">     
+				 
+ 				<div class="letraenvoltura"  flex >
+					
+						<md-input-container flex="50"
+										class="input-container-margen letraTexto nomarginbotottom"
+										md-no-float="true"> 
+										<label>ID del registro</label>
+										<input id="idregistro" 
+										ng-keypress="validateFormat($event)"
+										ng-model="datosBusqueda.idregistro"
+										type="number"> 
+						</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"  flex >
+					
+						<md-input-container md-no-float="true" 
+							class="input-container-margen letraTexto nomarginbotottom"
+							flex="50"> 
+							<label>Tipo de servicio</label>
+							<md-select
+							ng-model="datosBusqueda.idtiposervicio" required placeholder="Tipo de servicio"
+							name="idtiposervicio"> <md-option
+							ng-repeat="item in listaPrtParametrosIdTipoServicio"
+							ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+						<div ng-messages="busquedaForm.idtiposervicio.$error">
+							<div ng-message="required">Seleccione el Tipo de servicio.</div>
+						</div>
+						</md-input-container>
+				</div>
+       		
+					 
+ </div>
+ 
+ </form>
+</md-dialog-content>
+<md-dialog-actions layout="row" layout-align="center end">
+    
+    <md-button class="md-raised" ng-click="buscarXTipoServicio($event)" >
+      Buscar
+    </md-button>
+    <md-button class="md-raised" ng-click="cancel()">
+      Cancelar
+    </md-button>
+</md-dialog-actions>   
+</md-dialog>

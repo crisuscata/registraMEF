@@ -1,0 +1,1450 @@
+@CHARSET "UTF-8";
+
+body, html {
+	background-color: rgb(255, 255, 255) !important;
+	font-family: 'Calibri Negrita', 'Calibri Normal', Calibri !important;
+	font-size: 13px !important;
+}
+
+.md-toolbar-tools {
+	font-size: 14px !important;
+}
+
+.md-button {
+	min-height: 15px !important;
+	height: 28px;
+	line-height: 28px;
+	margin-right: 4px;
+	margin-left: 3px;
+	min-whidth: 28px !important;
+}
+
+@media ( min-width :600px) {
+	body {
+		font-size: 10px;
+	}
+	.md-button {
+		min-height: 15px !important;
+		height: 28px;
+		line-height: 28px;
+		margin-right: 4px;
+		margin-left: 3px;
+		min-whidth: 28px !important;
+		whidth: 30px !important;
+	}
+}
+
+@media ( min-width : 960px) {
+	body {
+		font-size: 12px;
+	}
+	.md-button {
+		min-height: 15px !important;
+		height: 28px;
+		line-height: 28px;
+		margin-right: 4px;
+		margin-left: 3px;
+	}
+}
+
+@media ( min-width :1200px) {
+	body {
+		font-size: 13px;
+	}
+	.md-button {
+		min-height: 15px !important;
+		height: 28px;
+		line-height: 28px;
+		margin-right: 4px;
+		margin-left: 3px;
+	}
+}
+
+.md-toolbar-size {
+	height: 35px !important;
+	min-height: 35px !important;
+	width: 100%;
+}
+
+.md-toolbar-filtro-size {
+	height: 60px !important;
+	min-height: 35px !important;
+	width: 100%;
+	background: #FFFFFF !important;
+	font-size: 11px !important;
+}
+
+.titulo-registramef {
+	font-family: 'Leelawadee Negrita', 'Leelawadee Normal', 'Leelawadee';
+	font-size: 32px !important;
+	color: #1E82AD;
+	text-align: left;
+	font-weight: bold;
+}
+
+.md-icon-tabla-accion {
+	font-size: 12px !important;
+}
+
+table.md-table th.md-column {
+	font-size: 10px !important;
+}
+
+table.md-table thead.md-head>tr.md-row {
+	height: 24px !important;
+}
+
+.md-button-borde {
+	border: #FFFFFF 1px solid !important;
+	box-sizing: border-box;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgba(255, 255, 255, 1);
+	border-radius: 5px;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	font-family: 'Calibri';
+	font-weight: 400;
+	font-style: normal;
+	color: #FFFFFF !important;
+	font-size: 13px !important;
+}
+
+.md-button-entidad {
+	border: #FFFFFF 1px solid !important;
+	box-sizing: border-box;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgba(255, 255, 255, 1);
+	border-radius: 5px;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	font-family: 'Calibri';
+	font-weight: 400;
+	font-style: normal;
+	color: #1E82AD;
+	font-size: 14px !important;
+}
+
+.md-icon-color {
+	color: #FFFFFF !important;
+	fill: rgb(255, 255, 255) !important;
+}
+
+.md-headline {
+	font-family: 'Calibri Bold', 'Calibri Regular', 'Calibri';
+	font-weight: 700;
+	color: #1E82AD;
+	font-size: 22px;
+	font-kerning: normal;
+}
+
+.md-headline-sub {
+	font-family: 'Calibri Bold', 'Calibri Regular', 'Calibri';
+	font-weight: 700;
+	color: #747B7C;
+	font-size: 16px;
+	font-kerning: normal;
+	text-align: center;
+}
+
+
+
+.legend_190 {
+	width: 190px !important;
+}
+
+fieldset {
+	margin-top: 20px !important;
+	border-radius: 5px;
+	border-width: 1px;
+	padding: 6px 6px;
+}
+
+.md-datepicker-input {
+	font-size: 13px !important;
+}
+
+button, select, html, textarea, input {
+	font-family: 'Calibri Negrita', 'Calibri Normal', Calibri !important;
+	font-size: 13px !important;
+}
+
+.noshadow {
+	box-shadow: none !important;
+}
+
+.md-whiteframe-z1 {
+	box-shadow: none !important;
+}
+
+/* MS_USUARIOS SERVICIO: LISTA DE LOS USUARIOS INTERNOS REGISTRADOS EN EL SISTEMA */
+.ttamnumero {
+	width: 5px !important;
+	max-width: 5px !important;
+	min-width: 5px !important;
+}
+
+.ttammsUsuariosidusuario {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 5px !important;
+}
+
+.ttammsUsuariosdni {
+	width: 40px !important;
+	max-width: 40px !important;
+	min-width: 5px !important;
+}
+
+.ttammsUsuariosusername {
+	width: 40px !important;
+	max-width: 40px !important;
+	min-width: 5px !important;
+}
+
+.ttammsUsuariosapellidoPaterno {
+	width: 60px !important;
+	max-width: 60px !important;
+	min-width: 5px !important;
+}
+
+.ttammsUsuariosapellidoMaterno {
+	width: 60px !important;
+	max-width: 60px !important;
+	min-width: 5px !important;
+}
+
+.ttammsUsuariosnombres {
+	width: 60px !important;
+	max-width: 60px !important;
+	min-width: 5px !important;
+}
+
+.ttammsUsuarioscorreo {
+	width: 50px !important;
+	max-width: 50px !important;
+	min-width: 5px !important;
+}
+
+.ttammsUsuariosidSistAdmiTxt {
+	width: 70px !important;
+	max-width: 70px !important;
+	min-width: 5px !important;
+}
+
+.ttammsUsuariosidSedeTxt {
+	width: 70px !important;
+	max-width: 70px !important;
+	min-width: 5px !important;
+}
+
+.ttammsUsuariosfechaModif {
+	width: 60px !important;
+	max-width: 60px !important;
+	min-width: 5px !important;
+}
+
+.ttammsUsuariosestado {
+	width: 50px !important;
+	max-width: 50px !important;
+	min-width: 5px !important;
+}
+
+.ttammsRoles {
+	width: 70px !important;
+	max-width: 70px !important;
+	min-width: 5px !important;
+}
+
+/* DT_VISITAS SERVICIO: LISTA DE LOS DATOS REGISTRADOS EN UNA VISITA */
+.ttamdtVisitasidVisita {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttamdtVisitasfechaVisita {
+	width: 70px !important;
+	max-width: 70px !important;
+	min-width: 7px !important;
+}
+
+.ttamdtVisitasidSistAdm {
+	width: 200px !important;
+	max-width: 200px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtVisitasidSedeTxt {
+	width: 150px !important;
+	max-width: 150px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtVisitasidOrigenTxt {
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtVisitasidProgramacion {
+	width: 70px !important;
+	max-width: 70px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtVisitasestado {
+	width: 50px !important;
+	max-width: 50px !important;
+	min-width: 10px !important;
+}
+
+/* MS_PAISES SERVICIO: LISTA DE LOS PAÍSES REGISTRADOS EN EL SISTEMA */
+.ttammsPaisesidpais {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttammsPaisespaisNombre {
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 100px !important;
+}
+
+.ttammsPaisesacronimo {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttammsPaisesestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+/* DT_CAPACITACION SERVICIO: LISTA DE LOS DATOS REGISTRADOS EN UNA CAPACITACIÓN */
+.ttamdtCapacitacionidCapacitacion {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttamdtCapacitacionfechaInic {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttamdtCapacitacionfechaFin {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttamdtCapacitacionnomEvento {
+	width: 1000px !important;
+	max-width: 1000px !important;
+	min-width: 1000px !important;
+}
+
+.ttamdtCapacitacionidSistAdm {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtCapacitacionidUsuinterno {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtCapacitacionflagPubli {
+	width: 38px !important;
+	max-width: 38px !important;
+	min-width: 38px !important;
+}
+
+.ttamdtCapacitacionidModalidad {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtCapacitacionidProgramacion {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtCapacitacionestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtCapacitacioncantPartic {
+	width: 5px !important;
+	max-width: 5px !important;
+	min-width: 5px !important;
+}
+
+/* TA_FERIADOS SERVICIO: TABLA EN LA QUE SE REGISTRAN TODOS LOS DIAS FERIADOS DEL AÑO */
+.ttamtaFeriadosfeFecha {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttamtaFeriadosfeDesc {
+	width: 255px !important;
+	max-width: 255px !important;
+	min-width: 255px !important;
+}
+
+.ttamtaFeriadosfeFchmod {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttamtaFeriadosfeFchcrear {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttamtaFeriadosfeEstado {
+	width: 1px !important;
+	max-width: 1px !important;
+	min-width: 1px !important;
+}
+
+/* DT_ENTIDADES SERVICIO: LISTA DE LAS ENTIDADES REGISTRADAS EN EL SISTEMA */
+.ttamdtEntidadesidEntidad {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttamdtEntidadescodEjec {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtEntidadesrazSocial {
+	width: 200px !important;
+	max-width: 200px !important;
+	min-width: 200px !important;
+}
+
+.ttamdtEntidadesruc {
+	width: 11px !important;
+	max-width: 11px !important;
+	min-width: 11px !important;
+}
+
+.ttamdtEntidadesidTipo {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtEntidadescodDpto {
+	width: 2px !important;
+	max-width: 2px !important;
+	min-width: 2px !important;
+}
+
+.ttamdtEntidadescodProv {
+	width: 2px !important;
+	max-width: 2px !important;
+	min-width: 2px !important;
+}
+
+.ttamdtEntidadescodDistr {
+	width: 2px !important;
+	max-width: 2px !important;
+	min-width: 2px !important;
+}
+
+.ttamdtEntidadesidCaract {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtEntidadesidSistAdmi {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtEntidadesestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+/* PRT_PARAMETROS SERVICIO: LISTA LOS PARAMETROS REGISTRADOS EN EL SISTEMA */
+.ttamprtParametrosidparametro {
+	width: 50px !important;
+	max-width: 50px !important;
+	min-width: 20px !important;
+}
+
+.ttamprtParametrosdescripcion {
+	width: 200px !important;
+	max-width: 200px !important;
+	min-width: 100px !important;
+}
+
+.ttamprtParametrosidpadre {
+	width: 150px !important;
+	max-width: 150px !important;
+	min-width: 10px !important;
+}
+
+.ttamprtParametrosfechaCrea {
+	width: 70px !important;
+	max-width: 70px !important;
+	min-width: 7px !important;
+}
+
+.ttamprtParametrosfechaModif {
+	width: 70px !important;
+	max-width: 70px !important;
+	min-width: 7px !important;
+}
+
+.ttamprtParametrosestado {
+	width: 50px !important;
+	max-width: 50px !important;
+	min-width: 1px !important;
+}
+
+/* DT_USUARIO_EXTERNO SERVICIO: LISTA DE LOS USUARIOS EXTERNOS REGISTRADOS EN EL SISTEMA */
+.ttamdtUsuarioExternoidUsuexterno {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttamdtUsuarioExternoaPaterno {
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 100px !important;
+}
+
+.ttamdtUsuarioExternoaMaterno {
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 100px !important;
+}
+
+.ttamdtUsuarioExternonombre {
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 100px !important;
+}
+
+.ttamdtUsuarioExternonumDocu {
+	width: 25px !important;
+	max-width: 25px !important;
+	min-width: 25px !important;
+}
+
+.ttamdtUsuarioExternocorreo {
+	width: 50px !important;
+	max-width: 50px !important;
+	min-width: 50px !important;
+}
+
+.ttamdtUsuarioExternotelefFijo {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttamdtUsuarioExternotelefCell {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttamdtUsuarioExternofechaModif {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttamdtUsuarioExternoestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+/* MS_UBIGEO SERVICIO: LISTA EL UBIGEO (DEPARTAMENTO */
+.ttammsUbigeoid {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttammsUbigeocodDpto {
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 2px !important;
+}
+
+.ttammsUbigeocodProv {
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 2px !important;
+}
+
+.ttammsUbigeocodDistr {
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 2px !important;
+}
+
+.ttammsUbigeofechaCrea {
+	width: 70px !important;
+	max-width: 70px !important;
+	min-width: 7px !important;
+}
+
+.ttammsUbigeofechaModif {
+	width: 70px !important;
+	max-width: 70px !important;
+	min-width: 7px !important;
+}
+
+.ttammsUbigeoestado {
+	width: 70px !important;
+	max-width: 70px !important;
+	min-width: 10px !important;
+}
+
+/* MS_SUBTEMA SERVICIO: LISTA DE LOS SUBTEMAS REGISTRADOS EN EL SISTEMA */
+.ttammsSubtemaidSubtema {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttammsSubtemaidTema {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsSubtemadescripcion {
+	width: 200px !important;
+	max-width: 200px !important;
+	min-width: 200px !important;
+}
+
+.ttammsSubtemafechaCrea {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttammsSubtemafechaModif {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttammsSubtemaestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+/* MS_PROYECTO_INVERSION SERVICIO: LISTA DE LOS DATOS DE PROYECTOS DE INVERSIÓN */
+.ttammsProyectoInversionidProyecto {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttammsProyectoInversioncodigo {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttammsProyectoInversionnombre {
+	width: 470px !important;
+	max-width: 470px !important;
+	min-width: 470px !important;
+}
+
+.ttammsProyectoInversionidSede {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+/* DT_AMPLIACION_FECHA SERVICIO: LISTA DE AMPLIACIONES DE LOS DÍAS DE PROGRAMACIÓN Y EJECUCION DEL SERVICIO PARA UN SISTEMA ADMINISTRATIVO */
+.ttamdtAmpliacionFechaidAutorizacion {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttamdtAmpliacionFechatipoFechaCorte {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtAmpliacionFechaidSede {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtAmpliacionFechaidSistAdmi {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtAmpliacionFechafechaInicio {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttamdtAmpliacionFechafechaFin {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttamdtAmpliacionFechafechaModif {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttamdtAmpliacionFechaestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+/* MS_SEDES SERVICIO: LISTA LAS SEDES REGISTRADAS EN EL SISTEMA */
+.ttammsSedesidSede {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttammsSedessede {
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 100px !important;
+}
+
+.ttammsSedesidGrupo {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsSedesidMacregion {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsSedessigla {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsSedescodDpto {
+	width: 2px !important;
+	max-width: 2px !important;
+	min-width: 2px !important;
+}
+
+.ttammsSedesdireccion {
+	width: 1000px !important;
+	max-width: 1000px !important;
+	min-width: 1000px !important;
+}
+
+.ttammsSedesorden {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsSedesfechaModif {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttammsSedesestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+/* DT_CONSULTAS SERVICIO: LISTA DE LOS DATOS REGISTRADOS EN UNA CONSULTA */
+.ttamdtConsultasidConsulta {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttamdtConsultasfechaConsu {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttamdtConsultasidUsuexterno {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtConsultasidSistAdm {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtConsultasidTema {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtConsultasidSubtema {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtConsultasestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+/* MS_TEMA SERVICIO: LISTA DE LOS TEMAS REGISTRADOS EN EL SISTEMA */
+.ttammsTemaidTema {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttammsTemaidSistAdmi {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsTemadescripcion {
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 100px !important;
+}
+
+.ttammsTemafechaCrea {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttammsTemafechaModif {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttammsTemaestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+/* MS_INDICADOR SERVICIO: LISTA DE LOS INDICADORES REGISTRADOS EN EL SISTEMA */
+.ttammsIndicadoridIndicador {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttammsIndicadordescripcion {
+	width: 500px !important;
+	max-width: 500px !important;
+	min-width: 500px !important;
+}
+
+.ttammsIndicadoridObjetvo {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsIndicadoridNivlstrat {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsIndicadoridFactor {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsIndicadoridFuenteinfor {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsIndicadorfechaModif {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttammsIndicadorestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+/* DT_ENCUESTA SERVICIO: LISTA DE ENCUESTAS */
+.ttamdtEncuestaidEncuesta {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttamdtEncuestatipoServicio {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtEncuestafechaInicio {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttamdtEncuestafechaFin {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttamdtEncuestaidOrigen {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtEncuestaidPrestacion {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+/* MS_LOCAL SERVICIO: LISTA DE LOS LOCALES REGISTRADOS EN EL SISTEMA */
+.ttammsLocalidLocal {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttammsLocaldescripcion {
+	width: 200px !important;
+	max-width: 200px !important;
+	min-width: 200px !important;
+}
+
+.ttammsLocaldireccion {
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 100px !important;
+}
+
+.ttammsLocalreferencia {
+	width: 200px !important;
+	max-width: 200px !important;
+	min-width: 200px !important;
+}
+
+.ttammsLocalcodDpto {
+	width: 2px !important;
+	max-width: 2px !important;
+	min-width: 2px !important;
+}
+
+.ttammsLocalcodProv {
+	width: 2px !important;
+	max-width: 2px !important;
+	min-width: 2px !important;
+}
+
+.ttammsLocalcodDistr {
+	width: 2px !important;
+	max-width: 2px !important;
+	min-width: 2px !important;
+}
+
+.ttammsLocalfechaModif {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttammsLocalestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+/* MS_META SERVICIO: LISTA DE LAS METAS CON SUS VALORES */
+.ttammsMetaidMeta {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttammsMetaannio {
+	width: 4px !important;
+	max-width: 4px !important;
+	min-width: 4px !important;
+}
+
+.ttammsMetaidTipoServicio {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsMetaidSistAdmi {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsMetaidSede {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsMetavalor {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsMetafechaCrea {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttammsMetafechaModif {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttammsMetaestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+/* MS_ALERTA SERVICIO: LISTA DE LAS ALERTAS GENERADAS EN EL SISTMA */
+.ttammsAlertaidAlerta {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttammsAlertaidCaracterst {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttammsAlertaotrosDestin {
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 100px !important;
+}
+
+.ttammsAlertadia {
+	width: 4px !important;
+	max-width: 4px !important;
+	min-width: 4px !important;
+}
+
+.ttammsAlertahora {
+	width: 4px !important;
+	max-width: 4px !important;
+	min-width: 4px !important;
+}
+
+.ttammsAlertafechaCrea {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttammsAlertafechaModif {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttammsAlertaestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+/* DT_ASISTENCIA SERVICIO: LISTA DE LOS DATOS REGISTRADOS EN UNA ASISTENCIA TECNICA */
+.ttamdtAsistenciaidAsistencia {
+	width: 20px !important;
+	max-width: 20px !important;
+	min-width: 20px !important;
+}
+
+.ttamdtAsistenciaidEntidad {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtAsistenciaidSede {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtAsistenciafechaAsistencia {
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important;
+}
+
+.ttamdtAsistenciaidUsuinterno {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtAsistenciaidSistAdm {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtAsistenciaidOrigen {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtAsistenciaidProgramacion {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+.ttamdtAsistenciaestado {
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important;
+}
+
+/* PURIBE 22012024 - INICIO*/
+.custom-tabs .md-tab {
+	float: right;
+	font-size: 11px !important;
+	text-transform: none !important;
+	font-weight: bold !important;
+	color: rgba(0, 150, 136, 1) !important;
+}
+
+.subhead {
+	width: 100px;
+	height: 66px;
+	font-family: 'Calibri Bold', 'Calibri Regular', 'Calibri';
+	font-weight: 700;
+	font-style: normal;
+	font-size: 16px;
+	color: #877474;
+	text-align: center;
+	align-items: center;
+}
+
+.TituloCard {
+	position: absolute;
+	left: 10px;
+	top: -30px;
+	background-color: rgba(244, 243, 240, 1);
+	padding: 1% 29% !important;
+	border-radius: 5px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: rgba(0, 150, 136, 1) !important;
+	font-weight: 700;
+	font-style: normal;
+	font-size: 12px;
+	align-items: center;
+	width: 100px !important;
+	height: 20px !important;
+	min-height: 20px !important;
+	min-width: 80px !important;
+	line-height: 20px;
+}
+
+/* Cambia el color del texto de las pestañas */
+.custom-tabs md-pagination-wrapper {
+	right: 0;
+	left: inherit;
+}
+
+.custom-card md-card-content {
+	height: 36px;
+}
+
+.custom-card md-card-content {
+	height: 36px;
+}
+
+.custom-card md-card-actions {
+	border-top: 1px solid #ccc;
+	height: 28px;
+}
+
+.contenido {
+	position: relative;
+	margin: 5px;
+	margin-top: 50px;
+	height: 70px;
+	width: 290px !important;
+}
+
+.custom-tabs md-tabs-wrapper {
+	border-bottom: 2px solid rgb(54 54 64/ 36%);
+}
+
+/* Cambia el color del indicador de la pestaña seleccionada */
+.custom-tabs md-ink-bar {
+	background-color: rgba(0, 150, 136, 1) !important;
+}
+
+.encabezado-card {
+	display: flex;
+	height: 20px;
+	width: 200px;
+	justify-content: left;
+	align-items: center;
+	color: rgba(0, 150, 136, 1);
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.custom-card {
+	/*border: 10px solid #ddd !important;  Ajusta el color y el grosor del borde según tus preferencias */
+	margin: 10px !important; /* Ajusta el margen según tus preferencias */
+	border-radius: 15px !important;
+}
+
+.custom-header {
+	/*border: 10px solid #ddd !important;  Ajusta el color y el grosor del borde según tus preferencias */
+	margin: 10px !important; /* Ajusta el margen según tus preferencias */
+	border-radius: 15px !important;
+	background: color #3498db;
+	color: #3498db;
+	border-bottom: 2px solid #ddd;
+}
+
+.carddemoBasicUsage .card-media {
+	background-color: #702d2d !important;
+}
+
+.alineado-izquierda {
+	text-align: left;
+	font-family: 'Calibri';
+	font-weight: 400;
+	font-style: normal;
+	color: #949494;
+	text-align: center;
+	line-height: 12px;
+	font-size: 13px;
+	margin-right: 10px;
+}
+
+/* PURIBE 22012024 - FIN*/
+
+/* MPINARES 24012023 - INICIO */
+legend {
+    background-color: #d0cccc;
+    padding: 5px 5px;
+    border-radius: 5px;
+    border-style:solid;
+    border-width:1px ;
+    border-color: #9e9ea2;   
+    font-weight: 700;
+    font-style: normal;
+    font-size: 14px;
+    color: rgba(51, 102, 102, 0.556862745098039);
+    align-items: center;
+    /* width: 150px !important; */
+    height: 20px !important;
+    min-height: 20px !important;
+    min-width: 145px !important;
+    line-height: 20px;
+}
+
+.legend_190 {
+	width: 190px !important;
+}
+
+fieldset{
+margin-top: 20px !important;
+border-radius: 5px;  
+border-width:1px;
+padding: 6px 6px;
+}
+
+.md-table-cuerpo {
+    font-size: 13px !important; /* //MPINARES 24012023 - INICIO */
+}
+
+.md-datepicker-input {
+    font-size: 13px;
+}
+
+.noshadow {
+    box-shadow: none !important;
+}
+
+.nomarginbotottom {
+    margin-bottom: 0px;
+}
+
+.md-toolbar-filtro-size {
+	height: 42px !important;
+    min-height: 42px !important;
+    width: 100%;
+    background: #FFFFFF !important;
+    font-size: 11px !important;
+}
+
+.md-button-borde-naranja {
+	box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(0, 150, 136);
+    border-radius: 5px;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    font-family: 'Calibri Bold', 'Calibri Regular', 'Calibri';
+    font-weight: 700;
+    font-style: normal;
+	font-size: 13px;
+	background-color: rgb(0, 150, 136);
+	color: rgb(255, 255, 255);
+	line-height: 26px;
+	min-height: 26px;
+}
+
+.md-button-borde-naranja:hover, .md-button-borde-naranja:focus {
+	color: rgb(255, 255, 255) !important;
+    background-color: rgb(0, 150, 136) !important;
+}
+
+.ttamdtAsistenciausuExt{
+	width: 150px !important;
+	max-width: 150px !important;
+	min-width: 150px !important; 
+} 
+
+.ttamdtAsistenciaidEntidadTxt{
+	width: 120px !important;
+	max-width: 120px !important;
+	min-width: 120px !important; 
+} 
+
+md-autocomplete-wrap {
+    box-shadow: none !important;
+}
+
+.md-dialog-container {
+    width: 900px !important;
+}
+
+.ttacheckbox{
+	width: 40px !important;
+	max-width: 40px !important;
+	min-width: 40px !important; 
+} 
+
+.ttaeditreg{
+	width: 40px !important;
+	max-width: 40px !important;
+	min-width: 40px !important; 
+} 
+
+/* MPINARES 24012023 - FIN */
+
+/* //MPINARES 14022024 - INICIO */
+.mousechange:hover {
+  cursor: pointer;
+}
+
+.md-panel-inner-wrapper {
+    position: fixed;
+    width: 273px;
+}
+
+/* //MPINARES 14022024 - FIN */
+
+/* PURIBE 29032024 - INICIO*/
+
+#pie {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background-color: #333;
+	color: white;
+	text-align: center;
+	padding: 10px 0;
+  }
+
+.badge {
+	background-color: red; /* Fondo rojo */
+	color: white; /* Texto blanco */
+	border-radius: 50%; /* Forma de círculo */
+	padding: 5px 10px; /* Espaciado interno */
+  }
+  /* PURIBE 29032024 - FIN*/

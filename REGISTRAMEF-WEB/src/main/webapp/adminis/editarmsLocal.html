@@ -1,0 +1,214 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editmsLocal()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Locales</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{msLocalModelo.XXXX}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarMsLocal()" aria-label="Salir">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">undo</md-icon>
+         <span ng-if="nuevo" hide-xs show-gt-sm>Salir</span>
+         <span ng-if="!nuevo" hide-xs show-gt-sm>Salir</span>
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarMsLocal($event)" ng-if="msLocalModelo.editopcion==1" aria-label="Grabar">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">save</md-icon>
+         <span hide-xs show-gt-sm>Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+    
+<div layout="column">
+<fieldset>
+<legend>Datos de Locales</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msLocalModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Descripción</label>    
+            <input type="text" md-maxlength="200" required name="descripcion" ng-model="msLocalModelo.descripcion"
+                   >
+           <div ng-messages="msLocalForm.descripcion.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Descripción.</div>
+            <div ng-message="maxlength">El Descripción tiene un m&aacute;ximo de 200 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msLocalModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Descripción:</div>
+            <div class="letraTexto">{{msLocalModelo.descripcion}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msLocalModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Dirección</label>    
+            <input type="text" md-maxlength="100" required name="direccion" ng-model="msLocalModelo.direccion"
+                   >
+           <div ng-messages="msLocalForm.direccion.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Dirección.</div>
+            <div ng-message="maxlength">El Dirección tiene un m&aacute;ximo de 100 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msLocalModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Dirección:</div>
+            <div class="letraTexto">{{msLocalModelo.direccion}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msLocalModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Referencia</label>    
+            <input type="text" md-maxlength="200" required name="referencia" ng-model="msLocalModelo.referencia"
+                   >
+           <div ng-messages="msLocalForm.referencia.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Referencia.</div>
+            <div ng-message="maxlength">El Referencia tiene un m&aacute;ximo de 200 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msLocalModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Referencia:</div>
+            <div class="letraTexto">{{msLocalModelo.referencia}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msLocalModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Departamento</label>    
+            <input type="text" md-maxlength="2" required name="codDpto" ng-model="msLocalModelo.codDpto"
+                   >
+           <div ng-messages="msLocalForm.codDpto.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Departamento.</div>
+            <div ng-message="maxlength">El Departamento tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msLocalModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Departamento:</div>
+            <div class="letraTexto">{{msLocalModelo.codDpto}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msLocalModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Provincia</label>    
+            <input type="text" md-maxlength="2" required name="codProv" ng-model="msLocalModelo.codProv"
+                   >
+           <div ng-messages="msLocalForm.codProv.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Provincia.</div>
+            <div ng-message="maxlength">El Provincia tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msLocalModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Provincia:</div>
+            <div class="letraTexto">{{msLocalModelo.codProv}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msLocalModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Distrito</label>    
+            <input type="text" md-maxlength="2" required name="codDistr" ng-model="msLocalModelo.codDistr"
+                   >
+           <div ng-messages="msLocalForm.codDistr.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Distrito.</div>
+            <div ng-message="maxlength">El Distrito tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msLocalModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Distrito:</div>
+            <div class="letraTexto">{{msLocalModelo.codDistr}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="msLocalModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Modificación</label>
+            <md-datepicker required ng-model="msLocalModelo.fechaModifJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msLocalModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Modificación:</div>
+            <div class="letraTexto">{{msLocalModelo.fechaModif}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msLocalModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Estado</label>    
+            <input type="number" md-maxlength="10" required name="estado" ng-model="msLocalModelo.estado"
+                   >
+           <div ng-messages="msLocalForm.estado.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Estado.</div>
+            <div ng-message="maxlength">El Estado tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msLocalModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Estado:</div>
+            <div class="letraTexto">{{msLocalModelo.estado}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="msLocalModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Sede</label>
+            <md-select ng-model="msLocalModelo.idSede" ng-change="changeIdSede()" required
+                       name="idSede"
+                       >
+             <md-option ng-repeat="item in listaMsSedesIdSede" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="msLocalForm.idSede.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msLocalModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Sede:</div>
+            <div class="letraTexto">{{msLocalModelo.idSedeTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msLocalModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>País</label>    
+            <input type="number" md-maxlength="10" required name="idpais" ng-model="msLocalModelo.idpais"
+                   >
+           <div ng-messages="msLocalForm.idpais.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el País.</div>
+            <div ng-message="maxlength">El País tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msLocalModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">País:</div>
+            <div class="letraTexto">{{msLocalModelo.idpais}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

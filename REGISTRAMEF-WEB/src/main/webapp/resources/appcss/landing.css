@@ -1,0 +1,199 @@
+
+
+/* *************************** /MPINARES 29092023 - INICIO ************************************************************ */
+
+#textlanding {
+    font-family: 'Calibri Bold', 'Calibri Regular', 'Calibri';
+    font-weight: 700;
+    font-size: 20px;
+    color: #009688;
+}
+
+
+#backgroundlanding {
+    width: 215px;
+    height: 31px;
+    background-color: rgba(244, 243, 240, 1);
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(0, 150, 136, 1);
+    border-radius: 10px;
+}
+
+#backgroundbodylanding {
+    width: 215px;
+    height: 122px;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #d1c8c8;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+#backgroundsubbody {
+    width: 214px;
+    height: 91px;
+    box-sizing: border-box;
+    border-bottom: solid;
+    border-bottom-color: #d1c8c8;
+    border-bottom-width: 1px;
+    display: flex;
+}
+
+#backgroundbodybottom {
+    display: flex;
+}
+
+#fonthistorial {
+    font-family: 'Calibri';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px;
+    color: #949494;
+    width: 139px;
+    height: 33px;
+    margin-top: 6px;
+    text-align: left;
+    margin-left: 15px;
+}
+
+#topIconarrow {
+	margin-top: 6px;
+}
+
+
+
+
+#u215 {
+    border-width: 0px;
+    left: 173px;
+    top: 3px;
+    width: 24px;
+    height: 24px;
+}
+
+#widhtCategoria {
+    width: 139px;
+    font-family: 'Calibri Bold', 'Calibri Regular', 'Calibri';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 15px;
+    line-height: 15px;
+    margin-top: 20px;
+    margin-left: 10px;
+    text-align: initial;
+}
+
+#numberCategoria {
+    width: 71px;
+    height: 66px;
+    font-family: 'Calibri Bold', 'Calibri Regular', 'Calibri';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 48px;
+    color: #1E1E1E;
+    text-align: center;
+    align-items: end;
+}
+
+#solesCategoria {
+    width: 100px;
+    height: 66px;
+    font-family: 'Calibri Bold', 'Calibri Regular', 'Calibri';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 18px;
+    color: #1E1E1E;
+    text-align: center;
+    align-items: center;
+}
+
+#detailCategoria {
+    dfont-family: 'Calibri';
+    font-weight: 400;
+    font-style: normal;
+    color: #949494;
+    text-align: center;
+    line-height: 12px;
+    font-size: 13px;
+    margin-right: 10px;
+}
+
+#itemright {
+	text-align: -webkit-right;
+}
+
+#legendFiltro {
+    padding: 5px 5px;
+    font-family: 'Calibri Bold', 'Calibri Regular', 'Calibri';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 13px;
+    color: #1E82AD;
+    text-align: center;
+    background-color: transparent;
+    border-style: hidden;
+    margin-right: auto;
+    min-width: 100px !important;
+    width: 100px !important;
+}
+
+#fieldsetfiltro{
+	margin-top: 11px !important;
+    border-radius: 5px;
+    border-width: 1px;
+    padding: 6px 6px;
+    margin-bottom: 18px;
+    width: 100%;
+    height: 90px;
+    display: flex;
+}
+
+#fontfiltro{
+	font-family: 'Calibri';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px;
+    color: #9E9E9E;
+    margin-left: 18px;
+}
+
+.md-datepicker-input-container {
+    width: 70px;
+}
+
+md-input-container .md-input {
+	font-size: 13px;
+	color: #9E9E9E;
+	border-style: hidden;
+}
+
+.md-default-theme .md-datepicker-triangle-button .md-datepicker-expand-triangle, .md-datepicker-triangle-button .md-datepicker-expand-triangle {
+	margin-left: 10px;
+}
+
+._md-datepicker-floating-label > md-datepicker .md-datepicker-input-container {
+    border: none;
+    margin-left: -33px;
+}
+
+#fontSede{
+	font-family: 'Calibri';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 13px;
+    color: #363640;
+    line-height: normal;
+}
+
+
+/* *********************** //MPINARES 29092023 - FIN **************************************************************** */
+
+/* //MPINARES 09102023 - INICIO */
+#marginLeft20{
+	margin-left: 20px;
+}
+
+/* //MPINARES 09102023 - FIN */

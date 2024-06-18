@@ -1,0 +1,190 @@
+<div layout="column" layout-align="start stretch" data-ng-init="loaddtEncuestas()">
+
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size">
+	 <h2 flex md-truncate md-colors="{color: 'background-A100'}">Lista De Encuestas</h2>
+         <md-button class="md-button-borde md-sm"
+			ng-click="showConfirmLista($event)" aria-label="Anular">
+         <md-icon md-svg-icon="resources/icons/delete_forever.svg"
+            class="md-icon-color" aria-label="Delete Forever"></md-icon> 
+            <span hide-xs show-gt-sm>Anular</span>
+         </md-button>
+         <md-button class="md-button-borde md-sm" 
+            ng-href="{{descargar()}}" target="_blank" aria-label="Exportar"> 
+            <md-icon md-svg-icon="resources/icons/system_update_alt.svg"
+            class="md-icon-color" aria-label="System Update Alt"></md-icon> 
+            <span hide-xs show-gt-sm>Exportar</span>
+         </md-button>
+	</div>
+</md-toolbar>
+    
+<!-- Filtro -->
+<md-toolbar md-colors="{background: 'background-50'}" class="md-toolbar-filtro-size">
+	
+        <div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="start center"
+          ng-hide="showSearchBarDiv"
+         >
+            
+            <div class="tamaDivFiltro">
+            <md-button aria-label="Nuevo Encuestas" ng-click="nuevoDtEncuesta()" ng-if="creadtEncuesta" 
+              class="md-button-borde" md-colors="{background: 'primary-900'}">
+              <md-icon md-svg-icon="resources/icons/docs_add_on.svg" 
+              class="md-icon-color" aria-label="Docs Add On"></md-icon>  
+              <span hide-xs show-gt-sm>Crear Encuestas</span>
+            </md-button>
+            </div>
+            
+            <div class="tamaDivFiltro" hide-xs show-gt-sm>
+            <label>N° de Encuestas:</label>
+            <md-input-container class="container_margen-top"> 
+               <input type="text" name="idEncuesta" ng-model="filtro.idEncuesta" /> 
+            </md-input-container>
+            </div>
+            
+            <div class="tamaDivFiltro" hide-xs show-gt-sm> 
+            <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                       ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
+                <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">search</md-icon>
+                <span>Buscar</span>
+            </md-button>
+            </div>
+    
+            <div class="tamaDivFiltro" show-xs hide-gt-xs> 
+            <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                       ng-click="showSearchBarDiv = true" aria-label="BUSCAR"> 
+                <md-icon md-svg-icon="resources/icons/tornado.svg" ng-class="md-icon-color" class="md-icon-color" aria-label="tornado"></md-icon> 
+            </md-button>
+            </div>
+        </div>
+    
+        <div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" 
+	layout="row" layout-align="start center" ng-show="showSearchBarDiv" 
+	show-sm show-md hide-gt-md
+	>
+	
+            <div class="tamaDivFiltro">
+            <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                    ng-click="showSearchBarDiv = false" aria-label="RETROCEDER"> 
+                <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">back</md-icon>
+            </md-button>
+            </div>
+    
+            <div class="tamaDivFiltro">
+            <label>N° de Encuestas:</label>
+            <md-input-container class="container_margen-top"> 
+               <input type="text" name="idEncuesta" ng-model="filtro.idEncuesta" /> 
+            </md-input-container>
+            </div>
+    
+            <div class="tamaDivFiltro"> 
+                <md-button class="md-button-borde" md-colors="{background: 'primary-900'}" 
+                           ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
+                    <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">search</md-icon>
+                </md-button>
+            </div>
+
+	</div>
+</md-toolbar>
+<!-- FIN Filtro -->
+<md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                  md-total="{{total}}" md-page-select="options.pageSelect" 
+                  md-boundary-links="options.boundaryLinks"
+                  md-on-paginate="logPagination"
+                  style="margin-bottom: -20px !important;"
+                  > 
+            </md-table-pagination>
+<md-divider></md-divider>
+  <md-table-container>
+    <table resize md-table md-row-select="options.rowSelection" multiple="{{options.multiSelect}}" 
+           ng-model="selected" md-progress="promise">
+      <thead id="tablewidth" ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="logOrder">
+         <tr md-row class="md-table-head-label">
+           <th class="md-title ttamnumero" md-column><span>N&deg;</span></th>
+           <th md-column class="md-title ttamnumero">&nbsp;</th>
+           <th class="md-title ttamdtEncuestaidEncuesta" md-column md-order-by="idEncuesta">
+           <span>ID</span></th>  
+           <th class="md-title ttamdtEncuestatipoServicioTxt" md-column md-order-by="tipoServicioTxt" hide-xs show-gt-sm>
+           <span>Tipo De Servicio</span></th>
+           <th class="md-title ttamdtEncuestafechaInicio" md-column md-order-by="fechaInicio" hide-xs show-gt-sm>
+           <span>Fecha De Inicio</span></th>
+           <th class="md-title ttamdtEncuestafechaFin" md-column md-order-by="fechaFin" hide-xs show-gt-sm>
+           <span>Fecha Fin</span></th>
+           <th class="md-title ttamdtEncuestaidOrigenTxt" md-column md-order-by="idOrigenTxt" hide-xs show-gt-sm>
+           <span>Origen Del Servicio</span></th>
+           <th class="md-title ttamdtEncuestaidPrestacionTxt" md-column md-order-by="idPrestacionTxt" hide-xs show-gt-sm>
+           <span>Prestación De Servicio</span></th>
+                      
+         </tr>
+         <tr md-row class="md-table-head-order">
+         <th md-column>&nbsp;</th>
+         <th md-column>&nbsp;</th>
+         <th md-column> 
+            <input type="text" name="ID" ng-model="filtro.idEncuesta" placeholder="ID" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEncuestaidEncuesta"/>
+         </th>
+           
+           <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="tipoServicioTxt" ng-model="filtro.tipoServicioTxt" placeholder="Tipo De Servicio" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEncuestatipoServicioTxt"/>
+         </th><th md-column hide-xs show-gt-sm> 
+            <input type="text" name="fechaInicio" ng-model="filtro.fechaInicio" placeholder="yyyy-mm-dd" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEncuestafechaInicio"/>
+         </th><th md-column hide-xs show-gt-sm> 
+            <input type="text" name="fechaFin" ng-model="filtro.fechaFin" placeholder="yyyy-mm-dd" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEncuestafechaFin"/>
+         </th>
+           <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="idOrigenTxt" ng-model="filtro.idOrigenTxt" placeholder="Origen Del Servicio" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEncuestaidOrigenTxt"/>
+         </th>
+           <th md-column hide-xs show-gt-sm> 
+            <input type="text" name="idPrestacionTxt" ng-model="filtro.idPrestacionTxt" placeholder="Prestación De Servicio" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtEncuestaidPrestacionTxt"/>
+         </th>                    
+         </tr>
+      </thead>
+      <tbody md-body>
+         <tr class="primary triddtEncuesta md-table-cuerpo" md-row md-select="dato" md-on-select="logItem" md-auto-select="options.autoSelect"   
+             ng-disabled="!dato.dtEncuestaACL.eliminar" ng-repeat-start="dato in datos">
+          <td md-cell>{{$index + 1}}</td>
+          <td class="md-title ttamnumero" data-title="Acciones" md-cell>
+             <div layout="row" layout-xs="column" layout-align="center center">
+                <md-button 
+                        ng-click="editarDtEncuesta($event, dato)"
+                        ng-if="dato.dtEncuestaACL.esEditable"> 
+                    <md-icon class="md-icon-tabla-accion" md-font-set="material-icons">edit</md-icon> 
+                </md-button>
+                <md-button class="{{dato.cestado}}" ng-click="showConfirmActivar($event, dato)"
+                 ng-if="dato.dtEncuestaACL.eliminar  && dato.esEliminado">
+                    <md-icon class="md-icon-tabla-accion" md-font-set="material-icons">redo</md-icon>
+                </md-button>                 
+             </div>
+          </td>
+          <td class="tdaa1 md-table-cuerpo" data-title="ID" md-cell>
+          {{dato.idEncuesta}}
+          </td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Tipo De Servicio" md-cell hide-xs show-gt-sm>
+          {{dato.tipoServicioTxt}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Fecha De Inicio" md-cell hide-xs show-gt-sm>
+          {{formatDMY(dato.fechaInicio)}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Fecha Fin" md-cell hide-xs show-gt-sm>
+          {{formatDMY(dato.fechaFin)}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Origen Del Servicio" md-cell hide-xs show-gt-sm>
+          {{dato.idOrigenTxt}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Prestación De Servicio" md-cell hide-xs show-gt-sm>
+          {{dato.idPrestacionTxt}}</td>
+                     
+           </tr>
+           <tr class="secondary childiddtEncuesta" ng-repeat-end></tr>
+       </tbody>
+    </table>
+  </md-table-container>
+  </div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+    <!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

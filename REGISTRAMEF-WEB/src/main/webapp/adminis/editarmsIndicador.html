@@ -1,0 +1,192 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editmsIndicador()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Indicadores</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{msIndicadorModelo.XXXX}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarMsIndicador()" aria-label="Salir">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">undo</md-icon>
+         <span ng-if="nuevo" hide-xs show-gt-sm>Salir</span>
+         <span ng-if="!nuevo" hide-xs show-gt-sm>Salir</span>
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarMsIndicador($event)" ng-if="msIndicadorModelo.editopcion==1" aria-label="Grabar">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">save</md-icon>
+         <span hide-xs show-gt-sm>Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+    
+<div layout="column">
+<fieldset>
+<legend>Datos de Indicadores</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-xs="column" layout-aling="center start" flex>
+        <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Descripción</label>            
+            <textarea ng-model="msIndicadorModelo.descripcion" md-maxlength="500" rows="5" md-select-on-focus
+                      ></textarea>
+            <div ng-messages="msIndicadorForm.descripcion.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Descripción.</div>
+            <div ng-message="maxlength">El Descripción tiene un m&aacute;ximo de 500 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel">Descripción:</div>
+            <div class="letraTexto">{{msIndicadorModelo.descripcion}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Objetivo</label>
+            <md-select ng-model="msIndicadorModelo.idObjetvo" ng-change="changeIdObjetvo()" required
+                       name="idObjetvo"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdObjetvo" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="msIndicadorForm.idObjetvo.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Objetivo:</div>
+            <div class="letraTexto">{{msIndicadorModelo.idObjetvoTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Nivel Estratégico</label>
+            <md-select ng-model="msIndicadorModelo.idNivlstrat" ng-change="changeIdNivlstrat()" required
+                       name="idNivlstrat"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdNivlstrat" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="msIndicadorForm.idNivlstrat.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Nivel Estratégico:</div>
+            <div class="letraTexto">{{msIndicadorModelo.idNivlstratTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Factor</label>
+            <md-select ng-model="msIndicadorModelo.idFactor" ng-change="changeIdFactor()" required
+                       name="idFactor"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdFactor" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="msIndicadorForm.idFactor.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Factor:</div>
+            <div class="letraTexto">{{msIndicadorModelo.idFactorTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fuente De Información</label>
+            <md-select ng-model="msIndicadorModelo.idFuenteinfor" ng-change="changeIdFuenteinfor()" required
+                       name="idFuenteinfor"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdFuenteinfor" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="msIndicadorForm.idFuenteinfor.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Fuente De Información:</div>
+            <div class="letraTexto">{{msIndicadorModelo.idFuenteinforTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Modificación</label>
+            <md-datepicker required ng-model="msIndicadorModelo.fechaModifJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Modificación:</div>
+            <div class="letraTexto">{{msIndicadorModelo.fechaModif}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Estado</label>    
+            <input type="number" md-maxlength="10" required name="estado" ng-model="msIndicadorModelo.estado"
+                   >
+           <div ng-messages="msIndicadorForm.estado.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Estado.</div>
+            <div ng-message="maxlength">El Estado tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Estado:</div>
+            <div class="letraTexto">{{msIndicadorModelo.estado}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex>
+        <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fórmula</label>            
+            <textarea ng-model="msIndicadorModelo.formula" md-maxlength="500" rows="5" md-select-on-focus
+                      ></textarea>
+            <div ng-messages="msIndicadorForm.formula.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Fórmula.</div>
+            <div ng-message="maxlength">El Fórmula tiene un m&aacute;ximo de 500 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msIndicadorModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel">Fórmula:</div>
+            <div class="letraTexto">{{msIndicadorModelo.formula}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

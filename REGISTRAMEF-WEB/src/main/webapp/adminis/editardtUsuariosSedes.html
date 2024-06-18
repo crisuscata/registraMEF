@@ -1,0 +1,78 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editdtUsuariosSedes()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Sedes De Usuarios</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{dtUsuariosSedesModelo.XXX}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarDtUsuariosSedes()" aria-label="Salir">
+<!--          <md-icon md-font-set="material-icons">undo</md-icon>  -->
+         <span ng-if="nuevo">Salir</span>
+         <span ng-if="!nuevo">Salir</span>   
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarDtUsuariosSedes($event)" 
+       ng-if="dtUsuariosSedesModelo.editopcion==1" aria-label="Grabar">
+<!--          <md-icon md-font-set="material-icons">save</md-icon>  -->
+         <span >Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+
+<div layout="column">
+<fieldset>
+<legend>Datos de Sedes De Usuarios</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuariosSedesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Sede</label>    
+            <input type="number" md-maxlength="10" required name="idSede" ng-model="dtUsuariosSedesModelo.idSede"
+                   >
+           <div ng-messages="dtUsuariosSedesForm.idSede.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Sede.</div>
+            <div ng-message="maxlength">El Sede tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuariosSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Sede:</div>
+            <div class="letraTexto">{{dtUsuariosSedesModelo.idSede}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuariosSedesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Usuario</label>    
+            <input type="number" md-maxlength="10" required name="idusuario" ng-model="dtUsuariosSedesModelo.idusuario"
+                   >
+           <div ng-messages="dtUsuariosSedesForm.idusuario.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Usuario.</div>
+            <div ng-message="maxlength">El Usuario tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuariosSedesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Usuario:</div>
+            <div class="letraTexto">{{dtUsuariosSedesModelo.idusuario}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

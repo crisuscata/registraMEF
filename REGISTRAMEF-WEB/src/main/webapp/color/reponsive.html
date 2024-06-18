@@ -1,0 +1,96 @@
+<html>
+<head>
+<base href="/registramef/" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="resources/js/angular.js"></script>
+<script src="resources/js/angular-animate.js"></script>
+<script src="resources/js/angular-aria.js"></script>
+<script src="resources/js/angular-material.js"></script>
+<script src="resources/js/angular-messages.js"></script>
+<script src="resources/js/md-data-table.js"></script>
+<script src="resources/js/angular-route.js"></script>
+
+<link href="resources/css/angular-material.css" rel="stylesheet" type="text/css" />
+<link href="resources/font/material-icons.css" rel="stylesheet" type="text/css" />
+<style>
+ .header md-toolbar md-icon.md-default-theme { 
+   color: white;  
+   }
+  .panel {
+    padding: 50px 10px;
+    text-align: center;
+    margin: 10px 0px;
+    border: 1px solid #ccc;
+    font-size: 25px;
+}  
+</style>
+</head>
+<body>
+<div ng-controller="AppCtrl" class="header" ng-app="MyAppTest">
+<md-toolbar>
+      <div class="md-toolbar-tools" ng-hide="showSearchBarDiv">
+        <md-button class="md-icon-button" aria-label="Icon">
+          <md-tooltip>Icon</md-tooltip>
+          <md-icon class="md-default-theme" md-svg-icon="resources/icons/fb.svg"></md-icon>
+        </md-button>
+        <h2>
+          <span>Heading</span>
+        </h2>
+        <md-input-container md-no-float class="md-accent" flex="50" style="padding-bottom:0px;margin-left:25px" show-gt-md hide-sm hide-md>
+           <md-icon style="color:wheat" class="material-icons">&#xE8B6;</md-icon>
+           <input ng-model="searchInput" placeholder="Search here" style="color:wheat;padding-left:25px;margin-left:5px">
+        </md-input-container>
+        <span flex></span>
+        <md-button class="md-icon-button" hide-gt-md show-sm show-md ng-click="showSearchBarDiv = true">
+          <md-tooltip>Search</md-tooltip>
+          <img src="resources/imagen/search.png" style="width:24px;height:24px;"/>
+        </md-button>
+        <md-button class="md-icon-button" show-gt-sm hide-sm>
+          <md-tooltip>Pen</md-tooltip>
+          <img src="resources/imagen/pen.png" style="width:24px;height:24px;"/>
+        </md-button>
+        <md-button class="md-icon-button" show-gt-sm hide-sm>
+          <md-tooltip>Messages</md-tooltip>
+          <img src="resources/imagen/messages.png" style="width:24px;height:24px;"/>
+        </md-button>
+        <md-button class="md-icon-button" show-gt-sm hide-sm>
+          <md-tooltip>User</md-tooltip>
+          <img src="resources/imagen/user.png" style="width:24px;height:24px;"/>
+        </md-button>
+        <md-button class="md-icon-button" show-gt-sm hide-sm>
+          <md-tooltip>Settings</md-tooltip>
+          <img src="resources/imagen/settings.png" style="width:24px;height:24px;"/>
+        </md-button>
+        <md-button class="md-icon-button" hide-gt-sm show-sm>
+          <md-tooltip>Menu</md-tooltip>
+          <img src="resources/imagen/menu.png" style="width:24px;height:24px;"/>
+        </md-button>
+      </div>
+      <div layout="row" class="md-toolbar-tools" show-sm show-md hide-gt-md ng-show="showSearchBarDiv">
+        <md-button class="md-icon-button" ng-click="showSearchBarDiv = false">
+          <img src="resources/imagen/back.png" style="width:24px;height:24px;"/>
+        </md-button>
+        <md-input-container flex="80" md-no-float class="md-accent" style="padding-bottom:0px;">
+           <md-icon style="color:wheat" class="material-icons">&#xE8B6;</md-icon>
+           <input ng-model="searchInput" placeholder="Search here" style="color:wheat;padding-left:25px;margin-left:5px">
+        </md-input-container>
+        <span flex></span>
+        <md-button class="md-icon-button">
+          <img src="resources/imagen/search.png" style="width:24px;height:24px;"/>
+        </md-button>
+      </div>
+</md-toolbar>
+<div layout="row">
+       <div class="panel" flex="20" flex-md="30" show-gt-sm hide-sm>Left Side Panel</div>
+       <div class="panel" flex="60" flex-sm="100" flex-md="70">News Feed</div>
+       <div class="panel" flex="20" show-gt-md hide-sm hide-md>Right Side Panel</div>
+</div>
+</div>
+<script>
+angular.module('MyAppTest', ['ngMaterial'])
+.controller('AppCtrl', function($scope, $mdSidenav) {
+	
+});
+</script>
+</body>
+</html>

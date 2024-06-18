@@ -1,0 +1,57 @@
+<div md-whiteframe="6" layout="column" ng-controller="tituloCtrl as ctrl" data-ng-init="inicializacion()" >
+<div layout="row" layout-align="space-between center" hide-xs show-gt-sm>   
+   <div class="titulo-registramef">REGISTRAMEF</div>
+   <div layout="column" layout-align="center center" flex="55">
+   <div class="md-headline-sub">
+         Bienvenido(a): <b>{{msUsuariosPerfilJS.nombrecompleto}}</b>
+   </div>
+      <div class="md-headline-sub">
+         Sistema administrativo: <b>{{msUsuariosPerfilJS.idunidadTxt}}</b>
+   </div>
+   <div class="md-headline-sub">
+         Sede: <b>{{msUsuariosPerfilJS.sede}}</b>
+   </div>
+   </div>
+   <div layout="row" layout-align="center center" flex>
+   <img src="resources/imagen/u14-1.png" style="width: 180px; height: 50px;"/>
+   <!--    //MPINARES 14022024 - INICIO -->
+      <md-button class="md-icon-button md-primary" aria-label="busqueda" ng-click="buscarServicio($event)">
+        <md-icon md-font-set="material-icons">search</md-icon>
+    </md-button>
+<!--     //MPINARES 14022024 - FIN -->
+      <md-button class="md-primary" id="noticampana"  aria-label="notifications"
+   ng-click="ctrl.showdlgNoti($event,'noticampana')">
+        <md-icon md-font-set="material-icons">notifications_none</md-icon>
+        <span class="badge">{{ ctrl.contadorNotificaciones }}</span> <!-- Contador aquí -->
+        <!--PURIBE 29032024 FIN-->
+        <!--PURIBE 20012024 FIN-->
+<!--         <span ng-class="getClassNotifica()">{{getTotalNotifica()}}</span> -->
+    </md-button>
+   </div>       
+</div>
+<div layout="row" layout-align="space-between center" show-xs hide-gt-xs>   
+   <div layout="column" layout-align="center center" flex>
+   <div layout="row" layout-align="space-between center">
+   <div class="titulo-registramef">REGISTRAMEF</div>
+   <div layout="row" layout-align="center center" flex>
+   <md-button class="md-icon-button md-primary" aria-label="notifications">
+        <md-icon md-font-set="material-icons">notifications_none</md-icon>
+    </md-button>
+    <md-button class="md-icon-button md-primary" aria-label="notifications"
+      ng-href="paginas/listat600.html"
+    >
+        <md-icon md-font-set="material-icons">menu</md-icon>
+    </md-button>
+   </div>
+   </div>   
+   <div layout="column" layout-align="center center" flex>
+   <div class="md-headline-sub">
+         Bienvenido(a): <b>{{msUsuariosPerfilJS.nombrecompleto}}</b>
+   </div>
+   <div class="md-headline-sub">
+         Sede: <b>{{msUsuariosPerfilJS.sede}}</b>
+   </div>
+   </div>
+   </div>          
+</div>
+</div>

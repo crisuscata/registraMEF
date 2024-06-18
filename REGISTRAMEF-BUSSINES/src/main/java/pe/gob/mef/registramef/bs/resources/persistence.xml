@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+	<persistence-unit name="persistencia-jpa"
+		transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>pe.gob.mef.registramef.bs.domain.DtAmpliacionFecha</class>
+<class>pe.gob.mef.registramef.bs.domain.DtAnexo</class>
+<class>pe.gob.mef.registramef.bs.domain.DtAsistencia</class>
+<class>pe.gob.mef.registramef.bs.domain.DtAsistenciaProyecto</class>
+<class>pe.gob.mef.registramef.bs.domain.DtAsistenciaTemas</class>
+<class>pe.gob.mef.registramef.bs.domain.DtAsistenciaUsuexternos</class>
+<class>pe.gob.mef.registramef.bs.domain.DtCapacitacion</class>
+<class>pe.gob.mef.registramef.bs.domain.DtCapaEntidades</class>
+<class>pe.gob.mef.registramef.bs.domain.DtCapaProyecto</class>
+<class>pe.gob.mef.registramef.bs.domain.DtCapaPublico</class>
+<class>pe.gob.mef.registramef.bs.domain.DtCapaTemas</class>
+<class>pe.gob.mef.registramef.bs.domain.DtCapaUsuexternos</class>
+<class>pe.gob.mef.registramef.bs.domain.DtCargosUsuexter</class>
+<class>pe.gob.mef.registramef.bs.domain.DtConsultas</class>
+<class>pe.gob.mef.registramef.bs.domain.DtConsultasProyecto</class>
+<class>pe.gob.mef.registramef.bs.domain.DtEncuesta</class>
+<class>pe.gob.mef.registramef.bs.domain.DtEncuestaRespuesta</class>
+<class>pe.gob.mef.registramef.bs.domain.DtEntidades</class>
+<class>pe.gob.mef.registramef.bs.domain.DtEntidadesUsuexternos</class>
+<class>pe.gob.mef.registramef.bs.domain.DtEntidadSedes</class>
+<class>pe.gob.mef.registramef.bs.domain.DtEntidadSisAdmin</class>
+<class>pe.gob.mef.registramef.bs.domain.DtUsuarioExterno</class>
+<class>pe.gob.mef.registramef.bs.domain.DtUsuariosSedes</class>
+<class>pe.gob.mef.registramef.bs.domain.DtVisitas</class>
+<class>pe.gob.mef.registramef.bs.domain.DtVisitasProyecto</class>
+<class>pe.gob.mef.registramef.bs.domain.DtVisitasTemas</class>
+<class>pe.gob.mef.registramef.bs.domain.DtVisitasUsuexternos</class>
+<class>pe.gob.mef.registramef.bs.domain.DtVisitasUsuinternos</class>
+<class>pe.gob.mef.registramef.bs.domain.MsAlerta</class>
+<class>pe.gob.mef.registramef.bs.domain.MsAlertaCargoUser</class>
+<class>pe.gob.mef.registramef.bs.domain.MsIndicador</class>
+<class>pe.gob.mef.registramef.bs.domain.MsLocal</class>
+<class>pe.gob.mef.registramef.bs.domain.MsMeta</class>
+<class>pe.gob.mef.registramef.bs.domain.MsPaises</class>
+<class>pe.gob.mef.registramef.bs.domain.MsProyectoInversion</class>
+<class>pe.gob.mef.registramef.bs.domain.MsRoles</class>
+<class>pe.gob.mef.registramef.bs.domain.MsSedes</class>
+<class>pe.gob.mef.registramef.bs.domain.MsSisAdmistrativo</class>
+<class>pe.gob.mef.registramef.bs.domain.MsSubtema</class>
+<class>pe.gob.mef.registramef.bs.domain.MsTema</class>
+<class>pe.gob.mef.registramef.bs.domain.MsUbigeo</class>
+<class>pe.gob.mef.registramef.bs.domain.MsUbigeoId</class>
+<class>pe.gob.mef.registramef.bs.domain.MsUsuarios</class>
+<class>pe.gob.mef.registramef.bs.domain.PrtParametros</class>
+<class>pe.gob.mef.registramef.bs.domain.TaFeriados</class>
+		<exclude-unlisted-classes />
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
+			<property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy" />
+			<property name="hibernate.connection.charSet" value="UTF-8" />
+			<property name="hibernate.validator.apply_to_ddl" value="false" />
+			<property name="hibernate.validator.autoregister_listeners"
+				value="false" />
+			<property name="hibernate.show_sql" value="false" />
+			<property name="hibernate.default_schema" value="REGISTRAMEF" />
+			<property name="hibernate.connection.release_mode" value="auto" />
+			<property name="hibernate.current_session_context_class" value="jta" />
+		</properties>
+	</persistence-unit>
+</persistence>

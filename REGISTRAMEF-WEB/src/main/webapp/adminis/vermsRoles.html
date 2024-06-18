@@ -1,0 +1,111 @@
+<div layout="column" layout-align="start stretch" data-ng-init="loadmsRoless()">
+
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size">
+	 <h2 flex md-truncate md-colors="{color: 'background-A100'}">Lista De Los Roles Asignados A Los Usuarios Del Sistema</h2>
+	 <md-button aria-label="Nuevo Roles" ng-click="nuevoMsRoles()" ng-if="creamsRoles" class="md-button-borde md-sm">
+             Nuevo Roles
+         </md-button>
+	</div>
+</md-toolbar>    
+    
+<!-- Filtro -->
+<md-toolbar class="md-toolbar-filtro-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="space-between center">
+            <div class="tamaDivFiltro">
+            <label>N° de Roles:</label>
+            <md-input-container class="container_margen-top"> 
+               <input type="text" name="idrol" ng-model="filtro.idrol" /> 
+            </md-input-container>
+            </div>
+            <div class="tamaDivFiltro"> 
+            <md-button class="md-button-borde-naranja md-sm" ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
+                <span>BUSCAR</span>
+            </md-button>
+            </div>
+            <div class="tamaDivFiltro">
+            <md-button class="md-button-borde-naranja md-sm" ng-href="{{descargarvista($event)}}" target="_blank" aria-label="DESCARGAR">
+            <span>DESCARGAR</span> </md-button>
+            </div>
+            <div class="tamaDivFiltro">
+            <md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                  md-total="{{total}}" md-page-select="options.pageSelect" 
+                  md-boundary-links="options.boundaryLinks"
+                  md-on-paginate="logPagination"> 
+            </md-table-pagination>
+            </div>
+	</div>
+</md-toolbar>
+<!-- FIN Filtro -->
+<md-divider style="margin-top: 20px;"></md-divider>
+  <md-table-container>
+    <table resize md-table md-row-select="options.rowSelection" multiple="{{options.multiSelect}}" 
+           ng-model="selected" md-progress="promise">
+      <thead id="tablewidth" ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="logOrder">
+         <tr md-row class="md-table-head-label">
+           <th class="md-title ttamnumero" md-column><span>N&deg;</span></th>
+           <th class="md-title ttammsRolesidrol" md-column md-order-by="idrol">
+           <span>ID</span></th>  
+           <th class="md-title ttammsRolesusername" md-column md-order-by="username">
+           <span>Nombre Corto De Usuario</span></th>
+           <th class="md-title ttammsRolesrol" md-column md-order-by="rol">
+           <span>Rol</span></th>
+           
+           <th class="md-title ttamblanco" md-column><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
+         </tr>
+         <tr md-row class="md-table-head-order">
+         <th md-column>&nbsp;</th>     
+         <th md-column> 
+            <input type="text" name="ID" ng-model="filtro.idrol" placeholder="ID" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttammsRolesidrol"/>
+         </th>
+           
+         <th md-column> 
+            <input type="text" name="username" ng-model="filtro.username" placeholder="Nombre Corto De Usuario" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttammsRolesusername"/>
+         </th>
+         <th md-column> 
+            <input type="text" name="rol" ng-model="filtro.rol" placeholder="Rol" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttammsRolesrol"/>
+         </th>         
+           <th md-column>&nbsp;</th>
+         </tr>
+      </thead>
+      <tbody md-body>
+         <tr class="primary tridmsRoles md-table-cuerpo" md-row md-select="dato" md-on-select="logItem" md-auto-select="options.autoSelect"   
+             ng-disabled="dato.idrol > 0" ng-repeat-start="dato in datos">
+          <td md-cell>{{$index + 1}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="ID" md-cell>
+          {{dato.idrol}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Nombre Corto De Usuario" md-cell>
+          {{dato.username}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Rol" md-cell>
+          {{dato.rol}}</td>
+           
+           <td class="tdaa8 md-table-cuerpo" data-title="Acciones" md-cell>
+             <div layout="row" layout-xs="column" layout-align="center center">
+                 <md-button class="{{dato.cclase}}"
+                        ng-click="showConfirm($event, dato)"
+                        ng-if="dato.msRolesACL.eliminar">
+                        <label>{{dato.cestado}}</label>
+                        </md-button>
+                <md-button class="md-icon-button md-primary"
+                        ng-click="editarMsRoles($event, dato)"
+                        ng-if="dato.msRolesACL.esEditable"> <md-icon
+                        md-font-set="material-icons">search</md-icon> </md-button>                 
+             </div>
+            </td>
+           </tr>
+           <tr class="secondary childidmsRoles" ng-repeat-end></tr>
+       </tbody>
+    </table>
+  </md-table-container>
+  </div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+    <!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

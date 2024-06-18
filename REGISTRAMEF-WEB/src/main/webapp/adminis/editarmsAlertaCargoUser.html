@@ -1,0 +1,82 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editmsAlertaCargoUser()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Lista De Los Cargos De Los Usuarios En Las Alertas</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{msAlertaCargoUserModelo.XXX}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarMsAlertaCargoUser()" aria-label="Salir">
+<!--          <md-icon md-font-set="material-icons">undo</md-icon>  -->
+         <span ng-if="nuevo">Salir</span>
+         <span ng-if="!nuevo">Salir</span>   
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarMsAlertaCargoUser($event)" 
+       ng-if="msAlertaCargoUserModelo.editopcion==1" aria-label="Grabar">
+<!--          <md-icon md-font-set="material-icons">save</md-icon>  -->
+         <span >Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+
+<div layout="column">
+<fieldset>
+<legend>Datos de Lista De Los Cargos De Los Usuarios En Las Alertas</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="msAlertaCargoUserModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Alerta</label>    
+            <input type="number" md-maxlength="10" required name="idalerta" ng-model="msAlertaCargoUserModelo.idalerta"
+                   >
+           <div ng-messages="msAlertaCargoUserForm.idalerta.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Alerta.</div>
+            <div ng-message="maxlength">El Alerta tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msAlertaCargoUserModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Alerta:</div>
+            <div class="letraTexto">{{msAlertaCargoUserModelo.idalerta}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="msAlertaCargoUserModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Cargo</label>
+            <md-select ng-model="msAlertaCargoUserModelo.idcargo" ng-change="changeIdcargo()" required
+                       name="idcargo"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdcargo" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="msAlertaCargoUserForm.idcargo.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="msAlertaCargoUserModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Cargo:</div>
+            <div class="letraTexto">{{msAlertaCargoUserModelo.idcargoTxt}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

@@ -1,0 +1,78 @@
+
+<md-dialog aria-label="Lista de Participantes" class="modal-width-854">
+   <!--PURIBE 14032024 -INICIO-->
+    <md-progress-linear md-mode="determinate" value="{{determinateValue}}"></md-progress-linear>
+    <form ng-cloak name="dtVisitasForm" ng-submit="dtVisitasForm.$valid && hide()" novalidate>
+        <md-toolbar style="background-color: rgb(255,255,255);">
+            <div class="md-toolbar-tools">
+                <h2 style="color: #1E82AD; font-weight: bold;">Agregar Participante</h2>
+                <span flex></span>
+                <md-button ng-click="cancel()" style="color: rgb(255,87,34);"  >
+                    Cancelar
+                </md-button>    
+                <md-button style="color: rgb(255,87,34);" type="submit" ng-if="activar" >
+                    Agregar
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}"
+                        style="margin: 0px 30px;">
+                <div layout="row" layout-wrap class="modal-wrapped">
+                    <div class="letraenvoltura"  flex="auto">
+                        <label class="letraLabel" flex>Gestor/Especialidad:</label>    
+                        <md-input-container md-no-float="true" class="input-container-margen letraTexto"  flex="85">
+                            <md-select ng-model="usuario"   ng-change="changeSistemAd(usuario)" required
+                                       placeholder="Ingresar Gestor"
+                                       name="idparametrolugar"
+                                       >
+                              <md-option ng-value="0">Sin Gestor</md-option>
+                             <md-option ng-repeat="item in listainternoMsusuarios" ng-value="item" >
+                                 {{item.idUsuinternoTxt}}
+                             </md-option>
+                            </md-select>
+                            <div ng-messages="dtVisitasForm.idparametrolugar.$error">
+                              <div ng-message="required">Se requiere seleccione el participante.</div>
+                           </div>
+                         </md-input-container>
+                        </div>
+                      
+                </div>
+                <div layout="row" layout-wrap class="modal-wrapped">
+                        <div class="letraenvoltura"  flex="auto">
+                        <label class="letraLabel" flex>Sistema Administrativo:</label>    
+                   
+                            <label style="width:300px;">
+                                {{ visitausuario.idSistAdmTxt }}
+                            </label>
+                                   
+                        </div>
+                         		 
+                </div>
+                <div layout="row" layout-wrap class="modal-wrapped">
+                    <div class="letraenvoltura" flex="90">
+                    <label class="letraLabel" flex>Tema:</label>    
+                    <md-input-container class="input-container-margen letraTexto">
+
+                    <md-select ng-model="tema"  ng-change="changetema(tema)" required
+                       required placeholder="Seleccionar Tema" name="idTema">
+                    <md-option ng-value="0">SIN TEMA</md-option>
+                    <md-option ng-repeat="item in listamstemas" 
+                       ng-value="item"> {{item.descripcion}} </md-option> </md-select> 
+                       
+                    </md-input-container>
+                 </div>
+                </div>
+
+              
+
+                <div layout="row" layout-wrap class="modal-wrapped">
+
+                </div>
+
+            </md-content>
+        </md-dialog-content>
+    </form>
+      <!--PURIBE 14032024 -FIN-->
+</md-dialog>

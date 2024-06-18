@@ -1,0 +1,341 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editdtEntidades()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Entidades</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{dtEntidadesModelo.XXXX}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarDtEntidades()" aria-label="Salir">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">undo</md-icon>
+         <span ng-if="nuevo" hide-xs show-gt-sm>Salir</span>
+         <span ng-if="!nuevo" hide-xs show-gt-sm>Salir</span>
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarDtEntidades($event)" ng-if="dtEntidadesModelo.editopcion==1" aria-label="Grabar">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">save</md-icon>
+         <span hide-xs show-gt-sm>Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+    
+<div layout="column">
+<fieldset>
+<legend>Datos de Entidades</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Unidad Ejecutora</label>    
+            <input type="text" md-maxlength="10" required name="codEjec" ng-model="dtEntidadesModelo.codEjec"
+                   >
+           <div ng-messages="dtEntidadesForm.codEjec.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Unidad Ejecutora.</div>
+            <div ng-message="maxlength">El Unidad Ejecutora tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Unidad Ejecutora:</div>
+            <div class="letraTexto">{{dtEntidadesModelo.codEjec}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Razón Social</label>    
+            <input type="text" md-maxlength="200" required name="razSocial" ng-model="dtEntidadesModelo.razSocial"
+                   >
+           <div ng-messages="dtEntidadesForm.razSocial.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Razón Social.</div>
+            <div ng-message="maxlength">El Razón Social tiene un m&aacute;ximo de 200 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Razón Social:</div>
+            <div class="letraTexto">{{dtEntidadesModelo.razSocial}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Número De Ruc</label>    
+            <input type="number" md-maxlength="11" required name="ruc" ng-model="dtEntidadesModelo.ruc"
+                   >
+           <div ng-messages="dtEntidadesForm.ruc.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Número De Ruc.</div>
+            <div ng-message="maxlength">El Número De Ruc tiene un m&aacute;ximo de 11 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Número De Ruc:</div>
+            <div class="letraTexto">{{dtEntidadesModelo.ruc}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Tipo</label>
+            <md-select ng-model="dtEntidadesModelo.idTipo" ng-change="changeIdTipo()" required
+                       name="idTipo"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdTipo" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtEntidadesForm.idTipo.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Tipo:</div>
+            <div class="letraTexto">{{dtEntidadesModelo.idTipoTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Departamento</label>    
+            <input type="text" md-maxlength="2" required name="codDpto" ng-model="dtEntidadesModelo.codDpto"
+                   >
+           <div ng-messages="dtEntidadesForm.codDpto.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Departamento.</div>
+            <div ng-message="maxlength">El Departamento tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Departamento:</div>
+            <div class="letraTexto">{{dtEntidadesModelo.codDpto}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Provincia</label>    
+            <input type="text" md-maxlength="2" required name="codProv" ng-model="dtEntidadesModelo.codProv"
+                   >
+           <div ng-messages="dtEntidadesForm.codProv.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Provincia.</div>
+            <div ng-message="maxlength">El Provincia tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Provincia:</div>
+            <div class="letraTexto">{{dtEntidadesModelo.codProv}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Distrito</label>    
+            <input type="text" md-maxlength="2" required name="codDistr" ng-model="dtEntidadesModelo.codDistr"
+                   >
+           <div ng-messages="dtEntidadesForm.codDistr.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Distrito.</div>
+            <div ng-message="maxlength">El Distrito tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Distrito:</div>
+            <div class="letraTexto">{{dtEntidadesModelo.codDistr}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Característica</label>
+            <md-select ng-model="dtEntidadesModelo.idCaract" ng-change="changeIdCaract()" required
+                       name="idCaract"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdCaract" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtEntidadesForm.idCaract.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Característica:</div>
+            <div class="letraTexto">{{dtEntidadesModelo.idCaractTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Sistema Administrativo</label>
+            <md-select ng-model="dtEntidadesModelo.idSistAdmi" ng-change="changeIdSistAdmi()" required
+                       name="idSistAdmi"
+                       >
+             <md-option ng-repeat="item in listaMsSisAdmistrativoIdSistAdmi" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtEntidadesForm.idSistAdmi.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Sistema Administrativo:</div>
+            <div class="letraTexto">{{dtEntidadesModelo.idSistAdmiTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Estado</label>    
+            <input type="number" md-maxlength="10" required name="estado" ng-model="dtEntidadesModelo.estado"
+                   >
+           <div ng-messages="dtEntidadesForm.estado.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Estado.</div>
+            <div ng-message="maxlength">El Estado tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Estado:</div>
+            <div class="letraTexto">{{dtEntidadesModelo.estado}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex>
+        <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Dirección</label>            
+            <textarea ng-model="dtEntidadesModelo.direccion" md-maxlength="300" rows="5" md-select-on-focus
+                      ></textarea>
+            <div ng-messages="dtEntidadesForm.direccion.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Dirección.</div>
+            <div ng-message="maxlength">El Dirección tiene un m&aacute;ximo de 300 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel">Dirección:</div>
+            <div class="letraTexto">{{dtEntidadesModelo.direccion}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>País</label>    
+            <input type="number" md-maxlength="10" required name="idpais" ng-model="dtEntidadesModelo.idpais"
+                   >
+           <div ng-messages="dtEntidadesForm.idpais.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el País.</div>
+            <div ng-message="maxlength">El País tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">País:</div>
+            <div class="letraTexto">{{dtEntidadesModelo.idpais}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Pertenece A La Geozona</label>    
+            <input type="text" md-maxlength="2" required name="geozona" ng-model="dtEntidadesModelo.geozona"
+                   >
+           <div ng-messages="dtEntidadesForm.geozona.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Pertenece A La Geozona.</div>
+            <div ng-message="maxlength">El Pertenece A La Geozona tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtEntidadesModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Pertenece A La Geozona:</div>
+            <div class="letraTexto">{{dtEntidadesModelo.geozona}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+<fieldset>
+<legend>Sedes Asignadas a la Entidad</legend>			
+ <md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+   <div layout="row" >
+	 <table resize>
+					<thead>
+
+           <tr class="md-table-head-label">
+           <th class="md-title ttamnumero"><span>N&deg;</span></th>
+           <th class="md-title ttamdtEntidadSedesidSedeTxt" hide-xs show-gt-sm>
+           <span>Sede</span></th>           
+           <th class="md-title ttamopciones"><span>Opciones</span></th>           
+           </tr>
+
+	  <tbody>						
+          <tr ng-repeat="dato in dtEntidadesModelo.dtEntidadSedesss track by $index">
+          <td>{{$index + 1}}</td>
+           <td class="tdaa1 md-table-cuerpo" data-title="Sede" hide-xs show-gt-sm>
+          {{dato.idSedeTxt}}</td>           
+          </td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Opciones">                    
+                <md-button ng-if="dtEntidadesModelo.editopcion < 2" ng-click="removerDtEntidadSedes($event, dato)"
+                class="md-icon-button md-mini iconoEnLinea2 botonmargennegativo" aria-label="Eliminar">
+                    <md-tooltip md-direction="left">Eliminar</md-tooltip>
+                  <md-icon md-font-set="material-icons">remove</md-icon>
+                </md-button>
+                <md-button ng-if="dtEntidadesModelo.editopcion < 2" ng-click="editarDtEntidadSedes($event, dato)"
+                class="md-icon-button md-mini iconoEnLinea2 botonmargennegativo" aria-label="Editar">
+                    <md-tooltip md-direction="left">Editar</md-tooltip>
+                    <md-icon md-font-set="material-icons">edit</md-icon>
+                </md-button>           
+          </td>          
+         <tr class="secondary childiddtEntidadSedes" ng-repeat-end></tr>           
+        
+         <tr ng-if="dtEntidadesModelo.editopcion < 2">
+         <td>&nbsp;</td>
+          <td>
+           <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Sede</label>
+            <md-select ng-model="dtEntidadSedesModelo.idSede" ng-change="changeIdSede()" 
+                        name="dtEntidadSedesidSede"
+                       >
+             <md-option ng-repeat="item in listaMsSedesIdSede" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtEntidadesForm.dtEntidadSedesidSede.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>        
+         </td>          
+          <td>
+        <md-button class="md-icon-button md-mini iconoEnLinea2 botonmargennegativo"
+                                                      aria-label="Agregar"
+                                                      ng-click="addDtEntidadSedes($event)"
+                                                      > 
+        <md-icon md-font-set="material-icons">add</md-icon> 
+        </md-button>  
+        </td>
+          </tr>
+       </tbody>
+     </table>
+	</div>
+	</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

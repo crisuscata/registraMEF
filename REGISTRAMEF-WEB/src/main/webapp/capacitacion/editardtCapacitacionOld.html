@@ -1,0 +1,683 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editdtCapacitacion()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Capacitaciones</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{dtCapacitacionModelo.XXXX}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarDtCapacitacion()" aria-label="Salir">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">undo</md-icon>
+         <span ng-if="nuevo" hide-xs show-gt-sm>Salir</span>
+         <span ng-if="!nuevo" hide-xs show-gt-sm>Salir</span>
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarDtCapacitacion($event)" ng-if="dtCapacitacionModelo.editopcion==1" aria-label="Grabar">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">save</md-icon>
+         <span hide-xs show-gt-sm>Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+    
+<div layout="column">
+<fieldset>
+<legend>Datos de Capacitaciones</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Inicio</label>
+            <md-datepicker required ng-model="dtCapacitacionModelo.fechaInicJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Inicio:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.fechaInic}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha Fin</label>
+            <md-datepicker required ng-model="dtCapacitacionModelo.fechaFinJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha Fin:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.fechaFin}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex>
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Nombre Del Evento</label>            
+            <textarea ng-model="dtCapacitacionModelo.nomEvento" md-maxlength="1000" rows="5" md-select-on-focus
+                      ></textarea>
+            <div ng-messages="dtCapacitacionForm.nomEvento.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Nombre Del Evento.</div>
+            <div ng-message="maxlength">El Nombre Del Evento tiene un m&aacute;ximo de 1000 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel">Nombre Del Evento:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.nomEvento}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Sistema Administrativo</label>    
+            <input type="number" md-maxlength="10" required name="idSistAdm" ng-model="dtCapacitacionModelo.idSistAdm"
+                   >
+           <div ng-messages="dtCapacitacionForm.idSistAdm.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Sistema Administrativo.</div>
+            <div ng-message="maxlength">El Sistema Administrativo tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Sistema Administrativo:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.idSistAdm}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Usuario Interno</label>    
+            <input type="number" md-maxlength="10" required name="idUsuinterno" ng-model="dtCapacitacionModelo.idUsuinterno"
+                   >
+           <div ng-messages="dtCapacitacionForm.idUsuinterno.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Usuario Interno.</div>
+            <div ng-message="maxlength">El Usuario Interno tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Usuario Interno:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.idUsuinterno}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Esta Publicado</label>    
+            <input type="text" md-maxlength="38" required name="flagPubli" ng-model="dtCapacitacionModelo.flagPubli"
+                   >
+           <div ng-messages="dtCapacitacionForm.flagPubli.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Esta Publicado.</div>
+            <div ng-message="maxlength">El Esta Publicado tiene un m&aacute;ximo de 38 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Esta Publicado:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.flagPubli}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Modalidad</label>
+            <md-select ng-model="dtCapacitacionModelo.idModalidad" ng-change="changeIdModalidad()" required
+                       name="idModalidad"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdModalidad" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtCapacitacionForm.idModalidad.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Modalidad:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.idModalidadTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Programación</label>    
+            <input type="number" md-maxlength="10" required name="idProgramacion" ng-model="dtCapacitacionModelo.idProgramacion"
+                   >
+           <div ng-messages="dtCapacitacionForm.idProgramacion.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Programación.</div>
+            <div ng-message="maxlength">El Programación tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Programación:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.idProgramacion}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Estado</label>    
+            <input type="number" md-maxlength="10" required name="estado" ng-model="dtCapacitacionModelo.estado"
+                   >
+           <div ng-messages="dtCapacitacionForm.estado.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Estado.</div>
+            <div ng-message="maxlength">El Estado tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Estado:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.estado}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Cantidad De Participantes</label>    
+            <input type="number" md-maxlength="5" required name="cantPartic" ng-model="dtCapacitacionModelo.cantPartic"
+                   >
+           <div ng-messages="dtCapacitacionForm.cantPartic.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Cantidad De Participantes.</div>
+            <div ng-message="maxlength">El Cantidad De Participantes tiene un m&aacute;ximo de 5 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Cantidad De Participantes:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.cantPartic}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Público Objetivo</label>    
+            <input type="text" md-maxlength="100" required name="publicObj" ng-model="dtCapacitacionModelo.publicObj"
+                   >
+           <div ng-messages="dtCapacitacionForm.publicObj.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Público Objetivo.</div>
+            <div ng-message="maxlength">El Público Objetivo tiene un m&aacute;ximo de 100 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Público Objetivo:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.publicObj}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex>
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Detalle De La Capacitación</label>            
+            <textarea ng-model="dtCapacitacionModelo.detalleCapa" md-maxlength="500" rows="5" md-select-on-focus
+                      ></textarea>
+            <div ng-messages="dtCapacitacionForm.detalleCapa.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Detalle De La Capacitación.</div>
+            <div ng-message="maxlength">El Detalle De La Capacitación tiene un m&aacute;ximo de 500 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel">Detalle De La Capacitación:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.detalleCapa}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Local</label>
+            <md-select ng-model="dtCapacitacionModelo.idLocal" ng-change="changeIdLocal()" required
+                       name="idLocal"
+                       >
+             <md-option ng-repeat="item in listaMsLocalIdLocal" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtCapacitacionForm.idLocal.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Local:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.idLocalTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Modo</label>
+            <md-select ng-model="dtCapacitacionModelo.idModo" ng-change="changeIdModo()" required
+                       name="idModo"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdModo" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtCapacitacionForm.idModo.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Modo:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.idModoTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Nivel</label>
+            <md-select ng-model="dtCapacitacionModelo.idNivel" ng-change="changeIdNivel()" required
+                       name="idNivel"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdNivel" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtCapacitacionForm.idNivel.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Nivel:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.idNivelTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Origen</label>
+            <md-select ng-model="dtCapacitacionModelo.idOrigen" ng-change="changeIdOrigen()" required
+                       name="idOrigen"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdOrigen" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtCapacitacionForm.idOrigen.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Origen:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.idOrigenTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Prestación</label>
+            <md-select ng-model="dtCapacitacionModelo.idPrestacion" ng-change="changeIdPrestacion()" required
+                       name="idPrestacion"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdPrestacion" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtCapacitacionForm.idPrestacion.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Prestación:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.idPrestacionTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Cantidad De Participantes</label>    
+            <input type="number" md-maxlength="5" required name="cantParticAsist" ng-model="dtCapacitacionModelo.cantParticAsist"
+                   >
+           <div ng-messages="dtCapacitacionForm.cantParticAsist.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Cantidad De Participantes.</div>
+            <div ng-message="maxlength">El Cantidad De Participantes tiene un m&aacute;ximo de 5 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Cantidad De Participantes:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.cantParticAsist}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Tipo</label>
+            <md-select ng-model="dtCapacitacionModelo.idTipo" ng-change="changeIdTipo()" required
+                       name="idTipo"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdTipo" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtCapacitacionForm.idTipo.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Tipo:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.idTipoTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Acumulado A</label>    
+            <input type="number" md-maxlength="10" required name="idcapaPadre" ng-model="dtCapacitacionModelo.idcapaPadre"
+                   >
+           <div ng-messages="dtCapacitacionForm.idcapaPadre.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Acumulado A.</div>
+            <div ng-message="maxlength">El Acumulado A tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Acumulado A:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.idcapaPadre}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Sede</label>    
+            <input type="number" md-maxlength="10" required name="idSede" ng-model="dtCapacitacionModelo.idSede"
+                   >
+           <div ng-messages="dtCapacitacionForm.idSede.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Sede.</div>
+            <div ng-message="maxlength">El Sede tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Sede:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.idSede}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Tipo De Financiamiento</label>
+            <md-select ng-model="dtCapacitacionModelo.idFinancia" ng-change="changeIdFinancia()" required
+                       name="idFinancia"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdFinancia" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtCapacitacionForm.idFinancia.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Tipo De Financiamiento:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.idFinanciaTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Finalización</label>
+            <md-datepicker required ng-model="dtCapacitacionModelo.fechaFinalizacionJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Finalización:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.fechaFinalizacion}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex>
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Detalle De La Capacitación</label>            
+            <textarea ng-model="dtCapacitacionModelo.detalleCapaVirtual" md-maxlength="1000" rows="5" md-select-on-focus
+                      ></textarea>
+            <div ng-messages="dtCapacitacionForm.detalleCapaVirtual.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Detalle De La Capacitación.</div>
+            <div ng-message="maxlength">El Detalle De La Capacitación tiene un m&aacute;ximo de 1000 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel">Detalle De La Capacitación:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.detalleCapaVirtual}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha Y Hora De Inicio</label>
+            <md-datepicker required ng-model="dtCapacitacionModelo.fechaIniProgramadaJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha Y Hora De Inicio:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.fechaIniProgramada}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha Y Hora De Fin</label>
+            <md-datepicker required ng-model="dtCapacitacionModelo.fechaFinProgramadaJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha Y Hora De Fin:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.fechaFinProgramada}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Solicitud</label>
+            <md-datepicker required ng-model="dtCapacitacionModelo.fechaSoliJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Solicitud:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.fechaSoli}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Número</label>    
+            <input type="number" md-maxlength="10" required name="stdIddoc" ng-model="dtCapacitacionModelo.stdIddoc"
+                   >
+           <div ng-messages="dtCapacitacionForm.stdIddoc.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Número.</div>
+            <div ng-message="maxlength">El Número tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Número:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.stdIddoc}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Sgdd Número</label>    
+            <input type="text" md-maxlength="50" required name="stdNumeroSid" ng-model="dtCapacitacionModelo.stdNumeroSid"
+                   >
+           <div ng-messages="dtCapacitacionForm.stdNumeroSid.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Sgdd Número.</div>
+            <div ng-message="maxlength">El Sgdd Número tiene un m&aacute;ximo de 50 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Sgdd Número:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.stdNumeroSid}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Por El Cual Se Tramitó La Documentación</label>    
+            <input type="text" md-maxlength="4" required name="stdNumeroAnio" ng-model="dtCapacitacionModelo.stdNumeroAnio"
+                   >
+           <div ng-messages="dtCapacitacionForm.stdNumeroAnio.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Por El Cual Se Tramitó La Documentación.</div>
+            <div ng-message="maxlength">El Por El Cual Se Tramitó La Documentación tiene un m&aacute;ximo de 4 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Por El Cual Se Tramitó La Documentación:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.stdNumeroAnio}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Número De Documento</label>    
+            <input type="text" md-maxlength="200" required name="stdNumeroDoc" ng-model="dtCapacitacionModelo.stdNumeroDoc"
+                   >
+           <div ng-messages="dtCapacitacionForm.stdNumeroDoc.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Número De Documento.</div>
+            <div ng-message="maxlength">El Número De Documento tiene un m&aacute;ximo de 200 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Número De Documento:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.stdNumeroDoc}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex>
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Asunto Del Documento</label>            
+            <textarea ng-model="dtCapacitacionModelo.stdAsunto" md-maxlength="600" rows="5" md-select-on-focus
+                      ></textarea>
+            <div ng-messages="dtCapacitacionForm.stdAsunto.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Asunto Del Documento.</div>
+            <div ng-message="maxlength">El Asunto Del Documento tiene un m&aacute;ximo de 600 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel">Asunto Del Documento:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.stdAsunto}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Tipo De Documento</label>    
+            <input type="text" md-maxlength="100" required name="stdTipoDoc" ng-model="dtCapacitacionModelo.stdTipoDoc"
+                   >
+           <div ng-messages="dtCapacitacionForm.stdTipoDoc.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Tipo De Documento.</div>
+            <div ng-message="maxlength">El Tipo De Documento tiene un m&aacute;ximo de 100 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Tipo De Documento:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.stdTipoDoc}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Recepción</label>
+            <md-datepicker required ng-model="dtCapacitacionModelo.stdFechaRecepcionJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Recepción:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.stdFechaRecepcion}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Modalidad De Ingreso</label>    
+            <input type="text" md-maxlength="200" required name="stdModalidadIng" ng-model="dtCapacitacionModelo.stdModalidadIng"
+                   >
+           <div ng-messages="dtCapacitacionForm.stdModalidadIng.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Modalidad De Ingreso.</div>
+            <div ng-message="maxlength">El Modalidad De Ingreso tiene un m&aacute;ximo de 200 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Modalidad De Ingreso:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.stdModalidadIng}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Radio</label>    
+            <input type="number" md-maxlength="38" required name="flagEjec" ng-model="dtCapacitacionModelo.flagEjec"
+                   >
+           <div ng-messages="dtCapacitacionForm.flagEjec.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Radio.</div>
+            <div ng-message="maxlength">El Radio tiene un m&aacute;ximo de 38 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Radio:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.flagEjec}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Motivo De Ejecución</label>    
+            <input type="text" md-maxlength="500" required name="motivoEjec" ng-model="dtCapacitacionModelo.motivoEjec"
+                   >
+           <div ng-messages="dtCapacitacionForm.motivoEjec.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Motivo De Ejecución.</div>
+            <div ng-message="maxlength">El Motivo De Ejecución tiene un m&aacute;ximo de 500 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Motivo De Ejecución:</div>
+            <div class="letraTexto">{{dtCapacitacionModelo.motivoEjec}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

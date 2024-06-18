@@ -1,0 +1,632 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editdtConsultas()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Consultas</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{dtConsultasModelo.XXXX}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarDtConsultas()" aria-label="Salir">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">undo</md-icon>
+         <span ng-if="nuevo" hide-xs show-gt-sm>Salir</span>
+         <span ng-if="!nuevo" hide-xs show-gt-sm>Salir</span>
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarDtConsultas($event)" ng-if="dtConsultasModelo.editopcion==1" aria-label="Grabar">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">save</md-icon>
+         <span hide-xs show-gt-sm>Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+    
+<div layout="column">
+<fieldset>
+<legend>Datos de Consultas</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Consulta</label>
+            <md-datepicker required ng-model="dtConsultasModelo.fechaConsuJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Consulta:</div>
+            <div class="letraTexto">{{dtConsultasModelo.fechaConsu}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Usuario Externo</label>
+            <input type="text" md-maxlength="10" required name="nombre" ng-model="dtConsultasModelo.nombre" 
+            >
+           <div ng-messages="dtConsultasForm.idUsuexterno.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Usuario Externo.</div>
+            <div ng-message="maxlength">El Usuario Externo tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        <md-button class="md-fab md-mini" aria-label="Buscar por Nombre" 
+        ng-click="searchDtUsuarioExternoByNombre($event)" ng-if="dtConsultasModelo.editopcion < 2">
+            <md-icon md-font-set="material-icons">search</md-icon>
+        </md-button>
+        </div>     
+     
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Usuario Externo:</div>
+            <div class="letraTexto">{{dtConsultasModelo.nombre}}</div>
+         </div>			 
+ </div>
+ <div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura labelTamanioFijo" ng-if="dtConsultasModelo.editopcion < 2" flex="50">
+        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Usuario Externo</label>    
+       <md-autocomplete required 
+          md-input-name="nameDtUsuarioExternoIdUsuexterno" 
+          md-input-minlength="2"
+          md-input-maxlength="255" 
+          ng-disabled="ctrlDtUsuarioExternoIdUsuexterno.isDisabled"
+          md-no-cache="ctrlDtUsuarioExternoIdUsuexterno.noCache"
+          md-selected-item="ctrlDtUsuarioExternoIdUsuexterno.selectedItem"
+          md-search-text-change="searchTextChangeDtUsuarioExternoIdUsuexterno(dtConsultasModelo.idUsuexternoTxt)"
+          md-search-text="dtConsultasModelo.idUsuexternoTxt"
+          md-selected-item-change="selectedItemChangeDtUsuarioExternoIdUsuexterno(item)"
+          md-items="item in querySearchDtUsuarioExternoIdUsuexterno(dtConsultasModelo.idUsuexternoTxt)"
+          md-item-text="item.nombre" 
+          md-min-length="4"
+          placeholder="USUARIO EXTERNO"
+          input-aria-labelledby="USUARIO EXTERNO" 
+          md-delay="3000" 
+          placeholder="Ingresar USUARIO EXTERNO" 
+          >
+        <md-item-template>
+          <span md-highlight-text="dtConsultasModelo.idUsuexternoTxt" md-highlight-flags="^i">
+              {{item.nombre}}
+          </span>
+        </md-item-template>
+        <md-not-found>
+          No hay concidencias para "{{dtConsultasModelo.idUsuexternoTxt}}".
+          <a ng-click="newStateDtUsuarioExternoIdUsuexterno(dtConsultasModelo.idUsuexternoTxt)">¡Crea uno nuevo!</a>
+        </md-not-found>
+        <div ng-messages="dtConsultasForm.nameDtUsuarioExternoIdUsuexterno.$error" ng-if="dtConsultasForm.nameDtUsuarioExternoIdUsuexterno.$touched">
+            <div ng-message="required">Usted <b>debe</b> seleccionar un item.</div>
+            <div ng-message="md-require-match">Por favor seleccione un item.</div>
+            <div ng-message="minlength">Tu entrada no es lo suficientemente larga.</div>
+            <div ng-message="maxlength">Tu entrada es demasiado larga.</div>
+          </div>   
+      </md-autocomplete>            
+ 
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="50">
+            <div class="letraLabel labelTamanioFijo">Usuario Externo:</div>
+            <div class="letraTexto">{{dtConsultasModelo.idUsuexternoTxt}}</div>
+         </div>			 
+ </div>
+ <div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Sistema Administrativo</label>    
+            <input type="number" md-maxlength="10" required name="idSistAdm" ng-model="dtConsultasModelo.idSistAdm"
+                   >
+           <div ng-messages="dtConsultasForm.idSistAdm.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Sistema Administrativo.</div>
+            <div ng-message="maxlength">El Sistema Administrativo tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Sistema Administrativo:</div>
+            <div class="letraTexto">{{dtConsultasModelo.idSistAdm}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Tema</label>
+            <md-select ng-model="dtConsultasModelo.idTema" ng-change="changeIdTema()" required
+                       name="idTema"
+                       >
+             <md-option ng-repeat="item in listaMsTemaIdTema" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtConsultasForm.idTema.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Tema:</div>
+            <div class="letraTexto">{{dtConsultasModelo.idTemaTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Subtema</label>
+            <md-select ng-model="dtConsultasModelo.idSubtema" ng-change="changeIdSubtema()" required
+                       name="idSubtema"
+                       >
+             <md-option ng-repeat="item in listaMsSubtemaIdSubtema" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtConsultasForm.idSubtema.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Subtema:</div>
+            <div class="letraTexto">{{dtConsultasModelo.idSubtemaTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Estado</label>    
+            <input type="number" md-maxlength="10" required name="estado" ng-model="dtConsultasModelo.estado"
+                   >
+           <div ng-messages="dtConsultasForm.estado.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Estado.</div>
+            <div ng-message="maxlength">El Estado tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Estado:</div>
+            <div class="letraTexto">{{dtConsultasModelo.estado}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex>
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Detalle</label>            
+            <textarea ng-model="dtConsultasModelo.detalle" md-maxlength="500" rows="5" md-select-on-focus
+                      ></textarea>
+            <div ng-messages="dtConsultasForm.detalle.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Detalle.</div>
+            <div ng-message="maxlength">El Detalle tiene un m&aacute;ximo de 500 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel">Detalle:</div>
+            <div class="letraTexto">{{dtConsultasModelo.detalle}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex>
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Respuesta</label>            
+            <textarea ng-model="dtConsultasModelo.respuesta" md-maxlength="600" rows="5" md-select-on-focus
+                      ></textarea>
+            <div ng-messages="dtConsultasForm.respuesta.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Respuesta.</div>
+            <div ng-message="maxlength">El Respuesta tiene un m&aacute;ximo de 600 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel">Respuesta:</div>
+            <div class="letraTexto">{{dtConsultasModelo.respuesta}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Prestación De Servicio</label>
+            <md-select ng-model="dtConsultasModelo.idPrestservic" ng-change="changeIdPrestservic()" required
+                       name="idPrestservic"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdPrestservic" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtConsultasForm.idPrestservic.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Prestación De Servicio:</div>
+            <div class="letraTexto">{{dtConsultasModelo.idPrestservicTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Modalidad</label>
+            <md-select ng-model="dtConsultasModelo.idModalidad" ng-change="changeIdModalidad()" required
+                       name="idModalidad"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdModalidad" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtConsultasForm.idModalidad.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Modalidad:</div>
+            <div class="letraTexto">{{dtConsultasModelo.idModalidadTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Usuario Interno</label>    
+            <input type="number" md-maxlength="10" required name="idUsuinterno" ng-model="dtConsultasModelo.idUsuinterno"
+                   >
+           <div ng-messages="dtConsultasForm.idUsuinterno.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Usuario Interno.</div>
+            <div ng-message="maxlength">El Usuario Interno tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Usuario Interno:</div>
+            <div class="letraTexto">{{dtConsultasModelo.idUsuinterno}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Entidad</label>
+            <input type="text" md-maxlength="10" required name="razSocial" ng-model="dtConsultasModelo.razSocial" 
+            >
+           <div ng-messages="dtConsultasForm.idEntidad.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Entidad.</div>
+            <div ng-message="maxlength">El Entidad tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        <md-button class="md-fab md-mini" aria-label="Buscar por RazSocial" 
+        ng-click="searchDtEntidadesByRazSocial($event)" ng-if="dtConsultasModelo.editopcion < 2">
+            <md-icon md-font-set="material-icons">search</md-icon>
+        </md-button>
+        </div>     
+     
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Entidad:</div>
+            <div class="letraTexto">{{dtConsultasModelo.razSocial}}</div>
+         </div>			 
+ </div>
+ <div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura labelTamanioFijo" ng-if="dtConsultasModelo.editopcion < 2" flex="50">
+        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Entidad</label>    
+       <md-autocomplete required 
+          md-input-name="nameDtEntidadesIdEntidad" 
+          md-input-minlength="2"
+          md-input-maxlength="255" 
+          ng-disabled="ctrlDtEntidadesIdEntidad.isDisabled"
+          md-no-cache="ctrlDtEntidadesIdEntidad.noCache"
+          md-selected-item="ctrlDtEntidadesIdEntidad.selectedItem"
+          md-search-text-change="searchTextChangeDtEntidadesIdEntidad(dtConsultasModelo.idEntidadTxt)"
+          md-search-text="dtConsultasModelo.idEntidadTxt"
+          md-selected-item-change="selectedItemChangeDtEntidadesIdEntidad(item)"
+          md-items="item in querySearchDtEntidadesIdEntidad(dtConsultasModelo.idEntidadTxt)"
+          md-item-text="item.razSocial" 
+          md-min-length="4"
+          placeholder="ENTIDAD"
+          input-aria-labelledby="ENTIDAD" 
+          md-delay="3000" 
+          placeholder="Ingresar ENTIDAD" 
+          >
+        <md-item-template>
+          <span md-highlight-text="dtConsultasModelo.idEntidadTxt" md-highlight-flags="^i">
+              {{item.razSocial}}
+          </span>
+        </md-item-template>
+        <md-not-found>
+          No hay concidencias para "{{dtConsultasModelo.idEntidadTxt}}".
+          <a ng-click="newStateDtEntidadesIdEntidad(dtConsultasModelo.idEntidadTxt)">¡Crea uno nuevo!</a>
+        </md-not-found>
+        <div ng-messages="dtConsultasForm.nameDtEntidadesIdEntidad.$error" ng-if="dtConsultasForm.nameDtEntidadesIdEntidad.$touched">
+            <div ng-message="required">Usted <b>debe</b> seleccionar un item.</div>
+            <div ng-message="md-require-match">Por favor seleccione un item.</div>
+            <div ng-message="minlength">Tu entrada no es lo suficientemente larga.</div>
+            <div ng-message="maxlength">Tu entrada es demasiado larga.</div>
+          </div>   
+      </md-autocomplete>            
+ 
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="50">
+            <div class="letraLabel labelTamanioFijo">Entidad:</div>
+            <div class="letraTexto">{{dtConsultasModelo.idEntidadTxt}}</div>
+         </div>			 
+ </div>
+ <div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Origen</label>
+            <md-select ng-model="dtConsultasModelo.idOrigen" ng-change="changeIdOrigen()" required
+                       name="idOrigen"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdOrigen" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtConsultasForm.idOrigen.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Origen:</div>
+            <div class="letraTexto">{{dtConsultasModelo.idOrigenTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Cargo</label>
+            <md-select ng-model="dtConsultasModelo.idCargo" ng-change="changeIdCargo()" required
+                       name="idCargo"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdCargo" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtConsultasForm.idCargo.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Cargo:</div>
+            <div class="letraTexto">{{dtConsultasModelo.idCargoTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Sede</label>
+            <md-select ng-model="dtConsultasModelo.idSede" ng-change="changeIdSede()" required
+                       name="idSede"
+                       >
+             <md-option ng-repeat="item in listaMsSedesIdSede" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtConsultasForm.idSede.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Sede:</div>
+            <div class="letraTexto">{{dtConsultasModelo.idSedeTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Correo</label>    
+            <input type="text" md-maxlength="50" required name="correoUsuext" ng-model="dtConsultasModelo.correoUsuext"
+                   >
+           <div ng-messages="dtConsultasForm.correoUsuext.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Correo.</div>
+            <div ng-message="maxlength">El Correo tiene un m&aacute;ximo de 50 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Correo:</div>
+            <div class="letraTexto">{{dtConsultasModelo.correoUsuext}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Teléfono</label>    
+            <input type="text" md-maxlength="50" required name="fijoUsuext" ng-model="dtConsultasModelo.fijoUsuext"
+                   >
+           <div ng-messages="dtConsultasForm.fijoUsuext.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Teléfono.</div>
+            <div ng-message="maxlength">El Teléfono tiene un m&aacute;ximo de 50 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Teléfono:</div>
+            <div class="letraTexto">{{dtConsultasModelo.fijoUsuext}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Celular</label>    
+            <input type="text" md-maxlength="50" required name="celularUsuext" ng-model="dtConsultasModelo.celularUsuext"
+                   >
+           <div ng-messages="dtConsultasForm.celularUsuext.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Celular.</div>
+            <div ng-message="maxlength">El Celular tiene un m&aacute;ximo de 50 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Celular:</div>
+            <div class="letraTexto">{{dtConsultasModelo.celularUsuext}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Finalización</label>
+            <md-datepicker required ng-model="dtConsultasModelo.fechaFinalizacionJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Finalización:</div>
+            <div class="letraTexto">{{dtConsultasModelo.fechaFinalizacion}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Solicitud</label>
+            <md-datepicker required ng-model="dtConsultasModelo.fechaSoliJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtConsultasModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Solicitud:</div>
+            <div class="letraTexto">{{dtConsultasModelo.fechaSoli}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+<div style="visibility: hidden">
+   <div class="md-dialog-container" id="dtUsuarioExternoDialog">
+    <md-dialog layout-padding style="min-width: 80% !important;">   
+     <md-toolbar>
+      <div class="md-toolbar-tools" md-colors="{color: 'background-200'}">
+        <h2>USUARIO EXTERNO</h2>
+        <span flex></span>
+         <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-font-set="material-icons" aria-label="Close dialog">clear</md-icon>
+        </md-button>        
+      </div>     
+     </md-toolbar>
+     <md-dialog-content>    
+    <md-table-pagination md-limit="dlgDtUsuarioExternoquery.limit" md-limit-options="dlgDtUsuarioExternolimitOptions" md-page="dlgDtUsuarioExternoquery.page"
+                  md-total="{{dlgDtUsuarioExternototal}}" md-page-select="dlgDtUsuarioExternooptions.pageSelect" 
+                  md-boundary-links="dlgDtUsuarioExternooptions.boundaryLinks"
+                  md-on-paginate="logPagination"> 
+    </md-table-pagination>
+    <md-table-container>
+    <table resize md-table md-row-select="dlgDtUsuarioExternooptions.rowSelection" multiple="{{dlgDtUsuarioExternooptions.multiSelect}}" 
+           ng-model="dlgDtUsuarioExternoselected" md-progress="dlgDtUsuarioExternopromise">
+      <thead id="tablewidthPers" ng-if="!dlgDtUsuarioExternooptions.decapitate" md-head md-order="dlgDtUsuarioExternoquery.order" md-on-reorder="logOrder">
+         <tr md-row class="md-table-head-label">
+           <th class="md-title thaa1" md-column md-order-by="idUsuexterno"><span>idUsuexterno</span></th>
+           <th class="md-title thaa1" md-column md-order-by="nombre"><span>nombre</span></th>
+         </tr>
+         <tr md-row class="md-table-head-order">
+         <th md-column> 
+            <input type="text" ng-model="dlgDtUsuarioExternofiltro.idUsuexterno" placeholder="idUsuexterno" 
+                   ng-keypress="dlgDtUsuarioExternorefrescarvista($event)" class="md-table-orden-imput"/>
+         </th>
+         <th md-column> 
+            <input type="text" ng-model="dlgDtUsuarioExternofiltro.nombre" placeholder="nombre" 
+                   ng-keypress="dlgDtUsuarioExternorefrescarvista($event)" class="md-table-orden-imput"/>
+         </th>
+         </tr>
+      </thead>
+      <tbody md-body>
+         <tr class="primary dlgDtUsuarioExternoclass md-table-cuerpo" md-row 
+         md-select="dato" 
+         md-on-select="seleccionadodlgDtUsuarioExterno" 
+         md-auto-select="dlgDtUsuarioExternooptions.autoSelect"   
+         ng-repeat-start="dato in dlgDtUsuarioExternoDtoss | filter: filtrodlgDtUsuarioExterno | orderBy: dlgDtUsuarioExternoquery.order | limitTo: dlgDtUsuarioExternoquery.limit : (dlgDtUsuarioExternoquery.page -1) * dlgDtUsuarioExternoquery.limit"
+         >
+          <td class="tdaa1 md-table-cuerpo" data-title="idUsuexterno" md-cell>{{dato.idUsuexterno}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="nombre" md-cell>{{dato.nombre}}</td>
+          </tr>
+           <tr class="secondary dlgchilDtUsuarioExternoclass" ng-repeat-end></tr>
+       </tbody>
+    </table>
+   </md-table-container>        
+  </md-dialog-content>
+     <md-dialog-actions layout="row" layout-xs="column" layout-align="center end">  
+       <md-button class="md-raised md-primary alargarBoton" ng-click="cancel()">
+            Cancelar
+       </md-button>
+       <md-button class="md-raised md-primary alargarBoton" ng-click="XXX($event)">
+            Aceptar
+       </md-button>   
+     </md-dialog-actions> 
+    </md-dialog>
+   </div>   
+</div><div style="visibility: hidden">
+   <div class="md-dialog-container" id="dtEntidadesDialog">
+    <md-dialog layout-padding style="min-width: 80% !important;">   
+     <md-toolbar>
+      <div class="md-toolbar-tools" md-colors="{color: 'background-200'}">
+        <h2>ENTIDAD</h2>
+        <span flex></span>
+         <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-font-set="material-icons" aria-label="Close dialog">clear</md-icon>
+        </md-button>        
+      </div>     
+     </md-toolbar>
+     <md-dialog-content>    
+    <md-table-pagination md-limit="dlgDtEntidadesquery.limit" md-limit-options="dlgDtEntidadeslimitOptions" md-page="dlgDtEntidadesquery.page"
+                  md-total="{{dlgDtEntidadestotal}}" md-page-select="dlgDtEntidadesoptions.pageSelect" 
+                  md-boundary-links="dlgDtEntidadesoptions.boundaryLinks"
+                  md-on-paginate="logPagination"> 
+    </md-table-pagination>
+    <md-table-container>
+    <table resize md-table md-row-select="dlgDtEntidadesoptions.rowSelection" multiple="{{dlgDtEntidadesoptions.multiSelect}}" 
+           ng-model="dlgDtEntidadesselected" md-progress="dlgDtEntidadespromise">
+      <thead id="tablewidthPers" ng-if="!dlgDtEntidadesoptions.decapitate" md-head md-order="dlgDtEntidadesquery.order" md-on-reorder="logOrder">
+         <tr md-row class="md-table-head-label">
+           <th class="md-title thaa1" md-column md-order-by="idEntidad"><span>idEntidad</span></th>
+           <th class="md-title thaa1" md-column md-order-by="razSocial"><span>razSocial</span></th>
+         </tr>
+         <tr md-row class="md-table-head-order">
+         <th md-column> 
+            <input type="text" ng-model="dlgDtEntidadesfiltro.idEntidad" placeholder="idEntidad" 
+                   ng-keypress="dlgDtEntidadesrefrescarvista($event)" class="md-table-orden-imput"/>
+         </th>
+         <th md-column> 
+            <input type="text" ng-model="dlgDtEntidadesfiltro.razSocial" placeholder="razSocial" 
+                   ng-keypress="dlgDtEntidadesrefrescarvista($event)" class="md-table-orden-imput"/>
+         </th>
+         </tr>
+      </thead>
+      <tbody md-body>
+         <tr class="primary dlgDtEntidadesclass md-table-cuerpo" md-row 
+         md-select="dato" 
+         md-on-select="seleccionadodlgDtEntidades" 
+         md-auto-select="dlgDtEntidadesoptions.autoSelect"   
+         ng-repeat-start="dato in dlgDtEntidadesDtoss | filter: filtrodlgDtEntidades | orderBy: dlgDtEntidadesquery.order | limitTo: dlgDtEntidadesquery.limit : (dlgDtEntidadesquery.page -1) * dlgDtEntidadesquery.limit"
+         >
+          <td class="tdaa1 md-table-cuerpo" data-title="idEntidad" md-cell>{{dato.idEntidad}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="razSocial" md-cell>{{dato.razSocial}}</td>
+          </tr>
+           <tr class="secondary dlgchilDtEntidadesclass" ng-repeat-end></tr>
+       </tbody>
+    </table>
+   </md-table-container>        
+  </md-dialog-content>
+     <md-dialog-actions layout="row" layout-xs="column" layout-align="center end">  
+       <md-button class="md-raised md-primary alargarBoton" ng-click="cancel()">
+            Cancelar
+       </md-button>
+       <md-button class="md-raised md-primary alargarBoton" ng-click="XXX($event)">
+            Aceptar
+       </md-button>   
+     </md-dialog-actions> 
+    </md-dialog>
+   </div>   
+</div>
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

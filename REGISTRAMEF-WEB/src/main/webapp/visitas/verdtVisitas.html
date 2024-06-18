@@ -1,0 +1,249 @@
+<div layout="column" layout-align="start stretch" data-ng-init="loaddtVisitass()">
+   <!-- PURIBE 14032024 - INICIO -->
+   <md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+      <div class="md-toolbar-tools md-toolbar-tools-size">
+       <h2 flex md-truncate md-colors="{color: 'background-A100'}" style="font-size: 17px;">Lista de reuniones de trabajo programadas</h2>
+       <md-button aria-label="Nuevo Visitas"  ng-click="showConfirmEliminar($event, dato)"  class="md-button-borde md-sm">
+         <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">event_busy</md-icon>
+         <span style="color: rgb(255,255,255);">Anular</span> </md-button>
+            </md-button>
+            <md-button class="md-button-borde md-sm" ng-href="{{descargarvista()}}" target="_blank" aria-label="Exportar">
+               <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">file_download</md-icon>
+            <span style="color: rgb(255,255,255);">Exportar</span> </md-button>
+           </md-button>
+
+           
+        
+      </div>
+   </md-toolbar>    
+       
+  
+ <!-- Filtro -->
+<md-toolbar class="md-toolbar-filtro-size">
+ <div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="space-between center">
+ 
+      <div class="tamaDivFiltro">
+      <md-button class="md-button-borde-naranja md-sm" ng-click="nuevoDtVisitas()" aria-label="Nueva reuni&oacute;n"> 
+              <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: inherit;">playlist_add</md-icon>
+                <span>Crear reuni&oacute;n</span>
+            </md-button>
+      </div> 
+        <div class="tamaDivFiltro">
+        <md-input-container class="container_margen-top" style="margin-top: 42px;"> 
+          <label style="font-size: 15px;">Fecha de inicio</label>
+          <md-datepicker required ng-model="filtro.fechaInicio" 
+                   md-placeholder="Fecha de inicio"
+                   input-aria-describedby="datepicker-description"
+                   input-aria-labelledby="datepicker-header ">
+          </md-datepicker>
+        </md-input-container>
+        </div>
+        
+           <div class="tamaDivFiltro">
+            <md-input-container class="container_margen-top" style="margin-top: 42px;"> 
+              <label style="font-size: 15px;">Fecha fin</label>
+              <md-datepicker required ng-model="filtro.fechaFin" 
+                       md-placeholder="Fecha fin"
+                       input-aria-describedby="datepicker-description"
+                       input-aria-labelledby="datepicker-header ">
+              </md-datepicker>
+            </md-input-container>
+            </div>
+            
+            <div class="tamaDivFiltro" style="font-size: 14px;margin-top: 22px;">
+            <md-input-container class="container_margen-top"> 
+               <input type="text" name="Entidad" ng-model="filtro.Entidad" placeholder="Entidad" /> 
+            </md-input-container>
+            </div>
+     
+         <div class="tamaDivFiltro">
+            <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
+               <label  id="miLabel" style="width: 100px;">Departamento</label>
+                  <!--PURIBE 29032024 INICIO-->
+                     <md-select ng-model="filtro.Departamento" placeholder="Departamento" class="ttamdtdepartamento"
+                      name="codDpto">
+                      <!--PURIBE 29032024 FIN-->
+                     <md-option ng-value="0">SIN DEPARTAMENTO</md-option>
+                  <md-option ng-repeat="item in listaMsUbigeoCodDpto" ng-value="item.valor" >
+                        {{item.valor}}
+                  </md-option>
+                  </md-select>
+               </md-input-container>
+          </div>
+          
+          <div class="tamaDivFiltro" style="font-size: 14px;margin-top: 22px;">
+            <md-input-container class="container_margen-top"> 
+               <input type="text" name="Participante" ng-model="filtro.participante" placeholder="Participante" /> 
+            </md-input-container>
+            </div>
+            
+           <div class="tamaDivFiltro"> 
+            <md-button class="md-button-borde-naranja md-sm" ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
+              <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: inherit;">search</md-icon>
+                <span>BUSCAR</span>
+            </md-button>
+            </div>
+			
+			   <!-- FIN Filtro -->
+<!--       <div class="tamaDivFiltro" style ="display:inline-block; text-align: right;"> -->
+<!--                <md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page" -->
+<!--                      md-total="{{total}}" md-page-select="options.pageSelect"  -->
+<!--                      md-boundary-links="options.boundaryLinks" -->
+<!--                      md-on-paginate="logPagination">  -->
+<!--                </md-table-pagination> -->
+<!--                </div> -->
+
+    
+</div>
+</md-toolbar>
+
+<!--   PURIBE 29032024 - INICIO*/ -->
+<div class="tamaDivFiltro">  
+   <md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+         md-total="{{total}}" md-page-select="options.pageSelect" 
+         md-boundary-links="options.boundaryLinks"
+         md-on-paginate="logPagination"> 
+   </md-table-pagination>
+   </div>
+<!--   PURIBE 29032024 - FIN*/ -->
+
+
+   <md-divider style="margin-top: 20px;"></md-divider>
+     <md-table-container><!--   PURIBE 29032024  INICIO-->
+       <table resize md-table md-row-select="options.rowSelection" multiple="{{options.multiSelect}}" 
+              ng-model="selected" md-progress="promise">
+         <thead id="tablewidth" ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="logOrder">
+            <tr md-row class="md-table-head-label">
+            <th class="md-title ttamblanco" md-column><span></span> </th>
+           <th class="md-title ttamblanco" md-column><span></span> </th>
+           <th class="md-title ttamblanco" md-column><span></span> </th>
+                 <th class="md-title ttamblanco" md-column><span>N&deg;</span></th>
+             
+              <th class="md-title ttamdtVisitasidVisita" md-column md-order-by="idVisita">
+              <span>ID</span></th>  
+              <th class="md-title ttamdtVisitasfechaVisita" md-column md-order-by="fechaProgramada">
+              <span>Fecha De reuni&oacute;n</span></th>
+            
+        <th class="md-title ttamdtVisitasidSistAdm" md-column md-order-by="idSistAdmTxt">
+              <span>Sistema Administrativo</span></th>
+              <th class="md-title ttamdtVisitasidparticipante" md-column md-order-by="idParticipanteTxt">
+               <span>Participante</span></th>
+         <th class="md-title ttamdtVisitasidSede" md-column md-order-by="idSedeTxt">
+              <span>Sede</span></th>
+              <th class="md-title ttamdtVisitasidOrigen" md-column md-order-by="idOrigenTxt">
+              <span>Origen</span></th>
+              <th class="md-title ttamdtVisitasidProgramacion" md-column md-order-by="Programacion">
+              <span>Programaci&oacute;n</span></th>
+              
+                <th class="md-title ttamblanco" md-column><span>Estado</span></th>
+            </tr>
+            <tr md-row class="md-table-head-order">
+            <th md-column>&nbsp;</th>  
+            <th md-column>&nbsp;</th>     
+            <th md-column>&nbsp;</th> 
+            <th md-column>&nbsp;</th> 
+            <th md-column> 
+               <input type="text" name="ID" ng-model="filtro.idVisita" placeholder="ID" 
+                      ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtVisitasidVisita"/>
+            </th>
+              
+            <th md-column> 
+               <input type="text" name="fechaProgramada" ng-model="filtro.fechaProgramada" placeholder="Fecha De reuni&oacute;n" 
+                      ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtVisitasfechaVisita"/>
+            </th>
+        
+            <th md-column> 
+               <input type="text" name="idSistAdmTxt" ng-model="filtro.idSistAdmTxt" placeholder="Sistema Administrativo" 
+                      ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtVisitasidSistAdm"/>
+            </th>
+            <th md-column> 
+               <!--   PURIBE 29032024  INICIO-->
+               <input type="text" name="idParticipanteTxt" ng-model="filtro.idParticipanteTxt" placeholder="Participante"  
+                      ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtVisitasidparticipante"/>
+          <!--   PURIBE 29032024  FIN-->
+            </th>
+            <th md-column> 
+               <input type="text" name="idSedeTxt" ng-model="filtro.idSedeTxt" placeholder="Sede" 
+                      ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtVisitasidSede"/>
+            </th>
+            <th md-column> 
+               <input type="text" name="idOrigenTxt" ng-model="filtro.idOrigenTxt" placeholder="Origen" 
+                      ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtVisitasidOrigen"/>
+            </th>         
+            <th md-column> 
+               <input type="text" name="idProgramacionTxt" ng-model="filtro.idProgramacionTxt" placeholder="Programacion" 
+                      ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamdtVisitasidProgramacion"/>
+            </th>      
+            <th md-column> 
+               <input type="text" name="estadoTxt" ng-model="filtro.estadoTxt" placeholder="Estado" 
+                      ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttamprtEstado"/>
+            </th>      
+   
+              <th md-column>&nbsp;</th>
+            </tr>
+         </thead>
+         <tbody md-body>
+            <tr class="primary triddtVisitas md-table-cuerpo" md-row md-select="dato"   md-auto-select="options.autoSelect"   
+                ng-disabled="dato.idVisita > 0" ng-repeat-start="dato in datos">
+                
+            <td class="tdaa8 md-table-cuerpo" data-title="Anular" md-cell style="padding-right: 0;">
+                  <md-checkbox  aria-label="Anular" ng-click="logItem($event, dato)" ng-if="dato.dtVisitasACL.eliminar"  id="{{ 'checkbox_' + dato.idVisita }}">
+                  
+                  </md-checkbox>
+            </td>
+
+			<td class="tdaa8 md-table-cuerpo" data-title="Edicion" md-cell style="padding-right: 0;">
+             <div layout="row" layout-xs="column" layout-align="center center">
+                <md-button class="md-icon-button"
+                        ng-click="editarDtVisitas($event, dato)"
+                        ng-if="dato.dtVisitasACL.editopcion"> <md-icon style="font-size: 20px;"
+                        md-font-set="material-icons">edit</md-icon> </md-button>                
+             </div>
+            </td>
+            
+            <td class="tdaa8 md-table-cuerpo" data-title="Reactivar" md-cell style="padding-right: 0;">
+             <div layout="row" layout-xs="column" layout-align="center center"> 
+                <md-button class="md-icon-button" ng-click="showConfirmReactivar($event, dato)" 
+                			ng-if="dato.dtVisitasACL.reactivar"> <md-icon
+                        md-font-set="material-icons" style="font-size: 20px;">replay</md-icon> </md-button>                 
+             </div>
+            </td>
+
+                
+             <td md-cell>{{$index + 1}}</td>
+             <td class="tdaa1 md-table-cuerpo" data-title="ID" md-cell>
+             {{dato.idVisita}}</td>
+             <td class="tdaa1 md-table-cuerpo" data-title="Fecha programada" md-cell>
+             {{dato.fechaProgramadaMostrar}}</td>
+             <td class="tdaa1 md-table-cuerpo" data-title="Sistema Administrativo" md-cell>
+               {{dato.idSistAdmTxt}}</td>
+               <td class="tdaa1 md-table-cuerpo" data-title="Participantes" md-cell>
+                  {{dato.idParticipanteTxt}}</td>
+               <td class="tdaa1 md-table-cuerpo" data-title="Sede" md-cell>
+               {{dato.idSedeTxt}}</td>
+             <td class="tdaa1 md-table-cuerpo" data-title="Origen" md-cell>
+             {{dato.idOrigenTxt}}</td>
+             <td class="tdaa1 md-table-cuerpo" data-title="Programaci&oacute;n" md-cell>
+             {{dato.idProgramacionTxt}}</td>
+      
+              <td class="tdaa8 md-table-cuerpo" data-title="Acciones" md-cell>
+                <div layout="row" layout-xs="column" layout-align="center center">
+                           <label style="font-size: 12px;">{{dato.estadoTxt}}</label>
+                </div>
+               </td>
+              </tr>
+              <tr class="secondary childiddtVisitas" ng-repeat-end></tr>
+          </tbody>
+       </table>
+     </md-table-container>
+     </div>
+     <div>&nbsp;</div>
+     <div>&nbsp;</div>
+     <div>&nbsp;</div>
+     <div>&nbsp;</div>
+     <div>&nbsp;</div>
+       <!-- Footer -->
+       <!-- PURIBE 14032024 - FIN -->
+<!--    <div ng-include="'paginas/pie.html'"></div> -->
+<div id="pie" ng-include="'paginas/pie.html'"></div> <!-- PURIBE 29032024 - INICIO -->
+   <!-- Fin Footer -->

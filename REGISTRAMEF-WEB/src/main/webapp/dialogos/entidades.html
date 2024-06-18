@@ -1,0 +1,264 @@
+<md-dialog layout-padding flex>
+<!-- //MPINARES 24012023 - INICIO - NUEVO HTML-->
+<md-dialog-content md-whiteframe="1" class="overflowEsconder" style="font-size: 14px;">
+
+<md-toolbar style="background: rgb(255,255,255);"
+		class="md-toolbar-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size">
+		<md-button class="md-icon-button" ng-click="cancel()"
+			style="margin-left: -19px;margin-bottom: 11px;"> <md-icon
+			md-font-set="material-icons" aria-label="Close dialog"
+			style="font-size: 29px;color: rgb(189,189,189);">close</md-icon>
+		</md-button>
+		<div flex="auto" >
+			<h2 md-truncate 
+				style="font-weight: 700;font-style: normal;font-size: 14px;color: rgba(51, 102, 102, 0.556862745098039);">Nueva Entidad</h2>
+		</div>
+		<md-button class="md-button-entidad md-sm"
+			ng-click="salvarDtEntidades($event)" style="margin-bottom: 8px;color: black;border: rgb(189,189,189) 1px solid !important;" 
+			aria-label="Agregar">
+		<span>Agregar</span> </md-button>
+
+		
+	</div>
+	</md-toolbar>
+
+<fieldset >
+<legend>Datos generales</legend>
+	<md-content md-whiteframe="1" class="overflowEsconder noshadow"
+				md-colors="{background: 'background-A100'}">
+				
+				<div layout="row" layout-aling="center start"> 
+        <md-input-container class="md-block input-container-margen" flex >
+            <input type="text" md-maxlength="11" required name="ruc" ng-model="dtEntidadesModelo.ruc"
+                   placeholder="N&uacute;mero de ruc"
+                   >
+           <div ng-messages="dtEntidadesForm.ruc.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Número De Ruc.</div>
+            <div ng-message="maxlength">El Número De Ruc tiene un m&aacute;ximo de 11 caracteres.</div>
+            </div>
+         </md-input-container>
+         
+         <md-input-container class="md-block input-container-margen" flex >
+            <input type="text" md-maxlength="10" required name="codEjec" ng-model="dtEntidadesModelo.codEjec"
+                   placeholder="C&oacute;digo ejecutora/SICON"
+                   >
+           <div ng-messages="dtEntidadesForm.codEjec.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Unidad Ejecutora.</div>
+            <div ng-message="maxlength">El Unidad Ejecutora tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container> 
+          
+ </div>
+ 
+ <div layout="row" layout-aling="center start"> 
+        <md-input-container class="md-block input-container-margen" flex style="margin: auto;">
+            <input type="text" md-maxlength="200" required name="razSocial" ng-model="dtEntidadesModelo.razSocial"
+                   placeholder="Raz&oacute;n social"
+                   >
+           <div ng-messages="dtEntidadesForm.razSocial.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Razón Social.</div>
+            <div ng-message="maxlength">El Razón Social tiene un m&aacute;ximo de 200 caracteres.</div>
+            </div>
+         </md-input-container>   
+          
+ </div>
+ 
+  <div layout="row" layout-aling="center start"> 
+        <md-input-container class="md-block input-container-margen" flex >
+        	<label>Sede Principal</label>
+            <md-select ng-model="dtEntidadesModelo.idSede" ng-change="changeIdTipo()" required
+                       placeholder="Sede Principal"
+                       name="idTipo">
+             <md-option ng-repeat="item in listaMsSedes" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtEntidadesForm.idSede.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>   
+         
+        <md-input-container class="md-block input-container-margen" flex >
+            <md-checkbox ng-model="dtEntidadesModelo.geozona"
+							aria-label="Checkbox 1" ng-true-value="1" ng-false-value="0">
+						CON GEOZONA </md-checkbox>
+         </md-input-container> 
+          
+ </div>
+ 
+ <div layout="row" layout-aling="center start"> 
+        <md-input-container class="md-block input-container-margen" flex >
+        <label>Sede Tipo de entidad</label>
+            <md-select ng-model="dtEntidadesModelo.idTipo" ng-change="changeIdTipo()" required
+                       placeholder="Tipo de entidad"
+                       name="idTipo">
+             <md-option ng-repeat="item in listaPrtParametrosIdTipoEntidad" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtEntidadesForm.idTipo.$error">
+	      <div ng-message="required">Se requiere seleccione Tipo de entidad.</div>
+	    </div>
+         </md-input-container>   
+          
+ </div>
+ 
+  <div layout="row" layout-aling="center start"> 
+        <md-input-container class="md-block input-container-margen" flex style="margin: auto;">
+             <input type="text" md-maxlength="200" required name="razSocial" ng-model="dtEntidadesModelo.direccion"
+                   placeholder="Direcci&oacute;n"
+                   >
+            <div ng-messages="dtEntidadesForm.direccion.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Dirección.</div>
+            <div ng-message="maxlength">El Dirección tiene un m&aacute;ximo de 300 caracteres.</div>
+            </div>
+         </md-input-container>   
+          
+ </div>
+ 
+ <div layout="row" layout-aling="center start"> 
+        <md-input-container class="md-block input-container-margen" flex>
+        <label>Departamento</label>
+            <md-select ng-model="dtEntidadesModelo.codDpto" ng-change="changeCoddpto()" required
+                       placeholder="Departamento"
+                       name="idTipo">
+             <md-option ng-repeat="item in listaCoddptoss" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtEntidadesForm.idTipo.$error">
+	      <div ng-message="required">Se requiere seleccione el Departamento.</div>
+	    </div>
+         </md-input-container>  
+         
+         <md-input-container class="md-block input-container-margen" flex>
+         <label>Caracteristica</label>
+            <md-select ng-model="dtEntidadesModelo.idCaract" ng-change="changeIdTipo()" required
+                       placeholder="Caracteristica"
+                       name="idCaract">
+             <md-option ng-repeat="item in listaPrtParametrosIdCaracteristica" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtEntidadesForm.idCaract.$error">
+	      <div ng-message="required">Se requiere seleccione la Caracteristica.</div>
+	    </div>
+         </md-input-container>  
+          
+ </div>
+ 
+ <div layout="row" layout-aling="center start"> 
+        <md-input-container class="md-block input-container-margen" flex>
+        	<label>Provincia</label>
+            <md-select ng-model="dtEntidadesModelo.codProv" ng-change="changeCodprov()" required
+                       placeholder="Provincia"
+                       name="idTipo">
+             <md-option ng-repeat="item in listaCodprovs" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtEntidadesForm.idTipo.$error">
+	      <div ng-message="required">Se requiere seleccione la Provincia.</div>
+	    </div>
+         </md-input-container>  
+         
+         <md-input-container class="md-block input-container-margen" flex>
+         <label>Distrito</label>
+            <md-select ng-model="dtEntidadesModelo.codDistr" required
+                       placeholder="Distrito"
+                       name="idTipo">
+             <md-option ng-repeat="item in listaCoddists" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtEntidadesForm.idTipo.$error">
+	      <div ng-message="required">Se requiere seleccione el Distrito.</div>
+	    </div>
+         </md-input-container>  
+          
+ </div>
+				
+	</md-content>
+</fieldset>
+
+
+<fieldset >
+	<legend>Sistemas administrativos y sedes asociadas</legend>
+	<md-content md-whiteframe="1" class="overflowEsconder noshadow"
+				md-colors="{background: 'background-A100'}">
+				<md-table-container
+				flex="100">
+			<table md-progress="promise" md-row-select="options.rowSelection"
+				md-table multiple="{{options.multiSelect}}" ng-model="selected"
+				resize>
+				<thead id="tablewidth" md-head md-on-reorder="logOrder"
+					md-order="query.order" ng-if="!options.decapitate">
+
+					<tr class="md-table-head-label" md-row>
+						<th class="md-title ttamnumero" md-column flex="13"><span>&nbsp;</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Sistema administrativo</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Sede</span></th>
+						<th class="md-title ttamopciones" md-column flex="20"><span>Opciones</span></th>
+					</tr>
+				<tbody md-body style="font-size: 14px;">
+					<tr class="primary tridtdPersonalPersonal md-table-cuerpo"
+						md-auto-select="options.autoSelect" md-on-select="logItem" md-row
+						md-select="dato" ng-disabled="dato.id > 0"
+						ng-repeat-start="dato in datoEntidadSisAdmin">
+
+						<td md-cell flex="20">{{$index + 1}}</td>
+						
+						<td class="tdaa1 md-table-cuerpo" data-title="Sisadmin" md-cell>
+							<div layout="row" flex>
+								<div class="letraenvoltura" flex="100">
+
+									<md-input-container class="input-container-margen letraTexto">
+
+									<md-select ng-model="dato.idSistAdmi" 
+										required placeholder="Seleccionar sistema" name="idSistAdmi">
+									<md-option ng-repeat="item in listaMsSisAdmin"
+										ng-value="item.id"> {{item.valor}} </md-option> </md-select> </md-input-container>
+								</div>
+							</div>
+						</td>
+
+						<td class="tdaa1 md-table-cuerpo" data-title="Sede" md-cell>
+							<div layout="row">
+								<div class="letraenvoltura" flex="100">
+
+									<md-input-container class="input-container-margen letraTexto">
+									<md-select ng-model="dato.idSede" required ng-change="changeIdSedeEnti($event,dato)"
+										placeholder="Seleccionar Sede" name="idSede">
+									<md-option ng-repeat="item in listaMsSedes"
+										ng-value="item.id"> {{item.valor}} </md-option> </md-select> </md-input-container>
+								</div>
+							</div>
+						</td>
+						
+						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
+							<md-button class="md-icon-button md-primary"
+								ng-click="removeEntidadSisAdmin($event,dato)" ng-if="!dato.add">
+							<md-icon md-font-set="material-icons">remove</md-icon> </md-button> <md-button
+								class="md-icon-button md-primary"
+								ng-click="nuevoEntidadSisAdmin($event,dato)" ng-if="dato.add">
+							<md-icon md-font-set="material-icons">add_circle</md-icon> </md-button>
+						</td>
+
+					</tr>
+					<tr class="secondary childidtdPersonalPersonal" ng-repeat-end></tr>
+				</tbody>
+
+			</table>
+			</md-table-container> 
+	</md-content>
+ </fieldset>
+ 
+
+</md-dialog-content>
+ 
+</md-dialog>

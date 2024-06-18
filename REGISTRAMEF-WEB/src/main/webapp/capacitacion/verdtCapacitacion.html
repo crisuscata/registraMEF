@@ -1,0 +1,347 @@
+<div layout="column" layout-align="start stretch" data-ng-init="loaddtCapacitacions()">
+<!-- //MPINARES 14022024 - INICIO - SE CAMBIA TODO -->
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size">
+	<h2 flex md-truncate md-colors="{color: 'background-A100'}" style="font-size: 17px;">Lista de capacitaciones programadas</h2>
+	<md-button class="md-button-borde md-sm"  ng-click="showConfirmAnularCapacitacion($event)" aria-label="Anular">
+         <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">event_busy</md-icon>
+		<span style="color: rgb(255,255,255);">Anular</span> </md-button>
+         <md-button class="md-button-borde md-sm" ng-href="{{descargarvista()}}" target="_blank" aria-label="Exportar">
+         <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">file_download</md-icon>
+		<span style="color: rgb(255,255,255);">Exportar</span> </md-button>
+		<md-button class="md-button-borde md-sm"  ng-click="showConfirmPrepublicarCapacitacion($event)" aria-label="Pre-publicar">
+         <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">system_update_alt</md-icon>
+		<span style="color: rgb(255,255,255);">Pre-publicar</span> </md-button>
+		<md-button class="md-button-borde md-sm"  ng-click="showConfirmAcumularCapacitacion($event)" aria-label="Acumular">
+         <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">grid_on</md-icon>
+		<span style="color: rgb(255,255,255);">Acumular</span> </md-button>
+	
+	
+<!-- 	 <h2 flex md-truncate md-colors="{color: 'background-A100'}">Lista De Los Datos Registrados En Una Capacitación</h2> -->
+<!-- 	 <md-button aria-label="Nuevo Capacitaciones" ng-click="nuevoDtCapacitacion()" ng-if="creadtCapacitacion" class="md-button-borde md-sm"> -->
+<!--              Nuevo Capacitaciones -->
+<!--          </md-button> -->
+	</div>
+</md-toolbar>    
+    
+<!-- Filtro -->
+<md-toolbar class="md-toolbar-filtro-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="space-between center">
+	<div class="tamaDivFiltro"> 
+            <md-button class="md-button-borde-naranja md-sm" ng-click="nuevoDtCapacitacion()" aria-label="Crear capacitaci&oacute;n"> 
+            	<md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: inherit;">playlist_add</md-icon>
+                <span>Crear capacitaci&oacute;n</span>
+            </md-button>
+            </div>
+     <div class="tamaDivFiltro">
+            <md-input-container class="container_margen-top" style="margin-top: 42px;"> 
+            	<label style="font-size: 15px;">Fecha de inicio</label>
+            	<md-datepicker required ng-model="filtro.fechaInicio" 
+	                     md-placeholder="Fecha de inicio"
+	                     input-aria-describedby="datepicker-description"
+	                     input-aria-labelledby="datepicker-header ">
+	            </md-datepicker>
+            </md-input-container>
+            </div>
+            <div class="tamaDivFiltro">
+            <md-input-container class="container_margen-top" style="margin-top: 42px;"> 
+            	<label style="font-size: 15px;">Fecha fin</label>
+            	<md-datepicker required ng-model="filtro.fechaFin" 
+	                     md-placeholder="Fecha fin"
+	                     input-aria-describedby="datepicker-description"
+	                     input-aria-labelledby="datepicker-header ">
+	            </md-datepicker>
+            </md-input-container>
+            </div>
+            <div class="tamaDivFiltro" style="font-size: 14px;margin-top: 22px;">
+            <md-input-container class="container_margen-top"> 
+               <input type="text" name="Entidad" ng-model="filtro.entidadesTxt" placeholder="Entidad" /> 
+            </md-input-container>
+            </div>
+            <div class="tamaDivFiltro" style="font-size: 14px;">
+			<md-input-container style="margin-right: 15px;"> 
+				<label>Sede</label>
+				<md-select
+				ng-model="filtro.idSedeTxt" placeholder="Sede"> 
+				<md-option ng-value="">Todas las sedes</md-option>
+				<md-option
+				ng-repeat="item in listaMsSedes" ng-value="item.valor">
+			{{item.valor}} </md-option> </md-select> </md-input-container>
+			</div>
+            <div class="tamaDivFiltro"> 
+            <md-button class="md-button-borde-naranja md-sm" ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
+            	<md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: inherit;">search</md-icon>
+                <span>BUSCAR</span>
+            </md-button>
+            </div>
+
+            <div class="tamaDivFiltro">
+            <md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                  md-total="{{total}}" md-page-select="options.pageSelect" 
+                  md-boundary-links="options.boundaryLinks"
+                  md-on-paginate="logPagination"> 
+            </md-table-pagination>
+            </div>
+	
+	
+<!--             <div class="tamaDivFiltro"> -->
+<!--             <label>N° de Capacitaciones:</label> -->
+<!--             <md-input-container class="container_margen-top">  -->
+<!--                <input type="text" name="idCapacitacion" ng-model="filtro.idCapacitacion" />  -->
+<!--             </md-input-container> -->
+<!--             </div> -->
+<!--             <div class="tamaDivFiltro">  -->
+<!--             <md-button class="md-button-borde-naranja md-sm" ng-click="refrescarvista($event)" aria-label="BUSCAR">  -->
+<!--                 <span>BUSCAR</span> -->
+<!--             </md-button> -->
+<!--             </div> -->
+<!--             <div class="tamaDivFiltro"> -->
+<!--             <md-button class="md-button-borde-naranja md-sm" ng-href="{{descargarvista($event)}}" target="_blank" aria-label="DESCARGAR"> -->
+<!--             <span>DESCARGAR</span> </md-button> -->
+<!--             </div> -->
+<!--             <div class="tamaDivFiltro"> -->
+<!--             <md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page" -->
+<!--                   md-total="{{total}}" md-page-select="options.pageSelect"  -->
+<!--                   md-boundary-links="options.boundaryLinks" -->
+<!--                   md-on-paginate="logPagination">  -->
+<!--             </md-table-pagination> -->
+<!--             </div> -->
+	</div>
+</md-toolbar>
+<!-- FIN Filtro -->
+<md-divider style="margin-top: 20px;"></md-divider>
+  <md-table-container>
+    <table resize md-table md-row-select="options.rowSelection" multiple="{{options.multiSelect}}" 
+           ng-model="selected" md-progress="promise">
+      <thead id="tablewidth" ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="logOrder">
+         <tr md-row class="md-table-head-label">
+           <th class="md-title ttamnumero" md-column><span>N&deg;</span></th>
+           <th class="md-title ttacheckbox" md-column style="padding-right: 0;"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
+           <th class="md-title ttaeditreg" md-column style="padding-right: 0;"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
+           <th class="md-title ttaedireact" md-column style="padding-right: 0;"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
+           <th class="md-title ttamdtCapacitacionidCapacitacion" md-column md-order-by="idCapacitacion">
+           <span>ID</span></th>
+           <th class="md-title " md-column md-order-by="fechaInic">
+           <span>Fecha de inicio</span></th>   
+           <th class="md-title " md-column md-order-by="fechaFin">
+           <span>Fecha de fin</span></th>
+           <th class="md-title " md-column md-order-by="idSistAdmTxt">
+           <span>Nombre de evento</span></th>
+           <th class="md-title " md-column md-order-by="nomEvento">
+           <span>SIS. administrativo</span></th>
+           <th class="md-title " md-column md-order-by="idUsuinternoTxt">
+           <span>USU. interno</span></th>
+           <th class="md-title " md-column md-order-by="temasTxt">
+           <span>tema</span></th>
+           <th class="md-title " md-column md-order-by="flagPubliTxt">
+           <span>Publicada</span></th>
+           <th class="md-title " md-column md-order-by="idModoTxt">
+           <span>Modo</span></th>
+           <th class="md-title " md-column md-order-by="estadoTxt">
+           <span>Estado</span></th>
+<!--            <th class="md-title ttamdtCapacitacionfechaInic" md-column md-order-by="fechaInic"> -->
+<!--            <span>Fecha De Inicio</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionfechaFin" md-column md-order-by="fechaFin"> -->
+<!--            <span>Fecha Fin</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacioncantPartic" md-column md-order-by="cantPartic"> -->
+<!--            <span>Cantidad De Participantes</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionnomEvento" md-column md-order-by="nomEvento"> -->
+<!--            <span>Nombre Del Evento</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionidLocal" md-column md-order-by="idLocal"> -->
+<!--            <span>Local</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionidUsuinterno" md-column md-order-by="idUsuinterno"> -->
+<!--            <span>Usuario Interno</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionidModo" md-column md-order-by="idModo"> -->
+<!--            <span>Modo</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionidNivel" md-column md-order-by="idNivel"> -->
+<!--            <span>Nivel</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionidOrigen" md-column md-order-by="idOrigen"> -->
+<!--            <span>Origen</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionidPrestacion" md-column md-order-by="idPrestacion"> -->
+<!--            <span>Prestación</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionidProgramacion" md-column md-order-by="idProgramacion"> -->
+<!--            <span>Programación</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionidTipo" md-column md-order-by="idTipo"> -->
+<!--            <span>Tipo</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionidSede" md-column md-order-by="idSede"> -->
+<!--            <span>Sede</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionidSistAdm" md-column md-order-by="idSistAdm"> -->
+<!--            <span>Sistema Administrativo</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionidFinancia" md-column md-order-by="idFinancia"> -->
+<!--            <span>Tipo De Financiamiento</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionfechaFinalizacion" md-column md-order-by="fechaFinalizacion"> -->
+<!--            <span>Fecha De Finalización</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionidModalidad" md-column md-order-by="idModalidad"> -->
+<!--            <span>Modalidad</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionfechaIniProgramada" md-column md-order-by="fechaIniProgramada"> -->
+<!--            <span>Fecha Y Hora De Inicio</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionfechaFinProgramada" md-column md-order-by="fechaFinProgramada"> -->
+<!--            <span>Fecha Y Hora De Fin</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionfechaSoli" md-column md-order-by="fechaSoli"> -->
+<!--            <span>Fecha De Solicitud</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionstdNumeroSid" md-column md-order-by="stdNumeroSid"> -->
+<!--            <span>Sgdd Número</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionstdNumeroDoc" md-column md-order-by="stdNumeroDoc"> -->
+<!--            <span>Número De Documento</span></th> -->
+<!--            <th class="md-title ttamdtCapacitacionmotivoEjec" md-column md-order-by="motivoEjec"> -->
+<!--            <span>Motivo De Ejecución</span></th> -->
+           
+           <th class="md-title ttamblanco" md-column><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
+         </tr>
+         <tr md-row class="md-table-head-order">
+         <th md-column>&nbsp;</th>   
+         <th md-column>&nbsp;</th> 
+         <th md-column>&nbsp;</th> 
+         <th md-column>&nbsp;</th>   
+         
+         <th md-column> 
+            <input type="text" name="ID" ng-model="filtro.idCapacitacion" placeholder="ID" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+         </th>
+         <th md-column>&nbsp;</th> 
+         <th md-column>&nbsp;</th> 
+         <th md-column> 
+            <input type="text" name="nomEvento" ng-model="filtro.nomEvento" placeholder="Nombre de evento" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+         </th>
+         <th md-column> 
+            <input type="text" name="idSistAdm" ng-model="filtro.idSistAdm" placeholder="SIS. administrativo" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+         </th>
+         <th md-column> 
+            <input type="text" name="idUsuinternoTxt" ng-model="filtro.idUsuinternoTxt" placeholder="USU. interno" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+         </th>
+         <th md-column> 
+            <input type="text" name="temasTxt" ng-model="filtro.temasTxt" placeholder="tema" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+         </th>
+         <th md-column> 
+            <input type="text" name="flagPubliTxt" ng-model="filtro.flagPubliTxt" placeholder="Publicada" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+         </th>
+         <th md-column> 
+            <input type="text" name="idModoTxt" ng-model="filtro.idModoTxt" placeholder="Modo" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+         </th>
+         <th md-column> 
+            <input type="text" name="estadoTxt" ng-model="filtro.estadoTxt" placeholder="Estado" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+         </th>
+         </tr>
+      </thead>
+      <tbody md-body>
+         <tr class="primary triddtCapacitacion md-table-cuerpo" md-row md-select="dato" md-on-select="logItem" md-auto-select="options.autoSelect"   
+             ng-disabled="dato.idCapacitacion > 0" ng-repeat-start="dato in datos">
+          <td md-cell>{{$index + 1}}</td>
+          <td style="padding-right: 0;"><input type="checkbox" ng-model="dato.checked" ng-change="selection(dato)"></td>
+          <td class="tdaa8 md-table-cuerpo" data-title="Acciones" md-cell style="padding-right: 0;">
+             <div layout="row" layout-xs="column" layout-align="center center">
+                <md-button class="md-icon-button"
+                        ng-click="editarDtCapacitacion($event, dato)"
+                        ng-if="dato.dtCapacitacionACL.esEditable"> <md-icon style="font-size: 20px;"
+                        md-font-set="material-icons">edit</md-icon> </md-button>                
+             </div>
+            </td>
+            <td class="tdaa8 md-table-cuerpo" data-title="React" md-cell style="padding-right: 0;">
+             <div layout="row" layout-xs="column" layout-align="center center"> 
+                <md-button class="md-icon-button" ng-click="showConfirmReactivarCapacitacion($event, dato)" 
+                			ng-if="dato.dtCapacitacionACL.reactivar"> <md-icon
+                        md-font-set="material-icons" style="font-size: 20px;">replay</md-icon> </md-button>                 
+             </div>
+            </td>
+          <td class="tdaa1 md-table-cuerpo" data-title="ID" md-cell>
+          {{dato.idCapacitacion}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Fecha de inicio" md-cell>
+          {{formatDMYHM(dato.fechaInic)}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Fecha de fin" md-cell>
+          {{formatDMYHM(dato.fechaFin)}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Nombre de evento" md-cell>
+          {{dato.nomEvento}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="SIS. administrativo" md-cell>
+          {{dato.idSistAdmTxt}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="USU. interno" md-cell>
+          {{dato.idUsuinternoTxt}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="tema" md-cell>
+          {{dato.temasTxt}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Publicada" md-cell>
+          {{dato.flagPubliTxt}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Modo" md-cell>
+          {{dato.idModoTxt}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Estado" md-cell>
+          {{dato.estadoTxt}}</td>
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Fecha De Inicio" md-cell> -->
+<!--           {{dato.fechaInic}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Fecha Fin" md-cell> -->
+<!--           {{dato.fechaFin}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Cantidad De Participantes" md-cell> -->
+<!--           {{dato.cantPartic}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Nombre Del Evento" md-cell> -->
+<!--           {{dato.nomEvento}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Local" md-cell> -->
+<!--           {{dato.idLocal}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Usuario Interno" md-cell> -->
+<!--           {{dato.idUsuinterno}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Modo" md-cell> -->
+<!--           {{dato.idModo}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Nivel" md-cell> -->
+<!--           {{dato.idNivel}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Origen" md-cell> -->
+<!--           {{dato.idOrigen}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Prestación" md-cell> -->
+<!--           {{dato.idPrestacion}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Programación" md-cell> -->
+<!--           {{dato.idProgramacion}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Tipo" md-cell> -->
+<!--           {{dato.idTipo}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Sede" md-cell> -->
+<!--           {{dato.idSede}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Sistema Administrativo" md-cell> -->
+<!--           {{dato.idSistAdm}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Tipo De Financiamiento" md-cell> -->
+<!--           {{dato.idFinancia}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Fecha De Finalización" md-cell> -->
+<!--           {{dato.fechaFinalizacion}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Modalidad" md-cell> -->
+<!--           {{dato.idModalidad}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Fecha Y Hora De Inicio" md-cell> -->
+<!--           {{dato.fechaIniProgramada}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Fecha Y Hora De Fin" md-cell> -->
+<!--           {{dato.fechaFinProgramada}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Fecha De Solicitud" md-cell> -->
+<!--           {{dato.fechaSoli}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Sgdd Número" md-cell> -->
+<!--           {{dato.stdNumeroSid}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Número De Documento" md-cell> -->
+<!--           {{dato.stdNumeroDoc}}</td> -->
+<!--           <td class="tdaa1 md-table-cuerpo" data-title="Motivo De Ejecución" md-cell> -->
+<!--           {{dato.motivoEjec}}</td> -->
+           
+<!--            <td class="tdaa8 md-table-cuerpo" data-title="Acciones" md-cell> -->
+<!--              <div layout="row" layout-xs="column" layout-align="center center"> -->
+<!--                  <md-button class="{{dato.cclase}}" -->
+<!--                         ng-click="showConfirm($event, dato)" -->
+<!--                         ng-if="dato.dtCapacitacionACL.eliminar"> -->
+<!--                         <label>{{dato.cestado}}</label> -->
+<!--                         </md-button> -->
+<!--                 <md-button class="md-icon-button md-primary" -->
+<!--                         ng-click="editarDtCapacitacion($event, dato)" -->
+<!--                         ng-if="dato.dtCapacitacionACL.esEditable"> <md-icon -->
+<!--                         md-font-set="material-icons">search</md-icon> </md-button>                  -->
+<!--              </div> -->
+<!--             </td> -->
+           </tr>
+           <tr class="secondary childiddtCapacitacion" ng-repeat-end></tr>
+       </tbody>
+    </table>
+  </md-table-container>
+  </div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+    <!-- Footer -->
+<!-- <div ng-include="'paginas/pie.html'"></div> -->
+<div id="pie" ng-include="'paginas/pie.html'"></div> <!-- PURIBE 29032024 - INICIO-->
+<!-- Fin Footer -->

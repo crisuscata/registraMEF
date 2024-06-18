@@ -1,0 +1,86 @@
+<md-dialog layout-padding flex>
+<!-- //MPINARES 14022024 - INICIO - NUEVO HTML-->
+<md-dialog-content md-whiteframe="1" class="overflowEsconder" md-colors="{background: 'background-A100'}">
+ <form name="dtCapacitacionForm2">
+ 
+ <div layout="row" layout-aling="center start" flex
+				style="font-size: 14px;">      
+        
+       		 <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex >
+					
+						<md-input-container
+										class="input-container-margen letraTexto nomarginbotottom"
+										md-no-float="true"> 
+										<label>C&oacute;digo ejecutora</label>
+										<input 
+										ng-keypress="validateFormat($event)"
+										id="codigoEjecutora" style="width: 50%;"
+										ng-model="capaEntidadmodelo.codEjecutora"> 
+										<md-button
+										aria-label="Buscar por Cod. ejecutora"
+										class="md-icon-button md-mini iconoEnLinea"
+										id="idbuscarCodEjecutora"
+										ng-click="buscarxcodEjec(capaEntidadmodelo)"> <md-icon
+										md-font-set="material-icons">search</md-icon> </md-button> 
+										
+						</md-input-container>
+				</div>
+					 
+ </div>
+ 
+  <div layout="row" layout-aling="center start" flex style="font-size: 14px;"> 
+  
+  <div class="letraenvoltura" flex 
+									ng-if="dtCapacitacionModelo.editopcion < 2">
+
+									<md-input-container
+										class="input-container-margen letraTexto nomarginbotottom"
+										flex="100" md-no-float="true" style="width: 400%;">
+									<label>Raz&oacute;n social</label>
+									<md-autocomplete
+										required md-input-name="nameMsInstitucionesIdprovee"
+										md-input-minlength="2" md-input-maxlength="255"
+										ng-disabled="ctrlMsInstitucionesIdprovee.isDisabled"
+										md-no-cache="ctrlMsInstitucionesIdprovee.noCache"
+										md-selected-item="ctrlMsInstitucionesIdprovee.selectedItem"
+										md-search-text-change="searchTextChangeMsInstitucionesIdprovee(dtAsistenciaModelo.idEntidadTxt)"
+										md-search-text="capaEntidadmodelo.idEntidadTxt"
+										md-selected-item-change="selectedItemChangeMsInstitucionesIdprovee(item)"
+										md-items="item in querySearchMsInstitucionesIdprovee(capaEntidadmodelo.idEntidadTxt)"
+										md-item-text="item.razSocial" md-min-length="4"
+										input-aria-labelledby="raz&oacute;n social" md-delay="3000"
+										placeholder="Raz&oacute;n social">
+									<md-item-template> <span
+										md-highlight-text="capaEntidadmodelo.idEntidadTxt"
+										md-highlight-flags="^i"> {{item.razSocial}} </span> </md-item-template> <md-not-found>
+									No hay concidencias para "{{capaEntidadmodelo.idEntidadTxt}}". <a
+										ng-click="newStateMsInstitucionesIdprovee(capaEntidadmodelo.idEntidadTxt)">, no existe o no esta vinculado a su sistema administrativo</a> </md-not-found>
+									<div
+										ng-messages="dtCapacitacionForm2.nameMsInstitucionesIdprovee.$error"
+										ng-if="dtCapacitacionForm2.nameMsInstitucionesIdprovee.$touched">
+										<div ng-message="required">
+											Usted <b>debe</b> seleccionar un item.
+										</div>
+										<div ng-message="md-require-match">Por favor seleccione un
+											item.</div>
+										<div ng-message="minlength">Tu entrada no es lo
+											suficientemente larga.</div>
+										<div ng-message="maxlength">Tu entrada es demasiado larga.</div>
+									</div>
+									</md-autocomplete> </md-input-container>
+								</div>
+  
+  </div> 
+ 
+ </form>
+</md-dialog-content>
+<md-dialog-actions layout="row" layout-align="center end">
+    <md-button class="md-raised md-primary alargarBoton" ng-click="cancel()">
+      Cancelar
+    </md-button>
+    <!-- ng-disabled="tdLogisticaConformidadForm2.$invalid" -->
+    <md-button class="md-raised md-primary alargarBoton" ng-click="nuevoCapaEntidadmodelo($event)" >
+      Aceptar
+    </md-button>
+</md-dialog-actions>   
+</md-dialog>

@@ -1,0 +1,384 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editdtUsuarioExterno()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Usuarios Externos</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{dtUsuarioExternoModelo.XXXX}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarDtUsuarioExterno()" aria-label="Salir">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">undo</md-icon>
+         <span ng-if="nuevo" hide-xs show-gt-sm>Salir</span>
+         <span ng-if="!nuevo" hide-xs show-gt-sm>Salir</span>
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarDtUsuarioExterno($event)" ng-if="dtUsuarioExternoModelo.editopcion==1" aria-label="Grabar">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">save</md-icon>
+         <span hide-xs show-gt-sm>Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+    
+<div layout="column">
+<fieldset>
+<legend>Datos de Usuarios Externos</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Apellido Paterno</label>    
+            <input type="text" md-maxlength="100" required name="aPaterno" ng-model="dtUsuarioExternoModelo.aPaterno"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.aPaterno.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Apellido Paterno.</div>
+            <div ng-message="maxlength">El Apellido Paterno tiene un m&aacute;ximo de 100 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Apellido Paterno:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.aPaterno}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Apellido Materno</label>    
+            <input type="text" md-maxlength="100" required name="aMaterno" ng-model="dtUsuarioExternoModelo.aMaterno"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.aMaterno.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Apellido Materno.</div>
+            <div ng-message="maxlength">El Apellido Materno tiene un m&aacute;ximo de 100 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Apellido Materno:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.aMaterno}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Nombres</label>    
+            <input type="text" md-maxlength="100" required name="nombre" ng-model="dtUsuarioExternoModelo.nombre"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.nombre.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Nombres.</div>
+            <div ng-message="maxlength">El Nombres tiene un m&aacute;ximo de 100 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Nombres:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.nombre}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Numero De Documento</label>    
+            <input type="number" md-maxlength="25" required name="numDocu" ng-model="dtUsuarioExternoModelo.numDocu"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.numDocu.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Numero De Documento.</div>
+            <div ng-message="maxlength">El Numero De Documento tiene un m&aacute;ximo de 25 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Numero De Documento:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.numDocu}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Correo</label>    
+            <input type="text" md-maxlength="50" required name="correo" ng-model="dtUsuarioExternoModelo.correo"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.correo.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Correo.</div>
+            <div ng-message="maxlength">El Correo tiene un m&aacute;ximo de 50 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Correo:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.correo}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Teléfono Fijo</label>    
+            <input type="number" md-maxlength="20" required name="telefFijo" ng-model="dtUsuarioExternoModelo.telefFijo"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.telefFijo.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Teléfono Fijo.</div>
+            <div ng-message="maxlength">El Teléfono Fijo tiene un m&aacute;ximo de 20 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Teléfono Fijo:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.telefFijo}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Teléfono Celular</label>    
+            <input type="number" md-maxlength="20" required name="telefCell" ng-model="dtUsuarioExternoModelo.telefCell"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.telefCell.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Teléfono Celular.</div>
+            <div ng-message="maxlength">El Teléfono Celular tiene un m&aacute;ximo de 20 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Teléfono Celular:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.telefCell}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Fecha De Modificación</label>
+            <md-datepicker required ng-model="dtUsuarioExternoModelo.fechaModifJUD" 
+                     input-aria-describedby="datepicker-description"
+                     input-aria-labelledby="datepicker-header ">
+            </md-datepicker>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel labelTamanioFijo">Fecha De Modificación:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.fechaModif}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Estado</label>    
+            <input type="number" md-maxlength="10" required name="estado" ng-model="dtUsuarioExternoModelo.estado"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.estado.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Estado.</div>
+            <div ng-message="maxlength">El Estado tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Estado:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.estado}}</div>
+         </div>			 
+ </div><div layout="row" layout-xs="column" layout-aling="center start" flex>
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="50">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Dirección</label>            
+            <textarea ng-model="dtUsuarioExternoModelo.direccion" md-maxlength="300" rows="5" md-select-on-focus
+                      ></textarea>
+            <div ng-messages="dtUsuarioExternoForm.direccion.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Dirección.</div>
+            <div ng-message="maxlength">El Dirección tiene un m&aacute;ximo de 300 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="50">  
+            <div class="letraLabel">Dirección:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.direccion}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Contiene El Sexo Del Usuario Externo (m: Masculino,</label>    
+            <input type="text" md-maxlength="1" required name="sexo" ng-model="dtUsuarioExternoModelo.sexo"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.sexo.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Contiene El Sexo Del Usuario Externo (m: Masculino,.</div>
+            <div ng-message="maxlength">El Contiene El Sexo Del Usuario Externo (m: Masculino, tiene un m&aacute;ximo de 1 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Contiene El Sexo Del Usuario Externo (m: Masculino,:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.sexo}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column">       
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">
+            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Tipo De Documento</label>
+            <md-select ng-model="dtUsuarioExternoModelo.idTipodocumento" ng-change="changeIdTipodocumento()" required
+                       name="idTipodocumento"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdTipodocumento" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="dtUsuarioExternoForm.idTipodocumento.$error">
+	      <div ng-message="required">Se requiere seleccione la sede.</div>
+	    </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Tipo De Documento:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.idTipodocumentoTxt}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Departamento</label>    
+            <input type="text" md-maxlength="2" required name="codDpto" ng-model="dtUsuarioExternoModelo.codDpto"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.codDpto.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Departamento.</div>
+            <div ng-message="maxlength">El Departamento tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Departamento:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.codDpto}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Provincia</label>    
+            <input type="text" md-maxlength="2" required name="codProv" ng-model="dtUsuarioExternoModelo.codProv"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.codProv.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Provincia.</div>
+            <div ng-message="maxlength">El Provincia tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Provincia:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.codProv}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Distrito</label>    
+            <input type="text" md-maxlength="2" required name="codDistr" ng-model="dtUsuarioExternoModelo.codDistr"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.codDistr.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Distrito.</div>
+            <div ng-message="maxlength">El Distrito tiene un m&aacute;ximo de 2 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Distrito:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.codDistr}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>País</label>    
+            <input type="number" md-maxlength="10" required name="idpais" ng-model="dtUsuarioExternoModelo.idpais"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.idpais.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el País.</div>
+            <div ng-message="maxlength">El País tiene un m&aacute;ximo de 10 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">País:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.idpais}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Teléfono Del Usuario Externo</label>    
+            <input type="text" md-maxlength="150" required name="otroTelefono" ng-model="dtUsuarioExternoModelo.otroTelefono"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.otroTelefono.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Teléfono Del Usuario Externo.</div>
+            <div ng-message="maxlength">El Teléfono Del Usuario Externo tiene un m&aacute;ximo de 150 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Teléfono Del Usuario Externo:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.otroTelefono}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Número De Celular</label>    
+            <input type="text" md-maxlength="150" required name="otroCelular" ng-model="dtUsuarioExternoModelo.otroCelular"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.otroCelular.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Número De Celular.</div>
+            <div ng-message="maxlength">El Número De Celular tiene un m&aacute;ximo de 150 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Número De Celular:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.otroCelular}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Numero De Documento</label>    
+            <input type="text" md-maxlength="20" required name="numDocum" ng-model="dtUsuarioExternoModelo.numDocum"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.numDocum.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Numero De Documento.</div>
+            <div ng-message="maxlength">El Numero De Documento tiene un m&aacute;ximo de 20 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Numero De Documento:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.numDocum}}</div>
+         </div>			 
+ </div><div layout="row" layout-aling="center start" layout-xs="column"> 
+        <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Checkbox</label>    
+            <input type="number" md-maxlength="38" required name="flagMedioreg" ng-model="dtUsuarioExternoModelo.flagMedioreg"
+                   >
+           <div ng-messages="dtUsuarioExternoForm.flagMedioreg.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Checkbox.</div>
+            <div ng-message="maxlength">El Checkbox tiene un m&aacute;ximo de 38 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="dtUsuarioExternoModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Checkbox:</div>
+            <div class="letraTexto">{{dtUsuarioExternoModelo.flagMedioreg}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

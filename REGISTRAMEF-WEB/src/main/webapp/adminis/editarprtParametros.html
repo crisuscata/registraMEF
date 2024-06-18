@@ -1,0 +1,81 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editprtParametros()">
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Par&acute;metros</h2>
+      </div>
+      <div flex="auto" ng-if="!nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}">{{prtParametrosModelo.descripcion}}</h2>
+      </div>        
+       <md-button class="md-button-borde md-sm" ng-click="cancelarPrtParametros()" aria-label="Salir">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">undo</md-icon>
+         <span ng-if="nuevo" hide-xs show-gt-sm>Salir</span>
+         <span ng-if="!nuevo" hide-xs show-gt-sm>Salir</span>
+       </md-button>
+       <md-button class="md-button-borde md-sm" ng-click="salvarPrtParametros($event)" ng-if="prtParametrosModelo.editopcion==1" aria-label="Grabar">
+         <md-icon ng-class="md-icon-color" class="md-icon-color" md-font-set="material-icons">save</md-icon>
+         <span hide-xs show-gt-sm>Grabar</span>       
+       </md-button>
+      </div>
+</md-toolbar>    
+    
+<div layout="column">
+<fieldset>
+<legend>Datos de Par&acute;metros</legend>
+<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
+ <div layout="row" layout-aling="center start" layout-xs="column"> 
+        
+        <div class="letraenvoltura" ng-if="prtParametrosModelo.editopcion < 2" flex="auto">            
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Dependencia</label>
+            <md-select ng-model="prtParametrosModelo.idpadre" ng-change="changeIdpadre()" required
+                       name="idpadre"
+                       >
+             <md-option ng-repeat="item in listaPrtParametrosIdpadre" ng-value="item.id">
+                 {{item.valor}}
+             </md-option>
+            </md-select>
+            <div ng-messages="prtParametrosForm.idpadre.$error">
+	          <div ng-message="required">Se requiere seleccione la sede.</div>
+	        </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="prtParametrosModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Dependencia:</div>
+            <div class="letraTexto">{{prtParametrosModelo.idpadreTxt}}</div>
+         </div>
+        
+        <div class="letraenvoltura" ng-if="prtParametrosModelo.editopcion < 2" flex="auto">        
+        <md-input-container md-no-float="true" class="input-container-margen letraTexto">
+            <label>Descripci&oacute;n</label>    
+            <input type="text" md-maxlength="100" required name="descripcion" ng-model="prtParametrosModelo.descripcion"
+                   >
+           <div ng-messages="prtParametrosForm.descripcion.$error">
+            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+            <div ng-message="required">Se requiere el Descripción.</div>
+            <div ng-message="maxlength">El Descripción tiene un m&aacute;ximo de 100 caracteres.</div>
+            </div>
+         </md-input-container>
+        </div>
+         <div class="letraenvoltura" ng-if="prtParametrosModelo.editopcion > 1" flex="auto">  
+            <div class="letraLabel">Descripci&oacute;n:</div>
+            <div class="letraTexto">{{prtParametrosModelo.descripcion}}</div>
+         </div>			 
+ </div>
+</md-content>
+</fieldset>
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

@@ -1,0 +1,352 @@
+<div flex="100" layout="column" layout-align="start stretch"
+	class="margenForm" data-ng-init="editdtAsistencia()">
+
+	<md-toolbar md-colors="{background: 'primary-700'}"
+		class="md-toolbar-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size">
+		<md-button class="md-icon-button" ng-click="cancelarDtAsistencia()"
+			style="margin-left: -19px;margin-bottom: 11px;"> <md-icon
+			md-font-set="material-icons" aria-label="Close dialog"
+			style="font-size: 29px;color: rgb(189,189,189);">chevron_left</md-icon>
+		</md-button>
+		<div flex="auto" ng-if="nuevo">
+			<h2 md-truncate md-colors="{color: 'background-A100'}"
+				style="font-size: 17px;">Nueva asistencia t&eacute;cnica
+				programada</h2>
+			<!-- //MPINARES 24012023 - INICIO - SE CAMBIO TODO-->
+		</div>
+		<div flex="10" ng-if="!nuevo">
+			<h2 md-truncate md-colors="{color: 'background-A100'}"
+				style="font-size: 17px;">AT - {{dtAsistenciaModelo.idAsistencia}}</h2>
+		</div>
+		<div flex="auto" ng-if="!nuevo">
+			<h2 md-truncate md-colors="{color: 'background-A100'}"
+				style="font-size: 17px;width: max-content;background-color: rgba(121, 121, 121, 1);">
+				<div style="font-size: 14px;">{{dtAsistenciaModelo.estadoTxt}}</div></h2>
+		</div>
+
+		<!--        <md-button class="md-button-borde md-sm" ng-click="cancelarDtAsistencia()" aria-label="Salir"> -->
+		<!--          <md-icon md-font-set="material-icons">undo</md-icon>  -->
+		<!--          <span ng-if="nuevo">Salir</span> -->
+		<!--          <span ng-if="!nuevo">Salir</span>    -->
+		<!--        </md-button> -->
+		<md-button class="md-button-borde md-sm"
+			ng-click="salvarDtAsistencia($event)" style="margin-bottom: 8px;"
+			ng-if="dtAsistenciaModelo.editopcion==1" aria-label="Guardar">
+		<!--          <md-icon md-font-set="material-icons">save</md-icon>  -->
+		<span>Guardar</span> </md-button>
+	</div>
+	</md-toolbar>
+
+	<div layout="column">
+
+		<fieldset style="margin-left: 15px;">
+			<legend>Datos de asistencia</legend>
+			<md-content md-whiteframe="1" class="overflowEsconder noshadow"
+				md-colors="{background: 'background-A100'}">
+
+			<div layout="row" layout-aling="center start" flex
+				style="font-size: 14px;">
+
+				<div class="letraenvoltura"
+					ng-if="dtAsistenciaModelo.editopcion < 2" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label style="font-size: 15px;width: auto;">Fecha de solicitud</label>
+						<md-datepicker required
+						ng-model="dtAsistenciaModelo.fechaSoliJUD"
+						md-placeholder="Fecha de solicitud"
+						input-aria-describedby="datepicker-description"
+						input-aria-labelledby="datepicker-header "> </md-datepicker> </md-input-container>
+				</div>
+
+				<div class="letraenvoltura"
+					ng-if="dtAsistenciaModelo.editopcion < 2" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label style="font-size: 15px;width: auto;">Fecha de Servicio</label>
+						<md-datepicker required
+						ng-model="dtAsistenciaModelo.fechaProgramadaJUD"
+						md-placeholder="Fecha de Servicio"
+						input-aria-describedby="datepicker-description"
+						input-aria-labelledby="datepicker-header "> </md-datepicker> </md-input-container>
+				</div>
+
+				<div class="letraenvoltura"
+					ng-if="dtAsistenciaModelo.editopcion < 2" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label style="font-size: 15px;width: auto;">Modalidad</label>
+						<md-select
+						ng-model="dtAsistenciaModelo.idModalidad"
+						ng-change="changeIdModalidad()" required placeholder="Modalidad"
+						name="idModalidad"> <md-option
+						ng-repeat="item in listaPrtParametrosIdModalidad"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+					<div ng-messages="dtAsistenciaForm.idModalidad.$error">
+						<div ng-message="required">Seleccione la Modalidad.</div>
+					</div>
+					</md-input-container>
+				</div>
+
+				<div class="letraenvoltura"
+					ng-if="dtAsistenciaModelo.editopcion < 2" flex="20">
+					<md-input-container md-no-float="true" style="width: 100%;"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label style="font-size: 15px;width: auto;">Tipo de financiamiento</label>
+						<md-select style="width: fit-content;"
+						ng-model="dtAsistenciaModelo.idFinancia"
+						ng-change="changeIdFinancia()" required
+						placeholder="Tipo de financiamiento" name="idFinancia">
+					<md-option ng-repeat="item in listaPrtParametrosIdFinancia"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+					<div ng-messages="dtAsistenciaForm.idFinancia.$error">
+						<div ng-message="required">Seleccione el Tipo de
+							financiamiento.</div>
+					</div>
+					</md-input-container>
+				</div>
+
+				<div class="letraenvoltura"
+					ng-if="dtAsistenciaModelo.editopcion < 2" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+					<label class="letraLabel" style="width: 150px;" flex>Origen</label>
+					<md-select  required
+                                       placeholder="Origen" ng-disabled="true"
+                                       name="Origen" ng-model="dtAsistenciaModelo.idOrigen">
+                                       <md-option ng-value="-1">--seleccione origen--</md-option>
+                                       <md-option ng-repeat="item in listaPrtParametrosIdOrigen" ng-value="item.id" >
+                                          {{item.valor}}
+                                      </md-option>
+                         
+                            </md-select>
+					</md-input-container>
+				</div>
+			</div>
+			</md-content>
+		</fieldset>
+
+		<fieldset style="margin-left: 15px;">
+			<legend>Datos de la entidad</legend>
+			<md-content md-whiteframe="1" class="overflowEsconder noshadow"
+				md-colors="{background: 'background-A100'}">
+			<div layout="row" layout-aling="center start" flex
+				style="margin-left: 20px; font-size: 14px;">
+				<div class="letraenvoltura"
+					ng-if="dtAsistenciaModelo.editopcion < 2" flex="20">
+					<md-input-container
+						class="input-container-margen letraTexto nomarginbotottom"
+						md-no-float="true"> 
+						<label>C&oacute;digo ejecutora</label>
+						<input 
+						ng-keypress="validateFormat($event)"
+						id="codigoEjecutora" style="width: 50%;"
+						ng-model="dtAsistenciaModelo.codEjecutora"> 
+						<md-button
+						aria-label="Buscar por Cod. ejecutora"
+						class="md-icon-button md-mini iconoEnLinea"
+						id="idbuscarCodEjecutora"
+						ng-click="buscarxcodEjec(dtAsistenciaModelo)"> <md-icon
+						md-font-set="material-icons">search</md-icon> </md-button> </md-input-container>
+
+				</div>
+				<div class="letraenvoltura"
+					ng-if="dtAsistenciaModelo.editopcion < 2" flex="40">
+					<md-input-container
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100" md-no-float="true" style="width: 400%;">
+					<!-- 				<input id="razonSocial" ng-model="dtAsistenciaModelo.idEntidadTxt" -->
+					<!-- 					placeholder="Raz&oacute;n Social">  --> 
+					<label>Raz&oacute;n social</label>
+					<md-autocomplete
+						required md-input-name="nameMsInstitucionesIdprovee"
+						md-input-minlength="2" md-input-maxlength="255"
+						ng-disabled="ctrlMsInstitucionesIdprovee.isDisabled"
+						md-no-cache="ctrlMsInstitucionesIdprovee.noCache"
+						md-selected-item="ctrlMsInstitucionesIdprovee.selectedItem"
+						md-search-text-change="searchTextChangeMsInstitucionesIdprovee(dtAsistenciaModelo.idEntidadTxt)"
+						md-search-text="dtAsistenciaModelo.idEntidadTxt"
+						md-selected-item-change="selectedItemChangeMsInstitucionesIdprovee(item)"
+						md-items="item in querySearchMsInstitucionesIdprovee(dtAsistenciaModelo.idEntidadTxt)"
+						md-item-text="item.razSocial" md-min-length="4"
+						input-aria-labelledby="raz&oacute;n social" md-delay="3000"
+						>
+					<md-item-template> <span
+						md-highlight-text="dtAsistenciaModelo.idEntidadTxt"
+						md-highlight-flags="^i"> {{item.razSocial}} </span> </md-item-template> <md-not-found>
+					No hay coincidencias para "{{dtAsistenciaModelo.idEntidadTxt}}". <a
+						ng-click="newStateMsInstitucionesIdprovee(dtAsistenciaModelo.idEntidadTxt)">, no existe o no esta vinculado a su sistema administrativo</a> </md-not-found>
+					<div
+						ng-messages="dtAsistenciaForm.nameMsInstitucionesIdprovee.$error"
+						ng-if="dtAsistenciaForm.nameMsInstitucionesIdprovee.$touched">
+						<div ng-message="required">
+							Usted <b>debe</b> seleccionar un item.
+						</div>
+						<div ng-message="md-require-match">Por favor seleccione un
+							item.</div>
+						<div ng-message="minlength">Tu entrada no es lo
+							suficientemente larga.</div>
+						<div ng-message="maxlength">Tu entrada es demasiado larga.</div>
+					</div>
+					</md-autocomplete> </md-input-container>
+
+				</div>
+			</div>
+			</md-content>
+		</fieldset>
+
+		<fieldset style="margin-left: 15px;">
+			<legend>Temas agendados</legend>
+			
+			<div layout="row" layout-align="center center" flex="100">
+				  <div>
+				  <md-button class="md-raised"
+				  aria-label="Agregar Temas"
+					ng-click="addAsistenciaTemas($event)">
+				  <md-icon md-font-set="material-icons" style="color: grey;">work_outline</md-icon>
+				  <span>Agregar Temas</span>
+				  </md-button>
+					</div>
+				</div>
+			
+			
+			<md-content md-whiteframe="1" class="overflowEsconder noshadow"
+				md-colors="{background: 'background-A100'}"> <md-table-container
+				flex="80">
+			<table md-progress="promise" md-row-select="options.rowSelection"
+				md-table multiple="{{options.multiSelect}}" ng-model="selected"
+				resize>
+				<thead id="tablewidth" md-head md-on-reorder="logOrder"
+					md-order="query.order" ng-if="!options.decapitate">
+
+					<tr class="md-table-head-label" md-row>
+						<th class="md-title ttamnumero" md-column flex="13"><span>&nbsp;</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Tema</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Subtema</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Detalle</span></th>
+						<th class="md-title ttamopciones" md-column flex="20"><span>Opciones</span></th>
+					</tr>
+				<tbody md-body style="font-size: 14px;">
+					<tr class="primary tridtdPersonalPersonal md-table-cuerpo"
+						md-auto-select="options.autoSelect" md-on-select="logItem" md-row
+						md-select="dato" ng-disabled="dato.id > 0"
+						ng-repeat-start="dato in datoAsistenciaTema">
+
+						<td md-cell flex="20">{{$index + 1}}</td>
+						<td class="tdaa1 md-table-cuerpo" data-title="idTemaTxt" md-cell>
+								<div class="letraTexto">{{dato.idTemaTxt}}</div>								
+							</td>
+						<td class="tdaa1 md-table-cuerpo" data-title="idSubtemaTxt" md-cell>
+								<div class="letraTexto">{{dato.idSubtemaTxt}}</div>								
+							</td>
+						<td class="tdaa1 md-table-cuerpo" data-title="detalle" md-cell>
+								<div class="letraTexto">{{dato.detalle}}</div>								
+							</td>
+						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
+							<md-button class="md-icon-button md-primary"
+								ng-click="removeAsistenciaTema($event,dato)" ng-if="!dato.add">
+							<md-icon md-font-set="material-icons">remove</md-icon> </md-button> 
+						</td>
+
+<!-- 						<td class="tdaa1 md-table-cuerpo" data-title="Tema" md-cell> -->
+<!-- 							<div layout="row" flex> -->
+<!-- 								<div class="letraenvoltura" flex="90" -->
+<!-- 									ng-if="dtAsistenciaModelo.editopcion < 2"> -->
+
+<!-- 									<md-input-container class="input-container-margen letraTexto"> -->
+
+<!-- 									<md-select ng-model="dato.idTema" ng-change="changeIdTema(dato.idTema)" -->
+<!-- 										required placeholder="Seleccionar Tema" name="idTema"> -->
+<!-- 									<md-option ng-repeat="item in listaMsTemaIdTema" -->
+<!-- 										ng-value="item.id"> {{item.valor}} </md-option> </md-select> </md-input-container> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 						</td> -->
+
+<!-- 						<td class="tdaa1 md-table-cuerpo" data-title="Subtema" md-cell> -->
+<!-- 							<div layout="row"> -->
+<!-- 								<div class="letraenvoltura" flex="90" -->
+<!-- 									ng-if="dtAsistenciaModelo.editopcion < 2"> -->
+
+<!-- 									<md-input-container class="input-container-margen letraTexto"> -->
+<!-- 									<md-select ng-model="dato.idSubtema" -->
+<!-- 										ng-change="changeIdSubtema()" required -->
+<!-- 										placeholder="Seleccionar Subtema" name="idSubtema"> -->
+<!-- 									<md-option ng-repeat="item in listaMsSubtemaIdSubtema" -->
+<!-- 										ng-value="item.id"> {{item.valor}} </md-option> </md-select> </md-input-container> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 						</td> -->
+
+<!-- 						<td class="tdaa1 md-table-cuerpo" data-title="Detalle" md-cell> -->
+<!-- 							<div layout="row"> -->
+<!-- 								<div class="letraenvoltura" flex="90" -->
+<!-- 									ng-if="dtAsistenciaModelo.editopcion < 2"> -->
+<!-- 									<md-input-container class="input-container-margen letraTexto" -->
+<!-- 										flex="90" md-no-float="true"> <input -->
+<!-- 										id="concepto" ng-model="dato.detalle" -->
+<!-- 										style="margin-bottom: -24px;" placeholder="Ingrese detalle"> -->
+<!-- 									</md-input-container> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 						</td> -->
+
+<!-- 						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell> -->
+<!-- 							<md-button class="md-icon-button md-primary" -->
+<!-- 								ng-click="removeAsistenciaTema($event,dato)" ng-if="!dato.add"> -->
+<!-- 							<md-icon md-font-set="material-icons">remove</md-icon> </md-button> <md-button -->
+<!-- 								class="md-icon-button md-primary" -->
+<!-- 								ng-click="nuevoAsistenciaTemas()" ng-if="dato.add"> -->
+<!-- 							<md-icon md-font-set="material-icons">add_circle</md-icon> </md-button> -->
+<!-- 						</td> -->
+
+					</tr>
+					<tr class="secondary childidtdPersonalPersonal" ng-repeat-end></tr>
+				</tbody>
+
+			</table>
+			</md-table-container> 
+			</md-content>
+		</fieldset>
+		
+		<div layout="column" layout-aling="center start" flex> 
+			<md-fab-speed-dial md-open="isOpenxx" md-direction="up"
+					class="md-scale md-fab-bottom-right" ng-mouseenter="isOpenxx=true"
+					ng-mouseleave="isOpenxx=false"> 
+						<md-fab-trigger>
+							<md-button aria-label="menu" class="md-fab md-warn" style="background-color: #009688;"> <md-icon
+							md-font-set="material-icons" style="color: rgb(255,255,255)">add</md-icon> </md-button> 
+							</md-fab-trigger> 
+							<md-fab-actions>
+							<md-button aria-label="Nueva entidady" class="md-fab md-raised md-mini"
+							ng-click="showdlgInstitucionDialog()" > 
+							<md-tooltip md-direction="left" md-visible="tooltipVisible">Nueva entidadx</md-tooltip>
+							<md-icon md-font-set="material-icons" >add</md-icon> 
+							</md-button> 
+						</md-fab-actions> 
+				</md-fab-speed-dial>
+		</div>
+		
+
+		
+	</div>
+	<div>&nbsp;</div>
+
+</div>
+<!-- FIN -->
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<!-- DIALOGOS -->
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<!-- <div ng-include="'paginas/pie.html'"></div> -->
+<div id="pie" ng-include="'paginas/pie.html'"></div>  <!-- PURIBE 29032024 - INICIO-->
+<!-- Fin Footer -->
