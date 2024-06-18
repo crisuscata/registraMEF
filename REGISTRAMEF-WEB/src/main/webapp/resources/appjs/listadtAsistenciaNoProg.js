@@ -13,6 +13,7 @@ var listaPrtParametrosidparametroIdOrigenUrl = contexto+"/rs/ctrldtAsistencia/li
 var listaPrtParametrosidparametroIdModalidadUrl = contexto+"/rs/ctrldtAsistencia/listaPrtParametrosIdparametroIdModalidad";
 var listaPrtParametrosidparametroIdFinanciaUrl = contexto+"/rs/ctrldtAsistencia/listaPrtParametrosIdparametroIdFinancia";
 var listaDtUsuarioXNombreapellidoUrl = contexto+"/rs/ctrldtAsistencia/buscarDtUsuarioXnombre/";
+var listaCargoPorIdUsuarioExtUrl = contexto+"/rs/ctrldtAsistencia/listaCargoPorIdUsuarioExt/";
 var descargarUrl = contexto+"/rs/ctrldtAsistencia/descargar/";
 
 ///URLs CARGA DE ARCHIVOS
@@ -1391,6 +1392,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
         	$scope.usuarioModelo.fijoUsuext= null;
         	$scope.usuarioModelo.celularUsuext= null;
         	$scope.usuarioModelo.nombresApellidos= null;
+        	$scope.listaCargos=[];
         }
         
         $scope.clearAsistenciaTecTemasmodelo= function(){
@@ -1557,6 +1559,35 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 		
 		//FIN DIALOG USUARIO
 		
+		$scope.selectedPerson = function(resData) {
+    		if($scope.isObject(resData)){
+    			console.log("persona seleccionada:" + JSON.stringify(resData));
+    			
+    			$scope.usuarioModelo.idUsuexterno = resData.idUsuexterno;
+	            $scope.usuarioModelo.nombresApellidos = resData.apaterno + ' '+ resData.amaterno + ' ' + resData.nombre;
+	            $scope.usuarioModelo.aPaterno = resData.apaterno;
+	            $scope.usuarioModelo.aMaterno = resData.amaterno;
+	            $scope.usuarioModelo.nombre = resData.nombre;
+	            $scope.usuarioModelo.correoUsuext = resData.correo;
+	            $scope.usuarioModelo.celularUsuext = (resData.telefCell!=null && resData.telefCell!=0)?resData.telefCell:resData.otroCelular;
+	            $scope.usuarioModelo.fijoUsuext =  (resData.telefFijo!=null && resData.telefFijo!=0)?resData.telefFijo:'';
+	            $scope.usuarioModelo.numDocu =    resData.numDocum;
+	            
+	            $scope.promise = $http.get(listaCargoPorIdUsuarioExtUrl+ resData.idUsuexterno)
+	            .then(function(response) {
+	            	console.log("persona seleccionada cargos:" + JSON.stringify(response.data));
+	            	$scope.listaCargos = response.data;
+	            	return response.data;
+	            })
+	            .catch(function (errResponse) {
+	            	console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+	                return [];
+	            });
+	            
+    			
+    		}
+    	}
+		
 		//BUSCAR POR APELLIDO Y NOMBRE
 		$scope.searchTextChange = function(text) {
 	        console.log('Texto de búsqueda cambiado a: ' + text);
@@ -1567,7 +1598,10 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 	    	
 	        return $http.get(listaDtUsuarioXNombreapellidoUrl+ valor)
 	            .then(function(response) {
-	            	console.log(response.data);
+	            	//console.log(response.data);
+	            	
+	            	console.log("response.data:" + JSON.stringify(response.data));
+	            	
 	            	$scope.activar=1;
 	            	
 	            	return response.data;
@@ -1665,6 +1699,8 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 	// ////////////////////////////////////////////////////////////////
 	
 		    $scope.cancel = function() {
+		    	$scope.activar = 0;
+		    	$scope.clearUsuarioModelDialog();
 				$mdDialog.cancel();
 		    };
 		    

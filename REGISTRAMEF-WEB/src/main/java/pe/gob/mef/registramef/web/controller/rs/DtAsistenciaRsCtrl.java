@@ -74,6 +74,7 @@ import pe.gob.mef.registramef.bs.transfer.IIDValorDto;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaTemasBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaUsuexternosBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtCargosUsuexterBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtEntidadesBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtUsuarioExternoBk;
 import pe.gob.mef.registramef.bs.transfer.bk.MsUsuariosBk;
@@ -518,6 +519,43 @@ public class DtAsistenciaRsCtrl {
    			
    			
    			GenericEntity<List<DtUsuarioExternoDto>> registrosOut = new GenericEntity<List<DtUsuarioExternoDto>>(listaUserExtDTO) {
+			};
+			return Response.status(200).entity(registrosOut).build();
+   			
+   		} catch (Exception e) {
+   			String mensaje = e.getMessage();
+   			System.out.println("ERROR: " + mensaje);
+   			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+   					new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+   					}).build();
+   		}
+   	}
+	
+	@GET
+   	@Path("/listaCargoPorIdUsuarioExt/{idUsuextEnti}")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	public Response listaCargoPorIdUsuario(@Context HttpServletRequest req, @Context HttpServletResponse res,
+   			@HeaderParam("authorization") String authString, @PathParam("idUsuextEnti") Long idUsuextEnti ) {
+       	SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+   		Principal usuario = req.getUserPrincipal();
+   		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+   		if (msUsuariosBk == null)
+   			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+   					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+   			}).build();
+
+   		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+				&& !req.isUserInRole(Roles.DTVISITAS_VE))
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
+					}).build();
+
+   		try {
+   			
+   			List<DtCargosUsuexterBk>  listaCargoUsuBK = servicio.getDtCargosUsuexterXFiltro(idUsuextEnti, null, null);
+   			
+   			GenericEntity<List<DtCargosUsuexterBk>> registrosOut = new GenericEntity<List<DtCargosUsuexterBk>>(listaCargoUsuBK) {
 			};
 			return Response.status(200).entity(registrosOut).build();
    			

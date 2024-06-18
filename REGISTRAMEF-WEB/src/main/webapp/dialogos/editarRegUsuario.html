@@ -37,7 +37,7 @@
 								<input type="text" md-maxlength="8" maxlength="8" md-minlength=8 minlength=8 required name="dni"
 								ng-model="usuarioModelo.numDocu" >
 								
-									<div ng-messages="dtVisitasUsuariosForm.dni.$error" ng-if="dtVisitasUsuariosForm.dni.$touched">
+									<div ng-messages="dtVisitasUsuariosForm.dni.$error" >
 										<div ng-message="required">Se requiere el DNI.</div>
 										<div ng-message="md-minlength">El DNI tiene 8 caracteres.</div>
 										<div ng-message="md-maxlength">El DNI tiene 8 caracteres.</div>
@@ -60,6 +60,7 @@
 						
 							<label class="letraLabel" flex>Apellidos y Nombres:</label>    
 		                  	<md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85" style="width: 63%;"> 
+		                  	<label>Ingresar Apellidos y nombres</label> 
 								<md-autocomplete
 									required md-input-name="nameMSUserExter"
 									md-input-minlength="3"
@@ -69,13 +70,14 @@
 									md-selected-item="ctrlMsUSuariosExterxNombApe.selectedItem"
 									md-search-text-change="searchTextChange(usuarioModelo.nombresApellidos)"
 									md-search-text="usuarioModelo.nombresApellidos"
-									md-selected-item-change="selectedItemChange(item)"
+									md-selected-item-change="selectedPerson(item)"
 									md-items="item in querySearch(usuarioModelo.nombresApellidos)"
 									md-item-text="item.nombresCompletos"
 									md-min-length="3"
 									input-aria-labelledby="Apellidos y Nombres"
 									md-delay="300"
-									placeholder="Nombres y apellidos">
+									required
+									>
 								    <md-item-template>
 					                    <span md-highlight-text="usuarioModelo.nombresApellidos"
 					                          md-highlight-flags="^i">{{item.nombresCompletos}}</span>
@@ -86,7 +88,7 @@
 					                        No existe o no está vinculado a su sistema administrativo.
 					                    </a>
 					                </md-not-found>
-					                <div ng-messages="dtVisitasUsuariosForm.nameMSUserExter.$error" ng-if="dtVisitasUsuariosForm.nameMSUserExter.$touched">
+					                <div ng-messages="dtVisitasUsuariosForm.nameMSUserExter.$error" >
 					                    <div ng-message="required">Se requiere Apellidos y Nombres</div>
 					                    <div ng-message="md-require-match">Por favor seleccione un item.</div>
 					                    <div ng-message="minlength">Tu entrada no es lo suficientemente larga.</div>
