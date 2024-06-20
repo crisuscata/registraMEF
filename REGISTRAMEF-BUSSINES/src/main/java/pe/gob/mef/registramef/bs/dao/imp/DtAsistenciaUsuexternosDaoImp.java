@@ -49,6 +49,16 @@ public class DtAsistenciaUsuexternosDaoImp extends
 	public void updateDtAsistenciaUsuexternos(DtAsistenciaUsuexternos param) {
 		super.update(param);
 	}
+	
+	@Transactional
+	public void updateDtAsistenciaUsuexCorreo(Long id) {
+		
+		DtAsistenciaUsuexternos dtAsistenciaUsuexternos = this.getDtAsistenciaUsuexternos(id);
+		dtAsistenciaUsuexternos.setCtrlConfirmacion(2L);
+		
+		super.update(dtAsistenciaUsuexternos);
+	}
+
 
 	@Transactional
 	public void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternos param) {

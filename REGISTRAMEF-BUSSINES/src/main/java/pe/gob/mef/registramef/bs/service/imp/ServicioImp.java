@@ -18807,6 +18807,11 @@ public class ServicioImp implements Servicio, Serializable {
 	        return dtusuarioExternoBkList;
 	}
 
+	@Override
+	public void updateDtAsistenciaUsuexCorreo(Long id) throws Validador {
+		 dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexCorreo(id);;
+	}
+
 	
 
 	

@@ -1398,5 +1398,20 @@ public class FuncionesStaticas implements Serializable {
 		return di[S] + " " + D + " DE " + me[M];
 	}
 	
+	public static String convertirFrasePrimerCaracMayuscula(String str) {
+		if (str == null || str.length() == 0) {
+			return str;
+		}
+		StringTokenizer stPalabras = new StringTokenizer(str);
+		String sPalabra="";
+		str="";
+		while (stPalabras.hasMoreTokens()) {
+			  sPalabra = stPalabras.nextToken();				  
+			  str=str+" "+  StringUtils.capitalize(sPalabra.trim().toLowerCase());			 
+		}
+		 
+		return str.trim();
+	}
+	
 
 }

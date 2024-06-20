@@ -98,6 +98,19 @@
 		<servlet-name>ImageCaptcha</servlet-name>
 		<url-pattern>/captcha_rd.png</url-pattern>
 	</servlet-mapping>
+	
+	<!-- EXTERNAL WEB -->
+	<servlet>
+        <servlet-name>ConfirmationPageServlet</servlet-name>
+        <servlet-class>pe.gob.mef.registramef.web.srvlt.ConfirmationPageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ConfirmationPageServlet</servlet-name>
+        <url-pattern>/confirmacion-page</url-pattern>
+    </servlet-mapping>
+	
+	
 	<session-config>
 		<session-timeout>60</session-timeout>
 		<cookie-config>

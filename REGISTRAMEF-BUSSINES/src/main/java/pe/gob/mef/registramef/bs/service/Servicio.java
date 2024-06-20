@@ -583,6 +583,8 @@ public interface Servicio {
 
 	DtAsistenciaUsuexternosBk saveorupdateDtAsistenciaUsuexternosBk(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk,
 			String user, Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador;
+	
+	void updateDtAsistenciaUsuexCorreo(Long id) throws Validador;
 
 	void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user,
 			Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador;
