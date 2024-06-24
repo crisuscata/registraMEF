@@ -568,12 +568,15 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	 } 
 	 
 	  $scope.setDtAsistenciaModelo = function(dtAsistenciaBk) {
-		  $scope.dtAsistenciaModelo.idAsistencia = dtAsistenciaBk.idAsistencia;
+		  
+		  	$scope.dtAsistenciaModelo.idAsistencia = dtAsistenciaBk.idAsistencia;
 			$scope.dtAsistenciaModelo.fechaAsistencia = dtAsistenciaBk.fechaAsistencia;
-                        if(!$scope.isNull($scope.dtAsistenciaModelo.fechaAsistencia) && !isNaN($scope.dtAsistenciaModelo.fechaAsistencia)){
+			
+            if(!$scope.isNull($scope.dtAsistenciaModelo.fechaAsistencia) && !isNaN($scope.dtAsistenciaModelo.fechaAsistencia)){
 			    $scope.dtAsistenciaModelo.fechaAsistencia = new Date($scope.dtAsistenciaModelo.fechaAsistencia);
-		        }
-$scope.dtAsistenciaModelo.detalle = dtAsistenciaBk.detalle;
+		    }
+            
+            $scope.dtAsistenciaModelo.detalle = dtAsistenciaBk.detalle;
 			$scope.dtAsistenciaModelo.idUsuinterno = dtAsistenciaBk.idUsuinterno;
 			$scope.dtAsistenciaModelo.idEntidad = dtAsistenciaBk.idEntidad;
 			$scope.dtAsistenciaModelo.idOrigen = dtAsistenciaBk.idOrigen;
@@ -583,72 +586,131 @@ $scope.dtAsistenciaModelo.detalle = dtAsistenciaBk.detalle;
 			$scope.dtAsistenciaModelo.idSistAdm = dtAsistenciaBk.idSistAdm;
 			$scope.dtAsistenciaModelo.idFinancia = dtAsistenciaBk.idFinancia;
 			$scope.dtAsistenciaModelo.fechaFinalizacion = dtAsistenciaBk.fechaFinalizacion;
-                        if(!$scope.isNull($scope.dtAsistenciaModelo.fechaFinalizacion) && !isNaN($scope.dtAsistenciaModelo.fechaFinalizacion)){
+			
+            if(!$scope.isNull($scope.dtAsistenciaModelo.fechaFinalizacion) && !isNaN($scope.dtAsistenciaModelo.fechaFinalizacion)){
 			    $scope.dtAsistenciaModelo.fechaFinalizacion = new Date($scope.dtAsistenciaModelo.fechaFinalizacion);
-		        }
-$scope.dtAsistenciaModelo.fechaProgramada = dtAsistenciaBk.fechaProgramada;
-                        if(!$scope.isNull($scope.dtAsistenciaModelo.fechaProgramada) && !isNaN($scope.dtAsistenciaModelo.fechaProgramada)){
-			    $scope.dtAsistenciaModelo.fechaProgramada = new Date($scope.dtAsistenciaModelo.fechaProgramada);
-		        }
+		    }
+            
+            $scope.dtAsistenciaModelo.fechaProgramada = dtAsistenciaBk.fechaProgramada;
+            
+            if(!$scope.isNull($scope.dtAsistenciaModelo.fechaProgramada) && !isNaN($scope.dtAsistenciaModelo.fechaProgramada)){
+			   $scope.dtAsistenciaModelo.fechaProgramada = new Date($scope.dtAsistenciaModelo.fechaProgramada);
+		    }
+            
             $scope.dtAsistenciaModelo.fechaSoli = dtAsistenciaBk.fechaSoli;
-                        if(!$scope.isNull($scope.dtAsistenciaModelo.fechaSoli) && !isNaN($scope.dtAsistenciaModelo.fechaSoli)){
+            
+            if(!$scope.isNull($scope.dtAsistenciaModelo.fechaSoli) && !isNaN($scope.dtAsistenciaModelo.fechaSoli)){
 			    $scope.dtAsistenciaModelo.fechaSoli = new Date($scope.dtAsistenciaModelo.fechaSoli);
-		        }
+		    }
                         
-                      
-                        $scope.dtAsistenciaModelo.fechaSoliJUD = dtAsistenciaBk.fechaSoliJUD;
-                        if(!$scope.isNull($scope.dtAsistenciaModelo.fechaSoliJUD) && !isNaN($scope.dtAsistenciaModelo.fechaSoliJUD)){
+            $scope.dtAsistenciaModelo.fechaSoliJUD = dtAsistenciaBk.fechaSoliJUD;
+            
+            if(!$scope.isNull($scope.dtAsistenciaModelo.fechaSoliJUD) && !isNaN($scope.dtAsistenciaModelo.fechaSoliJUD)){
 			    $scope.dtAsistenciaModelo.fechaSoliJUD = new Date($scope.dtAsistenciaModelo.fechaSoliJUD);
-		        }
-                        $scope.dtAsistenciaModelo.fechaProgramadaJUD = dtAsistenciaBk.fechaProgramadaJUD;
-                        if(!$scope.isNull($scope.dtAsistenciaModelo.fechaProgramadaJUD) && !isNaN($scope.dtAsistenciaModelo.fechaProgramadaJUD)){
+		    }
+            
+            $scope.dtAsistenciaModelo.fechaProgramadaJUD = dtAsistenciaBk.fechaProgramadaJUD;
+            
+            if(!$scope.isNull($scope.dtAsistenciaModelo.fechaProgramadaJUD) && !isNaN($scope.dtAsistenciaModelo.fechaProgramadaJUD)){
 			    $scope.dtAsistenciaModelo.fechaProgramadaJUD = new Date($scope.dtAsistenciaModelo.fechaProgramadaJUD);
-		        }
-                        $scope.dtAsistenciaModelo.codEjecutora = dtAsistenciaBk.codEjecutora;
+		    }
+            
+            $scope.dtAsistenciaModelo.codEjecutora = dtAsistenciaBk.codEjecutora;
                         
-            			$scope.dtAsistenciaModelo.dtAsistenciaTemasBkJSss = dtAsistenciaBk.dtAsistenciaTemasBkJSss;
-            			if(dtAsistenciaBk.dtAsistenciaTemasBkJSss!=null && dtAsistenciaBk.dtAsistenciaTemasBkJSss.length>0){
-            				$scope.datoAsistenciaTema = [];
-            				for(var i = 0; i < dtAsistenciaBk.dtAsistenciaTemasBkJSss.length; i++)
-            				{
-            					var asistenciaTema = dtAsistenciaBk.dtAsistenciaTemasBkJSss[i];
-            					$scope.addAsistTema(asistenciaTema, i, dtAsistenciaBk.dtAsistenciaTemasBkJSss.length);
-            				}
+            $scope.dtAsistenciaModelo.dtAsistenciaTemasBkJSss = dtAsistenciaBk.dtAsistenciaTemasBkJSss;
+            
+            if(dtAsistenciaBk.dtAsistenciaTemasBkJSss!=null && dtAsistenciaBk.dtAsistenciaTemasBkJSss.length>0){
+            $scope.datoAsistenciaTema = [];
+            
+    		 		for(var i = 0; i < dtAsistenciaBk.dtAsistenciaTemasBkJSss.length; i++) {
+    					var asistenciaTema = dtAsistenciaBk.dtAsistenciaTemasBkJSss[i];
+    					$scope.addAsistTema(asistenciaTema, i, dtAsistenciaBk.dtAsistenciaTemasBkJSss.length);
+    				}
 
-            			}
+            }
+            
+            $scope.dtAsistenciaModelo.dtAsistenciaUsuariosBkJSss = dtAsistenciaBk.dtAsistenciaUsuariosBkJSss;
+            
+            if(dtAsistenciaBk.dtAsistenciaUsuariosBkJSss!=null && dtAsistenciaBk.dtAsistenciaUsuariosBkJSss.length>0){
+            	$scope.datoUsuario = [];
+            	
+            	for(var i = 0; i < dtAsistenciaBk.dtAsistenciaUsuariosBkJSss.length; i++) {
+					var usuario = dtAsistenciaBk.dtAsistenciaUsuariosBkJSss[i];
+					$scope.addUsuario(usuario, i, dtAsistenciaBk.dtAsistenciaUsuariosBkJSss.length);
+				}
+            	
+            	
+            }
+            
 
-                        // ADICIONALES
-	                $scope.dtAsistenciaModelo.estadoTxt = dtAsistenciaBk.estadoTxt;
-$scope.dtAsistenciaModelo.idUsuinternoTxt = dtAsistenciaBk.idUsuinternoTxt;
-$scope.dtAsistenciaModelo.idEntidadTxt = dtAsistenciaBk.idEntidadTxt;
-$scope.dtAsistenciaModelo.idOrigenTxt = dtAsistenciaBk.idOrigenTxt;
-$scope.dtAsistenciaModelo.idProgramacionTxt = dtAsistenciaBk.idProgramacionTxt;
-$scope.dtAsistenciaModelo.idModalidadTxt = dtAsistenciaBk.idModalidadTxt;
-$scope.dtAsistenciaModelo.idSedeTxt = dtAsistenciaBk.idSedeTxt;
-$scope.dtAsistenciaModelo.idSistAdmTxt = dtAsistenciaBk.idSistAdmTxt;
-$scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
+             // ADICIONALES
+            $scope.dtAsistenciaModelo.estadoTxt = dtAsistenciaBk.estadoTxt;
+			$scope.dtAsistenciaModelo.idUsuinternoTxt = dtAsistenciaBk.idUsuinternoTxt;
+			$scope.dtAsistenciaModelo.idEntidadTxt = dtAsistenciaBk.idEntidadTxt;
+			$scope.dtAsistenciaModelo.idOrigenTxt = dtAsistenciaBk.idOrigenTxt;
+			$scope.dtAsistenciaModelo.idProgramacionTxt = dtAsistenciaBk.idProgramacionTxt;
+			$scope.dtAsistenciaModelo.idModalidadTxt = dtAsistenciaBk.idModalidadTxt;
+			$scope.dtAsistenciaModelo.idSedeTxt = dtAsistenciaBk.idSedeTxt;
+			$scope.dtAsistenciaModelo.idSistAdmTxt = dtAsistenciaBk.idSistAdmTxt;
+			$scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 
 			$scope.dtAsistenciaModelo.editopcion = dtAsistenciaBk.dtAsistenciaACL.editopcion;
 		}
 	
 	  $scope.addAsistTema = function (asistenciaTema, i, size) {
+		  
 	    	var addx=false;
+	    	
 	    	if(i+1==size){
 	    		addx= true;
-      }else{
-      	addx= false;
-      }
-	        $scope.datoAsistenciaTema.push({
+	    	}
+	    	
+	    	else{
+	    		addx= false;
+	    	}
+	        
+	    	$scope.datoAsistenciaTema.push({
 	        	contador: i+ 1, 
+	        	idTema: asistenciaTema.idTema,
 	        	idAsistTema: asistenciaTema.idAsistTema,
-	        	idTema: asistenciaTema.idTema, 
-	        	idSubtema: asistenciaTema.idSubtema, 
-	        	detalle: asistenciaTema.detalle,            
+	        	idTemaTxt: asistenciaTema.idTemaTxt,
+	        	idSubtema: asistenciaTema.idSubtema,
+	        	idSubtemaTxt: asistenciaTema.idSubtemaTxt,
+	        	detalle: asistenciaTema.detalle,
 	            add: addx
 	            
 	        })
 			
-	    }
+	  }
+	  
+	  $scope.addUsuario = function (usuario, i, size) {
+		  
+	    	var addx=false;
+	    	
+	    	if(i+1==size){
+	    		addx= true;
+	    	}
+	    	
+	    	else{
+	    		addx= false;
+	    	}
+	        
+	    	$scope.datoUsuario.push({
+	        	contador: i+ 1,
+	        	idAsistUsuext: usuario.idAsistUsuext,
+	        	numDocu: usuario.numDocu,
+	        	nombresApellidos: usuario.aPaterno + ' '+ usuario.aMaterno + ' ' + usuario.nombre,
+	        	idCargoUsuextTxt: usuario.idCargoUsuextTxt,
+	        	correoUsuext: usuario.correoUsuext,
+	        	fijoUsuext: usuario.fijoUsuext,
+	        	celularUsuext: usuario.celularUsuext,
+	        	idUsuexterno: usuario.idUsuexterno,
+	        	
+	            add: addx
+	            
+	        })
+			
+	  }
 	
 	  // ////////////////////////////////////////////////
 	  $scope.editarDtAsistencia = function(ev, dtAsistenciaBk) {		  
@@ -670,15 +732,17 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 	  			  
 	  $scope.salvarDtAsistencia = function(ev){	
 		  
+		  			var propertiesToRemove = ['contador', 'add'];
+		  
 				    if($scope.isArray($scope.datoAsistenciaTema)) {
 						if($scope.datoAsistenciaTema.length>0) {
-								$scope.dtAsistenciaModelo.dtAsistenciaTemasBkJSss = $scope.datoAsistenciaTema;
+								$scope.dtAsistenciaModelo.dtAsistenciaTemasBkJSss =  $scope.removePropertiesFromList(angular.copy($scope.datoAsistenciaTema), propertiesToRemove);
 						}
 					}
 				    
 				    if($scope.isArray($scope.datoUsuario)) {
 						if($scope.datoUsuario.length>0) {
-								$scope.dtAsistenciaModelo.dtAsistenciaUsuariosBkJSss = $scope.datoUsuario;
+								$scope.dtAsistenciaModelo.dtAsistenciaUsuariosBkJSss = $scope.removePropertiesFromList(angular.copy($scope.datoUsuario), propertiesToRemove);
 						}
 					}
 				    
@@ -880,10 +944,59 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 				    	} 
 				    }
 					
+					 $scope.removeProperties = function(obj, properties) {
+			                properties.forEach(function(property) {
+			                    delete obj[property];
+			                });
+			                return obj;
+			            };
+			            
+			       $scope.removePropertiesFromList = function(list, properties) {
+			                return list.map(function(item) {
+			                    properties.forEach(function(property) {
+			                        delete item[property];
+			                    });
+			                    return item;
+			                });
+			      };
+			      
+			      
+			      $scope.showSendMailUsuario = function(ev, usuario) {
+					    var confirm = $mdDialog.confirm()
+					      .title('Enviar Constancia de atención')
+					      .textContent('¿SEGURO QUE DESEA ENVIAR LA CONSTANCIA DE ATENCIÓN?')
+					      .targetEvent(ev)
+					      .ok('Si')
+					      .cancel('No');
+
+					    $mdDialog.show(confirm).then(function () {
+					      $scope.status = 'SI';
+					      $scope.sendMailUsuario(ev, usuario);
+					    }, function () {
+					      $scope.status = 'NO';
+					    });
+					  };
+			      
+			      
 					$scope.sendMailUsuario = function (ev,usuario) {
-				    	
-						if(usuario!=null){
-							$scope.dtAsistenciaModelo.dtAsistenciaUsuexternosBk = usuario;
+				        var propertiesToRemove = ['contador', 'add'];
+						var newUsuario = $scope.removeProperties(angular.copy(usuario), propertiesToRemove);
+						console.log("newUsuario:" + JSON.stringify( newUsuario));
+						
+						if(newUsuario.idAsistUsuext==null){
+							$mdDialog.show(
+									$mdDialog.alert()
+									.parent(angular.element(document.body))
+									.clickOutsideToClose(true)
+									.title('ASISTENCIA TECNICA')
+									.textContent("PARA QUE PUEDA ENVIAR EL CORREO SE NECESITA QUE GUARDE LA ASISTENCIA PARA QUE SE ACTUALICE LOS DATOS DE LOS NUEVOS USUARIOS AGREGADOS")
+									.ok('OK')
+							);
+							return;
+						}
+						
+						if(newUsuario!=null){
+							$scope.dtAsistenciaModelo.dtAsistenciaUsuexternosBk = newUsuario;
 						}
 						
 						console.log("$scope.dtAsistenciaModelo:" + JSON.stringify( $scope.dtAsistenciaModelo ));
@@ -891,21 +1004,10 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 						
 						$http.post(enviarConstanciaAtencionUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
 							var dato = res.data;
-
+							
 		    				$scope.total = $scope.datos.length;
 		    				
 		    				$scope.setDtAsistenciaModelo(dato);
-		    				
-		    				$mdDialog.show(
-							         $mdDialog.alert()
-							        .parent(angular.element(document.body))
-							        .clickOutsideToClose(true)
-							        .title('Guardar asistencia técnica')
-							        .textContent("Se envio el correo exitosamente.")
-							        .ariaLabel('ERROR')
-							        .ok('OK')
-							        .targetEvent(ev)
-							    );
 		    				
 		    				$scope.nuevo = false;
 						},
@@ -925,8 +1027,6 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 								    );
 				            }
 				        });		
-						
-						
 				    }
 					
 					
@@ -1495,7 +1595,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 		            $scope.usuarioModelo.nombre = resData.nombre;
 		            $scope.usuarioModelo.correoUsuext = resData.correo;
 		            $scope.usuarioModelo.celularUsuext = (resData.telefCell!=null && resData.telefCell!=0)?resData.telefCell:resData.otroCelular;
-		            $scope.usuarioModelo.fijoUsuext =  (resData.telefFijo!=null && resData.telefFijo!=0)?resData.telefFijo:'';
+		            $scope.usuarioModelo.fijoUsuext =  (resData.telefFijo!=null && resData.telefFijo!=0)?resData.telefFijo:resData.otroCelular;
 		            $scope.listaCargos = resData.usucargos;
 		            
 		            $scope.activar=1;

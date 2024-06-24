@@ -2530,6 +2530,7 @@ public class ServicioImp implements Servicio, Serializable {
 	
 	@Override
 	public DtAsistenciaBk enviarConstanciaAtencion(DtAsistenciaBk dtAsistenciaBk, 
+												   String url,
 												   String user, 
 												   Long kyUsuarioMod,
 												   Long kyAreaMod, 
@@ -2550,7 +2551,7 @@ public class ServicioImp implements Servicio, Serializable {
 			
 			List<DtAsistenciaTemasBk> lstAsistTema =  this.getDtAsistenciaTemasXIdAsistencia(dtAsistenciaBk.getIdAsistencia());
 			
-			if ( lstAsistTema==null && lstAsistTema.isEmpty()) {
+			if ( lstAsistTema==null ) {
 				throw new Validador(MessageFormat.format(Messages.getStringToKey("dtAsistenciaTema.listaTemasVaciaa"),
 									Messages.getStringToKey("dtEntidades.titulotabla") ) ); 
 			}
@@ -2558,13 +2559,15 @@ public class ServicioImp implements Servicio, Serializable {
 			
 			Timestamp hoy = new Timestamp(System.currentTimeMillis());
 			dtAsistenciaBk.getDtAsistenciaUsuexternosBk().setCtrlConfirmacion(1L);
+			dtAsistenciaBk.setDtAsistenciaUsuariosBkJSss(new ArrayList<>());
 			dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss().add(dtAsistenciaBk.getDtAsistenciaUsuexternosBk());
 			
 			this.saveorupdateDtAsistenciaBk(dtAsistenciaBk, user, kyUsuarioMod, kyAreaMod, rmtaddress);
 			
-			String url = "HTTP://AAAAAAAA";
+			List<DtAsistenciaUsuexternosBk> participantes = new ArrayList<>();
+			participantes.add(dtAsistenciaBk.getDtAsistenciaUsuexternosBk());
 			
-			enviarConstanAtenPorCorreo(dtAsistenciaBk, dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss(), lstAsistTema, url, hoy);
+			enviarConstanAtenPorCorreo(dtAsistenciaBk, participantes, lstAsistTema, url, hoy);
 			
 		}
 		
@@ -2652,7 +2655,7 @@ public class ServicioImp implements Servicio, Serializable {
 							msg.append(
 									"<div align='center' valign='middle' height='28px' style='font-size:20px;line-height:28px;align:center !important;valign:middle;background:#C8000E;-webkit-border-radius:1px;-moz-border-radius:1px;border-radius:1px;-ms-border-radius:1px; width:80%'>");
 							msg.append("<a style=text-decoration:none; width: 210px;  href='" + url
-									+ "/servicioExterno/ServicioExtConfir.htm?idu=" + idUsuarioAsisExterno + "&ids="
+									+ "?idu=" + idUsuarioAsisExterno + "&ids="
 									+ dtAsistenciaBke.getIdAsistencia()
 									+ "'><font color=white><b>CLIC AQUÍ PARA CONFIRMAR ATENCIÓN</b></font></a>");
 							msg.append("</div>");

@@ -192,7 +192,7 @@ public interface Servicio {
 	DtAsistenciaBk saveorupdateDtAsistenciaBk(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
 	
-	DtAsistenciaBk enviarConstanciaAtencion(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod,
+	DtAsistenciaBk enviarConstanciaAtencion(DtAsistenciaBk dtAsistenciaBk, String url, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
 	
 	DtAsistenciaBk finalizarDtAsistenciaBk(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod,

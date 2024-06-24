@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -24,8 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +39,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -468,7 +464,7 @@ public class DtAsistenciaRsCtrl {
 
 		try {
 			
-			dtAsistenciaC = servicio.enviarConstanciaAtencion(dtAsistenciaC, msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto);
+			dtAsistenciaC = servicio.enviarConstanciaAtencion(dtAsistenciaC, this.getURlPageConfirmation(req),msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto);
 			
 			DtAsistenciaData dtAsistenciaData = (DtAsistenciaData) req.getSession().getAttribute("DtAsistenciaData");
 			if(dtAsistenciaData==null){
@@ -487,6 +483,16 @@ public class DtAsistenciaRsCtrl {
 					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
 					}).build();
 		}
+	}
+	
+	private String getURlPageConfirmation(HttpServletRequest request) {
+		String scheme = request.getScheme(); 
+        String hostname = request.getServerName(); 
+        int port = request.getServerPort(); 
+		
+        String url = scheme + "://" + hostname + ":" + port + "/registramef/confirmacion-page";
+		
+		return url;
 	}
 	
 	@GET

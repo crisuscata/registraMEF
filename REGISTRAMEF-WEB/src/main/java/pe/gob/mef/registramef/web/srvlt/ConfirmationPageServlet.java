@@ -43,6 +43,7 @@ public class ConfirmationPageServlet extends HttpServlet {
         
         DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk = servicio.getDtAsistenciaUsuexternosBkXid(idUsuarioAsisExt, null);
         Long confirmoCorreo=2L;
+        Long paramIdModalidadVirtual = 137L;
         
         if(dtAsistenciaUsuexternosBk!=null) {
         	
@@ -52,17 +53,21 @@ public class ConfirmationPageServlet extends HttpServlet {
         	}else {
         		DtAsistenciaBk dtAsistenciaBk = servicio.getDtAsistenciaBkXid(idAsistencia, null);
         		if(dtAsistenciaBk!=null) {
-        			request.setAttribute("usuarioConfirmoCorreo", "NO");
-            		request.setAttribute("idAsistencia", dtAsistenciaBk.getIdAsistencia());
-            		SimpleDateFormat sdfddMMyyyy = new SimpleDateFormat("dd/MM/yyyy");
-            		String fechaAsistencia = sdfddMMyyyy.format(dtAsistenciaBk.getFechaAsistencia());
-            		request.setAttribute("fechaAsistencia", fechaAsistencia);
-            		request.setAttribute("temaTotal", this.temaTotal(dtAsistenciaBk).get("temaTotal"));
-            		request.setAttribute("especiaTotal", this.temaTotal(dtAsistenciaBk).get("especiaTotal"));
-            		request.setAttribute("fechaLargaSinAnio", this.fechaLargaSinAnio(dtAsistenciaBk));
-            		
-            		request.setAttribute("actionForm", "confirmacion-page?idu="+idUsuarioAsisExt+"&ids="+idAsistencia);
-            		
+        			if(String.valueOf(dtAsistenciaBk.getIdModalidad()).equals(String.valueOf(paramIdModalidadVirtual)) ) {
+        				request.setAttribute("usuarioConfirmoCorreo", "NO");
+	            		request.setAttribute("idAsistencia", dtAsistenciaBk.getIdAsistencia());
+	            		SimpleDateFormat sdfddMMyyyy = new SimpleDateFormat("dd/MM/yyyy");
+	            		String fechaAsistencia = sdfddMMyyyy.format(dtAsistenciaBk.getFechaAsistencia());
+	            		request.setAttribute("fechaAsistencia", fechaAsistencia);
+	            		request.setAttribute("temaTotal", this.temaTotal(dtAsistenciaBk).get("temaTotal"));
+	            		request.setAttribute("especiaTotal", this.temaTotal(dtAsistenciaBk).get("especiaTotal"));
+	            		request.setAttribute("fechaLargaSinAnio", this.fechaLargaSinAnio(dtAsistenciaBk));
+	            		
+	            		request.setAttribute("actionForm", "confirmacion-page?idu="+idUsuarioAsisExt+"&ids="+idAsistencia);
+        			} else {
+        				request.setAttribute("usuarioConfirmoCorreo", "SI");
+                		request.setAttribute("mensajeConfirmacion", "LA ASISTENCIA TÉCNICA DEBE DE SER  VIRTUAL.");
+        			}
         		}
         	}
         }

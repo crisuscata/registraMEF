@@ -274,7 +274,7 @@
 
 						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
 							<md-button class="md-icon-button md-primary"
-								ng-click="removeAsistenciaTema($event,dato)" ng-if="!dato.add">
+								ng-click="removeAsistenciaTema($event,dato)" >
 							<md-icon md-font-set="material-icons">remove</md-icon> </md-button> 
 						</td>
 
@@ -359,14 +359,14 @@
 						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
 						
 							<md-button  class="md-icon-button md-primary"
-										ng-click="sendMailUsuario($event,dato)" 
-										ng-if="!dato.add">
+										ng-click="showSendMailUsuario($event,dato)" 
+										>
 								<md-icon md-font-set="material-icons">mail</md-icon>
 							 </md-button>
 						
 							<md-button  class="md-icon-button md-primary"
 										ng-click="removeUsuario($event,dato)" 
-										ng-if="!dato.add">
+										>
 								<md-icon md-font-set="material-icons">remove</md-icon>
 							 </md-button> 
 							 
