@@ -94,7 +94,155 @@ myapp.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
 	};
 }]);
 
-myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout', '$http', '$mdDialog','$location','$routeParams', '$mdPanel',  function ($mdEditDialog, $scope, $timeout, $http, $mdDialog, $location, $routeParams, $mdPanel) {
+myapp.directive('ngFileModel', function () {
+	return {
+		scope:true,
+		link: function (scope, element, attrs) {
+			console.log("ngFileModel link2");
+			var letraatrib = attrs.letter==null?'':attrs.letter;
+			element.bind('change', function (changeEvent) {                  		
+				var files = changeEvent.target.files;
+				for (var i = 0;i<files.length;i++) {
+					var name = files[i].name.toLowerCase();
+					if ( /\.(jpe?g|png|gif|html|pdf|msg|doc?x|xls?x)$/i.test(name) ) {
+						cargar(files[i],letraatrib);               	
+					}
+				}                                       
+			});
+
+			function cargarBase64(archivo){
+				var reader = new FileReader();
+				reader.onload = function (loadEvent) {
+					var ngFileModel = {
+							lastModified: archivo.lastModified,
+							lastModifiedDate: archivo.lastModifiedDate,
+							name: archivo.name,
+							tamanio: archivo.size,
+							tipo: archivo.type,
+							data: loadEvent.target.result
+					};
+					scope.$emit("fileSelected", ngFileModel);
+
+				}
+				reader.readAsDataURL(archivo);
+			}
+
+			function cargar(archivo,letraatrib){
+				console.log("ngFileModel cargar");
+				// emit event upward
+				var ngFileModel = {
+						iddocumento: null,
+						lastmodified: archivo.lastModified,						
+						filenameoriginal: archivo.name,
+						filename: null,
+						tamanio: archivo.size,
+						tipo: archivo.type,
+						tipodocumento: null,
+						data: archivo,
+						letter:letraatrib
+				};
+				scope.$emit("fileSelected", ngFileModel);
+			}
+		},//FIN FUNCION LINK
+	};
+});
+
+myapp.service('fileUploadServ', ['$http','$mdDialog',
+						function ($http,$mdDialog) {
+	
+	this.uploadFileToUrl = function(posicion, archivo, uploadUrl){
+		var reader = {};
+		var slice_size = 1000 * 1024;
+		var file = archivo.data;
+
+		function start_upload() {
+			reader = new FileReader();
+			upload_file( 0 );
+		}
+
+		function upload_file( start ) {
+
+			var next_slice = start + slice_size + 1;
+			var blob = file.slice( start, next_slice );
+
+			reader.onloadend = function(event) {
+				if ( event.target.readyState !== FileReader.DONE ) {
+					return;
+				}
+				$http( {
+					url: uploadUrl,
+					method: 'POST', 
+					headers: { 'Content-Type': 'application/json' },
+					transformRequest: angular.identity,
+					data: angular.toJson({
+						iddocumento: archivo.iddocumento,
+						lastmodified: archivo.lastmodified,						
+						filenameoriginal: archivo.filenameoriginal,
+						filename: archivo.filename,
+						tamanio: archivo.tamanio,
+						tipo: archivo.tipo,
+						tipodocumento: archivo.tipodocumento,
+						data: event.target.result 	
+					})    				
+				}).then(function (response){
+					var data = response.data; 
+					console.log( "SUCCESS: "+response);
+					if(archivo.filename=== null)
+						archivo.filename = data.filename;    					
+					var size_done = start + slice_size;
+					var percent_done = Math.floor( ( size_done / archivo.tamanio ) * 100 );    					
+					if ( next_slice < archivo.tamanio ) {
+						// Update upload progress
+						document.getElementById('dbi-upload-progress'+archivo.letter+'_'+posicion).innerHTML = 'Uploading File - ' + percent_done + '%' ;
+						// More to upload, call function recursively
+						document.getElementById('progress-bar'+archivo.letter+'_'+posicion).style.width = percent_done+ '%';
+						document.getElementById('progress-bar'+archivo.letter+'_'+posicion).innerHTML = percent_done+ '%';
+
+						upload_file( next_slice );
+					} else {
+						document.getElementById('dbi-upload-progress'+archivo.letter+'_'+posicion).innerHTML = 'Upload Complete!' ;
+						document.getElementById('progress-bar'+archivo.letter+'_'+posicion).style.width = '100%';
+						document.getElementById('progress-bar'+archivo.letter+'_'+posicion).innerHTML = '100%';
+						archivo.data = null;
+					}
+				},
+				function error(errResponse) {
+					console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+					var dato = errResponse.data;
+					if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+						$mdDialog.show(
+								$mdDialog.alert()
+								.parent(angular.element(document.body))
+								.clickOutsideToClose(true)
+								.title('Cargar archivos')
+								.textContent(dato.message)
+								.ariaLabel('ERROR')
+								.ok('OK')
+								.targetEvent(event)
+						);
+					}
+				})    			
+			};
+			reader.readAsDataURL(blob);
+		}
+
+		start_upload();
+
+		function uuidv4() {
+			return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+				var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+				return v.toString(16);
+			});
+		}
+
+		function to2digit(n) {
+			return ('00' + n).slice(-2);
+		}
+	}
+}]);
+
+myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout', '$http', '$mdDialog','$location','$routeParams', '$mdPanel',  'fileUploadServ',
+								  function ($mdEditDialog,   $scope,   $timeout,   $http,   $mdDialog,  $location,  $routeParams,   $mdPanel, fileUploadSrv) {
 	'use strict';
 	 
 	 $scope.limitOptions = [100, 500, 1000, 5000];
@@ -138,6 +286,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
     // ///////////////////////////////////////////
 	$scope.datos = [];
 	$scope.total = 0;
+	$scope.archivos = [];
 
 	$scope.loaddtAsistencias = function () {
 	    //$scope.promise = $timeout(function () {
@@ -729,6 +878,15 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		    $scope.cleardtAsistencia();
 		    $location.url('/');
 	  }
+	  
+	  $scope.$on("fileSelected", function (event, args) {
+			$scope.$apply(function () {
+				console.log("PROBANDO ENVIAR EL ARCHIVO");           
+				$scope.archivos.push(args);	            
+				var pos = $scope.archivos.length-1;
+				fileUploadSrv.uploadFileToUrl(pos,$scope.archivos[pos],insertDocUrl);
+			});
+	  });
 	  			  
 	  $scope.salvarDtAsistencia = function(ev){	
 		  
@@ -755,6 +913,15 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		    				$scope.total = $scope.datos.length;
 		    				
 		    				$scope.setDtAsistenciaModelo(dato);
+		    				
+		    				var idPadreModVirtual = 137;
+		    				var idPadreModPresencial = 138;
+		    				
+		    				if($scope.dtAsistenciaModelo.idModalidad == idPadreModVirtual || 
+		    						$scope.dtAsistenciaModelo.idModalidad == idPadreModPresencial){
+		    					$scope.showPanelDocumentos = 1;
+		    				}
+		    				
 		    				
 		    				$mdDialog.show(
 							         $mdDialog.alert()
@@ -1579,6 +1746,8 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		};
 		$scope.listaCargos=[];
 		$scope.activar = 0;
+		$scope.showPanelDocumentos = 0;
+		$scope.archivos = [];
 		$scope.guardadoExitoso = 0;
 		$scope.buscarxdni = function(dato){
 	        console.log('dni: '+ dato.numDocu);
@@ -1794,6 +1963,9 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	    	ev.target.disabled = false;
 		 };
     	
+//ADJUNTAR DOCUMENTOS
+		 
+		 
     	
 ///FIN ADICIONALES			 			 
 	// ////////////////////////////////////////////////////////////////
@@ -2375,24 +2547,4 @@ $scope.loadListaPrtParametrosIdCaracteristica=function(){
 	        $scope.settingFlagAddAndRemoveEntidadSisAdmin();
 	    }
 };
-
-//SELECT INI
-/*$scope.listaMsSisAdmin=[];
-$scope.loadlistaMsSisAdmin=function(){
-$http.get(listamsSisAdminUrl).then(function(res){
-	$scope.listaMsSisAdmin = res.data; 
-},
-function error(errResponse) {
-	console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
-});
-};*/
-/*$scope.changeIdMsSisAdmin=function(){
-  ///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
-}*/
-/*$scope.$watch('dtAsistenciaModelo.idSede', function (newValue, oldValue) {
-console.log('dtAsistenciaModelo.idSede ' + newValue+' -- '+oldValue);
-//CARGAR DATOS DEL SIGUIENTE SELECT
-});*/
-//SELECT FIN 
-
 

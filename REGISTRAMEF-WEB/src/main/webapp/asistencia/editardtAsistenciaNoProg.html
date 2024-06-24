@@ -384,6 +384,66 @@
 		</fieldset>
 		
 		
+		<!--  <fieldset style="margin-left: 15px;" ng-if="showPanelDocumentos">  -->
+		<fieldset style="margin-left: 15px;" >
+			<legend>Adjuntar lista de participantes y programa del evento</legend>
+			
+			<div layout="row" layout-aling="center start"  flex> 
+			        <div flex="12">
+			        	<label class="letraLabel-personal-baja" >Adjuntar archivo</label>    
+			        	 </div>
+			        <div flex="90">
+				        <input type="file" ng-file-model multiple letter="A" style="font-size: 83%;margin-top: 17px;"/> 
+				        <button type="button" ng-click="uploadFile(file)" ng-disabled="uploadForm.file.$invalid">Upload</button>  
+				          <table>
+							  <tr ng-repeat="x in archivos">
+								    <td>{{ $index + 1 }}</td>
+								    <td>
+								  		  <img src="resources/imagen/mime/{{x.tipo}}.gif" alt="{{ x.filenameoriginal }}" style="float:left;">
+								    	  {{ x.filenameoriginal }}
+								    </td>
+								    <td>{{ (x.tamanio/1024).toFixed() }} KB</td>
+								    <td>
+								    <p id="dbi-upload-progressA_{{$index}}">.</p>
+								    <div class="progress">    
+								   		<div class="progress-bar" id="progress-barA_{{$index}}"></div> 
+								    </div>
+								    </td>
+								    <td>
+									    <md-button class="md-icon-button md-accent" aria-label="Eliminar" ng-click="handleremover($index)">
+									        <md-icon md-font-set="material-icons">clear</md-icon>
+									    </md-button>
+								    </td>
+							  </tr>
+						</table>  
+			         </div>
+			 </div>
+ 
+			  <div  ng-if="tdLogisticaConveniosModelo.editopcion  >= 1 && tdLogisticaConveniosModelo.tdAnexosJSss.length > 0" flex="auto">   
+			   		 <table>
+					 <tr>
+					  <th><span><b>N°</b></span></th>
+					  <th><span><b>Anexo</b></span></th>
+					  <th><span><b>Tamaño</b></span></th>
+					 </tr>
+					  <tr ng-repeat="x in tdLogisticaConveniosModelo.tdAnexosJSss">
+					    <td>{{ $index + 1 }}</td>
+					    <td>
+					    <a href="download?anex={{x.idanexo}}" target="_blank_">
+					    <img src="resources/imagen/mime/{{x.tipo}}.gif" alt="{{ x.filenameoriginal }}" style="float:left;">
+					    {{ x.filenameoriginal }}
+					    </a>
+					    </td>
+					    <td>{{ (x.tamanio/1024).toFixed() }} KB</td>
+					  </tr>
+					</table>
+			       
+			  </div>
+			
+			
+		</fieldset>	
+		
+		
 		<div layout="column" layout-aling="center start" flex> 
 			<md-fab-speed-dial md-open="isOpenxx" md-direction="up"
 					class="md-scale md-fab-bottom-right" ng-mouseenter="isOpenxx=true"
