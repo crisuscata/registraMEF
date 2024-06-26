@@ -287,6 +287,12 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	$scope.datos = [];
 	$scope.total = 0;
 	$scope.archivos = [];
+	
+	$scope.uploadFile = function () {
+		console.log("UPLOAD FILE");
+		
+		console.log("JSON.stringify( $scope.archivos ) : " + JSON.stringify( $scope.archivos ));
+	}
 
 	$scope.loaddtAsistencias = function () {
 	    //$scope.promise = $timeout(function () {
@@ -322,8 +328,6 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
             $scope.loadlistaMsSedes();//SELECT
 	  };
 	  
-	
-	 	  
 	  $scope.getURLParametros=function(){
 		    var elprimero = true;
 		    var order = ""; 
@@ -683,6 +687,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 			idSedeTxt: null,
 			idSistAdmTxt: null,
 			idFinanciaTxt: null,
+			tdAnexosJSss: [],
 
 		    editopcion: 1
 		};
@@ -790,7 +795,8 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
             	
             	
             }
-            
+            //tdLogisticaConveniosBk.tdAnexosDtoss;
+            $scope.dtAsistenciaModelo.tdAnexosJSss = dtAsistenciaBk.dtAnexosBKJSss;
 
              // ADICIONALES
             $scope.dtAsistenciaModelo.estadoTxt = dtAsistenciaBk.estadoTxt;
@@ -879,6 +885,10 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		    $location.url('/');
 	  }
 	  
+	  $scope.handleremover = function(pos){
+			$scope.archivos.splice(pos,1);			  
+	  }
+	  
 	  $scope.$on("fileSelected", function (event, args) {
 			$scope.$apply(function () {
 				console.log("PROBANDO ENVIAR EL ARCHIVO");           
@@ -903,6 +913,44 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 								$scope.dtAsistenciaModelo.dtAsistenciaUsuariosBkJSss = $scope.removePropertiesFromList(angular.copy($scope.datoUsuario), propertiesToRemove);
 						}
 					}
+				    
+				    //FILES
+				    if($scope.isArray($scope.archivos)){
+						if($scope.archivos.length>0){
+							for(var i = 0; i < $scope.archivos.length; i++)
+							{
+								var archivo = $scope.archivos[i];
+								if(archivo.filename!=null &&  archivo.data!=null){
+									$mdDialog.show(
+											$mdDialog.alert()
+											.parent(angular.element(document.body))
+											.clickOutsideToClose(true)
+											.title('Cargar archivos')
+											.textContent("TODAVÍA SE ESTA CARGANDO EL ARCHIVO "+archivo.filenameoriginal+" ESPERE QUE CULMINE LA OPERACIÓN...")
+											.ariaLabel('ERROR')
+											.ok('OK')
+											.targetEvent(ev)
+									);
+									return;
+								}else if(archivo.filename===null && archivo.data!=null){					
+									$mdDialog.show(
+											$mdDialog.alert()
+											.parent(angular.element(document.body))
+											.clickOutsideToClose(true)
+											.title('Cargar archivos')
+											.textContent("TODAVÍA SE ESTA CARGANDO EL ARCHIVO "+archivo.filenameoriginal+" ESPERE QUE CULMINE LA OPERACIÓN...")
+											.ariaLabel('ERROR')
+											.ok('OK')
+											.targetEvent(ev)
+									);
+									return;
+								}
+							}
+							
+							$scope.dtAsistenciaModelo.tdAnexosJSss = $scope.archivos;
+						}}
+				    
+				    
 				    
 				    ev.target.disabled = true;
 				    var datainsert = angular.toJson($scope.dtAsistenciaModelo);
@@ -1557,13 +1605,28 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 			console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
 		});
 	};
+	
         $scope.changeIdModalidad=function(){
-          ///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
+          
+        		
         }
+        
         $scope.$watch('dtAsistenciaModelo.idModalidad', function (newValue, oldValue) {
-		console.log('dtAsistenciaModelo.idModalidad ' + newValue+' -- '+oldValue);
-		//CARGAR DATOS DEL SIGUIENTE SELECT
-	});
+        	
+        		console.log('dtAsistenciaModelo.idModalidad ' + newValue+' -- '+oldValue);
+
+        		var idPadreModVirtual = 137;
+				var idPadreModPresencial = 138;
+				
+				if(newValue == idPadreModVirtual || 
+						newValue == idPadreModPresencial){
+					$scope.showPanelDocumentos = 1;
+				} else{
+					$scope.showPanelDocumentos = 0;
+				}
+        		
+        });
+        
 //SELECT FIN                
 //SELECT INI
         $scope.listaPrtParametrosIdFinancia=[];

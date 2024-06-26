@@ -71,6 +71,7 @@ public class DtAsistenciaBk implements java.io.Serializable {
 		
 	private List<DtAsistenciaUsuexternosBk> dtAsistenciaUsuariosBkJSss = null;
 	private DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk=null;
+	private List<DtAnexoBk> dtAnexosBKJSss = null;
 		
 	public DtAsistenciaBk() {
 	}
@@ -535,6 +536,14 @@ public class DtAsistenciaBk implements java.io.Serializable {
 
 	public void setDtAsistenciaUsuexternosBk(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk) {
 		this.dtAsistenciaUsuexternosBk = dtAsistenciaUsuexternosBk;
+	}
+
+	public List<DtAnexoBk> getDtAnexosBKJSss() {
+		return dtAnexosBKJSss;
+	}
+
+	public void setDtAnexosBKJSss(List<DtAnexoBk> dtAnexosBKJSss) {
+		this.dtAnexosBKJSss = dtAnexosBKJSss;
 	}
 	
 }

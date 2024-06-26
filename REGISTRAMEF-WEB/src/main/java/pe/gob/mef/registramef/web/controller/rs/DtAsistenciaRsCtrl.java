@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -67,6 +69,7 @@ import pe.gob.mef.registramef.bs.transfer.DtEntidadesDto;
 import pe.gob.mef.registramef.bs.transfer.DtUsuarioExternoDto;
 import pe.gob.mef.registramef.bs.transfer.IDValorDto;
 import pe.gob.mef.registramef.bs.transfer.IIDValorDto;
+import pe.gob.mef.registramef.bs.transfer.bk.DtAnexoBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaTemasBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaUsuexternosBk;
@@ -82,6 +85,7 @@ import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaLC;
 import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaTemasJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtEntidadesJS;
 import pe.gob.mef.registramef.web.controller.rs.data.RespuestaError;
+import pe.gob.mef.registramef.web.controller.rs.data.TdAnexosJS;
 import pe.gob.mef.registramef.web.controller.rs.data.UbigeoXDefectoJS;
 import pe.gob.mef.registramef.web.rs.reporte.StyleUtils;
 import pe.gob.mef.registramef.web.utils.ZipDirectory;
@@ -416,7 +420,18 @@ public class DtAsistenciaRsCtrl {
 					PropertiesMg.KEY_PAGINA_ORIGEN_NO_PROGRAMADO,
 					PropertiesMg.DEFAULT_PAGINA_ORIGEN_NO_PROGRAMADO);
 			
-			dtAsistenciaC = servicio.saveorupdateDtAsistenciaBk(dtAsistenciaC, msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto);
+			List<TdAnexosJS> tdAnexosJSsss = dtAsistenciaJS.getTdAnexosJSss();
+			List<DtAnexoBk> tdAnexosBkss = null;
+			if (tdAnexosJSsss != null && !tdAnexosJSsss.isEmpty()) {
+				tdAnexosBkss = new ArrayList<DtAnexoBk>();
+				for (TdAnexosJS tdAnexosJS : tdAnexosJSsss) {
+					DtAnexoBk tdAnexosBk = new DtAnexoBk();
+					FuncionesStaticas.copyPropertiesObject(tdAnexosBk, tdAnexosJS);
+					tdAnexosBkss.add(tdAnexosBk);
+				}
+			}
+			
+			dtAsistenciaC = servicio.saveorupdateDtAsistenciaBk(dtAsistenciaC, msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto, tdAnexosBkss);
 			
 			DtAsistenciaData dtAsistenciaData = (DtAsistenciaData) req.getSession().getAttribute("DtAsistenciaData");
 			if(dtAsistenciaData==null){
@@ -493,6 +508,62 @@ public class DtAsistenciaRsCtrl {
         String url = scheme + "://" + hostname + ":" + port + "/registramef/confirmacion-page";
 		
 		return url;
+	}
+	
+    @POST
+	@Path("/insertarchivo")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response insertArchivo(@Context HttpServletRequest req, @Context HttpServletResponse res,
+			@HeaderParam("authorization") String authString, TdAnexosJS tdAnexosJS) {
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+		Principal usuario = req.getUserPrincipal();
+		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+		if (msUsuariosBk == null)
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+					.entity(new GenericEntity<RespuestaError>(
+							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
+									HttpURLConnection.HTTP_UNAUTHORIZED)) {
+					}).build();
+
+
+		String sdata = tdAnexosJS.getData().substring(tdAnexosJS.getData().indexOf(";base64,") + 8);
+		byte[] data = Base64.getDecoder().decode(sdata);
+		String filename = null;
+		String rutaFilename = null;
+		if (tdAnexosJS.getFilename() == null) {
+			if (tdAnexosJS.getIdanexo() != null && tdAnexosJS.getIdanexo().longValue() > 0
+					&& tdAnexosJS.getIddocumento() != null && tdAnexosJS.getIddocumento().longValue() > 0) {
+				filename = FuncionesStaticas.getFileNameSistema(tdAnexosJS.getIddocumento(), tdAnexosJS.getIdanexo(), msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede());
+			} else {
+				filename = FuncionesStaticas.getFileNameTempSistema(msUsuariosBk.getIdusuario(),msUsuariosBk.getIdSede());
+			}
+			rutaFilename = FuncionesStaticas.getFileNameRutaSistema(filename);
+		} else {
+			filename = tdAnexosJS.getFilename();
+			rutaFilename = FuncionesStaticas.getFileNameRutaSistema(filename);
+		}
+
+		try {
+			FileOutputStream fos = new FileOutputStream(rutaFilename, true);
+			fos.write(data);
+			fos.close();
+
+			tdAnexosJS.setData(null);
+			tdAnexosJS.setFilename(filename);
+
+			GenericEntity<TdAnexosJS> registrors = new GenericEntity<TdAnexosJS>(tdAnexosJS) {
+			};
+			return Response.status(200).entity(registrors).build();
+		} catch (Exception e) {
+			// e.printStackTrace();
+			String mensaje = e.getMessage();
+			System.out.println("ERROR: " + mensaje);
+			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+					new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+					}).build();
+		}
 	}
 	
 	@GET

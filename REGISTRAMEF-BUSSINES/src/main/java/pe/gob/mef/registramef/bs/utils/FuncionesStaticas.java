@@ -1413,5 +1413,19 @@ public class FuncionesStaticas implements Serializable {
 		return str.trim();
 	}
 	
+	public static String getFileNameSistemaR(long id, long idusuario, int i, String solofilenameoriginal) {
+		int eslashDot = solofilenameoriginal.lastIndexOf("\\");
+		String filenameoriginal = solofilenameoriginal;
+		if (eslashDot > 0)
+			filenameoriginal = filenameoriginal.substring(eslashDot + 1);
+		int extDot = filenameoriginal.lastIndexOf('.');
+		String extension = filenameoriginal.substring(extDot + 1);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		DecimalFormat df = new DecimalFormat("000000");
+		Timestamp diahoy = new Timestamp(System.currentTimeMillis());
+		String filename = df.format(id) + df.format(idusuario) + sdf.format(diahoy) + i + "." + extension;
+		return filename;
+	}
+	
 
 }

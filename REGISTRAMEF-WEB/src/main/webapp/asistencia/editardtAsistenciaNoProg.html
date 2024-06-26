@@ -91,9 +91,11 @@
 						<md-select
 							ng-model="dtAsistenciaModelo.idModalidad"
 							ng-change="changeIdModalidad()" required placeholder="Modalidad"
-							name="idModalidad"> <md-option
-							ng-repeat="item in listaPrtParametrosIdModalidad"
-							ng-value="item.id"> {{item.valor}} </md-option>
+							name="idModalidad">							
+							 <md-option
+										 ng-repeat="item in listaPrtParametrosIdModalidad"
+										 ng-value="item.id"> {{item.valor}} 
+							</md-option>
 						</md-select>
 					<div ng-messages="dtAsistenciaForm.idModalidad.$error">
 						<div ng-message="required">Seleccione la Modalidad.</div>
@@ -384,8 +386,8 @@
 		</fieldset>
 		
 		
-		<!--  <fieldset style="margin-left: 15px;" ng-if="showPanelDocumentos">  -->
-		<fieldset style="margin-left: 15px;" >
+		  <fieldset style="margin-left: 15px;" ng-if="showPanelDocumentos">  
+	<!--	<fieldset style="margin-left: 15px;" > -->
 			<legend>Adjuntar lista de participantes y programa del evento</legend>
 			
 			<div layout="row" layout-aling="center start"  flex> 
@@ -394,7 +396,7 @@
 			        	 </div>
 			        <div flex="90">
 				        <input type="file" ng-file-model multiple letter="A" style="font-size: 83%;margin-top: 17px;"/> 
-				        <button type="button" ng-click="uploadFile(file)" ng-disabled="uploadForm.file.$invalid">Upload</button>  
+				    <!--    <button type="button" ng-click="uploadFile(file)" ng-disabled="uploadForm.file.$invalid">Upload</button>   -->
 				          <table>
 							  <tr ng-repeat="x in archivos">
 								    <td>{{ $index + 1 }}</td>
@@ -418,20 +420,20 @@
 						</table>  
 			         </div>
 			 </div>
- 
-			  <div  ng-if="tdLogisticaConveniosModelo.editopcion  >= 1 && tdLogisticaConveniosModelo.tdAnexosJSss.length > 0" flex="auto">   
+ <!-- 
+			  <div  ng-if="dtAsistenciaModelo.tdAnexosJSss.length > 0" flex="auto">   
 			   		 <table>
 					 <tr>
 					  <th><span><b>N°</b></span></th>
 					  <th><span><b>Anexo</b></span></th>
-					  <th><span><b>Tamaño</b></span></th>
+					  <th><span><b>Tama&ntilde;o</b></span></th>
 					 </tr>
-					  <tr ng-repeat="x in tdLogisticaConveniosModelo.tdAnexosJSss">
+					  <tr ng-repeat="x in dtAsistenciaModelo.tdAnexosJSss">
 					    <td>{{ $index + 1 }}</td>
 					    <td>
-					    <a href="download?anex={{x.idanexo}}" target="_blank_">
-					    <img src="resources/imagen/mime/{{x.tipo}}.gif" alt="{{ x.filenameoriginal }}" style="float:left;">
-					    {{ x.filenameoriginal }}
+					    <a href="download?anex={{x.idAnexo}}" target="_blank_">
+					    <img src="resources/imagen/mime/{{x.idTiposervicio}}.gif" alt="{{ x.filenameoriginal }}" style="float:left;">
+					    	{{ x.filenameoriginal }}
 					    </a>
 					    </td>
 					    <td>{{ (x.tamanio/1024).toFixed() }} KB</td>
@@ -439,7 +441,7 @@
 					</table>
 			       
 			  </div>
-			
+		 -->	
 			
 		</fieldset>	
 		

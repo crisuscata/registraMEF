@@ -190,7 +190,7 @@ public interface Servicio {
 	List<DtAsistenciaBk> getAllDtAsistenciaActivosCero(Long kyUsuarioMod);
 
 	DtAsistenciaBk saveorupdateDtAsistenciaBk(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod,
-			Long kyAreaMod, String rmtaddress) throws Validador;
+			Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador;
 	
 	DtAsistenciaBk enviarConstanciaAtencion(DtAsistenciaBk dtAsistenciaBk, String url, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;

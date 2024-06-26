@@ -2,9 +2,11 @@ package pe.gob.mef.registramef.bs.service.imp;
 
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.File;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -13,6 +15,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -2300,6 +2303,18 @@ public class ServicioImp implements Servicio, Serializable {
 							dtAsistenciaBk.setDtAsistenciaUsuariosBkJSss(listaDtAsistenciaUsuexternosBk);
 						}
 
+		
+						if (dtAsistenciaBk.getIdAsistencia() != null && dtAsistenciaBk.getIdAsistencia().longValue() > 0) {
+							Long idTipoServicio =  PropertiesMg.getSistemLong(
+									PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
+									PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
+							List<DtAnexoBk> lstAnexos =  this.getDtAnexoXFiltro(null, null, idTipoServicio, null, dtAsistenciaBk.getIdAsistencia(), null);
+							if(lstAnexos!=null && !lstAnexos.isEmpty()) {
+								dtAsistenciaBk.setDtAnexosBKJSss(lstAnexos);
+							}
+						}
+						
+						
 	}
 
 	@Override
@@ -2308,8 +2323,8 @@ public class ServicioImp implements Servicio, Serializable {
 													String user,
 													Long kyUsuarioMod, 
 													Long kyAreaMod, 
-													String rmtaddress		
-													) throws Validador{
+													String rmtaddress,		
+													List<DtAnexoBk> tdAnexosBkss) throws Validador{
 
 //		ValidacionDtAsistenciaMng.validarDtAsistenciaBk(dtAsistenciaBk);
 		//MPINARES 24012023 - INICIO
@@ -2522,10 +2537,139 @@ public class ServicioImp implements Servicio, Serializable {
 					}
 				}
 				//MPINARES 24012023 - FIN
-		this.saveOrUpdateAsistenciaUsuarioExt(dtAsistenciaBk, dtAsistencia, hoy, kyUsuarioMod, rmtaddress, user);		
+		this.saveOrUpdateAsistenciaUsuarioExt(dtAsistenciaBk, dtAsistencia, hoy, kyUsuarioMod, rmtaddress, user);	
+		//this.adjuntarDocumentoAsistencia(dtAsistencia.getIdAsistencia(), tdAnexosBkss, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+		
+		Long idTiposervicio = PropertiesMg.getSistemLong(
+				PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
+		this.cargarAnexos(tdAnexosBkss, dtAsistencia.getIdAsistencia(), user, kyUsuarioMod, kyAreaMod, rmtaddress, idTiposervicio);
 
-		dtAsistenciaBk = getDtAsistenciaBkXid(dtAsistencia.getIdAsistencia(),kyUsuarioMod);			
+		dtAsistenciaBk = getDtAsistenciaBkXid(dtAsistencia.getIdAsistencia(),kyUsuarioMod);	
+		
+		
+		
 		return dtAsistenciaBk;		
+	}
+	
+	/*private void adjuntarDocumentoAsistencia(Long idAsistencia,
+					List<DtAnexoBk> tdAnexosBkss,
+					String user,
+					Long kyUsuarioMod, 
+					Long kyAreaMod, 
+					String rmtaddress) throws Validador {
+		
+		if(idAsistencia!=null && 
+				tdAnexosBkss!=null && 
+				!tdAnexosBkss.isEmpty()) {
+			
+			for (DtAnexoBk dtAnexoBk : tdAnexosBkss) {
+				
+				Random rand = new Random();
+				int max = 9;
+				int min = 1;
+				int randomNum = rand.nextInt((max - min) + 1) + min;
+				String fileName = dtAnexoBk.getFilename();
+				String nombreenelsistema = FuncionesStaticas.getFileNameSistemaR(idAsistencia,
+																				 kyUsuarioMod, 
+																				 randomNum, 
+																				 fileName);
+				
+				Long idTiposervicio = PropertiesMg.getSistemLong(
+						PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
+						PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
+				
+				dtAnexoBk.setFilename(nombreenelsistema);
+				dtAnexoBk.setFilenameoriginal(fileName);
+				dtAnexoBk.setIdmaestro(idAsistencia);
+				dtAnexoBk.setIdTiposervicio(idTiposervicio);
+				
+				saveorupdateDtAnexoBk(dtAnexoBk, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+				
+			}
+			
+		}
+		
+	}*/
+	
+	private void cargarAnexos(List<DtAnexoBk> tdAnexosBkss, Long idmaestro, String user, Long kyUsuarioMod,
+			Long kyAreaMod, String rmtaddress, Long idTiposervicio) throws Validador {
+
+		//List<DtAnexoBk> TdAnexosBksssActuales = getTdAnexosXFiltro(idmaestro, idTiposervicio, kyUsuarioMod);
+		List<DtAnexoBk> TdAnexosBksssActuales =  this.getDtAnexoXFiltro(null, null, idTiposervicio, null, idmaestro, null);
+
+		if (tdAnexosBkss != null && !tdAnexosBkss.isEmpty()) {
+			for (DtAnexoBk tdAnexosBkAct : TdAnexosBksssActuales) {
+				if (!tdAnexosBkss.contains(tdAnexosBkAct)) {
+					deleteTdAnexos(tdAnexosBkAct, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+				}
+			}
+			for (DtAnexoBk tdAnexosBk : tdAnexosBkss) {
+				if (tdAnexosBk.getIdmaestro() == null || tdAnexosBk.getIdmaestro().longValue() <= 0) {
+					tdAnexosBk.setIdmaestro(idmaestro);
+					tdAnexosBk.setIdTiposervicio(idTiposervicio);
+					tdAnexosBk = saveorupdateDtAnexoBk(tdAnexosBk, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+					if (tdAnexosBk.getFilename() != null) {
+						if (tdAnexosBk.getFilename().startsWith("TEMP")) {
+							File file_tdAnexosBk = FuncionesStaticas
+									.getFileSistemaCompletoSearch(tdAnexosBk.getFilename(), tdAnexosBk.getFechaCrea());
+							if (file_tdAnexosBk != null && file_tdAnexosBk.exists()) {
+								String nuevonombre = FuncionesStaticas.getFileNameSistema(tdAnexosBk.getIdmaestro(),
+										tdAnexosBk.getIdAnexo(), kyUsuarioMod, kyAreaMod);
+								String nuevaruta = FuncionesStaticas.getFileNameRutaSistema(nuevonombre);
+								if (FuncionesStaticas.moveTo(file_tdAnexosBk, nuevaruta)) {
+									tdAnexosBk.setFilename(nuevonombre);
+									tdAnexosBk = saveorupdateDtAnexoBk(tdAnexosBk, user, kyUsuarioMod, kyAreaMod,
+											rmtaddress);
+								} else {
+									log.info("NO SE PUDO MOVER EL ARCHIVO DE: " + file_tdAnexosBk.getAbsolutePath()
+											+ " A " + nuevaruta);
+								}
+							} else {
+								SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm");
+								log.info("ARCHIVO NO ENCONTRADO: " + tdAnexosBk.getFilename() + " en " + sdf);
+							}
+						}
+					}
+				} else {
+					saveorupdateDtAnexoBk(tdAnexosBk, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+				}
+			}
+		} else {
+			for (DtAnexoBk tdAnexosBkAct : TdAnexosBksssActuales) {
+				deleteTdAnexos(tdAnexosBkAct, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+			}
+		}
+	}
+	
+	public void deleteTdAnexos(DtAnexoBk tdAnexosBk, String user, Long kyUsuarioMod, Long kyAreaMod, String rmtaddress)
+			throws Validador {
+		try {
+			DtAnexo tdAnexos = null;
+			if (tdAnexosBk.getIdAnexo() != null && tdAnexosBk.getIdAnexo().longValue() > 0) {
+
+				tdAnexos = dtAnexoDao.getDtAnexo(tdAnexosBk.getIdAnexo());
+
+				Timestamp hoy = new Timestamp(System.currentTimeMillis());
+
+				tdAnexos.setRtmaddressrst(rmtaddress);
+				tdAnexos.setIdusserModif(kyUsuarioMod);
+				tdAnexos.setFechaModif(hoy);
+				Long estadoanterior = tdAnexos.getEstado();
+				tdAnexos.setEstado(0L);
+
+				dtAnexoDao.updateDtAnexo(tdAnexos);
+
+				log.log(Level.INFO,
+						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+								+ "ELIMINADO tdAnexos" + " :: " + tdAnexos.getIdAnexo().toString() + " :: "
+								+ estadoanterior + " :: " + "0");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Validador(e.getMessage());
+		}
 	}
 	
 	@Override
@@ -2562,7 +2706,7 @@ public class ServicioImp implements Servicio, Serializable {
 			dtAsistenciaBk.setDtAsistenciaUsuariosBkJSss(new ArrayList<>());
 			dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss().add(dtAsistenciaBk.getDtAsistenciaUsuexternosBk());
 			
-			this.saveorupdateDtAsistenciaBk(dtAsistenciaBk, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+			this.saveorupdateDtAsistenciaBk(dtAsistenciaBk, user, kyUsuarioMod, kyAreaMod, rmtaddress, null);
 			
 			List<DtAsistenciaUsuexternosBk> participantes = new ArrayList<>();
 			participantes.add(dtAsistenciaBk.getDtAsistenciaUsuexternosBk());
@@ -2696,7 +2840,7 @@ public class ServicioImp implements Servicio, Serializable {
 		dtAsistenciaBk.setFechaModif(hoy);
 		dtAsistenciaBk.setEstado(estadoFinalizado);
 		
-		DtAsistenciaBk dtAsistenciaBkFinalizado = this.saveorupdateDtAsistenciaBk(dtAsistenciaBk, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+		DtAsistenciaBk dtAsistenciaBkFinalizado = this.saveorupdateDtAsistenciaBk(dtAsistenciaBk, user, kyUsuarioMod, kyAreaMod, rmtaddress, null);
 		
 		if(dtAsistenciaBkFinalizado != null) {
 			Long idTipoServicioAsistencia = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN, 

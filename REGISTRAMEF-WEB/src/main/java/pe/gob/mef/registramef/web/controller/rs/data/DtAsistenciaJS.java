@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import pe.gob.mef.registramef.bs.transfer.bk.DtAnexoBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaTemasBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaUsuexternosBk;
 
@@ -41,7 +42,6 @@ public class DtAsistenciaJS implements java.io.Serializable {
 	private Timestamp fechaSoli = null;
 	private Timestamp fechaServicioJUD = null;
 	
-	
 	// ADICIONALES
 	private String estadoTxt = null;
 	private String idUsuinternoTxt = null;
@@ -66,6 +66,9 @@ public class DtAsistenciaJS implements java.io.Serializable {
 		//MPINARES 24012023 - FIN
 		
 	private DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk=null;
+	
+	//private List<DtAnexoBk> dtAnexosBKJSss = null;
+	private List<TdAnexosJS> tdAnexosJSss = null;
 	
 	private Integer editopcion = 1;
 
@@ -376,6 +379,14 @@ public class DtAsistenciaJS implements java.io.Serializable {
 
 		public void setDtAsistenciaUsuexternosBk(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk) {
 			this.dtAsistenciaUsuexternosBk = dtAsistenciaUsuexternosBk;
+		}
+
+		public List<TdAnexosJS> getTdAnexosJSss() {
+			return tdAnexosJSss;
+		}
+
+		public void setTdAnexosJSss(List<TdAnexosJS> tdAnexosJSss) {
+			this.tdAnexosJSss = tdAnexosJSss;
 		}
 
 		
