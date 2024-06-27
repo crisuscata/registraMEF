@@ -26,15 +26,23 @@
 		</div>
 <!-- INICIO CUSCATA - 18062024-->
 		<md-button class="md-button-borde md-sm"
-			ng-click="showConfirmFinalizar($event)"   aria-label="FINALIZAR" style="color: white; margin-bottom: 8px;">
+			ng-click="showConfirmFinalizar($event)"   aria-label="FINALIZAR" style="color: white; margin-bottom: 8px;" ng-if="showButtonsFinalizarFormat">
 		<span ng-if="nuevo">Finalizar</span> 
 		<span ng-if="!nuevo">Finalizar</span> 
 		</md-button>
 		
+		<!--  
 		<md-button class="md-button-borde md-sm"
-			ng-href="{{generarFormato()}}"  target="_blank" aria-label="DESCARGAR" style="color: white; margin-bottom: 8px;">
+			ng-href="{{generarFormato()}}"  target="_blank" aria-label="DESCARGAR" style="color: white; margin-bottom: 8px;" >
 		<span ng-if="nuevo">Formato</span> 
 		<span ng-if="!nuevo">Formato</span> 
+		</md-button>
+		 -->
+		
+		<md-button class="md-button-borde md-sm"
+			ng-click="validateGenerarFormato($event)"  aria-label="DESCARGAR" style="color: white; margin-bottom: 8px;" >
+		<span ng-if="nuevo">Generar Formato</span> 
+		<span ng-if="!nuevo">Generar Formato</span> 
 		</md-button>
 		
 		

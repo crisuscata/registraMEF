@@ -1610,9 +1610,6 @@ public class DtAsistenciaRsCtrl {
     					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
     			}).build();
     		
-    		//String adressRemoto = getRemoteAdress(req);
-
-
     		try {
     			DtAsistenciaBk dtAsistenciaBk = servicio.getDtAsistenciaBkXid(idAsistencia, msUsuariosBk.getIdusuario());
     			

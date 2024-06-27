@@ -970,6 +970,9 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		    					$scope.showPanelDocumentos = 1;
 		    				}
 		    				
+		    				if($scope.dtAsistenciaModelo.idModalidad == idPadreModPresencial){
+		    					$scope.showButtonsFinalizarFormat = 1;
+		    				}
 		    				
 		    				$mdDialog.show(
 							         $mdDialog.alert()
@@ -1813,6 +1816,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		$scope.listaCargos=[];
 		$scope.activar = 0;
 		$scope.showPanelDocumentos = 0;
+		$scope.showButtonsFinalizarFormat = 0;
 		$scope.archivos = [];
 		$scope.guardadoExitoso = 0;
 		$scope.buscarxdni = function(dato){
@@ -1950,9 +1954,29 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	        
 	    };
 		
-	    $scope.generarFormato = function(ev){
+	    $scope.generarFormato = function(){
 			return descargarFormatoUrl+$scope.dtAsistenciaModelo.idAsistencia;
 	    };
+	    
+	    $scope.validateGenerarFormato = function(ev){
+	    	//var urlDescargarFormato = descargarFormatoUrl+$scope.dtAsistenciaModelo.idAsistencia;
+	    //	var urlDescargarFormato = descargarFormatoUrl+345925;
+
+	    	$http.get(descargarFormatoUrl+345925).then(function(res){
+				///$scope.listaMsTemaIdTema = res.data; 
+				//return res;
+	    		$scope.data = res.data;
+	    		
+	    		location.href = $scope.generarFormato();
+	    		
+			},
+			function error(errResponse) {
+				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+			});
+		    
+		    
+		    
+	    }
 		
 //DESCARGAR
     	$scope.descargar = function(){
