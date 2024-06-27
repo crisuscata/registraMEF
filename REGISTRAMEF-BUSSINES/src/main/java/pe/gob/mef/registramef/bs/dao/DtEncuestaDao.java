@@ -32,7 +32,7 @@ public interface DtEncuestaDao {
 	Long getMaxIdVal();
 	
 	List<DtEncuesta> getXFiltro(Long tipoServicio,Timestamp fechaInicio,Timestamp fechaFin,Long idOrigen,Long idPrestacion, int iniciar, int max);
-	List<DtEncuesta> getXFiltro(Long tipoServicio,Timestamp fechaInicio,Timestamp fechaFin,Long idOrigen,Long idPrestacion);
+	List<DtEncuesta> getXFiltro(Long tipoServicio,Timestamp fechaInicio,Timestamp fechaFin,Long idOrigen,Long idPrestacion,Date fechaServicio); //PURIBE 22042024 - INICIO-->
 	long getTotalXFiltro(Long tipoServicio,Timestamp fechaInicio,Timestamp fechaFin,Long idOrigen,Long idPrestacion);
 	List<DtEncuesta> findListPeriodo(Long idTipoServicio, Date fechaServicio) throws Validador;
 	

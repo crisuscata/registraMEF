@@ -46,5 +46,11 @@ public interface MsUbigeoDao {
 	//MPINARES 14022024 - INICIO
 		MsUbigeo getMsUbigeoByCodes(Long idDepart, Long idProv, Long idDist);
 		//MPINARES 14022024 - FIN
+		long getTotalXFiltro(String descripcion,Integer codDpto,Integer codProv,Integer codDistr);
+		List<MsUbigeo> getXFiltro(String descripcion,Integer codDpto,Integer codProv,Integer codDistr, int iniciar, int max);
+		List<MsUbigeo> getXFiltro(String descripcion,Integer codDpto,Integer codProv,Integer codDistr);
+		Integer getMaxIdVAlCodDistr(Integer codDpto,Integer codProv);
+		Integer getMaxIdVAlCodProv(Integer codDpto);
+		Integer getMaxIdVAlCodDept();
 	
 }

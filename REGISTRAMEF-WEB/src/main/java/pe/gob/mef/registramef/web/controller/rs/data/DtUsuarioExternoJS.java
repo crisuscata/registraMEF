@@ -1,5 +1,8 @@
 package pe.gob.mef.registramef.web.controller.rs.data;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -14,8 +17,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DtUsuarioExternoJS implements java.io.Serializable {
-
-	private static final long serialVersionUID = 1L;
+	
+	private static final long serialVersionUID = 1L;//CUSCATA - 18062024
 
 	// ID
 	private Long idUsuexterno;
@@ -40,8 +43,9 @@ public class DtUsuarioExternoJS implements java.io.Serializable {
 	private String numDocum = null;
 	private Long flagMedioreg = null;
 	
-	private Long idCargo=null;
-	private String idCargoTxt=null;
+	private Long idCargo=null;//CUSCATA - 18062024
+	private String idCargoTxt=null;//CUSCATA - 18062024
+	
 	
 	// ADICIONALES
 	private String estadoTxt = null;
@@ -64,200 +68,201 @@ public class DtUsuarioExternoJS implements java.io.Serializable {
 		this.idUsuexterno = idUsuexterno;
 	}
 	
-	public String getDireccion() {
-						return this.direccion;
-					}
+	//INICIO CUSCATA - 18062024
+		public String getDireccion() {
+							return this.direccion;
+						}
 
-	public void setDireccion(String direccion) {
-						this.direccion = direccion;
-					}
-	public Long getNumDocu() {
-						return this.numDocu;
-					}
+		public void setDireccion(String direccion) {
+							this.direccion = direccion;
+						}
+		public Long getNumDocu() {
+							return this.numDocu;
+						}
 
-	public void setNumDocu(Long numDocu) {
-						this.numDocu = numDocu;
-					}
-	public String getSexo() {
-						return this.sexo;
-					}
+		public void setNumDocu(Long numDocu) {
+							this.numDocu = numDocu;
+						}
+		public String getSexo() {
+							return this.sexo;
+						}
 
-	public void setSexo(String sexo) {
-						this.sexo = sexo;
-					}
-	public Long getIdTipodocumento() {
-						return this.idTipodocumento;
-					}
+		public void setSexo(String sexo) {
+							this.sexo = sexo;
+						}
+		public Long getIdTipodocumento() {
+							return this.idTipodocumento;
+						}
 
-	public void setIdTipodocumento(Long idTipodocumento) {
-						this.idTipodocumento = idTipodocumento;
-					}
-	public Integer getCodDpto() {
-						return this.codDpto;
-					}
+		public void setIdTipodocumento(Long idTipodocumento) {
+							this.idTipodocumento = idTipodocumento;
+						}
+		public Integer getCodDpto() {
+							return this.codDpto;
+						}
 
-	public void setCodDpto(Integer codDpto) {
-						this.codDpto = codDpto;
-					}
-	public Integer getCodProv() {
-						return this.codProv;
-					}
+		public void setCodDpto(Integer codDpto) {
+							this.codDpto = codDpto;
+						}
+		public Integer getCodProv() {
+							return this.codProv;
+						}
 
-	public void setCodProv(Integer codProv) {
-						this.codProv = codProv;
-					}
-	public Integer getCodDistr() {
-						return this.codDistr;
-					}
+		public void setCodProv(Integer codProv) {
+							this.codProv = codProv;
+						}
+		public Integer getCodDistr() {
+							return this.codDistr;
+						}
 
-	public void setCodDistr(Integer codDistr) {
-						this.codDistr = codDistr;
-					}
-	public Long getIdpais() {
-						return this.idpais;
-					}
+		public void setCodDistr(Integer codDistr) {
+							this.codDistr = codDistr;
+						}
+		public Long getIdpais() {
+							return this.idpais;
+						}
 
-	public void setIdpais(Long idpais) {
-						this.idpais = idpais;
-					}
-	public String getOtroTelefono() {
-						return this.otroTelefono;
-					}
+		public void setIdpais(Long idpais) {
+							this.idpais = idpais;
+						}
+		public String getOtroTelefono() {
+							return this.otroTelefono;
+						}
 
-	public void setOtroTelefono(String otroTelefono) {
-						this.otroTelefono = otroTelefono;
-					}
-	public String getOtroCelular() {
-						return this.otroCelular;
-					}
+		public void setOtroTelefono(String otroTelefono) {
+							this.otroTelefono = otroTelefono;
+						}
+		public String getOtroCelular() {
+							return this.otroCelular;
+						}
 
-	public void setOtroCelular(String otroCelular) {
-						this.otroCelular = otroCelular;
-					}
-	public String getNumDocum() {
-						return this.numDocum;
-					}
+		public void setOtroCelular(String otroCelular) {
+							this.otroCelular = otroCelular;
+						}
+		public String getNumDocum() {
+							return this.numDocum;
+						}
 
-	public void setNumDocum(String numDocum) {
-						this.numDocum = numDocum;
-					}
-	public Long getFlagMedioreg() {
-						return this.flagMedioreg;
-					}
+		public void setNumDocum(String numDocum) {
+							this.numDocum = numDocum;
+						}
+		public Long getFlagMedioreg() {
+							return this.flagMedioreg;
+						}
 
-	public void setFlagMedioreg(Long flagMedioreg) {
-						this.flagMedioreg = flagMedioreg;
-					}
-	
-	
-	public String getEstadoTxt() {
-		return this.estadoTxt;
-	}
-	public void setEstadoTxt(String estadoTxt) {
-		this.estadoTxt = estadoTxt;
-	}
-	public String getIdTipodocumentoTxt() {
-		return this.idTipodocumentoTxt;
-	}
-	public void setIdTipodocumentoTxt(String idTipodocumentoTxt) {
-		this.idTipodocumentoTxt = idTipodocumentoTxt;
-	}
-	public String getCodDptoTxt() {
-		return this.codDptoTxt;
-	}
-	public void setCodDptoTxt(String codDptoTxt) {
-		this.codDptoTxt = codDptoTxt;
-	}
-	public String getCodProvTxt() {
-		return this.codProvTxt;
-	}
-	public void setCodProvTxt(String codProvTxt) {
-		this.codProvTxt = codProvTxt;
-	}
-	public String getCodDistrTxt() {
-		return this.codDistrTxt;
-	}
-	public void setCodDistrTxt(String codDistrTxt) {
-		this.codDistrTxt = codDistrTxt;
-	}
-	public String getIdpaisTxt() {
-		return this.idpaisTxt;
-	}
-	public void setIdpaisTxt(String idpaisTxt) {
-		this.idpaisTxt = idpaisTxt;
-	}
+		public void setFlagMedioreg(Long flagMedioreg) {
+							this.flagMedioreg = flagMedioreg;
+						}
 		
+		
+		public String getEstadoTxt() {
+			return this.estadoTxt;
+		}
+		public void setEstadoTxt(String estadoTxt) {
+			this.estadoTxt = estadoTxt;
+		}
+		public String getIdTipodocumentoTxt() {
+			return this.idTipodocumentoTxt;
+		}
+		public void setIdTipodocumentoTxt(String idTipodocumentoTxt) {
+			this.idTipodocumentoTxt = idTipodocumentoTxt;
+		}
+		public String getCodDptoTxt() {
+			return this.codDptoTxt;
+		}
+		public void setCodDptoTxt(String codDptoTxt) {
+			this.codDptoTxt = codDptoTxt;
+		}
+		public String getCodProvTxt() {
+			return this.codProvTxt;
+		}
+		public void setCodProvTxt(String codProvTxt) {
+			this.codProvTxt = codProvTxt;
+		}
+		public String getCodDistrTxt() {
+			return this.codDistrTxt;
+		}
+		public void setCodDistrTxt(String codDistrTxt) {
+			this.codDistrTxt = codDistrTxt;
+		}
+		public String getIdpaisTxt() {
+			return this.idpaisTxt;
+		}
+		public void setIdpaisTxt(String idpaisTxt) {
+			this.idpaisTxt = idpaisTxt;
+		}
+			
 
-	public Integer getEditopcion() {
-		return editopcion;
-	}
+		public Integer getEditopcion() {
+			return editopcion;
+		}
 
-	public void setEditopcion(Integer editopcion) {
-		this.editopcion = editopcion;
-	}
+		public void setEditopcion(Integer editopcion) {
+			this.editopcion = editopcion;
+		}
 
-	public Long getIdCargo() {
-		return idCargo;
-	}
+		public Long getIdCargo() {
+			return idCargo;
+		}
 
-	public void setIdCargo(Long idCargo) {
-		this.idCargo = idCargo;
-	}
+		public void setIdCargo(Long idCargo) {
+			this.idCargo = idCargo;
+		}
 
-	public String getNombre() {
-		return nombre;
-	}
+		public String getNombre() {
+			return nombre;
+		}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+		public void setNombre(String nombre) {
+			this.nombre = nombre;
+		}
 
-	public String getaPaterno() {
-		return aPaterno;
-	}
+		public String getaPaterno() {
+			return aPaterno;
+		}
 
-	public void setaPaterno(String aPaterno) {
-		this.aPaterno = aPaterno;
-	}
+		public void setaPaterno(String aPaterno) {
+			this.aPaterno = aPaterno;
+		}
 
-	public String getaMaterno() {
-		return aMaterno;
-	}
+		public String getaMaterno() {
+			return aMaterno;
+		}
 
-	public void setaMaterno(String aMaterno) {
-		this.aMaterno = aMaterno;
-	}
+		public void setaMaterno(String aMaterno) {
+			this.aMaterno = aMaterno;
+		}
 
-	public String getCorreo() {
-		return correo;
-	}
+		public String getCorreo() {
+			return correo;
+		}
 
-	public void setCorreo(String correo) {
-		this.correo = correo;
-	}
+		public void setCorreo(String correo) {
+			this.correo = correo;
+		}
 
-	public Long getTelefFijo() {
-		return telefFijo;
-	}
+		public Long getTelefFijo() {
+			return telefFijo;
+		}
 
-	public void setTelefFijo(Long telefFijo) {
-		this.telefFijo = telefFijo;
-	}
+		public void setTelefFijo(Long telefFijo) {
+			this.telefFijo = telefFijo;
+		}
 
-	public Long getTelefCell() {
-		return telefCell;
-	}
+		public Long getTelefCell() {
+			return telefCell;
+		}
 
-	public void setTelefCell(Long telefCell) {
-		this.telefCell = telefCell;
-	}
+		public void setTelefCell(Long telefCell) {
+			this.telefCell = telefCell;
+		}
 
-	public String getIdCargoTxt() {
-		return idCargoTxt;
-	}
+		public String getIdCargoTxt() {
+			return idCargoTxt;
+		}
 
-	public void setIdCargoTxt(String idCargoTxt) {
-		this.idCargoTxt = idCargoTxt;
-	}	
-	
+		public void setIdCargoTxt(String idCargoTxt) {
+			this.idCargoTxt = idCargoTxt;
+		}	
+		//FIN CUSCATA - 18062024		
 }

@@ -65,15 +65,19 @@ myapp.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
 	};
 }]);
 
-myapp.controller('ctrlListataFeriados', ['$mdEditDialog', '$scope', '$timeout', '$http', '$mdDialog','$location','$routeParams', '$mdPanel',  function ($mdEditDialog, $scope, $timeout, $http, $mdDialog, $location, $routeParams, $mdPanel) {
+/* PURIBE 16012024 - INICIO */
+myapp.controller('ctrlListataFeriados', ['$mdEditDialog', '$scope', '$timeout', '$http', '$mdDialog','$location','$routeParams', '$mdPanel', function ($mdEditDialog, $scope, $timeout, $http, $mdDialog, $location, $routeParams, $mdPanel) {
 	'use strict';
-	 
+
 	 $scope.limitOptions = [100, 500, 1000, 5000];
 	 $scope.query = {
 			    order: 'feFecha',
 			    limit: 100,
 			    page: 1
 			  };
+			
+			  $scope.estado = 0;
+			 	  /* PURIBE 16012024 - FIN*/
 	 
 	 $scope.selected = [];
 	 $scope.options = {
@@ -112,9 +116,26 @@ myapp.controller('ctrlListataFeriados', ['$mdEditDialog', '$scope', '$timeout', 
 
 	$scope.loadtaFeriadoss = function () {
 	    //$scope.promise = $timeout(function () {
-	    	var surl = $scope.getURL();	    
-	    	$scope.promise = $http.get(surl).then(function(res){
-	    		 $scope.datos = res.data.data;
+		/* PURIBE 16012024 - INICIO */
+    	var surl = $scope.getURL();	    
+    	$scope.promise = $http.get(surl).then(function(res){
+    		 $scope.datos = res.data.data;
+
+			 $scope.formatDate = function(dateString) {
+				var date = new Date(dateString);
+				var year = date.toLocaleString("default", { year: "numeric" });
+				var month = date.toLocaleString("default", { month: "2-digit" });
+				var day = date.toLocaleString("default", { day: "2-digit" });
+				return day + "/" + month + "/" + year;
+			}
+
+			$scope.datos.map(function(obj) {
+				obj.feFchcrear= $scope.formatDate(obj.feFchcrear);
+				obj.feFchmod = $scope.formatDate(obj.feFchmod);
+				obj.feFecha = $scope.formatDate(obj.feFecha);
+			});	 
+
+		/* PURIBE 16012024 - FIN */
 	    		 if(res.data.contador>0)
 	    		 $scope.total = res.data.contador;
 	    		 var tiempoenBD = res.data.tiempoenBD;
@@ -147,6 +168,15 @@ myapp.controller('ctrlListataFeriados', ['$mdEditDialog', '$scope', '$timeout', 
 		        });			 
 	     //}, 500);
 	  };
+	  
+	  /* PURIBE 16012024 - INICIO*/
+	  /* PURIBE 20012024 - INICIO*/
+		$scope.updateModel = function() {
+			// Aplicar tu lógica aquí
+			$scope.estado = $scope.taFeriadosModelo.feEstado ? 1 : 0;
+		};
+			/* PURIBE 20012024 - FIN*/
+	/* PURIBE 16012024 - FIN */
 	 	  
 	  $scope.getURLParametros=function(){
 		    var elprimero = true;
@@ -242,54 +272,82 @@ myapp.controller('ctrlListataFeriados', ['$mdEditDialog', '$scope', '$timeout', 
           }
 		};
 
-	  $scope.taFeriadosModelo = {
-			feFecha : null,
-			feDesc: null,
-			feFchmod: new Date(),
-feFchcrear: new Date(),
-feEstado: null,
-			
-                        // ADICIONALES
-	                feEstadoTxt: null,
+		/* PURIBE 16012024 - INICIO */
+		  $scope.taFeriadosModelo = {
+			feFecha: new Date(),	
+				feDesc: null,
+				feEstado:null,
+				
+	                        // ADICIONALES
+		                feEstadoTxt: null,
 
-		    editopcion: 1
-		};
-	  
-	  $scope.cleartaFeriados = function(){
-		    $scope.taFeriadosModelo.feFecha = null;
-		    $scope.taFeriadosModelo.feDesc = null;
-		    $scope.taFeriadosModelo.feFchmod = new Date();$scope.taFeriadosModelo.feFchcrear = new Date();$scope.taFeriadosModelo.feEstado = null;
+			    editopcion: 1
+			};
 		    
-                    // ADICIONALES
-	            $scope.taFeriadosModelo.feEstadoTxt = null;
+		  $scope.cleartaFeriados = function(){
+				$scope.taFeriadosModelo.feFecha = new Date();	
+			    $scope.taFeriadosModelo.feDesc = null;
+				$scope.taFeriadosModelo.feEstado = null;
+			    
+	                    // ADICIONALES
+		            $scope.taFeriadosModelo.feEstadoTxt = null;
 
-		    $scope.taFeriadosModelo.editopcion = 1;
-	 } 
-	 
-	  $scope.setTaFeriadosModelo = function(taFeriadosBk) {
-		  $scope.taFeriadosModelo.feFecha = taFeriadosBk.feFecha;
-			$scope.taFeriadosModelo.feDesc = taFeriadosBk.feDesc;
-			$scope.taFeriadosModelo.feFchmod = taFeriadosBk.feFchmod;
-                        if(!$scope.isNull($scope.taFeriadosModelo.feFchmod) && !isNaN($scope.taFeriadosModelo.feFchmod)){
-			    $scope.taFeriadosModelo.feFchmod = new Date($scope.taFeriadosModelo.feFchmod);
-		        }
-$scope.taFeriadosModelo.feFchcrear = taFeriadosBk.feFchcrear;
-                        if(!$scope.isNull($scope.taFeriadosModelo.feFchcrear) && !isNaN($scope.taFeriadosModelo.feFchcrear)){
-			    $scope.taFeriadosModelo.feFchcrear = new Date($scope.taFeriadosModelo.feFchcrear);
-		        }
-$scope.taFeriadosModelo.feEstado = taFeriadosBk.feEstado;
-			
-                        // ADICIONALES
-	                $scope.taFeriadosModelo.feEstadoTxt = taFeriadosBk.feEstadoTxt;
+			    $scope.taFeriadosModelo.editopcion = 1;
+		 } 
+		    
+		 
+		  /* PURIBE 20012024 - INICIO */
+		  $scope.setTaFeriadosModelo = function(taFeriadosBk) {
+	  
+			if (taFeriadosBk.feFecha !== null &&
+				taFeriadosBk.feFecha !== undefined  &&
+				typeof taFeriadosBk.feFecha === 'string'){
+				$scope.taFeriadosModelo.feFecha = formatearFecha(taFeriadosBk.feFecha);
+			}
+			else
+			{
+				$scope.taFeriadosModelo.feFecha = taFeriadosBk.feFecha;
+			}
+		     	//$scope.taFeriadosModelo.feFecha = taFeriadosBk.feFecha;
+				$scope.taFeriadosModelo.feDesc = taFeriadosBk.feDesc;
 
-			$scope.taFeriadosModelo.editopcion = taFeriadosBk.taFeriadosACL.editopcion;
-		}
+				if (taFeriadosBk.feEstado==0){
+				$scope.taFeriadosModelo.feEstado = false;
+				}
+				else{
+					$scope.taFeriadosModelo.feEstado = true;
+				}
+
+	                        // ADICIONALES
+		                $scope.taFeriadosModelo.feEstadoTxt = taFeriadosBk.feEstadoTxt;
+
+				$scope.taFeriadosModelo.editopcion = taFeriadosBk.taFeriadosACL.editopcion;
+			}
+			/* PURIBE 20012024 - FIN */
+			 /* PURIBE 16012024 - FIN */
 	  // ////////////////////////////////////////////////
-	  $scope.editarTaFeriados = function(ev, taFeriadosBk) {		  
-		    $scope.setTaFeriadosModelo(taFeriadosBk);		  
-			$location.url('/editar/' + $scope.taFeriadosModelo.feFecha);
-			$scope.nuevo = false;
-	  }
+		  /* PURIBE 16012024 - INICIO */
+
+			function formatearFecha(fechaString) {
+				// Dividir la cadena en día, mes y año
+				var partes = fechaString.split("/");
+				var dia = parseInt(partes[0], 10) || 1;
+				var mes = parseInt(partes[1], 10) - 1 || 0; // Meses en JavaScript son base 0
+				var anio = parseInt(partes[2], 10) || 2000;
+			
+				// Crear y devolver un nuevo objeto Date con la configuración deseada en UTC
+				return new Date(anio, mes, dia);
+			}
+
+		  $scope.editarTaFeriados = function(ev, taFeriadosBk) {		  
+			    $scope.setTaFeriadosModelo(taFeriadosBk);	
+
+				var fechaFormateada = formatearFecha($scope.taFeriadosModelo.feFecha);
+			
+				$location.url('/editar/' + fechaFormateada);
+				$scope.nuevo = false;
+		  }
+		    /* PURIBE 16012024 - FIN*/
 	  
 	  $scope.nuevoTaFeriados = function() {
 		    $scope.cleartaFeriados();
@@ -303,56 +361,59 @@ $scope.taFeriadosModelo.feEstado = taFeriadosBk.feEstado;
 	  }
 	  			  
 	  $scope.salvarTaFeriados = function(ev){		
-				    ev.target.disabled = true;
-				    var datainsert = angular.toJson($scope.taFeriadosModelo);
-		 			console.log("datainsert = "+datainsert);	
-		        		$http.post(inserttaFeriadosUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
-							var dato = res.data;
+		    ev.target.disabled = true;
+		    /* PURIBE 25012024 - INICIO*/
+			$scope.estado = $scope.taFeriadosModelo.feEstado ? 3 : 0;
+					$scope.taFeriadosModelo.feEstado = $scope.estado
+	/* PURIBE 16012024 - FIN*/
+	/* PURIBE 25012024 - FIN*/
+		    var datainsert = angular.toJson($scope.taFeriadosModelo);
+			console.log("datainsert = "+datainsert);	
 
-//		    				$scope.datos.push(dato); 
-		    				$scope.total = $scope.datos.length;
-		    				
-		    				$scope.setTaFeriadosModelo(dato);
-		    				
-		    				$mdDialog.show(
-							         $mdDialog.alert()
-							        .parent(angular.element(document.body))
-							        .clickOutsideToClose(true)
-							        .title('Guardar Feriados')
-							        .textContent("del Feriados se guardó correctamente.")
-							        .ariaLabel('ERROR')
-							        .ok('OK')
-							        .targetEvent(ev)
-							    );
-		    				
-		    				$scope.nuevo = false;
-						},
-						function error(errResponse) {
-				            var dato;
-			if(errResponse && errResponse.data){
-			   console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
-			   dato = errResponse.data;
-			}
-			if(errResponse.message){ 
-				console.log("Message " + errResponse.message);
-				dato = errResponse.message;
-			}			
-			if(typeof(dato) != 'undefined'){
-				            	$mdDialog.show(
-								         $mdDialog.alert()
-								        .parent(angular.element(document.body))
-								        .clickOutsideToClose(true)
-								        .title('Guardar Feriados')
-								        .textContent(dato)
-								        .ariaLabel('ERROR')
-								        .ok('OK')
-								        .targetEvent(ev)
-								    );
-				            }
-				        });		
-		        			        	
-		        	ev.target.disabled = false;
-			 };
+      		$http.post(inserttaFeriadosUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
+					var dato = res.data;
+
+//  				$scope.datos.push(dato); 
+  				$scope.total = $scope.datos.length;
+  				
+						/* PURIBE 20012024 - INICIO */
+					// Aplicar la función formatDate al campo feFecha en dato
+					dato.feFecha = $scope.formatD(dato.feFecha);
+			
+  				$scope.setTaFeriadosModelo(dato);
+  				
+  				$mdDialog.show(
+					         $mdDialog.alert()
+					        .parent(angular.element(document.body))
+					        .clickOutsideToClose(true)
+					        .title('Guardar Feriados')
+					        .textContent("El Feriado se guard&oacute; correctamente.")
+					        .ariaLabel('ERROR')
+					        .ok('OK')
+					        .targetEvent(ev)
+					    );
+  						/* PURIBE 20012024 - FIN */
+  				$scope.nuevo = false;
+				},
+				function error(errResponse) {
+		            console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+		            var dato = errResponse.data;
+		            if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+		            	$mdDialog.show(
+						         $mdDialog.alert()
+						        .parent(angular.element(document.body))
+						        .clickOutsideToClose(true)
+						        .title('Guardar Feriados')
+						        .textContent(dato.message)
+						        .ariaLabel('ERROR')
+						        .ok('OK')
+						        .targetEvent(ev)
+						    );
+		            }
+		        });		
+      			        	
+      	ev.target.disabled = false;
+	 };
 			 
 	   $scope.eliminartaFeriados = function(ev,taFeriadosBk){		
 				    ev.target.disabled = true;
@@ -505,6 +566,10 @@ $scope.taFeriadosModelo.feEstado = taFeriadosBk.feEstado;
 			var surl = editartaFeriadosUrl+feFecha;
 			$http.get(surl).then(function(res){
 				var dato = res.data;
+				/* PURIBE 16012024 - INICIO */
+				// Aplicar la función formatDate al campo feFecha en dato
+				dato.feFecha = $scope.formatD(dato.feFecha);
+	  			/* PURIBE 16012024 - FIN */
 				$scope.setTaFeriadosModelo(dato);
 				$scope.nuevo = false;
 				},
@@ -687,8 +752,10 @@ $scope.taFeriadosModelo.feEstado = taFeriadosBk.feEstado;
 			  return typeof value === 'number' && isFinite(value);
 			  };	
 				  
-		    $scope.nuevo = ($scope.isNumber($scope.taFeriadosModelo.feFecha) && $scope.taFeriadosModelo.feFecha > 0);
-			$scope.edit  = true;
+			  /* PURIBE 16012024 - INICIO */
+				 //   $scope.nuevo = ($scope.isNumber($scope.taFeriadosModelo.feFecha) && $scope.taFeriadosModelo.feFecha > 0);
+					$scope.edit  = true;
+					  /* PURIBE 16012024 - FIN */
 			  
 		    	    
 			 $scope.toggle = function (item, list) {

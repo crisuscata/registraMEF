@@ -137,6 +137,8 @@
            <span>Sede</span></th>
            <th class="md-title ttammsRoles" md-column md-order-by="roles" hide-xs hide-gt-xs show-gt-sm>
            <span>Roles</span></th>
+           <th class="md-title ttammsRoles" md-column md-order-by="perfiles" hide-xs hide-gt-xs show-gt-sm>
+           <span>Perfil del usuario</span></th>
            <th class="md-title ttammsUsuariosfechaModif" md-column md-order-by="fechaModif" hide-xs hide-gt-xs show-gt-sm>
            <span>Modificaci&oacute;n</span></th>
            <th class="md-title ttammsUsuariosestado" md-column md-order-by="estadoTxt" hide-xs hide-gt-xs show-gt-sm>
@@ -188,6 +190,10 @@
                    ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttammsRoles"/>
          </th>
          <th md-column hide-xs hide-gt-xs show-gt-sm> 
+            <input type="text" name="perfiles" ng-model="filtro.perfiles" placeholder="Perfil" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttammsPerfiles"/>
+         </th>
+         <th md-column hide-xs hide-gt-xs show-gt-sm> 
             <input type="text" name="fechaModif" ng-model="filtro.fechaModif" placeholder="yyyy-mm-dd" 
                    ng-keypress="refrescarvista($event)" class="md-table-orden-imput ttammsUsuariosfechaModif"/>
          </th>
@@ -235,6 +241,8 @@
           {{dato.idSedeTxt}}</td>
           <td class="tdaa1 md-table-cuerpo" data-title="Roles" md-cell hide-xs hide-gt-xs show-gt-sm>
           {{dato.roles}}</td>
+          <td class="tdaa1 md-table-cuerpo" data-title="Perfil" md-cell hide-xs hide-gt-xs show-gt-sm>
+          {{dato.perfil}}</td>
           <td class="tdaa1 md-table-cuerpo" data-title="Fecha De Modificación" md-cell hide-xs show-gt-sm>
           {{formatDMY(dato.fechaModif)}}</td>
           <td class="tdaa1 md-table-cuerpo" data-title="Estado" md-cell hide-xs hide-gt-xs show-gt-sm>

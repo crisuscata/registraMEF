@@ -80,12 +80,12 @@ import pe.gob.mef.registramef.bs.transfer.bk.MsUsuariosBk;
 import pe.gob.mef.registramef.bs.utils.FuncionesStaticas;
 import pe.gob.mef.registramef.bs.utils.PropertiesMg;
 import pe.gob.mef.registramef.web.controller.DtAsistenciaData;
+import pe.gob.mef.registramef.web.controller.rs.data.DtAnexosJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaLC;
 import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaTemasJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtEntidadesJS;
 import pe.gob.mef.registramef.web.controller.rs.data.RespuestaError;
-import pe.gob.mef.registramef.web.controller.rs.data.TdAnexosJS;
 import pe.gob.mef.registramef.web.controller.rs.data.UbigeoXDefectoJS;
 import pe.gob.mef.registramef.web.rs.reporte.StyleUtils;
 import pe.gob.mef.registramef.web.utils.ZipDirectory;
@@ -420,11 +420,11 @@ public class DtAsistenciaRsCtrl {
 					PropertiesMg.KEY_PAGINA_ORIGEN_NO_PROGRAMADO,
 					PropertiesMg.DEFAULT_PAGINA_ORIGEN_NO_PROGRAMADO);
 			
-			List<TdAnexosJS> tdAnexosJSsss = dtAsistenciaJS.getTdAnexosJSss();
+			List<DtAnexosJS> tdAnexosJSsss = dtAsistenciaJS.getTdAnexosJSss();
 			List<DtAnexoBk> tdAnexosBkss = null;
 			if (tdAnexosJSsss != null && !tdAnexosJSsss.isEmpty()) {
 				tdAnexosBkss = new ArrayList<DtAnexoBk>();
-				for (TdAnexosJS tdAnexosJS : tdAnexosJSsss) {
+				for (DtAnexosJS tdAnexosJS : tdAnexosJSsss) {
 					DtAnexoBk tdAnexosBk = new DtAnexoBk();
 					FuncionesStaticas.copyPropertiesObject(tdAnexosBk, tdAnexosJS);
 					tdAnexosBkss.add(tdAnexosBk);
@@ -515,7 +515,7 @@ public class DtAsistenciaRsCtrl {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response insertArchivo(@Context HttpServletRequest req, @Context HttpServletResponse res,
-			@HeaderParam("authorization") String authString, TdAnexosJS tdAnexosJS) {
+			@HeaderParam("authorization") String authString, DtAnexosJS tdAnexosJS) {
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 		Principal usuario = req.getUserPrincipal();
 		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
@@ -533,9 +533,9 @@ public class DtAsistenciaRsCtrl {
 		String filename = null;
 		String rutaFilename = null;
 		if (tdAnexosJS.getFilename() == null) {
-			if (tdAnexosJS.getIdanexo() != null && tdAnexosJS.getIdanexo().longValue() > 0
+			if (tdAnexosJS.getIdAnexo() != null && tdAnexosJS.getIdAnexo().longValue() > 0
 					&& tdAnexosJS.getIddocumento() != null && tdAnexosJS.getIddocumento().longValue() > 0) {
-				filename = FuncionesStaticas.getFileNameSistema(tdAnexosJS.getIddocumento(), tdAnexosJS.getIdanexo(), msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede());
+				filename = FuncionesStaticas.getFileNameSistema(tdAnexosJS.getIddocumento(), tdAnexosJS.getIdAnexo(), msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede());
 			} else {
 				filename = FuncionesStaticas.getFileNameTempSistema(msUsuariosBk.getIdusuario(),msUsuariosBk.getIdSede());
 			}
@@ -553,7 +553,7 @@ public class DtAsistenciaRsCtrl {
 			tdAnexosJS.setData(null);
 			tdAnexosJS.setFilename(filename);
 
-			GenericEntity<TdAnexosJS> registrors = new GenericEntity<TdAnexosJS>(tdAnexosJS) {
+			GenericEntity<DtAnexosJS> registrors = new GenericEntity<DtAnexosJS>(tdAnexosJS) {
 			};
 			return Response.status(200).entity(registrors).build();
 		} catch (Exception e) {
@@ -1037,6 +1037,7 @@ public class DtAsistenciaRsCtrl {
 		    //filtrosaplicados.append(Messages.getStringToKey("dtAsistencia."+camponame)).append("=").append(filtroValue).append(" ");
 		    StringBuffer filtrosaplicados = new StringBuffer();
                     boolean primerregistro = true;
+                    boolean primerfiltro = true;
             ///////////////IGUAL QUE AL LISTAR
 		try {
 			String sorder = req.getParameter("order"); 
@@ -1111,7 +1112,8 @@ public class DtAsistenciaRsCtrl {
 //					contador++;
 //					System.out.println("Contador");
 					String camponame = camposdea[i].getName();
-					if(camponame.indexOf("serial")>-1 || camponame.indexOf("activo")>-1) continue;
+//					if(camponame.indexOf("serial")>-1 || camponame.indexOf("activo")>-1) continue;
+					if(camponame.indexOf("serial")>-1 || camponame.indexOf("activo")>-1 || camponame.indexOf("fechaInicio")>-1 || camponame.indexOf("fechaFin")>-1) continue;
 					
 					String filtroGetMetod = "get" + Character.toUpperCase(camponame.charAt(0)) + camponame.substring(1);
 					String claseGetMetod = "get" + Character.toUpperCase(camponame.charAt(0)) + camponame.substring(1);					
@@ -1541,6 +1543,7 @@ public class DtAsistenciaRsCtrl {
     	    }
     	}
         
+      //INICIO CUSCATA - 18062024
         @GET
     	@Path("/listaMsTemaIdTemaIdTema")
     	@Produces(MediaType.APPLICATION_JSON)
@@ -1842,6 +1845,7 @@ public class DtAsistenciaRsCtrl {
         	
         	new ZipDirectory(nuevoDirectorio);
         }
+        //FIN CUSCATA - 18062024
         
         @GET
     	@Path("/listaMsSubtemaIdSubtemaIdSubtema/{idTema}")
@@ -1904,7 +1908,8 @@ public class DtAsistenciaRsCtrl {
     			}).build();
 
     		try {			
-    			List<IDValorDto> datos = servicio.getMsSedesIdSedeIdSede();			
+//    			List<IDValorDto> datos = servicio.getMsSedesIdSedeIdSede();	
+    			List<IDValorDto> datos = servicio.getMsSedesIdSedeIdSedeExTodas();	
     			   GenericEntity<List<IDValorDto>> registrosx = new GenericEntity<List<IDValorDto>>(datos){
     			};
     			return Response.status(200).entity(registrosx).build();
@@ -2436,101 +2441,161 @@ public class DtAsistenciaRsCtrl {
         
       //MPINARES 24012023 - FIN
     	
-	@GET
-	@Path("/buscarPorNumDoc/{numDoc}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response buscarPorNumDoc(@Context HttpServletRequest req, @Context HttpServletResponse res,
-			@HeaderParam("authorization") String authString, @PathParam("numDoc") Long numDocum) {
+    	// PURIBE 15042024 - INICIO
+    				@GET
+    				@Path("/loadvalorcrear")
+    				@Produces(MediaType.APPLICATION_JSON)
+    				public Response loadvalorcrear(@Context HttpServletRequest req, @Context HttpServletResponse res,
+    						@HeaderParam("authorization") String authString) {
+    					SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    					Principal usuario = req.getUserPrincipal();
+    					MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-		Principal usuario = req.getUserPrincipal();
-		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+    					if (msUsuariosBk == null)
+    						
+    						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+    								.entity(new GenericEntity<RespuestaError>(
+    										new RespuestaError("Error no tiene autorización para realizar esta operación.",
+    												HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    								}).build();
+    				
+    					
+    					if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+    							&& !req.isUserInRole(Roles.DTASISTENCIA_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+    							&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+    							&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+    						
+    					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+    							.entity(new GenericEntity<RespuestaError>(
+    									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+    											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    							}).build();
+    						
 
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+    				try {
 
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-				&& !req.isUserInRole(Roles.DTVISITAS_VE))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+    					IDValorDto  datos = new IDValorDto();
+    					List<String> roles = msUsuariosBk.getRolesSistema();
+    							
+    					if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PERFIL_ADMINISTRADOR) 
+    							|| roles.contains(Roles.DTASISTENCIA_CREA)
+    							|| roles.contains(Roles.PERFIL_USU_OGC) || roles.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))  {
+    									datos.setId(2L);
+    									
+    								}else {
+    									datos.setId(1L);
+    								}
+    								
+    					GenericEntity<IDValorDto> registrosx = new GenericEntity<IDValorDto>(datos) {
+    					};
+    					return Response.status(200).entity(registrosx).build();
+    				} catch (Exception e) {
+    					String mensaje = e.getMessage();
+    					System.out.println("ERROR: " + mensaje);
+    					return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+    							new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+    							}).build();
+    				}
+    				}
 
-		try {
+    				// PURIBE 15042024 - FIN
+    				
+    				//INICIO CUSCATA - 18062024	
+    				@GET
+    				@Path("/buscarPorNumDoc/{numDoc}")
+    				@Produces(MediaType.APPLICATION_JSON)
+    				public Response buscarPorNumDoc(@Context HttpServletRequest req, @Context HttpServletResponse res,
+    						@HeaderParam("authorization") String authString, @PathParam("numDoc") Long numDocum) {
 
-			DtUsuarioExternoBk usuarioExterno = servicio.getUsuarioPorDNI(numDocum, msUsuariosBk.getIdusuario());
+    					SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    					Principal usuario = req.getUserPrincipal();
+    					MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
-			GenericEntity<DtUsuarioExternoBk> registrosx = new GenericEntity<DtUsuarioExternoBk>(usuarioExterno) {
-			};
+    					if (msUsuariosBk == null)
+    						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+    								.entity(new GenericEntity<RespuestaError>(
+    										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
+    												HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    								}).build();
 
-			return Response.status(200).entity(registrosx).build();
-		} catch (Exception e) {
-			String mensaje = e.getMessage();
-			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
-					new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
-					}).build();
-		}
-	}
-	
-	
-	@POST
-	@Path("/finalizardtAsistencia")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response finalizardtAsistencia(@Context HttpServletRequest req, 
-										  @Context HttpServletResponse res,
-										  @HeaderParam("authorization") String authString, 
-										  DtAsistenciaJS dtAsistenciaJS) {
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-		Principal usuario = req.getUserPrincipal();
-		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+    					if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+    							&& !req.isUserInRole(Roles.DTVISITAS_VE))
+    						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+    								.entity(new GenericEntity<RespuestaError>(
+    										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
+    												HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    								}).build();
 
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-		
-		if(!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-		
-		String adressRemoto = getRemoteAdress(req);
+    					try {
 
-		DtAsistenciaBk dtAsistenciaC = new DtAsistenciaBk();
-		FuncionesStaticas.copyPropertiesObject(dtAsistenciaC, dtAsistenciaJS);
-		// MPINARES 24012023 - INICIO
-		dtAsistenciaC.setVistaProgramado(dtAsistenciaJS.isVistaProgramado());
-		dtAsistenciaC.setIdSede(msUsuariosBk.getIdSede());
-		dtAsistenciaC.setIdSistAdm(msUsuariosBk.getIdSistAdmi());
-		dtAsistenciaC.setIdUsuinterno(msUsuariosBk.getIdusuario());
-		// MPINARES 24012023 - FIN
+    						DtUsuarioExternoBk usuarioExterno = servicio.getUsuarioPorDNI(numDocum, msUsuariosBk.getIdusuario());
 
-		try {
-			dtAsistenciaC = servicio.finalizarDtAsistenciaBk(dtAsistenciaC, msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto);
-			
-			DtAsistenciaData dtAsistenciaData = (DtAsistenciaData) req.getSession().getAttribute("DtAsistenciaData");
-			if(dtAsistenciaData==null){
-				dtAsistenciaData = new DtAsistenciaData();
-				req.getSession().setAttribute("DtAsistenciaData",dtAsistenciaData);
-			}
-			dtAsistenciaData.add(servicio, msUsuariosBk.getIdusuario(), dtAsistenciaC);
-			
-			GenericEntity<DtAsistenciaBk> registrors = new GenericEntity<DtAsistenciaBk>(dtAsistenciaC) {
-			};
-			return Response.status(HttpURLConnection.HTTP_OK).entity(registrors).build();
-		} catch (Validador e) {
-			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
-			System.out.println("ERROR: " + mensaje);
-			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
-					}).build();
-		}
-	}
-	
+    						GenericEntity<DtUsuarioExternoBk> registrosx = new GenericEntity<DtUsuarioExternoBk>(usuarioExterno) {
+    						};
+
+    						return Response.status(200).entity(registrosx).build();
+    					} catch (Exception e) {
+    						String mensaje = e.getMessage();
+    						return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+    								new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+    								}).build();
+    					}
+    				}
+    				
+    				
+    				@POST
+    				@Path("/finalizardtAsistencia")
+    				@Produces(MediaType.APPLICATION_JSON)
+    				public Response finalizardtAsistencia(@Context HttpServletRequest req, 
+    													  @Context HttpServletResponse res,
+    													  @HeaderParam("authorization") String authString, 
+    													  DtAsistenciaJS dtAsistenciaJS) {
+    					SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    					Principal usuario = req.getUserPrincipal();
+    					MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+    					if (msUsuariosBk == null)
+    						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+    								new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    						}).build();
+    					
+    					if(!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
+    						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+    								new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    						}).build();
+    					
+    					String adressRemoto = getRemoteAdress(req);
+
+    					DtAsistenciaBk dtAsistenciaC = new DtAsistenciaBk();
+    					FuncionesStaticas.copyPropertiesObject(dtAsistenciaC, dtAsistenciaJS);
+    					// MPINARES 24012023 - INICIO
+    					dtAsistenciaC.setVistaProgramado(dtAsistenciaJS.isVistaProgramado());
+    					dtAsistenciaC.setIdSede(msUsuariosBk.getIdSede());
+    					dtAsistenciaC.setIdSistAdm(msUsuariosBk.getIdSistAdmi());
+    					dtAsistenciaC.setIdUsuinterno(msUsuariosBk.getIdusuario());
+    					// MPINARES 24012023 - FIN
+
+    					try {
+    						dtAsistenciaC = servicio.finalizarDtAsistenciaBk(dtAsistenciaC, msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto);
+    						
+    						DtAsistenciaData dtAsistenciaData = (DtAsistenciaData) req.getSession().getAttribute("DtAsistenciaData");
+    						if(dtAsistenciaData==null){
+    							dtAsistenciaData = new DtAsistenciaData();
+    							req.getSession().setAttribute("DtAsistenciaData",dtAsistenciaData);
+    						}
+    						dtAsistenciaData.add(servicio, msUsuariosBk.getIdusuario(), dtAsistenciaC);
+    						
+    						GenericEntity<DtAsistenciaBk> registrors = new GenericEntity<DtAsistenciaBk>(dtAsistenciaC) {
+    						};
+    						return Response.status(HttpURLConnection.HTTP_OK).entity(registrors).build();
+    					} catch (Validador e) {
+    						String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
+    						System.out.println("ERROR: " + mensaje);
+    						return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+    								.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+    								}).build();
+    					}
+    				}
+    				//FIN CUSCATA - 18062024
 
 }

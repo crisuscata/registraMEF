@@ -27,7 +27,7 @@
 <!-- Filtro -->
 <md-toolbar class="md-toolbar-filtro-size">
 	<div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="space-between center">
-	<div class="tamaDivFiltro"> 
+	<div class="tamaDivFiltro" ng-if="creadtCapacitacion">  <!-- PURIBE 15042024 - INICIO -->
             <md-button class="md-button-borde-naranja md-sm" ng-click="nuevoDtCapacitacion()" aria-label="Crear capacitaci&oacute;n"> 
             	<md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: inherit;">playlist_add</md-icon>
                 <span>Crear capacitaci&oacute;n</span>

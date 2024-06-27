@@ -38,8 +38,8 @@ public class DtUsuarioExterno implements java.io.Serializable {
 
 	// PROPIEDADES
 	private String nombre = null;
-	private String apaterno = null; 	// JPUYEN 14052024 
-	private String amaterno = null;    // JPUYEN 14052024  
+	private String apaterno = null; 	//CUSCATA - 18062024
+	private String amaterno = null;    //CUSCATA - 18062024
 	private String direccion = null;
 	private String correo = null;
 	private Long telefFijo = null;
@@ -92,6 +92,7 @@ public void setNombre(String nombre)
 		this.nombre = nombre;
 }
 
+//INICIO CUSCATA - 18062024
 @Column(name = "A_PATERNO", length = 100)
 public String  getApaterno()
 {
@@ -113,6 +114,7 @@ public void setAmaterno(String amaterno)
 {
 		this.amaterno = amaterno;
 }
+//FIN CUSCATA - 18062024
 
 @Column(name = "DIRECCION", length = 300)
 public String  getDireccion()

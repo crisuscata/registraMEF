@@ -117,9 +117,29 @@ myapp.controller('ctrlListaprtParametros', ['$mdEditDialog', '$scope', '$timeout
 
 	$scope.loadprtParametross = function () {
 	    //$scope.promise = $timeout(function () {
-	    	var surl = $scope.getURL();	    
-	    	$scope.promise = $http.get(surl).then(function(res){
-	    		 $scope.datos = res.data.data;
+//	    	var surl = $scope.getURL();	    
+//	    	$scope.promise = $http.get(surl).then(function(res){
+//	    		 $scope.datos = res.data.data;
+		/* PURIBE 04012024 - INICIO */
+		$scope.loadListaPrtParametrosIdpadre();
+    	var surl = $scope.getURL();	    
+    	$scope.promise = $http.get(surl).then(function(res){
+    		 $scope.datos = res.data.data;
+
+	
+		$scope.formatDate = function(dateString) {
+			var date = new Date(dateString);
+			var year = date.toLocaleString("default", { year: "numeric" });
+			var month = date.toLocaleString("default", { month: "2-digit" });
+			var day = date.toLocaleString("default", { day: "2-digit" });
+			return day + "/" + month + "/" + year;
+		}
+
+		$scope.datos.map(function(obj) {
+			obj.fechaCrea = $scope.formatDate(obj.fechaCrea);
+			obj.fechaModif = $scope.formatDate(obj.fechaModif);
+		});	    		    		 
+		/* PURIBE 04012024 - FIN */
 	    		 if(res.data.contador>0)
 	    		 $scope.total = res.data.contador;
 	    		 var tiempoenBD = res.data.tiempoenBD;
@@ -218,15 +238,16 @@ myapp.controller('ctrlListaprtParametros', ['$mdEditDialog', '$scope', '$timeout
                 $scope.loadListaPrtParametrosIdpadre();//SELECT
 		  };
 	  
-	  $scope.filtro ={
-          descripcion: null,
-  idpadre: null,
-  fechaCrea: null,
-  fechaModif: null,
-  estadoTxt: null,
-  idpadreTxt: null,  
-         estado: null
-		}; 
+		//PURIBE 04012024 - INICIO
+		  $scope.filtro ={
+		idpadre: null,
+		descripcion: null,
+	         estado: null,
+			 idpadreTxt:null,
+			 fechaCrea:null,
+			 fechaModif:null
+			}; 
+			//PURIBE 04012024 - FIN
 	  
 	  $scope.seteestado = function(eestado) {
 			if($scope.filtro.estado === eestado){
@@ -637,6 +658,7 @@ $scope.prtParametrosModelo.estadoTxt = prtParametrosBk.estadoTxt;
 ///ADICIONALES
 //SELECT INI
 				//PURIBE 25012024 - INICIO
+				//PURIBE 25012024 - INICIO
 			        $scope.listaPrtParametrosIdpadre=[];
 				$scope.loadListaPrtParametrosIdpadre=function(){
 					$http.get(listaPrtParametrosidparametroIdpadreUrl).then(function(res){
@@ -644,21 +666,18 @@ $scope.prtParametrosModelo.estadoTxt = prtParametrosBk.estadoTxt;
 						$scope.prtParametrosModelo.idpadre = 0;
 					},
 					function error(errResponse) {
-						var dato;
-						if(errResponse && errResponse.data){
-						   console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
-						   dato = errResponse.data;
-						}
-						if(errResponse.message){ 
-							console.log("Message " + errResponse.message);
-							dato = errResponse.message;
-						}
+						console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
 					});
 				};
 				//PURIBE 25012024 - FIN
-        $scope.changeIdpadre=function(){
-          ///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
-        }
+				//PURIBE 25012024 - FIN
+				//PURIBE 04012024 - INICIO
+		        $scope.changeIdpadre=function(){
+				//	$scope.loadListaPrtParametrosIdpadre();
+					
+		          ///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
+		        }
+				//PURIBE 04012024 - FIN
         $scope.$watch('prtParametrosModelo.idpadre', function (newValue, oldValue) {
 		console.log('prtParametrosModelo.idpadre ' + newValue+' -- '+oldValue);
 		//CARGAR DATOS DEL SIGUIENTE SELECT

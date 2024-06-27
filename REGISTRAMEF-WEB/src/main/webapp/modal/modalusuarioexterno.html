@@ -1,0 +1,162 @@
+
+<md-dialog aria-label="Lista de Usuarios" class="modal-width-854">
+ <!--PURIBE 19032024 -INICIO-->
+    <md-progress-linear md-mode="determinate" value="{{determinateValue}}"></md-progress-linear>
+    <form ng-cloak name="dtVisitasusuForm" ng-submit="dtVisitasusuForm.$valid && hidee()" novalidate>
+        <md-toolbar style="background-color: rgb(255,255,255);">
+            <div class="md-toolbar-tools">
+                <h2 style="color: #1E82AD; font-weight: bold;">Agregar Usuario</h2>
+                <span flex></span>
+                <md-button ng-click="cancel()" style="color: rgb(255,87,34);"  >
+                    Cancelar
+                </md-button>
+                <md-button style="color: rgb(255,87,34);" type="submit"  >
+                    Agregar
+                </md-button>
+              
+            </div>
+        </md-toolbar>
+ <!--PURIBE 22042024   INICIO-->
+        <md-dialog-content>
+            <md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}"
+                        style="margin: 0px 30px;">
+                        <div layout="row" layout-align="start center" class="letraenvoltura"
+                               flex="100">
+                     
+                        <label class="letraLabel" flex="10">DNI:</label>    
+                        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="30">
+                              <input type="text" style="width:100px;"  ng-maxlength="8" ng-minlength="8" required name="numDocum" ng-model="usuarioexterno.numDocum"
+                                    >
+                           <div ng-messages="dtVisitasusuForm.numDocum.$error">
+                              <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
+                              <div ng-message="required">Se requiere el N&uacute;mero del DNI.</div>
+                              <div ng-message="maxlength">El DNI tiene un m&aacute;ximo de 8 caracteres.</div>
+                              </div>
+                           </md-input-container>  
+
+                           <div class="tamaDivFiltro"> 
+                            <md-button class="md-button-borde-naranja md-sm" ng-click="buscar()" aria-label="BUSCAR"> 
+                              <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: inherit;">search</md-icon>
+                                <span>BUSCAR</span>
+                            </md-button>
+                            </div>
+
+                        </div>
+                   
+                    
+                        <div layout="row" layout-align="start center" class="letraenvoltura"
+                        flex="100">
+                     
+                        <label class="letraLabel" flex>APELLIDOS Y NOMBRE:</label>   
+                        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
+                            <input type="text" style="width:500px;"  required name="nombre" ng-model="usuarioexterno.nombrecompleto" ng-disabled="true">
+                        
+                      </md-input-container>  
+                        </div>
+                            
+                        <div layout="row" layout-align="start center" class="letraenvoltura"
+                        flex="100">
+               
+                            <md-input-container
+                            class="input-container-margen letraTexto nomarginbotottom"
+                            flex="100" md-no-float="true" style="width: 400%;">
+                         <!-- 				<input id="razonSocial" ng-model="dtAsistenciaModelo.idEntidadTxt" -->
+                         <!-- 					placeholder="Raz&oacute;n Social">  --> 
+                 
+                              <label   style="width: 100px;">APELLIDOS Y NOMBRE:</label>
+                    
+                         <md-autocomplete
+                            required md-input-name="nombreexterno"
+                            md-input-minlength="2" md-input-maxlength="255"
+                            md-search-text-change="searchTextChangeMsExterno(usuarioexterno.nombrecompleto)"
+                            md-search-text="usuarioexterno.nombrecompleto"  
+                            md-selected-item-change="selectedItemChangeMsexterno(item)" 
+                            md-items="item in querySearchDtsuario(usuarioexterno.nombrecompleto)"
+                            md-item-text="item.nombrecompleto" md-min-length="4" 
+                            input-aria-labelledby="nombre" md-delay="3000"
+                            placeholder="nombre">
+                         <md-item-template> <span
+                            md-highlight-text="usuarioexterno.nombrecompleto"
+                            md-highlight-flags="^i"> {{item.nombrecompleto}} </span> </md-item-template> <md-not-found>
+                        No hay concidencias para "{{usuarioexterno.nombrecompleto}}". <a
+                            ng-click="newStateMsInstitucionesIdprovee(usuarioexterno.nombrecompleto)">Crea
+                            uno nuevo!</a> </md-not-found>
+                         
+                         <div
+                            ng-messages="dtVisitasusuForm.nombreexterno.$error"
+                            ng-if="dtVisitasusuForm.nombreexterno.$touched">
+                            <div ng-message="required">
+                               Usted <b>debe</b> seleccionar un item.
+                            </div>
+                            <div ng-message="md-require-match">Por favor seleccione un
+                               item.</div>
+                            <div ng-message="minlength">Tu entrada no es lo
+                               suficientemente larga.</div>
+                            <div ng-message="maxlength">Tu entrada es demasiado larga.</div>
+                         </div>
+                         </md-autocomplete> </md-input-container>
+
+                        </div>
+                                   
+
+                        <div layout="row" layout-wrap class="modal-wrapped">
+                            <div class="letraenvoltura"  flex="auto">
+                                <label class="letraLabel" flex>Cargo:</label>    
+                                <md-input-container md-no-float="true" class="input-container-margen letraTexto"  flex="85">
+                                    <md-select ng-model="usuariosexternos.idCargoUsuext"   required
+                                               placeholder="Ingresar Cargo"
+                                               name="idcargo"
+                                               >
+                                      <md-option ng-value="0">-- Seleccionar cargo--</md-option>
+                                     <md-option ng-repeat="item in usuarioexterno.usucargos" ng-value="item.idCargoUsuexter" >
+                                         {{item.idCargoTxt}}
+                                     </md-option>
+                                    </md-select>
+                                    <div ng-messages="dtVisitasusuForm.idcargo.$error">
+                                      <div ng-message="required">Se requiere seleccione el cargo.</div>
+                                   </div>
+                                 </md-input-container>
+                                </div>
+                              
+                        </div>
+   
+                        <div layout="row" layout-align="start center" class="letraenvoltura"
+                        flex="auto">
+                     
+                        <label class="letraLabel" flex>CORREO:</label>    
+                        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
+                              <input type="text" style="width:300px;"   required name="correo" ng-model="usuarioexterno.correo"
+                                    >
+                          
+                           </md-input-container>  
+                        </div>
+
+                        <div layout="row" layout-align="start center" class="letraenvoltura"
+                        flex="auto">
+                     
+                        <label class="letraLabel" flex>FIJO:</label>    
+                        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
+                              <input type="text" style="width:300px;"   required name="correo" ng-model="usuarioexterno.otroTelefono"
+                                    >
+                          
+                           </md-input-container>  
+                        </div>
+   
+                        <div layout="row" layout-align="start center" class="letraenvoltura"
+                        flex="auto">
+                     
+                        <label class="letraLabel" flex>CELULAR:</label>    
+                        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
+                              <input type="text" style="width:300px;"   required name="correo" ng-model="usuarioexterno.otroCelular"
+                                    >
+                          
+                           </md-input-container>  
+                        </div>
+             <!--PURIBE 22042024   FIN-->
+   
+
+            </md-content>
+        </md-dialog-content>
+    </form>
+       <!--PURIBE 19032024 -FIN-->
+</md-dialog>

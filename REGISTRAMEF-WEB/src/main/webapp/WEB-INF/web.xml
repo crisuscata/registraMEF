@@ -533,9 +533,11 @@
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>PAGINA CONTROLADA</web-resource-name>
-      <url-pattern>/adminis/listadtVisitas.html</url-pattern>
-      <url-pattern>/adminis/editardtVisitas.html</url-pattern>
-      <url-pattern>/adminis/verdtVisitas.html</url-pattern>
+      <!--   PURIBE 04042024 - INICIO -->
+      <url-pattern>/visitas/listadtVisitas.html</url-pattern>
+      <url-pattern>/visitas/editardtVisitas.html</url-pattern>
+      <url-pattern>/visitas/verdtVisitas.html</url-pattern>
+       <!--   PURIBE 04042024 - FIN -->
       <http-method>HEAD</http-method>
       <http-method>GET</http-method>
       <http-method>POST</http-method>
@@ -582,9 +584,11 @@
     <security-constraint>
     <web-resource-collection>
       <web-resource-name>PAGINA CONTROLADA</web-resource-name>
-      <url-pattern>/adminis/listadtVisitasnoprog.html</url-pattern>
-      <url-pattern>/adminis/editardtVisitasnoprog.html</url-pattern>
-      <url-pattern>/adminis/verdtVisitasnoprog.html</url-pattern>
+      <!--   PURIBE 04042024 - INICIO -->
+      <url-pattern>/visitas/listadtVisitasNoProg.html</url-pattern>
+      <url-pattern>/visitas/editardtVisitasNoProg.html</url-pattern>
+      <url-pattern>/visitas/verdtVisitasNoProg.html</url-pattern>
+       <!--   PURIBE 04042024 - FIN -->
       <http-method>HEAD</http-method>
       <http-method>GET</http-method>
       <http-method>POST</http-method>
@@ -594,7 +598,13 @@
     <auth-constraint>
       <role-name>REGISTRAMEF_DTVISITAS_EDITOR</role-name>  
       <role-name>REGISTRAMEF_DTVISITAS_LECTOR</role-name>
-      <role-name>REGISTRAMEF_ADMINISTRADOR</role-name>            
+      <role-name>REGISTRAMEF_ADMINISTRADOR</role-name>  
+      <!--   PURIBE 04042024 - INICIO -->
+      <role-name>REGISTRAMEF_ADMINISTRADOR_OGTI</role-name>
+      <role-name>REGISTRAMEF_ANALIST_ESPECIALIST_IMPL</role-name>    
+      <role-name>REGISTRAMEF_ADMINISTRADOR_OGTI</role-name>  
+      <role-name>REGISTRAMEF_GESTOR_CENTRO</role-name>
+      <!--   PURIBE 04042024 - FIN-->             
     </auth-constraint>
     <user-data-constraint>
       <transport-guarantee>NONE</transport-guarantee>

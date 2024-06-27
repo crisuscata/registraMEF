@@ -24,7 +24,7 @@
 <!--                <input type="text" name="idAsistencia" ng-model="filtro.idAsistencia" />  -->
 <!--             </md-input-container> -->
 <!--             </div> -->
-			<div class="tamaDivFiltro"> 
+			<div class="tamaDivFiltro" ng-if="creadtAsistencia">  <!-- PURIBE 15042024 - INICIO -->
             <md-button class="md-button-borde-naranja md-sm" ng-click="nuevoDtAsistencia()" aria-label="Crear asistencia"> 
             	<md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: inherit;">playlist_add</md-icon>
                 <span>Crear asistencia</span>
@@ -175,6 +175,9 @@
          </tr>
       </thead>
       <tbody md-body>
+      <tr ng-if="datos.length === 0">
+               <td colspan="15" style="text-align: center;">No se encontraron registros para mostrar</td>
+             </tr>
          <tr class="primary triddtAsistencia md-table-cuerpo" md-row md-select="dato" md-on-select="logItem" md-auto-select="options.autoSelect"   
              ng-disabled="dato.idAsistencia > 0" ng-repeat-start="dato in datos">
           <td md-cell>{{$index + 1}}</td>

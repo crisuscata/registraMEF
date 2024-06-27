@@ -13,6 +13,7 @@ public class DtCapacitacionACL implements Serializable{
 	private boolean eliminar = false;
 	private boolean reactivar = false;//MPINARES 14022024 - INICIO
 	private int editopcion = 1;
+	private boolean addEntidad = false;//MPINARES 24012023 - INICIO
 	
 	public DtCapacitacionACL() {
 	}
@@ -55,6 +56,14 @@ public class DtCapacitacionACL implements Serializable{
 		return "DtCapacitacionACL [esEditable=" + esEditable + ", eliminar=" + eliminar + ", editopcion=" + editopcion
 				+ "]";
 	}	
+	
+	public boolean isAddEntidad() {
+		return addEntidad;
+	}
+
+	public void setAddEntidad(boolean addEntidad) {
+		this.addEntidad = addEntidad;
+	}
 	
 	
 }

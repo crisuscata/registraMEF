@@ -535,7 +535,17 @@ public class MsUsuariosBk implements java.io.Serializable {
 		return true;
 	}
 	
+	public String getPerfil(){
+		StringBuffer s = new StringBuffer();
+		if (perfilesSistema != null) {
+			for (String rol : perfilesSistema) {
+				s.append(rol + " \n");
+			}
+		}
+		return s.toString();
+	}
 	
+	public void setPerfil(){} 
 	
 	
 }

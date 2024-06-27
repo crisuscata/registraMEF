@@ -24,7 +24,7 @@ public class DtUsuarioExternoBk implements java.io.Serializable {
 	private String apaterno = null;
 	private String amaterno = null;
 	private String nombre = null;
-	private String nombresCompletos=null;
+	private String nombresCompletos=null;//CUSCATA - 18062024
 	private Long numDocu = null;
 	private String correo = null;
 	private Long telefFijo = null;
@@ -47,6 +47,10 @@ public class DtUsuarioExternoBk implements java.io.Serializable {
 	private String otroCelular = null;
 	private String numDocum = null;
 	private Long flagMedioreg = null;
+	//PURIBE 22042024 - INICIO
+	private String nombreEntidad = null;
+	private String ejecutorEntidad = null;
+	//PURIBE 22042024 - FIN
 	
 	
 	//ADICIONALES
@@ -58,7 +62,6 @@ public class DtUsuarioExternoBk implements java.io.Serializable {
 	private String idpaisTxt = null;
 	private List<DtCargosUsuexterBk> usucargos;//PURIBE 14032024 - INICIO-->
 	//PURIBE 14032024 - INICIO-->
-	
 	public List<DtCargosUsuexterBk> getUsucargos() {
 		return usucargos;
 	}
@@ -362,29 +365,55 @@ public class DtUsuarioExternoBk implements java.io.Serializable {
 
 	public void setEsEliminado(boolean esEliminado) {		
 	}
+	
+	//PURIBE 22042024 - INICIO-->
+		public String getNombreEntidad() {
+			return nombreEntidad;
+		}
 
-	public String getNombresCompletos() {
-		return nombresCompletos;
-	}
+		public void setNombreEntidad(String nombreEntidad) {
+			this.nombreEntidad = nombreEntidad;
+		}
 
-	public void setNombresCompletos(String nombresCompletos) {
-		this.nombresCompletos = nombresCompletos;
-	}
+		public String getEjecutorEntidad() {
+			return ejecutorEntidad;
+		}
 
-	public String getAmaterno() {
-		return amaterno;
-	}
+		public void setEjecutorEntidad(String ejecutorEntidad) {
+			this.ejecutorEntidad = ejecutorEntidad;
+		}
+		
+		public String getNombreCompleto(){
+			return (getApaterno() != null ? " " + getApaterno() : "")
+			+ (getAmaterno() != null ? " " + getAmaterno() : "")
+			+ (getNombre() != null ? " " + getNombre() : "") ;
+		}
+		
+		//PURIBE 22042024 - FIN-->
+		
+		//INICIO CUSCATA - 18062024
+		public String getNombresCompletos() {
+			return nombresCompletos;
+		}
 
-	public void setAmaterno(String amaterno) {
-		this.amaterno = amaterno;
-	}
+		public void setNombresCompletos(String nombresCompletos) {
+			this.nombresCompletos = nombresCompletos;
+		}
 
-	public String getApaterno() {
-		return apaterno;
-	}
+		public String getAmaterno() {
+			return amaterno;
+		}
 
-	public void setApaterno(String apaterno) {
-		this.apaterno = apaterno;
-	}
+		public void setAmaterno(String amaterno) {
+			this.amaterno = amaterno;
+		}
 
+		public String getApaterno() {
+			return apaterno;
+		}
+
+		public void setApaterno(String apaterno) {
+			this.apaterno = apaterno;
+		}
+	//FIN CUSCATA - 18062024
 }

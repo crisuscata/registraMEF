@@ -23,9 +23,10 @@ public class DtVisitasData implements Serializable{
 	}
 
 	//puribe
-	@SuppressWarnings("unchecked")
-	public List<DtVisitasBk> getDtVisitasActivos(Servicio servicio, Long kyUsuarioMod,Timestamp fechaInicio,Timestamp fechaFin,int reload,int programada){		
-		List<DtVisitasBk> dtVisitasBksss = null;
+	//PURIBE 04042024 - INICIO-->
+		@SuppressWarnings("unchecked")
+		public List<DtVisitasBk> getDtVisitasActivos(Servicio servicio, Long kyUsuarioMod,Timestamp fechaInicio,Timestamp fechaFin,int reload,int programada,long sede,int rol,long sistemaadmi){		
+			List<DtVisitasBk> dtVisitasBksss = null;
 		String key = DtVisitasBk.class.getSimpleName();
 		
 		if(reload==1)
@@ -42,7 +43,9 @@ public class DtVisitasData implements Serializable{
 				new Thread() {
 		            public void run() {
 		                try {
-		                	List<DtVisitasBk> dtVisitasBkssss = servicio.getAllDtVisitasActivosCero(kyUsuarioMod,fechaInicio,fechaFin,programada);
+		                	//PURIBE 04042024 - INICIO-->
+		                	List<DtVisitasBk> dtVisitasBkssss = servicio.getAllDtVisitasActivosCero(kyUsuarioMod,fechaInicio,fechaFin,programada,sede,rol,sistemaadmi);
+		                	//PURIBE 04042024 - FIN-->
 		    				entrada.setLista(dtVisitasBkssss);
 		    				entrada.setUltimoacceso(System.currentTimeMillis());
 		                } catch (Exception ex) {
@@ -54,7 +57,9 @@ public class DtVisitasData implements Serializable{
 			}
 		}else{
 			Entrada entrada = new Entrada();
-			dtVisitasBksss = servicio.getAllDtVisitasActivosCero(kyUsuarioMod,fechaInicio,fechaFin,programada);
+			//PURIBE 04042024 - INICIO-->
+			dtVisitasBksss = servicio.getAllDtVisitasActivosCero(kyUsuarioMod,fechaInicio,fechaFin,programada,sede,rol,sistemaadmi);
+		 	//PURIBE 04042024 - FIN-->
 			entrada.setLista(dtVisitasBksss);
 			entrada.setTiempomuerto(60000);
 			entrada.setUltimoacceso(System.currentTimeMillis());
@@ -65,7 +70,7 @@ public class DtVisitasData implements Serializable{
 	//puribe
 	//puribe
 	@SuppressWarnings("unchecked") 
-	public void add(Servicio servicio, Long kyUsuarioMod, DtVisitasBk dtVisitasC,Timestamp fechaInicio,Timestamp fechaFin,int programada){		
+	public void add(Servicio servicio, Long kyUsuarioMod, DtVisitasBk dtVisitasC,Timestamp fechaInicio,Timestamp fechaFin,int programada,long sede,int rol,long sistemaadmi){// PURIBE 04042024 - INICIO		
 		List<DtVisitasBk> dtVisitasBksss = null;
 		String key = DtVisitasBk.class.getSimpleName();
 		
@@ -79,7 +84,7 @@ public class DtVisitasData implements Serializable{
 				new Thread() {
 		            public void run() {
 		                try {
-		                	List<DtVisitasBk> dtVisitasBkssss = servicio.getAllDtVisitasActivosCero(kyUsuarioMod,fechaInicio,fechaFin,programada);
+		                	List<DtVisitasBk> dtVisitasBkssss = servicio.getAllDtVisitasActivosCero(kyUsuarioMod,fechaInicio,fechaFin,programada,sede,rol,sistemaadmi);// PURIBE 04042024 - INICIO
 		    				entrada.setLista(dtVisitasBkssss);
 		    				entrada.setUltimoacceso(System.currentTimeMillis());
 		                } catch (Exception ex) {
@@ -91,7 +96,7 @@ public class DtVisitasData implements Serializable{
 			}
 		}else{
 			Entrada entrada = new Entrada();
-			dtVisitasBksss = servicio.getAllDtVisitasActivosCero(kyUsuarioMod,fechaInicio,fechaFin,programada);
+			dtVisitasBksss = servicio.getAllDtVisitasActivosCero(kyUsuarioMod,fechaInicio,fechaFin,programada,sede,rol,sistemaadmi);// PURIBE 04042024 - INICIO
 			entrada.setLista(dtVisitasBksss);
 			entrada.setTiempomuerto(60000);
 			entrada.setUltimoacceso(System.currentTimeMillis());
@@ -109,14 +114,14 @@ public class DtVisitasData implements Serializable{
 		}		
 	}
 	//puribe
-	public void refrescar(Servicio servicio, Long kyUsuarioMod,Timestamp fechaInicio,Timestamp fechaFin,int programada){
+	public void refrescar(Servicio servicio, Long kyUsuarioMod,Timestamp fechaInicio,Timestamp fechaFin,int programada,long sede,int rol,long sistemaadmi){// PURIBE 04042024 - INICIO
 		String key = DtVisitasBk.class.getSimpleName();
 		if(dataCache.containsKey(key)){
 			Entrada entrada = dataCache.get(key);
 		new Thread() {
             public void run() {
                 try {
-                	List<DtVisitasBk> dtVisitasBkssss = servicio.getAllDtVisitasActivosCero(kyUsuarioMod,fechaInicio,fechaFin,programada);
+                	List<DtVisitasBk> dtVisitasBkssss = servicio.getAllDtVisitasActivosCero(kyUsuarioMod,fechaInicio,fechaFin,programada,sede,rol,sistemaadmi);// PURIBE 04042024 - INICIO
     				entrada.setLista(dtVisitasBkssss);
     				entrada.setUltimoacceso(System.currentTimeMillis());
                 } catch (Exception ex) {

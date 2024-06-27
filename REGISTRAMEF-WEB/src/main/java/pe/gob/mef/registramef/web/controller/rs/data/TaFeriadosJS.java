@@ -28,10 +28,26 @@ public class TaFeriadosJS implements java.io.Serializable {
 	// ADICIONALES
 	private String feEstadoTxt = null;
 	
-	private Integer editopcion = 1;
+	//PURIBE 16012024 - INICIO-->
+		private Integer feEstado = null;
+		
 
-	public TaFeriadosJS() {
-	}
+
+		private Integer editopcion = 1;
+
+		public TaFeriadosJS() {
+		}
+
+		
+		public Integer getFeEstado() {
+			return feEstado;
+		}
+
+		public void setFeEstado(Integer feEstado) {
+			this.feEstado = feEstado;
+		}
+		
+		//PURIBE 16012024 - FIN-->
 
 	public Timestamp getFeFecha() {
 		return this.feFecha;

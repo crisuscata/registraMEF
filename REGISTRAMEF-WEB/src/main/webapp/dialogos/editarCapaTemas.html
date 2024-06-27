@@ -8,6 +8,7 @@
         
        		 <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex >
 					<md-input-container class="input-container-margen letraTexto">
+						<label>Tema</label>
 						<md-select ng-model="capaTemasmodelo.idTema" ng-change="changeIdTema(capaTemasmodelo.idTema)"
 							required placeholder="Seleccionar Tema" name="idTema">
 						<md-option ng-repeat="item in listaMsTemaIdTema"
@@ -23,6 +24,7 @@
 				<div class="letraenvoltura" flex 
 									ng-if="dtCapacitacionModelo.editopcion < 2">
 				<md-input-container class="input-container-margen letraTexto">
+				<label>Subtema</label>
 									<md-select ng-model="capaTemasmodelo.idSubtema" required
 									ng-change="changeIdSubtema(capaTemasmodelo.idSubtema)"
 										placeholder="Seleccionar Subtema" name="idSubtema">

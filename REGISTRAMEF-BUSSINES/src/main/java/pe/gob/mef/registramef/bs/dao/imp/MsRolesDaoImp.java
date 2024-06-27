@@ -247,4 +247,19 @@ public class MsRolesDaoImp extends
 			}
 		}
 		//MPINARES 24012023 - FIN
+		
+		public List<MsRoles> getXFiltro(String username) {
+			StringBuffer sb = new StringBuffer(100);
+			List<Object> hs = new ArrayList<Object>();
+			sb.append("select t from " + this.getDomainClass().getName() + " t where t.estado >= "+Estado.ACTIVO.getValor()+" ");
+			if (username != null && username.trim().length() > 0) {
+				sb.append("and t.username = ?1 ");
+				hs.add(username);
+			}
+
+			Object[] param = new Object[hs.size()];
+			hs.toArray(param);
+			List<MsRoles> lista = super.find(sb.toString(), param);
+			return lista;
+		}
 }

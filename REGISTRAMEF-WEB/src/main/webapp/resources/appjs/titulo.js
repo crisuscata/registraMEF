@@ -5,6 +5,7 @@ var perfilUrl = contexto+"/rs/ctrltitulo/perfilusuario";
 
 var editarprtParametrosUrl = contexto+"/rs/ctrltitulo/editarprtParametros/"; //PURIBE 21032024 - INI
 var actualizanotificacionUrl = contexto+"/rs/ctrltitulo/actualizanotificacion";//PURIBE 21032024 - INI
+var principalUrl = window.location.origin+contexto+'/index.htm'; //PURIBE 04042024 - INI
 
 //MPINARES 14022024 - INICIO
 var listaPrtParametrosidparametroIdTipoServicioUrl = contexto+"/rs/ctrltitulo/listaPrtParametrosIdparametroIdTipoServicio";
@@ -97,14 +98,18 @@ myapp.config(['$mdPanelProvider', function ($mdPanelProvider) {
 		controllerAs: 'ctrl',
 		template: '' +
 		//PURIBE 22032024 - INI
-		'<div>' +	          
+		//PURIBE 04042024 - INI
+		'<div style="overflow: auto;width: 350px;">' +	
+		//PURIBE 04042024 - FIN             
 		'  <div>' +
 		'        <span style="font-size: 16px !important;color:rgba(0, 150, 136, 1);"><b>NOTIFICACIONES</b></span>' +
 		'  </div>' +
 		'    <md-divider class="menu-divider"></md-divider>' +
 		'<div>' +		//PURIBE 29032024 - INI
 		'<div ng-repeat="pendiente in ctrl.pendientes">'+
-		'        <div style="font-size: 14px !important;color:#555753;width:290px;height:80px;overflow-y: auto; white-space: pre-wrap;">{{pendiente.descripcion}}</div>' +
+		//PURIBE 04042024 - INI
+		'        <div style="font-size: 14px !important;color:#555753;width:330px;height:80px;overflow-y: auto; white-space: pre-wrap;padding:10px;">{{pendiente.descripcion}}</div>' +
+		//PURIBE 04042024 - FIN
 		'<div>' +
 		//PURIBE 29032024 - FIN
 //		'<div ng-mouseleave="ctrl.closeMenu()">' +	          
@@ -746,7 +751,13 @@ myapp.controller('tituloCtrl', ['$mdEditDialog', '$scope', '$timeout', '$http', 
 			scope: $scope,
 			preserveScope: true
 		});
-	};		 
+	};	
+	
+	 //PURIBE 04042024 - INICIO ---
+	$scope.redirectlandingUrl=function(){
+		window.location.href=principalUrl; 
+		};	 
+		   //PURIBE 04042024 - FIN --
 
 	$scope.actulizarMsUsuarios = function(ev){		
 		ev.target.disabled = true;

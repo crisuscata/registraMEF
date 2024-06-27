@@ -24,6 +24,16 @@ public class MenuaccesosJS  implements java.io.Serializable{
 	private boolean usuarios = false;
 	private boolean ubigeo = false;
 	private boolean parametros = false;
+	// PURIBE 04042024 - INICIO-->
+		private boolean programacionreunion = false;
+		private boolean programacionasistencia = false;
+		private boolean programacioncapacitacion = false;
+		
+
+		private boolean registroreunion = false;
+		private boolean registroasistencia = false;
+		private boolean registrocapacitacion = false;
+		// PURIBE 04042024 - FIN-->
 	
     public MenuaccesosJS() {
 	}
@@ -35,6 +45,59 @@ public class MenuaccesosJS  implements java.io.Serializable{
 	public void setEntidades(boolean entidades) {
 		this.entidades = entidades;
 	}
+	
+	// PURIBE 04042024 - INICIO-->
+		public boolean isProgramacionreunion() {
+			return programacionreunion;
+		}
+
+		public void setProgramacionreunion(boolean programacionreunion) {
+			this.programacionreunion = programacionreunion;
+		}
+
+		public boolean isRegistroreunion() {
+			return registroreunion;
+		}
+
+		public void setRegistroreunion(boolean registroreunion) {
+			this.registroreunion = registroreunion;
+		}
+		
+		
+		
+		// PURIBE 04042024 - FIN-->
+
+	public boolean isProgramacionasistencia() {
+			return programacionasistencia;
+		}
+
+		public void setProgramacionasistencia(boolean programacionasistencia) {
+			this.programacionasistencia = programacionasistencia;
+		}
+
+		public boolean isProgramacioncapacitacion() {
+			return programacioncapacitacion;
+		}
+
+		public void setProgramacioncapacitacion(boolean programacioncapacitacion) {
+			this.programacioncapacitacion = programacioncapacitacion;
+		}
+
+		public boolean isRegistroasistencia() {
+			return registroasistencia;
+		}
+
+		public void setRegistroasistencia(boolean registroasistencia) {
+			this.registroasistencia = registroasistencia;
+		}
+
+		public boolean isRegistrocapacitacion() {
+			return registrocapacitacion;
+		}
+
+		public void setRegistrocapacitacion(boolean registrocapacitacion) {
+			this.registrocapacitacion = registrocapacitacion;
+		}
 
 	public boolean isUsuarios() {
 		return usuarios;

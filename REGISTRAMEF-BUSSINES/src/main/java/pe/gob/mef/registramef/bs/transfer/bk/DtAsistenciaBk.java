@@ -69,9 +69,9 @@ public class DtAsistenciaBk implements java.io.Serializable {
 		private boolean anulado = false;
 		//MPINARES 24012023 - FIN
 		
-	private List<DtAsistenciaUsuexternosBk> dtAsistenciaUsuariosBkJSss = null;
-	private DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk=null;
-	private List<DtAnexoBk> dtAnexosBKJSss = null;
+		private List<DtAsistenciaUsuexternosBk> dtAsistenciaUsuariosBkJSss = null;//CUSCATA - 18062024
+		private DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk=null;//CUSCATA - 18062024
+		private List<DtAnexoBk> dtAnexosBKJSss = null;
 		
 	public DtAsistenciaBk() {
 	}
@@ -501,49 +501,50 @@ public class DtAsistenciaBk implements java.io.Serializable {
 
 	public void setEsEliminado(boolean esEliminado) {		
 	}
-
-	public List<DtAsistenciaUsuexternosBk> getDtAsistenciaUsuariosBkJSss() {
-		return dtAsistenciaUsuariosBkJSss;
-	}
-
-	public void setDtAsistenciaUsuariosBkJSss(List<DtAsistenciaUsuexternosBk> dtAsistenciaUsuariosBkJSss) {
-		this.dtAsistenciaUsuariosBkJSss = dtAsistenciaUsuariosBkJSss;
-	}
 	
-	public String getTemasTxt() {
-		StringBuffer sb = new StringBuffer();
-		if (getDtAsistenciaTemasBkJSss() != null && getDtAsistenciaTemasBkJSss().size() > 0) {
-			for (DtAsistenciaTemasBk objeto : getDtAsistenciaTemasBkJSss()) {
-				sb.append(objeto.getIdTemaTxt()+", ").append('\n');
-			}
+	//INICIO CUSCATA - 18062024
+		public List<DtAsistenciaUsuexternosBk> getDtAsistenciaUsuariosBkJSss() {
+			return dtAsistenciaUsuariosBkJSss;
 		}
-		return sb.toString();
-	}
-	
-	public String getSubtemastTxt() {
-		StringBuffer sb = new StringBuffer();
-		if (getDtAsistenciaTemasBkJSss() != null && getDtAsistenciaTemasBkJSss().size() > 0) {
-			for (DtAsistenciaTemasBk objeto : getDtAsistenciaTemasBkJSss()) {
-				sb.append(objeto.getIdSubtemaTxt()+", ").append('\n');
-			}
+
+		public void setDtAsistenciaUsuariosBkJSss(List<DtAsistenciaUsuexternosBk> dtAsistenciaUsuariosBkJSss) {
+			this.dtAsistenciaUsuariosBkJSss = dtAsistenciaUsuariosBkJSss;
 		}
-		return sb.toString();
-	}
+		
+		public String getTemasTxt() {
+			StringBuffer sb = new StringBuffer();
+			if (getDtAsistenciaTemasBkJSss() != null && getDtAsistenciaTemasBkJSss().size() > 0) {
+				for (DtAsistenciaTemasBk objeto : getDtAsistenciaTemasBkJSss()) {
+					sb.append(objeto.getIdTemaTxt()+", ").append('\n');
+				}
+			}
+			return sb.toString();
+		}
+		
+		public String getSubtemastTxt() {
+			StringBuffer sb = new StringBuffer();
+			if (getDtAsistenciaTemasBkJSss() != null && getDtAsistenciaTemasBkJSss().size() > 0) {
+				for (DtAsistenciaTemasBk objeto : getDtAsistenciaTemasBkJSss()) {
+					sb.append(objeto.getIdSubtemaTxt()+", ").append('\n');
+				}
+			}
+			return sb.toString();
+		}
 
-	public DtAsistenciaUsuexternosBk getDtAsistenciaUsuexternosBk() {
-		return dtAsistenciaUsuexternosBk;
-	}
+		public DtAsistenciaUsuexternosBk getDtAsistenciaUsuexternosBk() {
+			return dtAsistenciaUsuexternosBk;
+		}
 
-	public void setDtAsistenciaUsuexternosBk(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk) {
-		this.dtAsistenciaUsuexternosBk = dtAsistenciaUsuexternosBk;
-	}
+		public void setDtAsistenciaUsuexternosBk(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk) {
+			this.dtAsistenciaUsuexternosBk = dtAsistenciaUsuexternosBk;
+		}
+		//FIN CUSCATA - 18062024
+		
+		public List<DtAnexoBk> getDtAnexosBKJSss() {
+			return dtAnexosBKJSss;
+		}
 
-	public List<DtAnexoBk> getDtAnexosBKJSss() {
-		return dtAnexosBKJSss;
-	}
-
-	public void setDtAnexosBKJSss(List<DtAnexoBk> dtAnexosBKJSss) {
-		this.dtAnexosBKJSss = dtAnexosBKJSss;
-	}
-	
+		public void setDtAnexosBKJSss(List<DtAnexoBk> dtAnexosBKJSss) {
+			this.dtAnexosBKJSss = dtAnexosBKJSss;
+		}
 }

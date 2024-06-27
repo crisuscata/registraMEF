@@ -24,10 +24,12 @@ public class ValidacionTaFeriadosMng implements Serializable{
 	public static void validarTaFeriadosBk(TaFeriadosBk taFeriadosBk)
 	 throws Validador
 	{
-                //FORANEAS
-                if(taFeriadosBk.getFeEstado()!=null && taFeriadosBk.getFeEstado().longValue()<=0){
-			taFeriadosBk.setFeEstado(null);
-		}
+		 //PURIBE 16012024 - INICIO
+        //FORANEAS
+     //   if(taFeriadosBk.getFeEstado()!=null && taFeriadosBk.getFeEstado().longValue()<=0){
+	//taFeriadosBk.setFeEstado(null);
+//}
+        //PURIBE 16012024 - FIN
 	        
 		//VALIDANDO
 		

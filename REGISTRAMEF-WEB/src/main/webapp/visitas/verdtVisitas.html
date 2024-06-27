@@ -1,4 +1,4 @@
-<div layout="column" layout-align="start stretch" data-ng-init="loaddtVisitass()">
+<div layout="column" layout-align="start stretch" data-ng-init="loaddtVisitass()"  style="overflow-x: auto;">   <!-- PURIBE 04042024 - INICIO -->
    <!-- PURIBE 14032024 - INICIO -->
    <md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
       <div class="md-toolbar-tools md-toolbar-tools-size">
@@ -22,7 +22,7 @@
 <md-toolbar class="md-toolbar-filtro-size">
  <div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="space-between center">
  
-      <div class="tamaDivFiltro">
+      <div class="tamaDivFiltro" ng-if="creadtVisitas" >    <!-- PURIBE 04042024 - INICIO -->
       <md-button class="md-button-borde-naranja md-sm" ng-click="nuevoDtVisitas()" aria-label="Nueva reuni&oacute;n"> 
               <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: inherit;">playlist_add</md-icon>
                 <span>Crear reuni&oacute;n</span>
@@ -71,11 +71,14 @@
                </md-input-container>
           </div>
           
-          <div class="tamaDivFiltro" style="font-size: 14px;margin-top: 22px;">
-            <md-input-container class="container_margen-top"> 
-               <input type="text" name="Participante" ng-model="filtro.participante" placeholder="Participante" /> 
-            </md-input-container>
-            </div>
+          <!--PURIBE 16042024 - INICIO-->
+           
+              <div class="tamaDivFiltro" style="font-size: 14px;margin-top: 22px;">
+               <md-input-container class="container_margen-top"> 
+                  <input type="text" name="Participante" ng-model="filtro.idParticipanteTxt" placeholder="Participante" /> 
+               </md-input-container>
+               </div>
+                 <!--PURIBE 16042024 - FIN-->
             
            <div class="tamaDivFiltro"> 
             <md-button class="md-button-borde-naranja md-sm" ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
@@ -183,6 +186,11 @@
             </tr>
          </thead>
          <tbody md-body>
+         <!--   PURIBE 04042024  INICIO-->
+            <tr ng-if="datos.length === 0">
+               <td colspan="15" style="text-align: center;">No se encontraron registros para mostrar</td>
+             </tr>
+                <!--   PURIBE 04042024  FIN-->
             <tr class="primary triddtVisitas md-table-cuerpo" md-row md-select="dato"   md-auto-select="options.autoSelect"   
                 ng-disabled="dato.idVisita > 0" ng-repeat-start="dato in datos">
                 

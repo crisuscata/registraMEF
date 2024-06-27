@@ -82,7 +82,7 @@ public class MsUsuariosDaoImp extends
 	
 	public List<MsUsuarios> getActivasMsUsuariosCero() {
 		return super.find("from " + getDomainClass().getName()
-				+ " t where t.estado >= "+Estado.ELIMINADO.getValor());
+				+ " t where t.idusuario=1 and t.estado >= "+Estado.ELIMINADO.getValor());//QUITAR t.idusuario=1 and
 	}
 
 	public List<MsUsuarios> getDesactivasMsUsuarios() {
@@ -428,4 +428,37 @@ public class MsUsuariosDaoImp extends
 			return lista;
 		}
 		//PURIBE 22032024 - FIN--
+		
+		//JPUYEN 14052024 - INICIO - SE ACTUALIZÓ LA QUERY SEGUN EL NEGOCIO
+		//SE CREO NUEVO METODO CON PARAMETRO SEDE
+		public List<MsUsuarios> getActivasMsUsuariosFilterXsede(Long sede) {
+			StringBuffer sb = new StringBuffer(100);
+			List<Object> hs = new ArrayList<Object>();
+			sb.append("select t from " + getDomainClass().getName()
+					+ " t where t.estado >= "+Estado.ACTIVO.getValor()+" ");
+			
+			if (sede!= null && sede.intValue() > 0) {
+				sb.append("and t.idSede = ? ");
+				hs.add(sede);
+			}
+		
+			
+			Object param[] = new Object[hs.size()];
+			hs.toArray(param);
+			List<MsUsuarios> lista = super.find(sb.toString(), param);
+			
+			return lista;
+		}
+
+		@Override
+		public List<MsUsuarios> getActivasMsUsuariosFilter() {
+			
+			return super.find("select DISTINCT t from " + getDomainClass().getName()
+					+ " t, MsRoles r"
+					+ " where t.username=r.username and"
+					+ " t.estado >= "+Estado.ACTIVO.getValor()+" and"
+					+ " r.estado >= " +Estado.ACTIVO.getValor()+" ");
+		}
+		
+		//JPUYEN 14052024 - FIN 
 }

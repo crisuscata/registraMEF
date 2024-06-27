@@ -14,6 +14,7 @@ public class DtAsistenciaACL implements Serializable{
 	private int editopcion = 1;
 	
 	private boolean reactivar = false;//MPINARES 24012023 - INICIO
+	private boolean addEntidad = false;//MPINARES 24012023 - INICIO
 	
 	public DtAsistenciaACL() {
 	}
@@ -56,5 +57,15 @@ public class DtAsistenciaACL implements Serializable{
 		public void setReactivar(boolean reactivar) {
 			this.reactivar = reactivar;
 		}
+
+		public boolean isAddEntidad() {
+			return addEntidad;
+		}
+
+		public void setAddEntidad(boolean addEntidad) {
+			this.addEntidad = addEntidad;
+		}
+		
+		
 	//MPINARES 24012023 - FIN
 }

@@ -115,42 +115,51 @@ public class DtEncuestaDaoImp extends
 		return sequence;
 	}
 	
-	@Override
-	public List<DtEncuesta> getXFiltro(Long tipoServicio,Timestamp fechaInicio,Timestamp fechaFin,Long idOrigen,Long idPrestacion) {
+	//PURIBE 22042024 - INICIO-->
+		@Override
+		public List<DtEncuesta> getXFiltro(Long tipoServicio,Timestamp fechaInicio,Timestamp fechaFin,Long idOrigen,Long idPrestacion,Date fechaServicio) {
 
-		StringBuffer sb = new StringBuffer(100);
-		List<Object> hs = new ArrayList<Object>();
-		sb.append("select t from " + getDomainClass().getName() + " t where t.estado >= "+Estado.ACTIVO.getValor()+" ");
+			StringBuffer sb = new StringBuffer(100);
+			List<Object> hs = new ArrayList<Object>();
+			sb.append("select t from " + getDomainClass().getName() + " t where t.estado >= "+Estado.ACTIVO.getValor()+" ");
 
-		
-		if (tipoServicio != null) {
-			sb.append("and t.tipoServicio = ? ");
-			hs.add(tipoServicio);
-		}
-		if (fechaInicio != null) {
-			sb.append("and t.fechaInicio = ? ");
-			hs.add(fechaInicio);
-		}
-		if (fechaFin != null) {
-			sb.append("and t.fechaFin = ? ");
-			hs.add(fechaFin);
-		}
-		if (idOrigen != null) {
-			sb.append("and t.idOrigen = ? ");
-			hs.add(idOrigen);
-		}
-		if (idPrestacion != null) {
-			sb.append("and t.idPrestacion = ? ");
-			hs.add(idPrestacion);
-		}		
-		// sb.append("order by t.idEncuesta desc ");
+			
+			if (tipoServicio != null) {
+				sb.append("and t.tipoServicio = ? ");
+				hs.add(tipoServicio);
+			}
+			if (fechaInicio != null) {
+				sb.append("and t.fechaInicio = ? ");
+				hs.add(fechaInicio);
+			}
+			if (fechaFin != null) {
+				sb.append("and t.fechaFin = ? ");
+				hs.add(fechaFin);
+			}
+			if (idOrigen != null) {
+				sb.append("and t.idOrigen = ? ");
+				hs.add(idOrigen);
+			}
+			if (idPrestacion != null) {
+				sb.append("and t.idPrestacion = ? ");
+				hs.add(idPrestacion);
+			}		
+			
+			if (fechaServicio !=null)
+			{
+				sb.append(" AND TO_DATE(?, 'dd/MM/yyyy') BETWEEN t.fechaInicio AND t.fechaFin ");
+				hs.add(FuncionesStaticas.toString(fechaServicio));
+				
+			}
+			// sb.append("order by t.idEncuesta desc ");
 
-		Object param[] = new Object[hs.size()];
-		hs.toArray(param);
-		List<DtEncuesta> lista = super.find(sb.toString(), param);
+			Object param[] = new Object[hs.size()];
+			hs.toArray(param);
+			List<DtEncuesta> lista = super.find(sb.toString(), param);
 
-		return lista;
-	}
+			return lista;
+		}
+		//PURIBE 22042024 - FIN-->
 
 	@Override
 	public List<DtEncuesta> getXFiltro(Long tipoServicio,Timestamp fechaInicio,Timestamp fechaFin,Long idOrigen,Long idPrestacion, int iniciar, int max) {

@@ -16,7 +16,6 @@ import pe.gob.mef.registramef.bs.domain.MsProyectoInversion;
 * 
 */
 public interface MsProyectoInversionDao {
-	public MsProyectoInversion findByPk(Long id);
 	void saveMsProyectoInversion(MsProyectoInversion param);
 	void updateMsProyectoInversion(MsProyectoInversion param);
 	void deleteMsProyectoInversion(MsProyectoInversion param);
@@ -32,5 +31,6 @@ public interface MsProyectoInversionDao {
 	List<MsProyectoInversion> getXFiltro(String codigo,String nombre,Long idSede);
 	long getTotalXFiltro(String codigo,String nombre,Long idSede);
 	List<MsProyectoInversion> getListaNombre(String nombre);
+	public MsProyectoInversion findByPk(Long id);//CUSCATA - 18062024
 	
 }

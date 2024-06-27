@@ -1214,8 +1214,11 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 							$scope.dtAsistenciaModelo.dtAsistenciaUsuexternosBk = newUsuario;
 						}
 						
-						console.log("$scope.dtAsistenciaModelo:" + JSON.stringify( $scope.dtAsistenciaModelo ));
-						 var datainsert = angular.toJson($scope.dtAsistenciaModelo);
+						var propertiestdAnexosJSssToRemove = ['tdAnexosJSss'];
+						var dtAsistenciaModelo = $scope.removeProperties(angular.copy($scope.dtAsistenciaModelo ), propertiestdAnexosJSssToRemove);
+						
+						console.log("$scope.dtAsistenciaModelo:" + JSON.stringify( dtAsistenciaModelo ));
+						 var datainsert = angular.toJson(dtAsistenciaModelo);
 						
 						$http.post(enviarConstanciaAtencionUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
 							var dato = res.data;

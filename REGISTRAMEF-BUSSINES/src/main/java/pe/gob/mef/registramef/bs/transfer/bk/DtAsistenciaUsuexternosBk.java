@@ -19,11 +19,12 @@ public class DtAsistenciaUsuexternosBk implements java.io.Serializable {
 	//ID
 	private Long idAsistUsuext;
 	
-	
-	private String aPaterno = null;
-	private String aMaterno = null;
-	private Long numDocu = null;
-	private String nombresApellidos = null;
+	//INICIO CUSCATA - 18062024
+		private String aPaterno = null;
+		private String aMaterno = null;
+		private Long numDocu = null;
+		private String nombresApellidos = null;
+	    //FIN CUSCATA - 18062024
 		
 	//PROPIEDADES
 	private Long idusserCrea = null;
@@ -31,8 +32,7 @@ public class DtAsistenciaUsuexternosBk implements java.io.Serializable {
 	private Timestamp fechaCrea = null;
 	private Timestamp fechaModif = null;
 	private Long idAsistencia = null;
-	private Long idUsuexterno = null;
-	private String nombre = null;
+	private Long idUsuexterno = null;private String nombre = null;
 	private Long estado = null;
 	private String rtmaddress = null;
 	private String rtmaddressrst = null;
@@ -250,37 +250,38 @@ public String getNombre() {
 
 	public void setEsEliminado(boolean esEliminado) {		
 	}
-
-	public String getaPaterno() {
-		return aPaterno;
-	}
-
-	public void setaPaterno(String aPaterno) {
-		this.aPaterno = aPaterno;
-	}
-
-	public String getaMaterno() {
-		return aMaterno;
-	}
-
-	public void setaMaterno(String aMaterno) {
-		this.aMaterno = aMaterno;
-	}
-
-	public Long getNumDocu() {
-		return numDocu;
-	}
-
-	public void setNumDocu(Long numDocu) {
-		this.numDocu = numDocu;
-	}
-
-	public String getNombresApellidos() {
-		return nombresApellidos;
-	}
-
-	public void setNombresApellidos(String nombresApellidos) {
-		this.nombresApellidos = nombresApellidos;
-	}
 	
+	//INICIO CUSCATA - 18062024
+		public String getaPaterno() {
+			return aPaterno;
+		}
+
+		public void setaPaterno(String aPaterno) {
+			this.aPaterno = aPaterno;
+		}
+
+		public String getaMaterno() {
+			return aMaterno;
+		}
+
+		public void setaMaterno(String aMaterno) {
+			this.aMaterno = aMaterno;
+		}
+
+		public Long getNumDocu() {
+			return numDocu;
+		}
+
+		public void setNumDocu(Long numDocu) {
+			this.numDocu = numDocu;
+		}
+
+		public String getNombresApellidos() {
+			return nombresApellidos;
+		}
+
+		public void setNombresApellidos(String nombresApellidos) {
+			this.nombresApellidos = nombresApellidos;
+		}
+		//FIN CUSCATA - 18062024
 }

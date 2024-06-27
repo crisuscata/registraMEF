@@ -66,6 +66,7 @@ public class MsUsuariosJS implements java.io.Serializable {
 	private String nombreCompleto = null;
 	private Boolean noEsEliminado = true;
 	private Integer editopcion = 1;
+	private String perfil = null;
 
 	public MsUsuariosJS() {
 	}
@@ -345,4 +346,13 @@ public class MsUsuariosJS implements java.io.Serializable {
 	public void setNoEsEliminado(Boolean noEsEliminado) {
 		this.noEsEliminado = noEsEliminado;
 	}
+	
+	public String getPerfil() {
+		return perfil;
+	}
+
+	public void setPerfil(String perfil) {
+		this.perfil = perfil;
+	}
+	
 }

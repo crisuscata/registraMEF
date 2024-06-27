@@ -8,7 +8,8 @@ var principalUrl = window.location.origin+contexto+'/index.htm';
 var asistenciaUrl= window.location.origin+contexto+'/asistencia'+'/listadtAsistencia.html';
 var capacitacionUrl= window.location.origin+contexto+'/capacitacion'+'/listadtCapacitacion.html';
 var visitaUrl= window.location.origin+contexto+'/visitas'+'/listadtVisitas.html';
-var visitanoprogUrl= window.location.origin+contexto+'/visitas'+'/listadtVisitasnoprog.html';/* PURIBE 21032024 - INICIO*/
+var visitanoprogUrl= window.location.origin+contexto+'/visitas'+'/listadtVisitasNoProg.html';/* PURIBE 21032024 - INICIO*/
+var valorverUrl = contexto+"/rs/ctrldtLanding/loadvalorcrearleer";// PURIBE 15042024 - INICIO -->
 
 //PURIBE 21032024 - INICIO
 var asistenciaformprogUrl= window.location.origin+contexto+'/asistencia'+'/listadtAsistencia.html'+'#!/nuevo';
@@ -295,17 +296,75 @@ $scope.setData = function(data){
 	    	$scope.loadListaTdSedesSedeIdsede();
 	  };
 	  
-	    //PURIBE 21032024 - INICIO
-		$scope.redirectasistenciaformprogUrl=function(){
-			window.location.href=asistenciaformprogUrl; 
-			};	 
-		$scope.redirectcapacitacionformprogUrl=function(){
-			window.location.href=capacitacionformprogUrl; 
-			};	 
-		$scope.redirectvisitaformprogUrl=function(){
-			window.location.href=visitaformprogUrl; 
-			};	 
-		 //PURIBE 21032024 - FIN
+	//PURIBE 15042024  INICIO-->
+	   $scope.landing = {
+		listareunion : null,
+		registroreunion : null,
+		listaasistencia :null,
+		registroasistencia :null,
+		listacapacitacion :null,
+		registrocapacitacion :null
+		}
+
+		$scope.valorverUrl;
+		$scope.cargarlanding = function(){
+			/**
+			 * PRINT DE CONTROL
+			 */
+			console.log("window.location.pathname: " + window.location.pathname + " contexto: " + contexto + "\nvalorverUrl: " + valorverUrl + " principalUrl: " + principalUrl);
+			
+			var surl = valorverUrl;
+			$http.get(surl).then(function(res){
+				var dato = res.data;					
+				$scope.landing.listareunion        = dato.listareunion;					
+				$scope.landing.registroreunion     = dato.registroreunion;
+				$scope.landing.listaasistencia     = dato.listaasistencia;
+				$scope.landing.registroasistencia  = dato.registroasistencia;
+				$scope.landing.listacapacitacion    =dato.listacapacitacion;
+				$scope.landing.registrocapacitacion =dato.registrocapacitacion;
+								
+			},
+			function error(errResponse) {
+				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+				var dato = errResponse.data;
+				if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+					$mdDialog.show(
+							$mdDialog.alert()
+							.parent(angular.element(document.body))
+							.clickOutsideToClose(true)
+							.title('Cargar landing por roles')
+							.textContent(dato.message)
+							.ariaLabel('ERROR')
+							.ok('Aceptar')
+							.targetEvent(ev)
+					);
+				}			           
+			});			        			        	
+		};		    
+
+	$scope.cargarlanding();
+	  //PURIBE 15042024  FIN-->
+	  
+	//PURIBE 15042024 - INICIO
+	$scope.redirectasistenciaformprogUrl=function(){
+		if($scope.landing.registroasistencia)
+			{
+		window.location.href=asistenciaformprogUrl; 
+			}
+		};	 
+	$scope.redirectcapacitacionformprogUrl=function(){
+		if($scope.landing.registrocapacitacion)
+			{
+		window.location.href=capacitacionformprogUrl; 
+			}
+		};	 
+	$scope.redirectvisitaformprogUrl=function(){
+		if($scope.landing.registroreunion)
+			{
+		window.location.href=visitaformprogUrl; 
+			}
+		};	 
+		//PURIBE 15042024 - INICIO
 
 		/* PURIBE 21032024 - INICIO*/
 		$scope.redirectvisitanoprogUrl=function(){
@@ -313,18 +372,28 @@ $scope.setData = function(data){
 			};	
 		/* PURIBE 21032024 - FIN*/
 
-			//PURIBE 22012024 - INICIO
+			//PURIBE 15042024 - INICIO
 			$scope.redirectasistenciaUrl=function(){
+				if ($scope.landing.listaasistencia)
+				{
 				window.location.href=asistenciaUrl; 
+				}
 				};	 
 
 			$scope.redirectcapacitacionUrl=function(){
+				if ($scope.landing.listacapacitacion)
+				{
 			window.location.href=capacitacionUrl; 
+				}
 				};	 
 
 			$scope.redirectvisitaUrl=function(){
+				if ($scope.landing.listareunion)
+				{
 			window.location.href=visitaUrl; 
+				}
 				};	 
+			//PURIBE 15042024 - FIN	 
 
 			///PURIBE 22012024 - FIN
 	  

@@ -372,15 +372,35 @@ public class AuditoriaDtAsistenciaMng implements Serializable{
 							cambios = true;			
 							dtAsistencia.setFechaSoli(dtAsistenciaBk.getFechaSoli());
 					}
+				//INICIO CUSCATA - 18062024
 				
-				if (dtAsistenciaBk.getEstado() != null) {
+				if (dtAsistenciaBk.getEstado() != null
+						&& dtAsistencia.getEstado() != null) {
+					if (!dtAsistenciaBk.getEstado().equals(
+							dtAsistencia.getEstado())) {						
 							if(nivel>0){
-							log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"dtAsistencia:IdFinancia"+" :: "+dtAsistenciaBk.getEstado().toString()+" :: "+ dtAsistencia.getEstado() + " :: "+ dtAsistenciaBk.getEstado());
+							log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"dtAsistencia:Estado"+" :: "+dtAsistenciaBk.getIdAsistencia().toString()+" :: "+ dtAsistencia.getEstado() + " :: "+ dtAsistenciaBk.getEstado());
+							}
+						cambios = true;
+						dtAsistencia.setEstado(dtAsistenciaBk.getEstado());
+					}
+				} else if (dtAsistenciaBk.getEstado() == null
+						&& dtAsistencia.getEstado() != null) {						
+						if(nivel>0){
+							log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"dtAsistencia:Estado"+" :: "+dtAsistenciaBk.getIdAsistencia().toString()+" :: "+ dtAsistencia.getEstado() + " :: "+ dtAsistenciaBk.getEstado());
 							}
 						cambios = true;
 						dtAsistencia.setEstado(dtAsistenciaBk.getEstado());
 					
+				} else if (dtAsistenciaBk.getEstado() != null
+						&& dtAsistencia.getEstado() == null) {						
+						if(nivel>0){
+							log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"dtAsistencia:Estado"+" :: "+dtAsistenciaBk.getIdAsistencia().toString()+" :: "+ dtAsistencia.getEstado() + " :: "+ dtAsistenciaBk.getEstado());
+							}
+						cambios = true;			
+						dtAsistencia.setEstado(dtAsistenciaBk.getEstado());
 				}
+				//FIN CUSCATA - 18062024
 				
 			
 			return cambios;

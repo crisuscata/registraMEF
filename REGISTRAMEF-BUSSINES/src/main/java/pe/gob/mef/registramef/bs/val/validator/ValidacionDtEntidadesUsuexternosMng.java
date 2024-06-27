@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.resources.Messages;
 import pe.gob.mef.registramef.bs.transfer.bk.DtEntidadesUsuexternosBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtVisitasUsuexternosBk;
 
 /**
  * DT_ENTIDADES_USUEXTERNOS SERVICIO VALIDACIÓN: ALMACENA LAS ENTIDADES A LA QUE PERTENECE EL USUARIO EXTERNO "ENTIDAD DEL USUARIO EXTERNO"
@@ -49,6 +50,26 @@ public class ValidacionDtEntidadesUsuexternosMng implements Serializable{
 		
 				
 	}
+	
+	// JPUYEN 14052024 - INICIO
+			public static void validarDtVisitasUsuexternoBk(DtVisitasUsuexternosBk dtEntidadesUsuexternosBk)
+			 throws Validador
+			{
+		                //FORANEAS
+		                
+			        if(dtEntidadesUsuexternosBk.getIdUsuexterno()!=null && dtEntidadesUsuexternosBk.getIdUsuexterno().longValue()<=0){
+					dtEntidadesUsuexternosBk.setIdUsuexterno(null);
+				}
+			        if(dtEntidadesUsuexternosBk.getEstado()!=null && dtEntidadesUsuexternosBk.getEstado().longValue()<=0){
+					dtEntidadesUsuexternosBk.setEstado(null);
+				}
+		
+				
+				
+						
+			}
+			
+			// JPUYEN 14052024 - FIN
 
 	public static void validarIdEntidad(Long idEntidad)
 	 throws Validador

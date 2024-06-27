@@ -4,8 +4,10 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
 //PURIBE 14032024 - INICIO-->
-import pe.gob.mef.registramef.bs.ctlracceso.DtVisitasACL; 
+import pe.gob.mef.registramef.bs.ctlracceso.DtVisitasACL;
+import pe.gob.mef.registramef.bs.transfer.bk.DtVisitasUsuexternosBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtVisitasUsuinternosBk;
 
 /**
@@ -46,6 +48,7 @@ public class DtVisitasJS implements java.io.Serializable {
 	private Long idFinancia = null;
 	private Timestamp fechaFinalizacion = null;
 	private Timestamp fechaProgramada = null;
+	private Timestamp fechaReprogramada = null; //PURIBE 22042024 - INICIO-->
 	
 	private String rtmaddress = null;
 	private String rtmaddressrst = null;
@@ -63,6 +66,7 @@ public class DtVisitasJS implements java.io.Serializable {
 	private String idFinanciaTxt = null;
 	
 	private Integer editopcion = 1;
+	private int editentidad = 1;//PURIBE 04042024 - INICIO-->
 	private Long idParticipante = null;
 	private String idParticipanteTxt = null;
 	
@@ -71,7 +75,10 @@ public class DtVisitasJS implements java.io.Serializable {
 	private String fechaProgramadaMostrar = null;
 	private String codEjecutora = null;//puribe
 	private Long idusuario = null;//puribe
+	private boolean finalizar = false; //PURIBE 22042024 - INICIO-->
 	private List<DtVisitasUsuinternosBk> visitaUsuarios;//puribe
+	private List<DtVisitasUsuexternosBk> visitaUsuariosExterno; //JPUYEN 14052024
+	private List<DtAnexosJS> dtAnexosJSss = null;//JPUYEN 14052024
 
 
 	private DtVisitasACL dtVisitasACL = null;
@@ -93,6 +100,16 @@ public class DtVisitasJS implements java.io.Serializable {
 	public void setVisitaUsuarios(List<DtVisitasUsuinternosBk> visitaUsuarios) {
 		this.visitaUsuarios = visitaUsuarios;
 	}
+	
+	//PURIBE 04042024 - INICIO-->
+		public int getEditentidad() {
+			return editentidad;
+		}
+
+		public void setEditentidad(int editentidad) {
+			this.editentidad = editentidad;
+		}
+		//PURIBE 04042024 - FIN->
 	
 	public String getCodEjecutora() {
 		return codEjecutora;
@@ -387,6 +404,50 @@ public class DtVisitasJS implements java.io.Serializable {
 
 	public void setEditopcion(Integer editopcion) {
 		this.editopcion = editopcion;
-	}			
+	}	
+	
+	//PURIBE 22042024 - INICIO-->
+		public Timestamp getFechaReprogramada() {
+			return fechaReprogramada;
+		}
+
+
+		public void setFechaReprogramada(Timestamp fechaReprogramada) {
+			this.fechaReprogramada = fechaReprogramada;
+		}
+		
+		public boolean getFinalizar() {
+			return finalizar;
+		}
+
+
+		public void setFinalizar(boolean finalizar) {
+			this.finalizar = finalizar;
+		}	
+		
+		//PURIBE 22042024 - FIN-->
+		
+		public List<DtVisitasUsuexternosBk> getVisitaUsuariosExterno() {
+			return visitaUsuariosExterno;
+		}
+
+
+
+		public void setVisitaUsuariosExterno(List<DtVisitasUsuexternosBk> visitaUsuariosExterno) {
+			this.visitaUsuariosExterno = visitaUsuariosExterno;
+		}
+		
+		public List<DtAnexosJS> getDtAnexosJSss() {
+			return dtAnexosJSss;
+		}
+
+
+
+		public void setDtAnexosJSss(List<DtAnexosJS> dtAnexosJSss) {
+			this.dtAnexosJSss = dtAnexosJSss;
+		}		
+		
+		
+		
 }
 //PURIBE 14032024 - FIN-->

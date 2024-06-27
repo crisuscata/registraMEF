@@ -24,7 +24,8 @@ public class MsUsuariosFiltro implements Serializable{
 	private String estadoTxt = null;
 	private String roles = null;
 	
-	private Integer estado = null;		
+	private Integer estado = null;	
+	private String perfil = null;
 	
 	public MsUsuariosFiltro(String idusuario,String dni,String username,String apellidoPaterno,String apellidoMaterno,
 			String nombres,String correo,String idSistAdmi,String idSede,String fechaModif,
@@ -125,6 +126,7 @@ public class MsUsuariosFiltro implements Serializable{
 		if(idSedeTxt!=null && idSedeTxt.trim().length()>0) return true;
 		if(estadoTxt!=null && estadoTxt.trim().length()>0) return true;
 		if(roles!=null && roles.trim().length()>0) return true;
+		if(perfil != null && perfil.trim().length()>0) return true;
 		
 		if(estado!=null && estado.intValue()>-1) return true;
 		return false;
@@ -169,4 +171,12 @@ public class MsUsuariosFiltro implements Serializable{
 	public void setRoles(String roles) {
 		this.roles = roles;
 	}
+	
+	public String getPerfil() {
+		return perfil;
+	}
+
+	public void setPerfil(String perfil) {
+		this.perfil = perfil;
+	}	
 }

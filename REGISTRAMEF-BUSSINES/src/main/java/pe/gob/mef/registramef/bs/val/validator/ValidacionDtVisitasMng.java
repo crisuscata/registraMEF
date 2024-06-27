@@ -7,15 +7,19 @@ import java.text.SimpleDateFormat;	//PURIBE 01022024 - INICIO-->
 import java.util.Calendar;	//PURIBE 01022024 - INICIO-->
 import java.util.Date;	//PURIBE 01022024 - INICIO-->
 import java.util.GregorianCalendar;	//PURIBE 01022024 - INICIO-->
-import java.util.List;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import pe.gob.mef.registramef.bs.dao.DtAmpliacionFechaDao;
 import pe.gob.mef.registramef.bs.domain.DtAmpliacionFecha;
 import pe.gob.mef.registramef.bs.domain.DtVisitas;
 import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.resources.Messages;
+import pe.gob.mef.registramef.bs.service.Servicio;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAmpliacionFechaBk;	//PURIBE 01022024 - INICIO-->
 import pe.gob.mef.registramef.bs.transfer.bk.DtVisitasBk;
+import pe.gob.mef.registramef.bs.utils.FuncionesStaticas;
 import pe.gob.mef.registramef.bs.utils.PropertiesMg; 	//PURIBE 01022024 - INICIO-->
 
 /**
@@ -30,6 +34,13 @@ import pe.gob.mef.registramef.bs.utils.PropertiesMg; 	//PURIBE 01022024 - INICIO
  */
 public class ValidacionDtVisitasMng implements Serializable{
 	public static final Logger log = Logger.getLogger(ValidacionDtVisitasMng.class.getName());
+	
+	//PURIBE 22042024 -INICIO-->
+		@Autowired
+		private static DtAmpliacionFechaDao dtAmpliacionFechaDao = null;
+		@Autowired
+		private Servicio servicio = null;
+		//PURIBE 22042024 -FIN-->
 	
 	public static void validarDtVisitasBk(DtVisitasBk dtVisitasBk,DtAmpliacionFecha autorizacionProgramacion,
 			DtAmpliacionFecha autorizacionEjecucion, boolean esAdminOGC, DtVisitas dtVisitasOrig)
@@ -253,6 +264,8 @@ public class ValidacionDtVisitasMng implements Serializable{
 				
 				//SPRINT_4.1 INICIO
 			
+				//PURIBE 22042024 - INICIO-->
+				if(dtVisitasBk.isVistaProgramado()){
 					if(dtVisitasOrig!=null && dtVisitasOrig.getFechaVisita()!=null){
 						if(!dtVisitasOrig.getFechaVisita().equals(dtVisitasBk.getFechaVisita())){
 							if(fechaServicio.after(fechaLimitFinMesSgte) || fechaServicio.before(fechaLimitIniMesSgte)){
@@ -269,7 +282,8 @@ public class ValidacionDtVisitasMng implements Serializable{
 							}
 						}
 					
-				}else{
+					}}else{
+						//PURIBE 22042024 - FIN-->
 					//PARA NUEVA FECHA INICIAL CON LOS DIAS HABILES POSTERIOR AL FIN DE MES
 					 //diasHabEjec
 					GregorianCalendar fechaLimitDiasHabEjecu= new GregorianCalendar();
@@ -708,4 +722,117 @@ public class ValidacionDtVisitasMng implements Serializable{
 			Messages.getStringToKey("dtVisitas.articuloFechaProgramada")));
 		}
 		//PURIBE 14032024 -FIN-->
+	
+	//PURIBE 22042024 - INICIO-->
+		public  boolean validarFechaEdit(DtVisitasBk dtVisitasBk) throws Validador{
+			boolean retorno = false;
+			if(dtVisitasBk!=null && dtVisitasBk.getIdVisita()!=null){
+				if(dtVisitasBk.getFechaVisita()!=null){
+					GregorianCalendar fechaLimitEdit = new GregorianCalendar();
+					fechaLimitEdit=VerfechaLimitEditMensual(dtVisitasBk.getFechaVisita(), -1);
+					GregorianCalendar fechaHoy = new GregorianCalendar();
+				//con ampliacion de fecha de programacion
+				DtAmpliacionFecha autorizacionProgramacion=servicio.getautorizacionProgramacion2(dtVisitasBk.getIdSede(), dtVisitasBk.getIdSistAdm());
+				if(autorizacionProgramacion!=null && autorizacionProgramacion.getFechaFin()!=null){
+					GregorianCalendar fechaautorizacionProgramacion = new GregorianCalendar();
+					fechaautorizacionProgramacion=VerfechaLimitFinDay(autorizacionProgramacion.getFechaFin(), 0);
+//				
+					if(fechaHoy.before(fechaautorizacionProgramacion) && fechaautorizacionProgramacion.after(fechaLimitEdit)){
+						int meslimitEdit=fechaLimitEdit.get(Calendar.MONTH);
+						int mesamplProg=fechaautorizacionProgramacion.get(Calendar.MONTH);
+						if(meslimitEdit==mesamplProg){
+							fechaLimitEdit=fechaautorizacionProgramacion;
+						}
+					}
+				}
+				//***************************************
+					if(fechaHoy.after(fechaLimitEdit)){
+						retorno = false;
+					}else{
+						retorno = true;
+					}
+				}
+				}else{
+					retorno = true;
+				}
+			return retorno;
+		}
+		
+		public static DtAmpliacionFecha getautorizacionProgramacion2(Long idsede, Long idsisAdmin) {
+			 
+			
+			Long idSisAdmTodos = PropertiesMg.getSistemLong(PropertiesMg.KEY_IDSISTEMA_ADMINISTRATIVO_TODOS,
+					PropertiesMg.DEFOULT_IDSISTEMA_ADMINISTRATIVO_TODOS);
+			Long idSedeTodas = PropertiesMg.getSistemLong(PropertiesMg.KEY_IDSEDES_TODAS,
+					PropertiesMg.DEFOULT_IDSEDES_TODAS);
+				int mes= FuncionesStaticas.getMonth();
+			
+			Long idTipoFechaCorteProgramada = PropertiesMg.getSistemLong(
+					PropertiesMg.KEY_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_PROG,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_PROG);
+			
+			DtAmpliacionFecha autorizacionProgramacion = dtAmpliacionFechaDao.getXFiltro(idTipoFechaCorteProgramada,
+					idsede, idsisAdmin, mes);
+
+			// ***********************************************************************************************************
+			DtAmpliacionFecha autorizacionProgramacion2 = dtAmpliacionFechaDao.getXFiltro(idTipoFechaCorteProgramada, idSedeTodas,
+					idsisAdmin, mes);
+			
+			if (autorizacionProgramacion2 != null) {
+				if (autorizacionProgramacion != null) {
+					if (autorizacionProgramacion2.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
+						autorizacionProgramacion = autorizacionProgramacion2;
+					}
+				} else {
+					autorizacionProgramacion = autorizacionProgramacion2;
+				}
+			}
+
+			DtAmpliacionFecha autorizacionProgramacion3 = dtAmpliacionFechaDao.getXFiltro(idTipoFechaCorteProgramada,
+					idsede, idSisAdmTodos, mes);
+			if (autorizacionProgramacion3 != null) {
+				if (autorizacionProgramacion != null) {
+					if (autorizacionProgramacion3.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
+						autorizacionProgramacion = autorizacionProgramacion3;
+					}
+				} else {
+					autorizacionProgramacion = autorizacionProgramacion3;
+				}
+			}
+
+			DtAmpliacionFecha autorizacionProgramacion4 = dtAmpliacionFechaDao.getXFiltro(idTipoFechaCorteProgramada, idSedeTodas,
+					idSisAdmTodos,mes);
+			if (autorizacionProgramacion4 != null) {
+				if (autorizacionProgramacion != null) {
+					if (autorizacionProgramacion4.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
+						autorizacionProgramacion = autorizacionProgramacion4;
+					}
+				} else {
+					autorizacionProgramacion = autorizacionProgramacion4;
+				}
+			}
+			return autorizacionProgramacion;
+		}
+		
+		public static GregorianCalendar VerfechaLimitEditMensual(Date fecha, int mesLimit){
+			GregorianCalendar fechaLimitFin = new GregorianCalendar();
+			fechaLimitFin.setTimeInMillis(fecha.getTime());
+			fechaLimitFin.add(Calendar.MONTH,mesLimit);
+
+			GregorianCalendar fechaServicio = new GregorianCalendar();
+			fechaServicio.setTimeInMillis(fecha.getTime());
+			int diaHoy=fechaServicio.get(Calendar.DATE);
+			
+			Long diasLimitProg = PropertiesMg.getSistemLong(PropertiesMg.KEY_DIALIMIT_PROGRAMAR,PropertiesMg.DEFOULT_DIALIMIT_PROGRAMAR);
+			fechaLimitFin.set(Calendar.DAY_OF_MONTH, diasLimitProg.intValue());
+			
+
+			fechaLimitFin.set(Calendar.HOUR_OF_DAY, fechaLimitFin.getActualMaximum(Calendar.HOUR_OF_DAY));
+			fechaLimitFin.set(Calendar.MINUTE, fechaLimitFin.getActualMaximum(Calendar.MINUTE));
+			fechaLimitFin.set(Calendar.SECOND, fechaLimitFin.getActualMaximum(Calendar.SECOND));
+			fechaLimitFin.set(Calendar.MILLISECOND, fechaLimitFin.getActualMaximum(Calendar.MILLISECOND));
+
+			return fechaLimitFin;
+		} 
+		//PURIBE 22042024 - FIN-->
 }

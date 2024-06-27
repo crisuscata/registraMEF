@@ -101,26 +101,22 @@ public class PrtParametrosRsCtrl {
 			String sorder = req.getParameter("order");
 			String slimit = req.getParameter("limit");
 			String spage = req.getParameter("page");
-
-			String descripcion = req.getParameter("descripcion");
 			String idpadre = req.getParameter("idpadre");
-			String fechaCrea = req.getParameter("fechaCrea");
-			String fechaModif = req.getParameter("fechaModif");
-			String estadoTxt = req.getParameter("estadoTxt");
+			String descripcion = req.getParameter("descripcion");
+			//PURIBE 04012024 - INICIO
 			String idpadreTxt = req.getParameter("idpadreTxt");
 			
-			String sestado = req.getParameter("estado");
-
+            String sestado = req.getParameter("estado");
+			
 			Integer iestado = null;
-			if (sestado != null) {
-				try {
+			if(sestado!=null){
+				try{
 					iestado = Integer.parseInt(sestado);
-				} catch (Exception e) {
-				}
-			}
-
-			PrtParametrosFiltro prtParametrosFiltro = new PrtParametrosFiltro(descripcion, idpadre, fechaCrea,
-					fechaModif, estadoTxt, idpadreTxt, iestado);
+				}catch(Exception e){}
+			}		
+			
+			PrtParametrosFiltro prtParametrosFiltro = new PrtParametrosFiltro(idpadre,descripcion,iestado,idpadreTxt);	
+			//PURIBE 04012024 - FIN
 
 			PrtParametrosData prtParametrosData = (PrtParametrosData) req.getSession()
 					.getAttribute("PrtParametrosData");
@@ -563,20 +559,26 @@ public class PrtParametrosRsCtrl {
 		Principal usuario = req.getUserPrincipal();
 		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.PRTPARAMETROS_CREA)
-				&& !req.isUserInRole(Roles.PRTPARAMETROS_VE))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+		//PURIBE 04042024 -INICIO-->
+				if (msUsuariosBk == null)
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación..",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+				//PURIBE 04042024 -FIN->
+				//PURIBE 04042024 -INICIO-->
+				if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+						&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+						&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+					
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+				//PURIBE 04042024 -FIN-->
 
 		try {
 			// PURIBE 25012024 - INICIO
@@ -626,19 +628,25 @@ public class PrtParametrosRsCtrl {
 		Principal usuario = req.getUserPrincipal();
 		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.PRTPARAMETROS_CREA))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+		//PURIBE 04042024 -INICIO-->
+				if (msUsuariosBk == null)
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+				//PURIBE 04042024 -FIN-->
+				//PURIBE 04042024 -INICIO-->
+						if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+								&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+								&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+								&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+					//PURIBE 04042024 -FIN-->
 
 		// String adressRemoto = getRemoteAdress(req);
 		PrtParametrosBk prtParametrosC = new PrtParametrosBk();
@@ -788,25 +796,22 @@ public class PrtParametrosRsCtrl {
 			String slimit = req.getParameter("limit");
 			String spage = req.getParameter("page");
 
-			String descripcion = req.getParameter("descripcion");
 			String idpadre = req.getParameter("idpadre");
-			String fechaCrea = req.getParameter("fechaCrea");
-			String fechaModif = req.getParameter("fechaModif");
-			String estadoTxt = req.getParameter("estadoTxt");
+			//PURIBE 04012024 - INICIO
 			String idpadreTxt = req.getParameter("idpadreTxt");
+			String descripcion = req.getParameter("descripcion");
 			
-			String sestado = req.getParameter("estado");
-
+            String sestado = req.getParameter("estado");
+			
 			Integer iestado = null;
-			if (sestado != null) {
-				try {
+			if(sestado!=null){
+				try{
 					iestado = Integer.parseInt(sestado);
-				} catch (Exception e) {
-				}
-			}
-
-			PrtParametrosFiltro prtParametrosFiltro = new PrtParametrosFiltro(descripcion, idpadre, fechaCrea,
-					fechaModif, estadoTxt, idpadreTxt, iestado);
+				}catch(Exception e){}
+			}		
+			
+			PrtParametrosFiltro prtParametrosFiltro = new PrtParametrosFiltro(idpadre,descripcion,iestado,idpadreTxt);		
+			//PURIBE 04012024 - FIN
 
 			PrtParametrosData prtParametrosData = (PrtParametrosData) req.getSession()
 					.getAttribute("PrtParametrosData");

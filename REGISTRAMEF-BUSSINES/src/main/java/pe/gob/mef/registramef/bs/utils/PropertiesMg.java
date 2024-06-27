@@ -366,6 +366,15 @@ public class PropertiesMg implements Serializable {
 	public static final String DEFOULT_PRTPARAMETROS_IDPARAMTEXTO= "449";
 	//PURIBE 25012024 - FIN
 	
+	//PURIBE 22042024 - INICIO
+		public enum Modulo{
+			PROGRAMACION, 
+			REGISTRO,
+			REPORTES
+		}
+		
+		//PURIBE 22042024 - FIN
+	
 	public static String getString(String key) {
 		try {
 			return RESOURCE_BUNDLE.getString(key);
@@ -1192,11 +1201,5 @@ public class PropertiesMg implements Serializable {
 			CREADO = cREADO;
 		}
 		//MPINARES 29092023 - FIN
-		
-		public enum Modulo{
-			PROGRAMACION, 
-			REGISTRO,
-			REPORTES
-		}
 		
 }

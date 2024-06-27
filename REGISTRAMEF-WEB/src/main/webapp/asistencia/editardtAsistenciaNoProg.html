@@ -24,7 +24,7 @@
 				style="font-size: 17px;width: max-content;background-color: rgba(121, 121, 121, 1);">
 				<div style="font-size: 14px;margin: 6px;">{{dtAsistenciaModelo.estadoTxt}}</div></h2>
 		</div>
-
+<!-- INICIO CUSCATA - 18062024-->
 		<md-button class="md-button-borde md-sm"
 			ng-click="showConfirmFinalizar($event)"   aria-label="FINALIZAR" style="color: white; margin-bottom: 8px;">
 		<span ng-if="nuevo">Finalizar</span> 
@@ -91,11 +91,9 @@
 						<md-select
 							ng-model="dtAsistenciaModelo.idModalidad"
 							ng-change="changeIdModalidad()" required placeholder="Modalidad"
-							name="idModalidad">							
-							 <md-option
-										 ng-repeat="item in listaPrtParametrosIdModalidad"
-										 ng-value="item.id"> {{item.valor}} 
-							</md-option>
+							name="idModalidad"> <md-option
+							ng-repeat="item in listaPrtParametrosIdModalidad"
+							ng-value="item.id"> {{item.valor}} </md-option>
 						</md-select>
 					<div ng-messages="dtAsistenciaForm.idModalidad.$error">
 						<div ng-message="required">Seleccione la Modalidad.</div>
@@ -463,7 +461,7 @@
 						</md-fab-actions> 
 				</md-fab-speed-dial>
 		</div>
-
+<!-- FIN CUSCATA - 18062024-->
 	</div>
 	<div>&nbsp;</div>
 

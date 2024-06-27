@@ -1,0 +1,495 @@
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editdtVisitas()">
+   <!--   PURIBE 19032024 - INICIO*/ -->
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+	  <md-button class="md-icon-button" ng-click="cancelarDtVisitas()"
+			style="margin-left: -19px;margin-bottom: 11px;"> <md-icon
+			md-font-set="material-icons" aria-label="Close dialog"
+			style="font-size: 29px;color: rgb(189,189,189);">chevron_left</md-icon>
+		</md-button>
+      <div flex="auto" ng-if="nuevo">        
+        <h2 md-truncate md-colors="{color: 'background-A100'}"
+				style="font-size: 17px;">Nueva reuni&oacute;n de trabajo</h2>	<!-- //JPUYEN 14052024 - Se quito programada-->
+			<!--   PURIBE 21032024 - INICIO -->
+      </div>
+      <div flex="10" ng-if="!nuevo">        
+         <h2 md-truncate md-colors="{color: 'background-A100'}" style="font-size: 17px;">RT - {{dtVisitasModelo.idVisita}}</h2>
+       </div>
+       <div flex="auto" ng-if="!nuevo">
+			<h2 md-truncate md-colors="{color: 'background-A100'}"
+				style="font-size: 17px;width: max-content;background-color: rgba(121, 121, 121, 1);">
+				<div style="font-size: 14px;margin: 6px;">{{dtVisitasModelo.estadoTxt}}</div></h2>
+		</div>
+     
+            
+<!--        <md-button class="md-button-borde md-sm" ng-click="cancelarDtAsistencia()" aria-label="Salir"> -->
+<!--          <md-icon md-font-set="material-icons">undo</md-icon>  -->
+<!--          <span ng-if="nuevo">Salir</span> -->
+<!--          <span ng-if="!nuevo">Salir</span>    -->
+<!--        </md-button> -->
+<!--          <md-button class="md-button-borde md-sm" ng-click="cancelarDtVisitas()" aria-label="Salir"> -->
+<!--             <md-icon md-font-set="material-icons" md-colors="{color: 'background-300'}">undo</md-icon>  -->
+<!--             <span ng-if="nuevo">Cancelar</span> -->
+<!--             <span ng-if="!nuevo">Salir</span>    -->
+<!--          </md-button> -->
+         <md-button class="md-button-borde md-sm"
+			ng-click="salvarDtVisitas($event)" style="margin-bottom: 8px;"
+			ng-if="dtVisitasModelo.editopcion==1" aria-label="Guardar">
+		<!--          <md-icon md-font-set="material-icons">save</md-icon>  -->
+		<span>Guardar</span> </md-button>
+   <!--   PURIBE 22042024 - INICIO*/ -->
+      <md-button class="md-button-borde md-sm"
+      ng-click="showConfirmFinalizar($event)" style="margin-bottom: 8px;"
+      ng-if="dtVisitasModelo.editopcion==1  && dtVisitasModelo.finalizar === true" aria-label="Finalizar">
+       <!--          <md-icon md-font-set="material-icons">save</md-icon>  -->
+    <span>Finalizar</span> </md-button>
+       <!--   PURIBE 22042024 - FIN*/ -->
+      </div>
+</md-toolbar>    
+
+<div layout="column">
+
+    <!--   PURIBE 22042024 - INICIO -->
+   <fieldset style="margin-left: 15px;">
+      <legend>Datos de la reuni&oacute;n</legend><!--   PURIBE 04042024 - INICIO -->
+      <md-content md-whiteframe="1" class="overflowEsconder noshadow"
+         md-colors="{background: 'background-A100'}">
+      <div layout="row" layout-aling="center start" flexstyle="margin-left: 20px; font-size: 14px;">
+               <div class="letraenvoltura"  flex="20">
+                  <md-input-container  
+                     class="input-container-margen letraTexto"
+                     md-no-float="true"> 
+                     <label class="md-no-float" style="width: 200px;">Fecha de reuni&oacute;n</label>
+                     <md-datepicker required  ng-model="dtVisitasModelo.fechaVisita"   ng-disabled="!verfecha"
+                        md-placeholder="Fecha de reuni&oacute;n"
+                        input-aria-describedby="datepicker-description"
+                        input-aria-labelledby="datepicker-header ">
+                     </md-datepicker>
+                  </md-input-container>
+                  </div>
+
+                  <div class="letraenvoltura" flex="20"  ng-if="verfechareprog">
+                     <md-input-container  
+                        class="input-container-margen letraTexto"
+                        md-no-float="true"> 
+                        <label class="md-no-float" style="width: 200px;">Fecha de reuni&oacute;n Reprogramado</label>
+                        <md-datepicker required  ng-model="dtVisitasModelo.fechaReprogramada"  
+                           md-placeholder="Fecha de reuni&oacute;n"
+                           input-aria-describedby="datepicker-description"
+                           input-aria-labelledby="datepicker-header ">
+                        </md-datepicker>
+                     </md-input-container>
+                     </div>
+           <!--   PURIBE 22042024 - FIN-->
+                  <div class="letraenvoltura" ng-if="dtVisitasModelo.editopcion < 2" flex="auto">
+                     <md-input-container md-no-float="true" class="input-container-margen letraTexto"  flex="85">
+                        <label class="letraLabel nocorte" style="width: 300px;" flex>Lugar de reuni&oacute;n</label>   
+                   <!--   PURIBE 22032024 - INICIO -->
+                        <md-select ng-model="dtVisitasModelo.idLugar"  required
+                                    placeholder="Lugar de Reunion"
+                                    name="idparametrolugar"
+                                    >
+                           <md-option ng-value="0">SIN LUGAR DE REUNI&Oacute;N</md-option>
+                          <md-option ng-repeat="item in listalugarMsparametros" ng-value="item.idparametro">
+                              {{item.descripcion}}
+                          </md-option>
+                         </md-select>
+                         <div ng-messages="dtVisitasForm.idparametrolugar.$error">
+                      <div ng-message="required">Se requiere seleccione el lugar de reuni&oacute;n.</div>
+                    </div>
+                      </md-input-container>
+                     </div>
+                      <div class="letraenvoltura" ng-if="dtVisitasModelo.editopcion > 1" flex="auto">  
+                         <div class="letraLabel">Lugar de reuni&oacute;n:</div>
+                         <div class="letraTexto">{{dtVisitasModelo.idLugarTxt}}</div> <!--   PURIBE 19032024 - INICIO -->
+                      </div>		
+
+
+                      <div class="letraenvoltura" ng-if="dtVisitasModelo.editopcion < 2" flex="auto">
+                        <md-input-container md-no-float="true" class="input-container-margen letraTexto"  flex="85">
+                           <label class="letraLabel nocorte" style="width: 300px;" flex>Tipo de financiamiento</label>    
+                            <!--   PURIBE 22032024 - INICIO-->
+                           <md-select ng-model="dtVisitasModelo.idFinancia"  required
+                                       placeholder="Tipo de Financiamiento"
+                                       name="idfinanciamiento"
+                                       >    <!--   PURIBE 22032024 - FIN--><!-- JPUYEN 14052024 - se agrego: Tipo de Financiamiento-->
+                              <md-option ng-value="0">SIN FINANCIACI&Oacute;N</md-option>
+                             <md-option ng-repeat="item in listafinanciamientoMsparametros" ng-value="item.idparametro" >
+                                 {{item.descripcion}}
+                             </md-option>
+                            </md-select>
+                            <div ng-messages="dtVisitasForm.idfinanciamiento.$error">
+                         <div ng-message="required">Se requiere seleccione el tipo de financiaci&oacute;n.</div>
+                       </div>
+                         </md-input-container>
+                        </div>
+                         <div class="letraenvoltura" ng-if="dtVisitasModelo.editopcion > 1" flex="auto">  
+                            <div class="letraLabel">Tipo de financiaci&oacute;n:</div>
+                            <div class="letraTexto">{{dtVisitasModelo.idFinanciaTxt}}</div>
+                         </div>	
+
+                         <div class="letraenvoltura"
+                         ng-if="dtVisitasModelo.editopcion < 2" flex="40">
+                         <md-input-container
+                            class="input-container-margen letraTexto nomarginbotottom"
+                            flex="100" md-no-float="true" style="width: 150px;">
+                            <label class="letraLabel" style="width: 150px;" flex>Origen</label>    
+                            <md-select  required
+                                       placeholder="Origen"
+                                       name="Origen" ng-model="dtVisitasModelo.idOrigen"> <!-- JPUYEN 14052024 - se cambio de true a false en:  ng-disabled="false"-->
+<!--                               <md-option ng-value="-1">--Seleccione Origen--</md-option> -->
+                              <md-option ng-repeat="item in listaorigen" ng-value="item.idparametro" >
+                                 {{item.descripcion}}
+                             </md-option>
+
+                            </md-select>
+                         </md-input-container>
+                         </div>
+
+
+               </div>
+            </md-content>
+      </fieldset>
+
+<fieldset style="margin-left: 15px;">
+   <legend>Datos de la entidad</legend>
+   <md-content md-whiteframe="1" class="overflowEsconder noshadow"
+      md-colors="{background: 'background-A100'}">
+   <div layout="row" layout-aling="center start" flexstyle="margin-left: 20px; font-size: 14px;">
+            <div class="letraenvoltura" ng-if="dtVisitasModelo.editopcion < 2" flex="20">
+               <md-input-container  
+                  class="input-container-margen letraTexto nomarginbotottom"
+                  md-no-float="true"> 
+                  <label  style="width:200px;">C&oacute;digo ejecutora</label>
+                  <!--PURIBE 29032024  INICIO-->
+                  <input ng-keypress="validateFormat($event)"
+                  id="codigoEjecutora" style="width:150px;"
+                  ng-model="dtVisitasModelo.codEjecutora" 
+                  placeholder="Buscar por C&oacute;digo"/> 
+                  <!--PURIBE 29032024   FIN-->
+                  <md-button
+                  aria-label="Buscar por Cod. ejecutora"
+                  class="md-icon-button md-mini iconoEnLinea"
+                  id="idbuscarCodEjecutora" ng-click="buscarxcodEjec(dtVisitasModelo)"
+                  > <md-icon
+                  md-font-set="material-icons">search</md-icon> </md-button> </md-input-container>
+
+            </div>
+            <div class="letraenvoltura"
+               ng-if="dtVisitasModelo.editopcion < 2" flex="40">
+               <md-input-container
+                  class="input-container-margen letraTexto nomarginbotottom"
+                  flex="100" md-no-float="true" style="width: 400%;">
+               <!-- 				<input id="razonSocial" ng-model="dtAsistenciaModelo.idEntidadTxt" -->
+               <!-- 					placeholder="Raz&oacute;n Social">  --> 
+                <!--PURIBE 04042024   INICIO-->  
+                    <label   style="width: 100px;">Raz&oacute;n social</label>
+                      <!--PURIBE 04042024   INICIO--> 
+               <md-autocomplete
+                  required md-input-name="nameMsInstitucionesIdprovee"
+                  md-input-minlength="2" md-input-maxlength="255"
+                  ng-disabled="ctrlMsInstitucionesIdprovee.isDisabled"
+                  md-no-cache="ctrlMsInstitucionesIdprovee.noCache"
+                  md-selected-item="ctrlMsInstitucionesIdprovee.selectedItem"
+                  md-search-text-change="searchTextChangeMsInstitucionesIdprovee(dtVisitasModelo.idEntidadTxt)"
+                  md-search-text="dtVisitasModelo.idEntidadTxt"
+                  md-selected-item-change="selectedItemChangeMsInstitucionesIdprovee(item)"
+                  md-items="item in querySearchMsInstitucionesIdprovee(dtVisitasModelo.idEntidadTxt)"
+                  md-item-text="item.razSocial" md-min-length="4" 
+                  input-aria-labelledby="raz&oacute;n social" md-delay="3000"
+                  placeholder="raz&oacute;n social">
+               <md-item-template> <span
+                  md-highlight-text="dtVisitasModelo.idEntidadTxt"
+                  md-highlight-flags="^i"> {{item.razSocial}} </span> </md-item-template> <md-not-found>
+              No hay concidencias para "{{dtVisitasModelo.idEntidadTxt}}". <a
+                  ng-click="newStateMsInstitucionesIdprovee(dtVisitasModelo.idEntidadTxt)">Crea
+                  uno nuevo!</a> </md-not-found>
+                   <!--PURIBE 04042024   FIN-->
+               <div
+                  ng-messages="dtVisitasForm.nameMsInstitucionesIdprovee.$error"
+                  ng-if="dtVisitasForm.nameMsInstitucionesIdprovee.$touched">
+                  <div ng-message="required">
+                     Usted <b>debe</b> seleccionar un item.
+                  </div>
+                  <div ng-message="md-require-match">Por favor seleccione un
+                     item.</div>
+                  <div ng-message="minlength">Tu entrada no es lo
+                     suficientemente larga.</div>
+                  <div ng-message="maxlength">Tu entrada es demasiado larga.</div>
+               </div>
+               </md-autocomplete> </md-input-container>
+
+            </div>
+
+           
+   </div>
+   </md-content>
+</fieldset>
+
+                   <fieldset style="margin-left: 15px;">
+                     <legend>Participantes</legend>
+
+
+                     <div layout="row" layout-align="center center" class="letraenvoltura"
+                     ng-if="dtVisitasModelo.editopcion < 2" flex="100">
+                  
+                        <div>
+                           
+                           <md-button class="md-raised"
+							  aria-label="Agregar Participante"
+								ng-click="agregarparticipante($event)">
+							  <md-icon md-font-set="material-icons" style="color: grey;">work_outline</md-icon>
+							  <span>Agregar Participantes</span><!-- //JPUYEN 14052024 - Se cambiÃ³ de nombre-->
+							</md-button>
+                        </div>
+                     </div>
+                     <md-divider style="margin-top: 20px;"></md-divider>
+<!-------------------------------------------------------------------------------------->
+            <div layout="row" layout-align="center">
+               <md-table-container>
+                  <table resize md-table md-row-select="options.rowSelection"
+                        multiple="{{options.multiSelect}}"
+                        ng-model="selected" md-progress="promise">
+                     <thead id="tablewidth" ng-if="!options.decapitate" md-head
+                              md-order="query.order" md-on-reorder="logOrder">
+                     <tr md-row class="md-table-head-label">
+                           <th class="md-title ttamblanco" md-column><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                           </th>
+                           <th class="md-title ttam20" md-column><span>Nro</span></th>
+                           <th class="md-title ttam120" md-column>
+                              <span>Gestor</span></th>
+                           <th class="md-title ttamdtVisitasidSistAdm" md-column>
+                              <span>Sistema Administrativo</span></th>
+                           <th class="md-title ttam50" md-column>
+                              <span>Tema</span></th>
+                           <th class="md-title ttam10" md-column>
+                              <span>&nbsp;</span></th>
+                           <th class="md-title ttamblanco" md-column><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                           </th>
+                     </tr>
+                     </thead>
+                     <tbody md-body>
+                     <!--   PURIBE 22032024 - INICIO -->
+                     <tr class="primary triddtCausas md-table-cuerpo" md-row md-select="dato"
+                           md-on-select="logItem"  md-auto-select="options.autoSelect" 
+                           ng-if="dato.estado !== 2"  ng-repeat-start="dato in visitausuarios">   
+                           <!--   PURIBE 22032024 - FIN -->
+                           <td>
+                              <md-button class="md-icon-button"
+                                          ng-click="eliminarParticipante($index)">
+                                 <md-icon md-font-set="material-icons">cancel
+                                 </md-icon>
+                              </md-button>
+                           </td>
+                           <td md-cell>{{$index + 1}}</td>
+                         
+                           <td class="tdaa1 md-table-cuerpo" data-title="Gestor" md-cell>
+                              {{dato.idUsuinternoTxt}}
+                           </td>
+                           <td class="tdaa1 md-table-cuerpo" data-title="SistemaAdministrativo" md-cell>
+                              {{dato.idSistAdmTxt}}
+                           </td>
+                           <td class="tdaa1 md-table-cuerpo" data-title="Tema"
+                              md-cell>
+                              {{dato.idTemaTxt}}
+                           </td>
+                           <td class="tdaa1 md-table-cuerpo" data-title="Etapa"
+                              md-cell>
+                              <span class="circle background-green" ng-if="dato.instanciaActual"></span>
+                           </td>
+                           <td class="tdaa8 md-table-cuerpo" data-title="Acciones" md-cell>
+                              <div layout="row" layout-xs="column" layout-align="center center">
+                                 <md-button class="md-icon-button"
+                                             ng-click="editarparticipante($event,dato)">
+                                       <md-icon
+                                             md-font-set="material-icons">edit
+                                       </md-icon>
+                                 </md-button>
+                              </div>
+                           </td>
+                     </tr>
+                     <tr class="secondary childiddtCausas" ng-repeat-end></tr>
+                     </tbody>
+                  </table>
+               </md-table-container>
+            </div>
+                  </fieldset>
+
+<!------------------------------------------------------------------------------------>
+                 <!-- //JPUYEN 14052024 - INICIO -->
+
+		<fieldset style="margin-left: 15px;">
+			<legend>Usuario al que se brinda atenci&oacute;n</legend>
+
+
+			<div layout="row" layout-align="center center" class="letraenvoltura"
+				ng-if="dtVisitasModelo.editopcion < 2" flex="100">
+
+				<div>
+
+					<md-button class="md-raised" aria-label="Agregar Usuario"
+						ng-click="agregarusuario($event)"> <md-icon
+						md-font-set="material-icons" style="color: grey;">work_outline</md-icon>
+					<span>Agregar Usuario</span>
+					</md-button>
+				</div>
+			</div>
+			<md-divider style="margin-top: 20px;"></md-divider>
+			<div layout="row" layout-align="center">
+				<md-table-container>
+				<table resize md-table md-row-select="options.rowSelection"
+					multiple="{{options.multiSelect}}" ng-model="selected"
+					md-progress="promise">
+					<thead id="tablewidth" ng-if="!options.decapitate" md-head
+						md-order="query.order" md-on-reorder="logOrder">
+						<tr md-row class="md-table-head-label">
+							<th class="md-title ttamblanco" md-column><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+							</th>
+							<th class="md-title ttam20" md-column><span>Nro</span></th>
+							<th class="md-title ttam120" md-column><span>DNI</span></th>
+							<th class="md-title ttam50" md-column><span>Usuario</span></th>
+							<!-- th class="md-title ttam50" md-column><span>Cargo</span></th -->
+							<th class="md-title ttam50" md-column><span>Correo</span></th>
+							<th class="md-title ttam50" md-column><span>TLF. Fijo</span></th>
+							<th class="md-title ttam50" md-column><span>TLF. Celular</span></th>
+							<th class="md-title ttam10" md-column><span>&nbsp;</span></th>
+							<th class="md-title ttamblanco" md-column><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+							</th>
+						</tr>
+					</thead>
+					<tbody md-body>
+						
+						<tr class="primary triddtCausas md-table-cuerpo" md-row
+							md-select="dato" md-on-select="logItem"
+							md-auto-select="options.autoSelect" ng-if="dato1.estado !== 2"
+							ng-repeat-start="dato1 in listavisitausuariosreutrabajo">
+							<!--   PURIBE 22032024 - FIN -->
+							<td><md-button class="md-icon-button"
+									ng-click="eliminarUsuarioReuTrabajo($index)"> <md-icon
+									md-font-set="material-icons">cancel </md-icon> </md-button></td>
+							<td md-cell>{{$index + 1}}</td>
+								<td class="tdaa1 md-table-cuerpo" data-title="DNI" md-cell>
+								{{dato1.dni}}</td>
+								<td class="tdaa1 md-table-cuerpo" data-title="Usuario" md-cell>
+								{{dato1.nombresApellidos}}</td>
+								<!-- td class="tdaa1 md-table-cuerpo" data-title="Cargo" md-cell>
+								{{dato1.cargo.nombres}}</td -->
+								<td class="tdaa1 md-table-cuerpo" data-title="Correo" md-cell>
+								{{dato1.correo}}</td>
+								<td class="tdaa1 md-table-cuerpo" data-title="Fijo" md-cell>
+								{{dato1.telefonoFijo}}</td>
+								<td class="tdaa1 md-table-cuerpo" data-title="Celular" md-cell>
+								{{dato1.celular}}</td>
+
+							<td class="tdaa1 md-table-cuerpo" data-title="Etapa" md-cell><span
+								class="circle background-green" ng-if="dato.instanciaActual"></span>
+							</td>
+
+						</tr>
+						<tr class="secondary childiddtCausas" ng-repeat-end></tr>
+					</tbody>
+				</table>
+				</md-table-container>
+			</div>
+
+
+		</fieldset>
+		<!-- //JPUYEN 14052024 - FIN -->
+		
+		<!-- //JPUYEN 17052024 - INICIO -->
+		
+		<fieldset style="margin-left: 15px;" ng-if="!nuevo">
+			<legend>Adjuntar Lista de participantes y programa del evento</legend>
+			
+		
+		
+		<div layout="row" layout-align="center start" ng-if="dtVisitasModelo.editopcion < 2" flex>
+
+				<div flex="12">
+		        	<label class="letraLabel-personal-baja" >Adjuntar archivo</label>    
+		        	 </div>
+		        <div flex="90">
+			        <input type="file" ng-file-model multiple letter="A" style="font-size: 83%;margin-top: 17px;"/>   
+			          <table>
+						  <tr ng-repeat="x in archivos">
+							    <td>{{ $index + 1 }}</td>
+							    <td>
+							  		  <img src="resources/imagen/mime/{{x.tipo}}.gif" alt="{{ x.filenameoriginal }}" style="float:left;">
+							    	  {{ x.filenameoriginal }}
+							    </td>
+							    <td>{{ (x.tamanio/1024).toFixed() }} KB</td>
+							    <td>
+							    	<p id="dbi-upload-progressA_{{$index}}">.</p>
+								    <div class="progress">    
+								   		<div class="progress-bar" id="progress-barA_{{$index}}"></div> 
+								    </div>
+							    </td>
+							    <td>
+								    <md-button class="md-icon-button md-accent" aria-label="Eliminar" ng-click="handleremover($index)">
+								        <md-icon md-font-set="material-icons">clear</md-icon>
+								    </md-button>
+							    </td>
+						  </tr>
+					</table>  
+		         </div>
+		</div>
+			<md-divider style="margin-top: 20px;"></md-divider>
+			<!-------------------------------------------------------------------------------------->
+		  <div  ng-if="dtVisitasModelo.editopcion  >= 1 && dtVisitasModelo.dtAnexosJSss.length > 0" flex="auto">   
+	   		 <table>
+				 <tr>
+					  <th><span><b>N°</b></span></th>
+					  <th><span><b>Anexo</b></span></th>
+					  <th><span><b>Tamaño</b></span></th>
+				 </tr>
+				  <tr ng-repeat="x in dtVisitasModelo.dtAnexosJSss">
+					    <td>{{ $index + 1 }}</td>
+					    <td>
+						    <a href="download?anex={{x.idanexo}}" target="_blank_">
+							    <img src="resources/imagen/mime/{{x.tipo}}.gif" alt="{{ x.filenameoriginal }}" style="float:left;">
+							    {{ x.filenameoriginal }}
+						    </a>
+					    </td>
+					    <td>{{ (x.tamanio/1024).toFixed() }} KB</td>
+				  </tr>
+			</table>
+	       
+	  </div>
+	  
+	  </fieldset>	
+	<!-- //JPUYEN 17052024 - FIN -->
+
+         <!--   PURIBE 04042024 - INICIO-->
+<div layout="column" layout-aling="center start" ng-if="dtVisitasModelo.editentidad==2"  flex> 
+   <md-fab-speed-dial md-open="isOpenxx" md-direction="up"
+         class="md-scale md-fab-bottom-right" ng-mouseenter="isOpenxx=true"
+         ng-mouseleave="isOpenxx=false"> 
+            <md-fab-trigger>
+               <md-button aria-label="menu" class="md-fab md-warn" style="background-color: #009688;"> <md-icon
+               md-font-set="material-icons" style="color: rgb(255,255,255)">add</md-icon> </md-button> 
+               </md-fab-trigger> 
+               <md-fab-actions>
+               <md-button aria-label="Nueva entidad" class="md-fab md-raised md-mini"
+               ng-click="showdlgInstitucionDialog()" > 
+               <md-tooltip md-direction="left" md-visible="tooltipVisible">Nueva entidad</md-tooltip>
+               <md-icon md-font-set="material-icons" >add</md-icon> 
+               </md-button> 
+            </md-fab-actions> 
+      </md-fab-speed-dial>
+</div>
+<!--   PURIBE 04042024 - FIN -->
+
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+<!--   PURIBE 19032024 - FIN -->
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<div ng-include="'paginas/pie.html'"></div>
+<!-- Fin Footer -->

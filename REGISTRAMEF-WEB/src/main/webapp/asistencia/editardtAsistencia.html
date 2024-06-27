@@ -1,3 +1,11 @@
+<style type="text/css">
+table.md-table td.md-cell {
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 14px !important;
+    border-top: 1px rgba(0, 0, 0, 0.12) solid;
+}
+</style>
+
 <div flex="100" layout="column" layout-align="start stretch"
 	class="margenForm" data-ng-init="editdtAsistencia()">
 
@@ -181,7 +189,7 @@
 						md-highlight-text="dtAsistenciaModelo.idEntidadTxt"
 						md-highlight-flags="^i"> {{item.razSocial}} </span> </md-item-template> <md-not-found>
 					No hay coincidencias para "{{dtAsistenciaModelo.idEntidadTxt}}". <a
-						ng-click="newStateMsInstitucionesIdprovee(dtAsistenciaModelo.idEntidadTxt)">, no existe o no esta vinculado a su sistema administrativo</a> </md-not-found>
+						ng-click="newStateMsInstitucionesIdprovee(dtAsistenciaModelo.idEntidadTxt)">No existe o no esta vinculado a su sistema administrativo</a> </md-not-found>
 					<div
 						ng-messages="dtAsistenciaForm.nameMsInstitucionesIdprovee.$error"
 						ng-if="dtAsistenciaForm.nameMsInstitucionesIdprovee.$touched">
@@ -315,8 +323,8 @@
 			</md-content>
 		</fieldset>
 		
-		<div layout="column" layout-aling="center start" flex> 
-			<md-fab-speed-dial md-open="isOpenxx" md-direction="up"
+		<div layout="column" layout-aling="center start" flex ng-if="dtAsistenciaModelo.addEntidad"> 
+			<md-fab-speed-dial md-open="isOpenxx" md-direction="up" 
 					class="md-scale md-fab-bottom-right" ng-mouseenter="isOpenxx=true"
 					ng-mouseleave="isOpenxx=false"> 
 						<md-fab-trigger>
@@ -324,9 +332,9 @@
 							md-font-set="material-icons" style="color: rgb(255,255,255)">add</md-icon> </md-button> 
 							</md-fab-trigger> 
 							<md-fab-actions>
-							<md-button aria-label="Nueva entidady" class="md-fab md-raised md-mini"
+							<md-button aria-label="Nueva entidad" class="md-fab md-raised md-mini"
 							ng-click="showdlgInstitucionDialog()" > 
-							<md-tooltip md-direction="left" md-visible="tooltipVisible">Nueva entidadx</md-tooltip>
+							<md-tooltip md-direction="left" md-visible="tooltipVisible">Nueva entidad</md-tooltip>
 							<md-icon md-font-set="material-icons" >add</md-icon> 
 							</md-button> 
 						</md-fab-actions> 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import pe.gob.mef.registramef.bs.cache.clases.CacheMsUsuariosBk;
+import pe.gob.mef.registramef.bs.domain.DtAmpliacionFecha;
 import pe.gob.mef.registramef.bs.domain.MsUbigeoId;
 import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.transfer.DtEntidadSedesDto;
@@ -280,7 +281,7 @@ public interface Servicio {
 	 * TA_FERIADOS SERVICIO: TABLA EN LA QUE SE REGISTRAN TODOS LOS DIAS
 	 * FERIADOS DEL AÑO
 	 */
-	TaFeriadosBk getTaFeriadosBkXid(Timestamp id, Long kyUsuarioMod);
+	TaFeriadosBk getTaFeriadosBkXid(Date id, Long kyUsuarioMod);//PURIBE 16012024 - FIN-->
 
 	List<TaFeriadosBk> getAllTaFeriadosActivos(Long kyUsuarioMod);
 
@@ -353,7 +354,7 @@ public interface Servicio {
 	List<DtVisitasBk> getAllDtVisitasActivos(Long kyUsuarioMod);
 
 	List<DtVisitasBk> getAllDtVisitasActivosCero(Long kyUsuarioMod);
-	List<DtVisitasBk> getAllDtVisitasActivosCero(Long kyUsuarioMod,Timestamp fechaInicio,Timestamp fechaFin,int programada);	//PURIBE 14032024 - INICIO-->
+	List<DtVisitasBk> getAllDtVisitasActivosCero(Long kyUsuarioMod,Timestamp fechaInicio,Timestamp fechaFin,int programada,long sede,int rol,long sistemaadmi);//PURIBE 04042024 - INICIO-->	//PURIBE 14032024 - INICIO-->
 
 	DtVisitasBk saveorupdateDtVisitasBk(DtVisitasBk dtVisitasBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador;
@@ -431,8 +432,16 @@ public interface Servicio {
 
 	List<DtEntidadesUsuexternosBk> getAllDtEntidadesUsuexternosActivosCero(Long kyUsuarioMod);
 
-	DtEntidadesUsuexternosBk saveorupdateDtEntidadesUsuexternosBk(DtEntidadesUsuexternosBk dtEntidadesUsuexternosBk,
-			String user, Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador;
+	// JPUYEN 14052024 - INICIO
+	
+		DtVisitasUsuexternosBk saveorupdateDtEntidadesUsuexternosBk(DtVisitasUsuexternosBk dtVisitasUsuexternosBk,			
+				String user,
+				Long kyUsuarioMod, 
+				Long kyAreaMod, 
+				String rmtaddress		
+				) throws Validador;
+
+		// JPUYEN 14052024 - FIN
 
 	void deleteDtEntidadesUsuexternos(DtEntidadesUsuexternosBk dtEntidadesUsuexternosBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
@@ -1196,7 +1205,7 @@ public interface Servicio {
 
 	Map<String, MsUsuariosBk> getMsUsuariosBkXUseranameCache();
 	
-	List<DtUsuarioExternoBk> getMsUsuariosExternoBkXnombreapellido(String nombreapellido) throws Validador;
+	List<DtUsuarioExternoBk> getMsUsuariosExternoBkXnombreapellido(String nombreapellido) throws Validador;//CUSCATA - 18062024
 
 	CacheMsUsuariosBk getCacheMsUsuariosBkActivos();
 
@@ -1278,14 +1287,19 @@ public interface Servicio {
 	void activarTaFeriados(TaFeriadosBk taFeriadosBk, String user, Long kyUsuarioMod, Long kyAreaMod, String rmtaddress)
 			throws Validador;
 
-	List<TaFeriadosBk> getTaFeriadosXFiltro(String feDesc, Timestamp feFchmod, Timestamp feFchcrear, Integer feEstado,
-			Long kyUsuarioMod);
+//	List<TaFeriadosBk> getTaFeriadosXFiltro(String feDesc, Timestamp feFchmod, Timestamp feFchcrear, Integer feEstado,
+//			Long kyUsuarioMod);
+	
+	List<TaFeriadosBk> getTaFeriadosXFiltro(String feDesc, Long kyUsuarioMod);
+	List<TaFeriadosBk> getTaFeriadosXFiltro(String feDesc, int inicial, int MAX, Long kyUsuarioMod);
 
-	List<TaFeriadosBk> getTaFeriadosXFiltro(String feDesc, Timestamp feFchmod, Timestamp feFchcrear, Integer feEstado,
-			int inicial, int MAX, Long kyUsuarioMod);
+//	List<TaFeriadosBk> getTaFeriadosXFiltro(String feDesc, Timestamp feFchmod, Timestamp feFchcrear, Integer feEstado,
+//			int inicial, int MAX, Long kyUsuarioMod);
 
-	Long getTaFeriadosTotalXFiltro(String feDesc, Timestamp feFchmod, Timestamp feFchcrear, Integer feEstado,
-			Long kyUsuarioMod);
+//	Long getTaFeriadosTotalXFiltro(String feDesc, Timestamp feFchmod, Timestamp feFchcrear, Integer feEstado,
+//			Long kyUsuarioMod);
+	
+	Long getTaFeriadosTotalXFiltro(String feDesc, Long kyUsuarioMod);
 
 //	List<DtEntidadesBk> getDtEntidadesXFiltro(String codEjec, String razSocial, Long ruc, Long idTipo, Integer codDpto,
 //			Integer codProv, Integer codDistr, Long idCaract, Long idSistAdmi, Long estado, Long kyUsuarioMod);
@@ -1630,6 +1644,21 @@ public interface Servicio {
 		Long getDtUsuarioExternoTotalXFiltro(String nombre, String aPaterno, String aMaterno, String direccion,
 				Integer codDpto, Integer codProv, Integer codDistr, String numDocum, Long kyUsuarioMod);
 		//PURIBE 14032024 - FIN-->
-		DtUsuarioExternoBk getUsuarioPorDNI(Long numDocum, Long kyUsuarioMod);
+		List<IDValorDto> getMsSedesIdSedeIdSedeExTodas();
 		
+		//PURIBE 22042024 - INICIO-->
+		List<DtEntidadesBk> getMsInstitucionesActivas(String rasonsocial);
+		List<DtUsuarioExternoBk> getDtUsuarioExternoXFiltro2(String nombre, Long kyUsuarioMod);
+		boolean validarFechaEdit(DtVisitasBk dtVisitasBk) throws Validador;
+		DtAmpliacionFecha getautorizacionProgramacion2(Long idsede, Long idsisAdmin);
+		void updateBloqueoEncuesta(DtEncuestaBk dtEncuestaBk,Long kyUsuarioMod,String rmtaddress)throws Validador;
+		DtVisitasBk finalizarDtVisita(DtVisitasBk dtVisitasBk, Long idSistemaAdmin, Long kyUsuarioMod)  throws Validador;
+		void validarfinalizarDtVisitas(DtVisitasBk dtVisitasBk,Long kyUsuarioMod) throws Validador; 
+		DtEncuestaBk getIdEncuesta (Long idTipoServicio, Long fechaServicio, Long idServicio) throws Validador;
+		//PURIBE 22042024 - FIN
+		DtUsuarioExternoBk getUsuarioPorDNI(Long numDocum, Long kyUsuarioMod);//CUSCATA - 18062024
+		
+		List<MsUsuariosDto> getMsUsuariosFilter(Long idSede);//JPUYEN 14052024
+		DtUsuarioExternoBk getMsUsuariosExternoBkXDni(String dni) throws Validador ;//JPUYEN 14052024
+		DtVisitasUsuexternosBk getDtVisitasUsuexternoBkXid(Long id, Long kyUsuarioMod); // JPUYEN 14052024 - INICIO
 }

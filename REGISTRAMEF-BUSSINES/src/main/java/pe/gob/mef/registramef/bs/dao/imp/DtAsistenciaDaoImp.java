@@ -309,8 +309,10 @@ public class DtAsistenciaDaoImp extends
 				sb.append("and trunc(t.fechaAsistencia) < ? ");
 				hs.add(fechaFin);
 			}
-				
-			 sb.append("order by t.idAsistencia desc ");
+			
+//			sb.append(" and t.idAsistencia = ? ");
+//			hs.add(345687L);
+			 sb.append(" order by t.idAsistencia desc ");
 
 			Object param[] = new Object[hs.size()];
 			hs.toArray(param);

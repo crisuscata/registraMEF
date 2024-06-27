@@ -94,6 +94,13 @@ table.md-table thead.md-head>tr.md-row {
 	height: 24px !important;
 }
 
+/* PURIBE 04042024 - INICIO--*/
+table.md-table {
+	display: inline-block !important;
+	overflow-x: auto;
+}
+/* PURIBE 04042024 - FIN--*/
+
 .md-button-borde {
 	border: #FFFFFF 1px solid !important;
 	box-sizing: border-box;
@@ -150,8 +157,6 @@ table.md-table thead.md-head>tr.md-row {
 	text-align: center;
 }
 
-
-
 .legend_190 {
 	width: 190px !important;
 }
@@ -181,11 +186,12 @@ button, select, html, textarea, input {
 }
 
 /* MS_USUARIOS SERVICIO: LISTA DE LOS USUARIOS INTERNOS REGISTRADOS EN EL SISTEMA */
-.ttamnumero {
+/*.ttamnumero {
 	width: 5px !important;
 	max-width: 5px !important;
 	min-width: 5px !important;
 }
+*/
 
 .ttammsUsuariosidusuario {
 	width: 20px !important;
@@ -259,48 +265,84 @@ button, select, html, textarea, input {
 	min-width: 5px !important;
 }
 
-/* DT_VISITAS SERVICIO: LISTA DE LOS DATOS REGISTRADOS EN UNA VISITA */
-.ttamdtVisitasidVisita {
+/* PURIBE 01022024 - INICIO */
+ /* DT_VISITAS SERVICIO: LISTA DE LOS DATOS REGISTRADOS EN UNA VISITA */
+.ttamdtVisitasidVisita{
 	width: 20px !important;
 	max-width: 20px !important;
-	min-width: 20px !important;
+	min-width: 20px !important; 
+} 
+
+.tdaa8{
+	padding:0px 0px 0px 0px !important;
 }
 
-.ttamdtVisitasfechaVisita {
-	width: 70px !important;
-	max-width: 70px !important;
-	min-width: 7px !important;
-}
-
-.ttamdtVisitasidSistAdm {
-	width: 200px !important;
-	max-width: 200px !important;
-	min-width: 10px !important;
-}
-
-.ttamdtVisitasidSedeTxt {
-	width: 150px !important;
-	max-width: 150px !important;
-	min-width: 10px !important;
-}
-
-.ttamdtVisitasidOrigenTxt {
+.ttamdtVisitasfechaVisita{
 	width: 100px !important;
 	max-width: 100px !important;
-	min-width: 10px !important;
+	min-width: 100px !important; 
+}
+.ttamdtVisitasidOrigen{
+	width: 80px !important;
+	max-width: 80px !important;
+	min-width: 80px !important; 
+}
+.ttamdtVisitasidProgramacion{
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 100px !important; 
+}
+.ttamdtVisitasidModalidad{
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important; 
+}
+.ttamdtVisitasidTipo{
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important; 
+}
+.ttamdtVisitasidLugar{
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important; 
+}
+.ttamdtVisitasidEntidad{
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important; 
+}
+.ttamdtVisitasidSede{
+	width: 80px !important;
+	max-width: 80px !important;
+	min-width: 80px !important; 
+}
+.ttamdtVisitasidSistAdm{
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 100px !important; 
+}
+.ttamdtVisitasidparticipante{
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 100px !important; 
 }
 
-.ttamdtVisitasidProgramacion {
-	width: 70px !important;
-	max-width: 70px !important;
-	min-width: 10px !important;
+.ttamdtdepartamento{
+	width: 200px !important;
 }
 
-.ttamdtVisitasestado {
-	width: 50px !important;
-	max-width: 50px !important;
-	min-width: 10px !important;
+.ttamdtVisitasidFinancia{
+	width: 10px !important;
+	max-width: 10px !important;
+	min-width: 10px !important; 
 }
+.ttamdtVisitasfechaProgramada{
+	width: 7px !important;
+	max-width: 7px !important;
+	min-width: 7px !important; 
+}
+/* PURIBE 01022024 - FIN */
 
 /* MS_PAISES SERVICIO: LISTA DE LOS PAÍSES REGISTRADOS EN EL SISTEMA */
 .ttammsPaisesidpais {
@@ -395,11 +437,13 @@ button, select, html, textarea, input {
 }
 
 /* TA_FERIADOS SERVICIO: TABLA EN LA QUE SE REGISTRAN TODOS LOS DIAS FERIADOS DEL AÑO */
-.ttamtaFeriadosfeFecha {
-	width: 20px !important;
-	max-width: 20px !important;
-	min-width: 20px !important;
-}
+ 		/* PURIBE 16012024 - INICIO */
+.ttamtaFeriadosfeFecha{
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 100px !important; 
+} 
+		/* PURIBE 16012024 - FIN */
 
 .ttamtaFeriadosfeDesc {
 	width: 255px !important;
@@ -505,29 +549,65 @@ button, select, html, textarea, input {
 	min-width: 100px !important;
 }
 
-.ttamprtParametrosidpadre {
+
+/* PURIBE 04012024 - INICIO */
+.ttamprtParametrosidpadre{
 	width: 150px !important;
 	max-width: 150px !important;
-	min-width: 10px !important;
+	min-width: 150px !important; 
 }
 
-.ttamprtParametrosfechaCrea {
-	width: 70px !important;
-	max-width: 70px !important;
-	min-width: 7px !important;
+.tdaa1{
+    font-family: 'Calibri';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px !important;
+    color: #363640; 
+    padding: 0px 0px 0px !important; 
 }
 
-.ttamprtParametrosfechaModif {
-	width: 70px !important;
-	max-width: 70px !important;
-	min-width: 7px !important;
+
+.ttamprtParametrosdescripcion{
+	width: 150px !important;
+	max-width: 150px !important;
+	min-width: 100px !important; 
 }
 
-.ttamprtParametrosestado {
-	width: 50px !important;
-	max-width: 50px !important;
-	min-width: 1px !important;
+.ttamprtParametrosfecha{
+	width: 100px !important;
+	max-width: 100px !important;
+	min-width: 100px !important; 
 }
+
+.ttamprtEstado{
+	width: 40px !important;
+	max-width: 40px !important;
+	min-width: 40px !important; 
+}
+
+/* PURIBE 20012024 - INICIO */
+.md-button.estilobuttonBuscar{
+	background-color:rgba(0, 150, 136, 1) !important;
+	display: flex;
+    align-items: center;
+    width: 80px; /* Ancho del botón */
+	height: 20px;
+     border-radius: 9px;
+	
+}
+
+.md-button.estilobuttonNuevo{
+	background-color: rgba(0, 150, 136, 1) !important;
+	display: flex;
+    align-items: center;
+    width: 120px; /* Ancho del botón */
+	height: 20px;
+     border-radius: 9px;
+	
+}
+/* PURIBE 20012024 - FIN */
+
+/* PURIBE 04012024 - FIN */
 
 /* DT_USUARIO_EXTERNO SERVICIO: LISTA DE LOS USUARIOS EXTERNOS REGISTRADOS EN EL SISTEMA */
 .ttamdtUsuarioExternoidUsuexterno {
@@ -591,47 +671,71 @@ button, select, html, textarea, input {
 }
 
 /* MS_UBIGEO SERVICIO: LISTA EL UBIGEO (DEPARTAMENTO */
-.ttammsUbigeoid {
-	width: 20px !important;
-	max-width: 20px !important;
-	min-width: 20px !important;
-}
+/* PURIBE 10012024 - INICIO */
+.ttammsUbigeoid{
+	width: 40px !important;
+	max-width: 40px !important;
+	min-width: 40px !important; 
+} 
 
-.ttammsUbigeocodDpto {
+.ttamblanco{
+	width: 5%;
+};
+
+.container
+{
+	display: flex;
+	flex-wrap: wrap;
+};
+
+.custom-switch .md-thumb:after,
+.custom-switch .md-bar {
+    
+	background-color: #00ff00; /* Cambia "#yourCustomColor" por el color que desees */
+	}
+
+.ttamnumero{
+	width: 40px !important;
+	max-width: 40px !important;
+	min-width: 40px !important; 
+} 
+
+.ttammsUbigeodescripcion{
+	width: 50px !important;
+	max-width: 50px !important;
+	min-width: 50px !important; 
+}
+.ttammsUbigeocodDpto{
 	width: 100px !important;
 	max-width: 100px !important;
-	min-width: 2px !important;
+	min-width: 100px !important; 
 }
-
-.ttammsUbigeocodProv {
+.ttammsUbigeocodProv{
 	width: 100px !important;
 	max-width: 100px !important;
-	min-width: 2px !important;
+	min-width: 100px !important; 
 }
-
-.ttammsUbigeocodDistr {
+.ttammsUbigeocodDistr{
 	width: 100px !important;
 	max-width: 100px !important;
-	min-width: 2px !important;
+	min-width: 100px !important; 
 }
+/* PURIBE 10012024 - FIN */
 
-.ttammsUbigeofechaCrea {
-	width: 70px !important;
-	max-width: 70px !important;
-	min-width: 7px !important;
+/* PURIBE 04012024 - INICIO */
+/* PURIBE 20012024 - INICIO */
+/* PURIBE 01022024 - INICIO */
+.tamaDivFiltro{
+	height: 50px !important;
+	max-height: 50px !important;
+	min-height: 50px !important; 
+	align-items: right;
+	padding: 0px 10px 0px 0px !important;
+	display: flex;
 }
-
-.ttammsUbigeofechaModif {
-	width: 70px !important;
-	max-width: 70px !important;
-	min-width: 7px !important;
-}
-
-.ttammsUbigeoestado {
-	width: 70px !important;
-	max-width: 70px !important;
-	min-width: 10px !important;
-}
+/* PURIBE 01022024 - FIN*/
+/* PURIBE 20012024 - FIN */
+/* PURIBE 04012024 - FIN */
 
 /* MS_SUBTEMA SERVICIO: LISTA DE LOS SUBTEMAS REGISTRADOS EN EL SISTEMA */
 .ttammsSubtemaidSubtema {
@@ -1301,8 +1405,6 @@ button, select, html, textarea, input {
 	margin-right: 10px;
 }
 
-/* PURIBE 22012024 - FIN*/
-
 /* MPINARES 24012023 - INICIO */
 legend {
     background-color: #d0cccc;
@@ -1358,6 +1460,7 @@ padding: 6px 6px;
     font-size: 11px !important;
 }
 
+/*
 .md-button-borde-naranja {
 	box-sizing: border-box;
     border-width: 1px;
@@ -1376,11 +1479,35 @@ padding: 6px 6px;
 	line-height: 26px;
 	min-height: 26px;
 }
+*/
 
+/* PURIBE 04012024 - INICIO */
 .md-button-borde-naranja:hover, .md-button-borde-naranja:focus {
-	color: rgb(255, 255, 255) !important;
-    background-color: rgb(0, 150, 136) !important;
+	color: rgb(0,150,136) !important;
+    background-color: rgb(256,256,256) !important;
 }
+.md-button-hover:hover, .md-button-hover:focus {
+	font-weight: bold;
+}
+
+.md-button-borde-naranja {
+	border: #fc9e00 1px solid !important;
+	box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(243, 156, 29, 1);
+    border-radius: 5px;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    font-family: 'Calibri Bold', 'Calibri Regular', 'Calibri';
+    font-weight: 700;
+    font-style: normal;
+    color: rgba(54, 54, 64, 0.6) !important; 
+	font-size: 14px;
+}
+
+/* PURIBE 04012024 - FIN */
 
 .ttamdtAsistenciausuExt{
 	width: 150px !important;
@@ -1414,19 +1541,10 @@ md-autocomplete-wrap {
 	min-width: 40px !important; 
 } 
 
-/* MPINARES 24012023 - FIN */
-
 /* //MPINARES 14022024 - INICIO */
 .mousechange:hover {
   cursor: pointer;
 }
-
-.md-panel-inner-wrapper {
-    position: fixed;
-    width: 273px;
-}
-
-/* //MPINARES 14022024 - FIN */
 
 /* PURIBE 29032024 - INICIO*/
 
@@ -1449,30 +1567,28 @@ md-autocomplete-wrap {
   }
   /* PURIBE 29032024 - FIN*/
   
-.progress {
-	display: -ms-flexbox;
-	display: flex;
-	height: 7px;
-	overflow: hidden;
-	font-size: .75rem;
-	background-color: #e9ecef;
-	border-radius: .25rem;
-	margin-top: -10px;
-}  
-  
-.progress-bar {
-	display: -ms-flexbox;
-	display: flex;
-	-ms-flex-direction: column;
-	flex-direction: column;
-	-ms-flex-pack: center;
-	justify-content: center;
-	overflow: hidden;
-	color: #fff;
-	text-align: center;
-	white-space: nowrap;
-	background-color: #28a745;
-	transition: width .6s ease;
-	font-size: 6px;
-	text-align: center;
+.titulo-registramef {
+	font-family: 'Leelawadee Negrita', 'Leelawadee Normal', 'Leelawadee';
+	font-size: 32px !important;
+	color: #1E82AD;
+	text-align: left;
+	font-weight: bold;
 }
+
+.overflowEsconder {
+	overflow: hidden;
+}
+
+/* PURIBE 10012024 - INICIO */
+.md-button.estilobuttonNuevoUbigeo{
+	background-color: rgba(0,143,57) !important;
+	display: flex;
+    align-items: center;
+    width: 150px; /* Ancho del botón */
+	height: 20px;
+     border-radius: 9px;
+	
+}
+
+/* PURIBE 10012024 - FIN */
+

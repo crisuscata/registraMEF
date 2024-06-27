@@ -509,7 +509,7 @@ public class TaFeriadosRsCtrl {
 	@Path("/editartaFeriados/{feFecha}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response editarTaFeriados(@Context HttpServletRequest req, @Context HttpServletResponse res,
-			@HeaderParam("authorization") String authString, @PathParam("feFecha") Long feFecha) {
+			@HeaderParam("authorization") String authString, @PathParam("feFecha") Date feFecha) {
 		
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 		Principal usuario = req.getUserPrincipal();
@@ -526,7 +526,9 @@ public class TaFeriadosRsCtrl {
 			}).build();	
 
 		try {
-			TaFeriadosBk taFeriadosE = null; //servicio.getTaFeriadosBkXid(feFecha,msUsuariosBk.getIdusuario());
+			//PURIBE 16012024 - INICIO-->
+			TaFeriadosBk taFeriadosE = servicio.getTaFeriadosBkXid(feFecha,msUsuariosBk.getIdusuario());
+			//PURIBE 16012024 - FIN-->
 			
 			GenericEntity<TaFeriadosBk> registro = new GenericEntity<TaFeriadosBk>(taFeriadosE) {
 			};

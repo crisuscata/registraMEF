@@ -7,13 +7,20 @@ var eliminarmsUbigeoUrl = contexto+"/rs/ctrlmsUbigeo/eliminarmsUbigeo";
 var activarmsUbigeoUrl = contexto+"/rs/ctrlmsUbigeo/activarmsUbigeo";
 var eliminarListamsUbigeoUrl = contexto+"/rs/ctrlmsUbigeo/eliminarListamsUbigeo";
 var editarmsUbigeoUrl = contexto+"/rs/ctrlmsUbigeo/editarmsUbigeo/";
-//var listaMsUbigeocodDptoCodDptoUrl = contexto+"/rs/ctrlmsUbigeo/listaMsUbigeoCodDptoCodDpto";
-//var listaMsUbigeocodProvCodProvUrl = contexto+"/rs/ctrlmsUbigeo/listaMsUbigeoCodProvCodProv";
+// var listaMsUbigeocodDptoCodDptoUrl =
+// contexto+"/rs/ctrlmsUbigeo/listaMsUbigeoCodDptoCodDpto";
+// var listaMsUbigeocodProvCodProvUrl =
+// contexto+"/rs/ctrlmsUbigeo/listaMsUbigeoCodProvCodProv";
+// PURIBE 10012024 - INICIO
+var listaMsUbigeocodDptoCodDptoUrl = contexto+"/rs/ctrlmsUbigeo/listaCoddptos";
+var listaMsUbigeocodProvCodProvUrl = contexto+"/rs/ctrlmsUbigeo/listaCodprov";
+var listaCoddistUrl = contexto+"/rs/ctrlmsUbigeo/listaCoddist/";
 var descargarUrl = contexto+"/rs/ctrlmsUbigeo/descargar/";
+// PURIBE 10012024 - FIN
 
-///URLs CARGA DE ARCHIVOS
+// /URLs CARGA DE ARCHIVOS
 var insertDocUrl = contexto+"/rs/ctrlmsUbigeo/insertarchivo";
-///FIN URLs CARGA DE ARCHIVOS
+// /FIN URLs CARGA DE ARCHIVOS
 
 var listaCoddptosUrl = contexto+"/rs/ctrlmsUbigeo/listaCoddptos";
 var listaCodprovUrl = contexto+"/rs/ctrlmsUbigeo/listaCodprov/";
@@ -25,21 +32,23 @@ var listaCoddistUrl = contexto+"/rs/ctrlmsUbigeo/listaCoddist/";
  */
 myapp = angular.module('MyApp');
 
+// PURIBE 10012024 - INICIO
 myapp.config(function($routeProvider) {
-	$routeProvider
-	.when("/editar/:id", {
-		templateUrl : "adminis/editarmsUbigeo.html",
-		controller : "ctrlListamsUbigeo"
-	})
-	.when("/nuevo/:stipo", {
-		templateUrl : "adminis/editarmsUbigeo.html",
-		controller : "ctrlListamsUbigeo"
-	})
-	.otherwise({
-		templateUrl : "adminis/vermsUbigeo.html",
-		controller : "ctrlListamsUbigeo"  
+	  $routeProvider
+	  .when("/editar/:codDpto/:codProv/:codDistr", {
+		  templateUrl : "adminis/editarmsUbigeo.html",
+		  controller : "ctrlListamsUbigeo"
+	  })
+	  .when("/nuevo/:stipo", {
+		  templateUrl : "adminis/editarmsUbigeo.html",
+		  controller : "ctrlListamsUbigeo"
+	  })
+	  .otherwise({
+		  templateUrl : "adminis/vermsUbigeo.html",
+		  controller : "ctrlListamsUbigeo"  
+	  });
 	});
-});
+ // PURIBE 10012024 - FIN
 
 myapp.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
 
@@ -57,16 +66,16 @@ myapp.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
 
 		return (day<10?'0'+day:day) + '/' + (monthIndex<9?'0'+(monthIndex + 1):(monthIndex + 1)) + '/' + year;
 
-//		return date ? moment(date).format('DD/MM/YYYY') : '';
+// return date ? moment(date).format('DD/MM/YYYY') : '';
 	};
 	$mdDateLocaleProvider.parseDate = function (dateString) {
-//		var m = moment(dateString, 'DD/MM/YYYY', true);
+// var m = moment(dateString, 'DD/MM/YYYY', true);
 		var parts = dateString.split("/");
 		var dt = new Date(parseInt(parts[2], 10),
 				parseInt(parts[1], 10) - 1,
 				parseInt(parts[0], 10));
 		return dt ? dt:new Date(NaN);
-//		return m.isValid() ? m.toDate() : new Date(NaN);
+// return m.isValid() ? m.toDate() : new Date(NaN);
 	};
 }]);
 
@@ -79,6 +88,11 @@ myapp.controller('ctrlListamsUbigeo', ['$mdEditDialog', '$scope', '$timeout', '$
 			limit: 100,
 			page: 1
 	};
+	/* PURIBE 20012024 - INICIO */
+	$scope.estado = 0;
+	$scope.deshabilitarBoton = false;
+	$scope.deshabilitarCombos = false;
+	/* PURIBE 20012024 - FIN */
 
 	$scope.selected = [];
 	$scope.options = {
@@ -114,9 +128,13 @@ myapp.controller('ctrlListamsUbigeo', ['$mdEditDialog', '$scope', '$timeout', '$
 	// ///////////////////////////////////////////
 	$scope.datos = [];
 	$scope.total = 0;
+	// PURIBE 10012024 - INICIO
+	$scope.tipo = 0;
+	$scope.stipo = 0;
+	 // PURIBE 10012024 - FIN
 
 	$scope.loadmsUbigeos = function () {
-		//$scope.promise = $timeout(function () {
+		// $scope.promise = $timeout(function () {
 		var surl = $scope.getURL();	    
 		$scope.promise = $http.get(surl).then(function(res){
 			$scope.datos = res.data.data;
@@ -150,7 +168,7 @@ myapp.controller('ctrlListamsUbigeo', ['$mdEditDialog', '$scope', '$timeout', '$
 				);
 			}
 		});			 
-		//}, 500);
+		// }, 500);
 	};
 
 	$scope.getURLParametros=function(){
@@ -182,14 +200,14 @@ myapp.controller('ctrlListamsUbigeo', ['$mdEditDialog', '$scope', '$timeout', '$
 				page = "&page="+$scope.query.page;
 			}
 		}		    
-		///FILTRO
+		// /FILTRO
 		const keys = Object.keys($scope.filtro);
-		//console.log('Filtro Keys '+keys);
+		// console.log('Filtro Keys '+keys);
 		var filtroparametro = "";
 		Object.keys($scope.filtro).forEach(key => {
-			//console.log(key);
+			// console.log(key);
 			const valor = $scope.filtro[key];
-			//console.log('Filtro Key '+key+' Valor '+valor);
+			// console.log('Filtro Key '+key+' Valor '+valor);
 			if(!$scope.isNull(valor) && ($scope.isString(valor) || $scope.isNumber(valor))){
 				if(elprimero){
 					elprimero=false;
@@ -207,32 +225,81 @@ myapp.controller('ctrlListamsUbigeo', ['$mdEditDialog', '$scope', '$timeout', '$
 		return listamsUbigeoUrl+$scope.getURLParametros();
 	}
 
+	// PURIBE 10012024 - INICIO
+	//PURIBE 15012024 - INICIO
 	$scope.editmsUbigeo = function () {
-		$scope.nuevo = true;
-		$scope.tipo = 0;
-		var id = $routeParams.id;
-		if(id){
-			$scope.cargarmsUbigeo(id);
-		}
+	    $scope.nuevo = true;
+		var stipos = $routeParams.stipo ? $routeParams.stipo : 0;
 		
-		///CARGAR COMPLEMENTOS 
-//		$scope.loadListaMsUbigeoCodDpto();//SELECT
-//		$scope.loadListaMsUbigeoCodProv();//SELECT
-		$scope.loadlistaCoddptos();
-		var stipo = $routeParams.stipo;
-		if($scope.isString(stipo)){
-			$scope.msUbigeoModelo.tipo = Number(stipo);
-			if($scope.isNumber($scope.msUbigeoModelo.tipo)){
-				if($scope.msUbigeoModelo.tipo>2){
-					$scope.msUbigeoModelo.tipoTxt="Distrito";
-				}else if($scope.msUbigeoModelo.tipo>1){
-					$scope.msUbigeoModelo.tipoTxt="Provincia";
-				}else if($scope.msUbigeoModelo.tipo>0){
-					$scope.msUbigeoModelo.tipoTxt="Departamento";
+		var codDpto = $routeParams.codDpto;
+		var codProv = $routeParams.codProv;
+		var codDistr = $routeParams.codDistr;
+
+
+		if (codDpto == null && codDpto == undefined) {
+		
+			codDpto =0;
+			console.log("codDpto es nulo o indefinido");
+		} 
+		
+		if (codProv == null && codProv == undefined) {
+		
+			codProv =0;
+			console.log("codProv es nulo o indefinido");
+		} 
+			if (codDistr == null && codDistr == undefined) {
+				codDistr =0;
+				console.log("codDistr es nulo o indefinido");
+			} 
+
+//PURIBE 16012024 - INICIO--
+		if (stipos > 0)
+		{	
+			if  (stipos == 1){
+				$scope.nombreDPTO = 'Departamento';
+				$scope.tipo=1;
+				$scope.msUbigeoModelo.id.codDpto = 0;
+				
+			}else if(stipos == 2)
+				{
+					$scope.nombreDPTO = 'Provincia';
+					$scope.tipo=2;
+					$scope.loadListaMsUbigeoCodDpto();	
+					$scope.msUbigeoModelo.id.codProv = 0;
 				}
-			}
+			
+				else if (stipos == 3)
+				{
+					$scope.nombreDPTO = 'Distrito';
+					$scope.tipo=3;
+					$scope.loadListaMsUbigeoCodDpto();
+				//	$scope.loadListaMsUbigeoCodProv(codProv);
+					$scope.msUbigeoModelo.id.codDistr= 0;
+				}
+						
+			//PURIBE 16012024 - FIN--
+		}else if (stipos==0)
+		{
+			$scope.nombreDPTO = 'Ubigeo';
+		$scope.stipo=1;	
+		$scope.nuevo = false;
+	
+		$scope.deshabilitarCombos= true;
+		$scope.loadListaMsUbigeoCodDpto();//SELECT
+		$scope.loadListaMsUbigeoCodProv(codDpto);//SELECT
+		$scope.loadListaMsUbigeoDistr(codDpto,codProv);
+		$scope.cargarmsUbigeo(codDpto+"-"+codProv+"-"+codDistr);
 		}
-	};
+	    //PURIBE 20012024 - FIN--
+	  //  if(id){
+	    //	$scope.cargarmsUbigeo(id);
+	    //}
+	   ///CARGAR COMPLEMENTOS 
+	
+			
+	  };
+		   //PURIBE 15012024 - FIN
+		    // PURIBE 10012024 - FIN
 
 	$scope.filtro ={
 			idTxt: null,
@@ -267,149 +334,203 @@ myapp.controller('ctrlListamsUbigeo', ['$mdEditDialog', '$scope', '$timeout', '$
 		}
 	};
 
-	$scope.msUbigeoModelo = {
-			id : {				
-				codDpto: null,
-				codProv: null,
-				codDistr: null
-			},
+	//PURIBE 20012024 - INICIO--
+	  $scope.msUbigeoModelo = {
+		id: $scope.msUbigeoId,
+			descripcion: null,
 			codDpto: null,
 			codProv: null,
-			codDistr: null,
-			fechaCrea: new Date(),
-			fechaModif: new Date(),
-			estado: null,
-			descripcion: null,
 			idubigeo: null,
-			// ADICIONALES
-			idTxt: null,
-			codDptoTxt: null,
-			codProvTxt: null,
-			codDistrTxt: null,
-			tipo: null,
-			tipoTxt: null,
-			estadoTxt: null,
-			editopcion: 1
-	};
-
-	$scope.clearmsUbigeo = function(){
-		$scope.msUbigeoModelo.id = null;
-		$scope.msUbigeoModelo.codDpto = null;
-		$scope.msUbigeoModelo.codProv = null;
-		$scope.msUbigeoModelo.codDistr = null;
-		$scope.msUbigeoModelo.fechaCrea = new Date();$scope.msUbigeoModelo.fechaModif = new Date();$scope.msUbigeoModelo.estado = null;
-		$scope.msUbigeoModelo.descripcion = null;
-		$scope.msUbigeoModelo.idubigeo = null;
-
-		// ADICIONALES
-		$scope.msUbigeoModelo.idTxt = null;
-		$scope.msUbigeoModelo.codDptoTxt = null;
-		$scope.msUbigeoModelo.codProvTxt = null;
-		$scope.msUbigeoModelo.codDistrTxt = null;
-		$scope.msUbigeoModelo.tipo = null;
-		$scope.msUbigeoModelo.tipoTxt = null;
-		$scope.msUbigeoModelo.estadoTxt = null;
-		$scope.msUbigeoModelo.editopcion = 1;
-	} 
-
-	$scope.setMsUbigeoModelo = function(msUbigeoBk) {
-		$scope.msUbigeoModelo.id = msUbigeoBk.id;
-		$scope.msUbigeoModelo.codDpto = msUbigeoBk.codDpto;
-		$scope.msUbigeoModelo.codProv = msUbigeoBk.codProv;
-		$scope.msUbigeoModelo.codDistr = msUbigeoBk.codDistr;
-		$scope.msUbigeoModelo.fechaCrea = msUbigeoBk.fechaCrea;
-		if(!$scope.isNull($scope.msUbigeoModelo.fechaCrea) && !isNaN($scope.msUbigeoModelo.fechaCrea)){
-			$scope.msUbigeoModelo.fechaCrea = new Date($scope.msUbigeoModelo.fechaCrea);
-		}
-		$scope.msUbigeoModelo.fechaModif = msUbigeoBk.fechaModif;
-		if(!$scope.isNull($scope.msUbigeoModelo.fechaModif) && !isNaN($scope.msUbigeoModelo.fechaModif)){
-			$scope.msUbigeoModelo.fechaModif = new Date($scope.msUbigeoModelo.fechaModif);
-		}
-		$scope.msUbigeoModelo.estado = msUbigeoBk.estado;
-		$scope.msUbigeoModelo.descripcion = msUbigeoBk.descripcion;
-		$scope.msUbigeoModelo.idubigeo = msUbigeoBk.idubigeo;
-
-		// ADICIONALES
-
-		$scope.msUbigeoModelo.idTxt = msUbigeoBk.idTxt;
-		$scope.msUbigeoModelo.codDptoTxt = msUbigeoBk.codDptoTxt;
-		$scope.msUbigeoModelo.codProvTxt = msUbigeoBk.codProvTxt;
-		$scope.msUbigeoModelo.codDistrTxt = msUbigeoBk.codDistrTxt;
-		$scope.msUbigeoModelo.tipo = msUbigeoBk.tipo;
-		$scope.msUbigeoModelo.tipoTxt = msUbigeoBk.tipoTxt;
-		$scope.msUbigeoModelo.estadoTxt = msUbigeoBk.estadoTxt;
+			coddistTxt:null,
+			coddptoTxt:null,
+			codprovTxt:null,
+			estado:null,
+                      // ADICIONALES
+	                
+		    editopcion: 1
+		};
+	  
+		//PURIBE 10012024 - INICIO--
+	  $scope.clearmsUbigeo = function(){
+		    $scope.msUbigeoModelo.id.codDpto = null;
+			$scope.msUbigeoModelo.id.codProv = null;
+			$scope.msUbigeoModelo.id.codDistr = null;
+			$scope.msUbigeoModelo.coddistTxt = null;
+		    $scope.msUbigeoModelo.coddptoTxt= null;
+		    $scope.msUbigeoModelo.codprovTxt = null;
+		    $scope.msUbigeoModelo.descripcion = null;
+		    $scope.msUbigeoModelo.codDpto = null;
+		    $scope.msUbigeoModelo.codProv = null;
+		    $scope.msUbigeoModelo.idubigeo = null;
+			$scope.msUbigeoModelo.estado=null;
+		    
+                  // ADICIONALES
+	            
+		    $scope.msUbigeoModelo.editopcion = 1;
 		
-		$scope.msUbigeoModelo.editopcion = msUbigeoBk.msUbigeoACL.editopcion;
-	}
-	// ////////////////////////////////////////////////
-	$scope.editarMsUbigeo = function(ev, msUbigeoBk) {		  
-		$scope.setMsUbigeoModelo(msUbigeoBk);		  
-		$location.url('/editar/' + msUbigeoBk.idTxt);
-		$scope.nuevo = false;
-	}
+	 } 
+	 	/* PURIBE 20012024 - INICIO*/
+	 
+	  /* PURIBE 20012024 - INICIO*/
+	  $scope.setMsUbigeoModelo = function(msUbigeoBk) {
+		$scope.msUbigeoModelo.coddistTxt=msUbigeoBk.coddistTxt;
+		$scope.msUbigeoModelo.coddptoTxt=msUbigeoBk.coddptoTxt;
+		$scope.msUbigeoModelo.codprovTxt=msUbigeoBk.codprovTxt;
+		  $scope.msUbigeoModelo.id = msUbigeoBk.id;
+		  $scope.msUbigeoModelo.id.codDpto = msUbigeoBk.id.codDpto;
+		  $scope.msUbigeoModelo.id.codProv = msUbigeoBk.id.codProv;
+		  $scope.msUbigeoModelo.id.codDistr = msUbigeoBk.id.codDistr;
+		  $scope.msUbigeoModelo.codDpto = msUbigeoBk.id.codDpto;
+		  $scope.msUbigeoModelo.codProv = msUbigeoBk.id.codProv;
+			$scope.msUbigeoModelo.descripcion = msUbigeoBk.descripcion;
+			$scope.msUbigeoModelo.idubigeo = msUbigeoBk.idubigeo;
+		
+			if (msUbigeoBk.estado==0){
+				$scope.msUbigeoModelo.estado = false;
+				}
+				else{
+					$scope.msUbigeoModelo.estado = true;
+				}
+		/* PURIBE 20012024 - FIN*/
+		
+                        // ADICIONALES
+	                
+			$scope.msUbigeoModelo.editopcion = msUbigeoBk.msUbigeoACL.editopcion;
+		}
+		//PURIBE 10012024 - INICIO--
+		//PURIBE 20012024 - FIN--
+	  // ////////////////////////////////////////////////
+	  $scope.editarMsUbigeo = function(ev, msUbigeoBk) {		  
+		    $scope.setMsUbigeoModelo(msUbigeoBk);		  
+			$location.url('/editar/' + $scope.msUbigeoModelo.codDpto  + '/' + $scope.msUbigeoModelo.codProv + '/' + msUbigeoBk.id.codDistr);
+			
+			// $location.url('/editar/' +msUbigeoBk.id);
+			// $scope.nuevo = false;
+		
+	  }
+	    // PURIBE 10012024 - FIN
 
-	$scope.nuevoMsUbigeo = function(tipo) {
-		$scope.clearmsUbigeo();
-		$location.url('/nuevo/'+tipo);
-		$scope.nuevo = true;		
-	}
+	// PURIBE 10012024 - INICIO
+	  $scope.nuevoMsUbigeo = function(tipo) {
+		
+			$location.url('/nuevo/'+tipo);
+		
+			$scope.nuevo = true;
+			$scope.clearmsUbigeo();
+				
+				
+
+	  }
+	  // PURIBE 10012024 - FIN
 
 	$scope.cancelarMsUbigeo = function() {
 		$scope.clearmsUbigeo();
 		$location.url('/');
 	}
+	
+	/* PURIBE 20012024 - INICIO*/
+	$scope.updateModel = function() {
+		// Aplicar tu lógica aquí
+		$scope.estado = $scope.msUbigeoModelo.estado ? 1 : 0;
+	};
+		/* PURIBE 20012024 - FIN*/
 
 	$scope.salvarMsUbigeo = function(ev){		
-		ev.target.disabled = true;
-		var datainsert = angular.toJson($scope.msUbigeoModelo);
-		console.log("datainsert = "+datainsert);	
-		$http.post(insertmsUbigeoUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
-			var dato = res.data;
+	    ev.target.disabled = true;
+			/* PURIBE 20012024 - INICIO*/
+	    /* PURIBE 25012024 - INICIO*/
+		$scope.estado = $scope.msUbigeoModelo.estado ? 3 : 0;
+		$scope.msUbigeoModelo.estado = $scope.estado
+		/* PURIBE 25012024 - FIN*/
+	/* PURIBE 20012024 - FIN*/
+		if ($scope.msUbigeoModelo.descripcion !== null && $scope.msUbigeoModelo.descripcion !== ''
+		&& $scope.msUbigeoModelo.id.codDpto ==0 )
+		{
+			$scope.msUbigeoModelo.codDpto =0;
+			$scope.msUbigeoModelo.id.codDpto =0;
+			$scope.msUbigeoModelo.id.codProv =0;
+			$scope.msUbigeoModelo.id.codDistr =0;
+		}
+		else if ($scope.msUbigeoModelo.descripcion !== null && $scope.msUbigeoModelo.descripcion !== ''
+		&& $scope.msUbigeoModelo.id.codProv ==0)
+		{
+			$scope.msUbigeoModelo.codDpto =0;
+			$scope.msUbigeoModelo.id.codProv =0;
+			$scope.msUbigeoModelo.id.codDistr =0;
+		}
+		else if ($scope.msUbigeoModelo.descripcion !== null && $scope.msUbigeoModelo.descripcion !== ''
+		&& $scope.msUbigeoModelo.id.codDistr ==0)
+		{
+			$scope.msUbigeoModelo.codDpto =0;
+			$scope.msUbigeoModelo.id.codDistr =0;
+		}
 
-//			$scope.datos.push(dato); 
-			$scope.total = $scope.datos.length;
+		if (!$scope.nuevo)
+		{
+			$scope.msUbigeoModelo.codDpto =$scope.msUbigeoModelo.id.codDpto;
 
-			$scope.setMsUbigeoModelo(dato);
+		}
 
-			$mdDialog.show(
-					$mdDialog.alert()
-					.parent(angular.element(document.body))
-					.clickOutsideToClose(true)
-					.title('Guardar Provincia')
-					.textContent("distrito) resgistrado en el sistema Provincia se guardó correctamente.")
-					.ariaLabel('ERROR')
-					.ok('OK')
-					.targetEvent(ev)
-			);
+	    var datainsert = angular.toJson($scope.msUbigeoModelo);
+			console.log("datainsert = "+datainsert);	
+    		$http.post(insertmsUbigeoUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
+				var dato = res.data;
 
-			$scope.nuevo = false;
-		},
-		function error(errResponse) {
-			var dato;
-			if(errResponse && errResponse.data){
-				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
-				dato = errResponse.data;
-			}
-			if(errResponse.message){ 
-				console.log("Message " + errResponse.message);
-				dato = errResponse.message;
-			}			
-			if(typeof(dato) != 'undefined'){
+//				$scope.datos.push(dato); 
+				$scope.total = $scope.datos.length;
+				
+				$scope.setMsUbigeoModelo(dato);
+				   //PURIBE 20012024 - INICIO
+				 if ($scope.nuevo)
+				{
+					$scope.deshabilitarBoton = true;
 				$mdDialog.show(
+				         $mdDialog.alert()
+				        .parent(angular.element(document.body))
+				        .clickOutsideToClose(true)
+				        .title('Guardar ' + $scope.nombreDPTO)
+				        .textContent($scope.nombreDPTO+" resgistrado en el sistema  se guardó correctamente.")
+				        .ariaLabel('ERROR')
+				        .ok('OK')
+				        .targetEvent(ev)
+				    );
+				}
+				   //PURIBE 20012024 - FIN
+				else if (!$scope.nuevo)
+				{
+					$mdDialog.show(
 						$mdDialog.alert()
-						.parent(angular.element(document.body))
-						.clickOutsideToClose(true)
-						.title('Guardar Provincia')
-						.textContent(dato)
-						.ariaLabel('ERROR')
-						.ok('OK')
-						.targetEvent(ev)
-				);
-			}
-		});		
+					   .parent(angular.element(document.body))
+					   .clickOutsideToClose(true)
+					   .title('Editar Ubigeo')
+					   .textContent("Ubigeo resgistrado en el sistema  se guardó correctamente.")
+					   .ariaLabel('ERROR')
+					   .ok('OK')
+					   .targetEvent(ev)
+				   );
 
-		ev.target.disabled = false;
-	};
+				}
+				$scope.nuevo = false;
+			},
+			function error(errResponse) {
+	            console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+	            var dato = errResponse.data;
+	            if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+	            	$mdDialog.show(
+					         $mdDialog.alert()
+					        .parent(angular.element(document.body))
+					        .clickOutsideToClose(true)
+					        .title('Guardar Provincia')
+					        .textContent(dato.message)
+					        .ariaLabel('ERROR')
+					        .ok('OK')
+					        .targetEvent(ev)
+					    );
+	            }
+	        });		
+    			        	
+    	ev.target.disabled = false;
+ };
 
 	$scope.eliminarmsUbigeo = function(ev,msUbigeoBk){		
 		ev.target.disabled = true;
@@ -656,71 +777,75 @@ myapp.controller('ctrlListamsUbigeo', ['$mdEditDialog', '$scope', '$timeout', '$
 			$scope.status = 'NO';
 		});
 	};		  
-//	/ADICIONALES
-//	SELECT INI
-//	$scope.listaMsUbigeoCodDpto=[];
-//	$scope.loadListaMsUbigeoCodDpto=function(){
-//		$http.get(listaMsUbigeocodDptoCodDptoUrl).then(function(res){
-//			$scope.listaMsUbigeoCodDpto = res.data; 
-//		},
-//		function error(errResponse) {
-//			var dato;
-//			if(errResponse && errResponse.data){
-//				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
-//				dato = errResponse.data;
-//			}
-//			if(errResponse.message){ 
-//				console.log("Message " + errResponse.message);
-//				dato = errResponse.message;
-//			}
-//		});
-//	};
-//	$scope.changeCodDpto=function(){
-//		///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
-//	}
-//	$scope.$watch('msUbigeoModelo.codDpto', function (newValue, oldValue) {
-//		console.log('msUbigeoModelo.codDpto ' + newValue+' -- '+oldValue);
-//		//CARGAR DATOS DEL SIGUIENTE SELECT
-////		if($scope.isArray($scope.listaMsUbigeoCodDpto)){
-////		var obj = $scope.listaMsUbigeoCodDpto.find(o => o.id === newValue);
-////		if($scope.isObject(obj)){
-////		$scope.msUbigeoModelo.codDptoTxt = obj.valor;
-////		}
-////		}
-//	});
-////	SELECT FIN                
-////	SELECT INI
-//	$scope.listaMsUbigeoCodProv=[];
-//	$scope.loadListaMsUbigeoCodProv=function(){
-//		$http.get(listaMsUbigeocodProvCodProvUrl).then(function(res){
-//			$scope.listaMsUbigeoCodProv = res.data; 
-//		},
-//		function error(errResponse) {
-//			var dato;
-//			if(errResponse && errResponse.data){
-//				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
-//				dato = errResponse.data;
-//			}
-//			if(errResponse.message){ 
-//				console.log("Message " + errResponse.message);
-//				dato = errResponse.message;
-//			}
-//		});
-//	};
-//	$scope.changeCodProv=function(){
-//		///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
-//	}
-//	$scope.$watch('msUbigeoModelo.codProv', function (newValue, oldValue) {
-//		console.log('msUbigeoModelo.codProv ' + newValue+' -- '+oldValue);
-//		//CARGAR DATOS DEL SIGUIENTE SELECT
-////		if($scope.isArray($scope.listaMsUbigeoCodProv)){
-////		var obj = $scope.listaMsUbigeoCodProv.find(o => o.id === newValue);
-////		if($scope.isObject(obj)){
-////		$scope.msUbigeoModelo.codProvTxt = obj.valor;
-////		}
-////		}
-//	});
-//	SELECT FIN                
+// /ADICIONALES
+// SELECT INI
+// $scope.listaMsUbigeoCodDpto=[];
+// $scope.loadListaMsUbigeoCodDpto=function(){
+// $http.get(listaMsUbigeocodDptoCodDptoUrl).then(function(res){
+// $scope.listaMsUbigeoCodDpto = res.data;
+// },
+// function error(errResponse) {
+// var dato;
+// if(errResponse && errResponse.data){
+// console.log("data " + errResponse.data + " status " + errResponse.status + "
+// headers " + errResponse.headers + "config " + errResponse.config + "
+// statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+// dato = errResponse.data;
+// }
+// if(errResponse.message){
+// console.log("Message " + errResponse.message);
+// dato = errResponse.message;
+// }
+// });
+// };
+// $scope.changeCodDpto=function(){
+// ///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
+// }
+// $scope.$watch('msUbigeoModelo.codDpto', function (newValue, oldValue) {
+// console.log('msUbigeoModelo.codDpto ' + newValue+' -- '+oldValue);
+// //CARGAR DATOS DEL SIGUIENTE SELECT
+// // if($scope.isArray($scope.listaMsUbigeoCodDpto)){
+// // var obj = $scope.listaMsUbigeoCodDpto.find(o => o.id === newValue);
+// // if($scope.isObject(obj)){
+// // $scope.msUbigeoModelo.codDptoTxt = obj.valor;
+// // }
+// // }
+// });
+// // SELECT FIN
+// // SELECT INI
+// $scope.listaMsUbigeoCodProv=[];
+// $scope.loadListaMsUbigeoCodProv=function(){
+// $http.get(listaMsUbigeocodProvCodProvUrl).then(function(res){
+// $scope.listaMsUbigeoCodProv = res.data;
+// },
+// function error(errResponse) {
+// var dato;
+// if(errResponse && errResponse.data){
+// console.log("data " + errResponse.data + " status " + errResponse.status + "
+// headers " + errResponse.headers + "config " + errResponse.config + "
+// statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+// dato = errResponse.data;
+// }
+// if(errResponse.message){
+// console.log("Message " + errResponse.message);
+// dato = errResponse.message;
+// }
+// });
+// };
+// $scope.changeCodProv=function(){
+// ///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
+// }
+// $scope.$watch('msUbigeoModelo.codProv', function (newValue, oldValue) {
+// console.log('msUbigeoModelo.codProv ' + newValue+' -- '+oldValue);
+// //CARGAR DATOS DEL SIGUIENTE SELECT
+// // if($scope.isArray($scope.listaMsUbigeoCodProv)){
+// // var obj = $scope.listaMsUbigeoCodProv.find(o => o.id === newValue);
+// // if($scope.isObject(obj)){
+// // $scope.msUbigeoModelo.codProvTxt = obj.valor;
+// // }
+// // }
+// });
+// SELECT FIN
 
 	$scope.listaMsUbigeoCoddpto=[];
 	$scope.loadlistaCoddptos=function(){
@@ -732,36 +857,39 @@ myapp.controller('ctrlListamsUbigeo', ['$mdEditDialog', '$scope', '$timeout', '$
 		});
 	};
 	
-	$scope.listaMsUbigeoCodprov=[];
-	$scope.loadlistaCodprov=function(){
-		if($scope.msUbigeoModelo.codDpto){
-		var surl = listaCodprovUrl+$scope.msUbigeoModelo.codDpto;
-		$http.get(surl).then(function(res){
-			$scope.listaMsUbigeoCodprov = res.data; 
-		},
-		function error(errResponse) {
-			console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
-		});
-		}else{
-			$scope.listaMsUbigeoCodprov=[];
-		}
-	};
-		
-	$scope.listaMsUbigeoCoddist=[];
-	$scope.loadlistaCoddist=function(){
-		if($scope.msUbigeoModelo.codDpto &&
-		$scope.msUbigeoModelo.codProv){
-			var surl = listaCoddistUrl+$scope.msUbigeoModelo.codDpto+'/'+$scope.msUbigeoModelo.codProv;
-		$http.get(surl).then(function(res){
-			$scope.listaMsUbigeoCoddist = res.data; 
-		},
-		function error(errResponse) {
-			console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
-		});
-		}else{
-			$scope.listaMsUbigeoCoddist=[];
-		}
-	};
+	// PURIBE 10012024 - INICIO--
+    $scope.listaMsUbigeoCodProv=[];
+$scope.loadListaMsUbigeoCodProv=function(CodDpto){
+	var surl = listaMsUbigeocodProvCodProvUrl+ '/'+ CodDpto;
+	$http.get(surl).then(function(res){
+		$scope.listaMsUbigeoCodProv = res.data; 
+	},
+	function error(errResponse) {
+		console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+	});
+};
+
+$scope.listaMsUbigeoCodDistr=[];
+$scope.loadListaMsUbigeoDistr=function(CodDpto,CodProv){
+	var surl = listaCoddistUrl+ '/'+ CodDpto+ '/'+ CodProv;
+	$http.get(surl).then(function(res){
+		$scope.listaMsUbigeoCodDistr = res.data; 
+	},
+	function error(errResponse) {
+		console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+	});
+};
+
+
+    $scope.changeCodProv=function(){
+		$scope.msUbigeoModelo.id.codDistr = null;
+      // /BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
+    }
+	// PURIBE 10012024 - FIN--
+    $scope.$watch('msUbigeoModelo.codProv', function (newValue, oldValue) {
+	console.log('msUbigeoModelo.codProv ' + newValue+' -- '+oldValue);
+	// CARGAR DATOS DEL SIGUIENTE SELECT
+});
 	
 	$scope.$watch('msUbigeoModelo.codDpto', function (newValue, oldValue) {
 		console.log('msUbigeoModelo.codDpto ' + newValue+' -- '+oldValue);
@@ -773,20 +901,33 @@ myapp.controller('ctrlListamsUbigeo', ['$mdEditDialog', '$scope', '$timeout', '$
 		$scope.loadlistaCoddist();
 	});
 	
-	$scope.changeCoddpto=function(){
-		$scope.msUbigeoModelo.codProv = null;
-		$scope.msUbigeoModelo.codDistr = null;
-	}
-	
-	$scope.changeCodprov=function(){
-		$scope.msUbigeoModelo.codDistr = null;
-	}
+	//PURIBE 20012024 - INICIO--
+    $scope.changeCodDpto=function(){
+		$scope.msUbigeoModelo.id.codProv = 0;
+		$scope.msUbigeoModelo.id.codDistr = 0;
 
-//	DESCARGAR
+		$scope.loadListaMsUbigeoCodProv($scope.msUbigeoModelo.id.codDpto);
+      ///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
+    }
+
+
+	$scope.changeCodDistr=function(){
+	//	$scope.msUbigeoModelo.id.codDistr = 0;
+		  ///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
+		}
+//PURIBE 20012024 - FIN--
+
+    $scope.$watch('msUbigeoModelo.codDpto', function (newValue, oldValue) {
+	console.log('msUbigeoModelo.codDpto ' + newValue+' -- '+oldValue);
+	// CARGAR DATOS DEL SIGUIENTE SELECT
+	// PURIBE 10012024 - FIN --
+});
+	
+// DESCARGAR
 	$scope.descargar = function(){
 		return descargarUrl+$scope.getURLParametros();
 	}
-//	/FIN ADICIONALES			 			 
+// /FIN ADICIONALES
 	// ////////////////////////////////////////////////////////////////
 
 	$scope.cancel = function() {
@@ -867,8 +1008,11 @@ myapp.controller('ctrlListamsUbigeo', ['$mdEditDialog', '$scope', '$timeout', '$
 		return typeof value === 'number' && isFinite(value);
 	};	
 
-	$scope.nuevo = ($scope.isNumber($scope.msUbigeoModelo.id) && $scope.msUbigeoModelo.id > 0);
-	$scope.edit  = true;
+	//PURIBE 10012024 - INICIO
+	  //  $scope.nuevo = ($scope.isNumber($scope.msUbigeoModelo.id) && $scope.msUbigeoModelo.id > 0);
+		  debugger;
+		$scope.edit  = true;
+		  //PURIBE 10012024 - FIN--
 
 
 	$scope.toggle = function (item, list) {
@@ -891,7 +1035,7 @@ myapp.controller('ctrlListamsUbigeo', ['$mdEditDialog', '$scope', '$timeout', '$
 		Object.keys($scope.filtro).forEach(key => {
 			console.log(key);
 			const valor = $scope.filtro[key];
-			//console.log('Filtro Key '+key+' Valor '+valor);
+			// console.log('Filtro Key '+key+' Valor '+valor);
 			try{
 				if(typeof(valor)!='undefined' && typeof(toma[key])!='undefined'){
 					if(valor!=null && toma[key]!=null){
@@ -1063,6 +1207,6 @@ myapp.controller('ctrlListamsUbigeo', ['$mdEditDialog', '$scope', '$timeout', '$
 		var type = typeof obj;
 		return type === 'function' || type === 'object' && !!obj;
 	}
-	// $scope.promise = $timeout(function () {	 
+	// $scope.promise = $timeout(function () {
 		// }, 500);
 }]);

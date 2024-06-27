@@ -61,8 +61,8 @@ public class ValidacionDtUsuarioExternoMng implements Serializable{
 
 		
 		//validarAPaterno(dtUsuarioExternoBk.getAPaterno());
-		if(dtUsuarioExternoBk.getApaterno()!=null){
-				if(dtUsuarioExternoBk.getApaterno().trim().length()>100)
+		if(dtUsuarioExternoBk.getApaterno()!=null){//CUSCATA - 18062024
+			if(dtUsuarioExternoBk.getApaterno().trim().length()>100)//CUSCATA - 18062024
 					throw new Validador(MessageFormat.format(
 							Messages.getStringToKey("dtUsuarioExterno.noexceder"),
 							Messages.getStringToKey("dtUsuarioExterno.aPaterno"),

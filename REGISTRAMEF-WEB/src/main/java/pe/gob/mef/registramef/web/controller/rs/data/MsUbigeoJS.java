@@ -1,7 +1,5 @@
 package pe.gob.mef.registramef.web.controller.rs.data;
 
-import java.sql.Timestamp;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 import pe.gob.mef.registramef.bs.domain.MsUbigeoId;
@@ -19,38 +17,59 @@ import pe.gob.mef.registramef.bs.domain.MsUbigeoId;
 @XmlRootElement
 public class MsUbigeoJS implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5576348650809034531L;
-
 	// ID
 	private MsUbigeoId id;
 
 	// PROPIEDADES
 	private String descripcion = null;
 	private Integer codDpto = null;
-	private Integer codProv = null;
-	private Integer codDistr = null;
-	private Timestamp fechaCrea = null;
-	private Timestamp fechaModif = null;
-	private Long estado = null;
-	private Long idubigeo = null;
+	public String getCoddistTxt() {
+		return coddistTxt;
+	}
 
+	public void setCoddistTxt(String coddistTxt) {
+		this.coddistTxt = coddistTxt;
+	}
+
+	public String getCoddptoTxt() {
+		return coddptoTxt;
+	}
+
+	public void setCoddptoTxt(String coddptoTxt) {
+		this.coddptoTxt = coddptoTxt;
+	}
+
+	public String getCodprovTxt() {
+		return codprovTxt;
+	}
+
+	public void setCodprovTxt(String codprovTxt) {
+		this.codprovTxt = codprovTxt;
+	}
+   //PURIBE 20012024 - INICIO-->
+	private Integer codProv = null;
+	private Long idubigeo = null;
+	private Long estado = null;
+
+	private String coddistTxt = null;
+	private String coddptoTxt=null;
+	private String codprovTxt=null;
+	
 	// ADICIONALES
-	private String estadoTxt = null;
-	private String codDptoTxt = null;
-	private String codProvTxt = null;
-	private String codDistrTxt = null;
-	private String idTxt=null;
-	private Integer tipo = null;
-	private String tipoTxt = null;
- 
+	
 	private Integer editopcion = 1;
 
 	public MsUbigeoJS() {
 	}
 
+	public Long getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Long estado) {
+		this.estado = estado;
+	}
+	   //PURIBE 20012024 - FIN-->
 	public MsUbigeoId getId() {
 		return this.id;
 	}
@@ -97,93 +116,5 @@ public class MsUbigeoJS implements java.io.Serializable {
 
 	public void setEditopcion(Integer editopcion) {
 		this.editopcion = editopcion;
-	}
-
-	public Integer getCodDistr() {
-		return codDistr;
-	}
-
-	public void setCodDistr(Integer codDistr) {
-		this.codDistr = codDistr;
-	}
-
-	public Timestamp getFechaModif() {
-		return fechaModif;
-	}
-
-	public void setFechaModif(Timestamp fechaModif) {
-		this.fechaModif = fechaModif;
-	}
-
-	public Timestamp getFechaCrea() {
-		return fechaCrea;
-	}
-
-	public void setFechaCrea(Timestamp fechaCrea) {
-		this.fechaCrea = fechaCrea;
-	}
-
-	public Long getEstado() {
-		return estado;
-	}
-
-	public void setEstado(Long estado) {
-		this.estado = estado;
-	}
-
-	public String getEstadoTxt() {
-		return estadoTxt;
-	}
-
-	public void setEstadoTxt(String estadoTxt) {
-		this.estadoTxt = estadoTxt;
-	}
-
-	public String getCodDptoTxt() {
-		return codDptoTxt;
-	}
-
-	public void setCodDptoTxt(String codDptoTxt) {
-		this.codDptoTxt = codDptoTxt;
-	}
-
-	public String getCodDistrTxt() {
-		return codDistrTxt;
-	}
-
-	public void setCodDistrTxt(String codDistrTxt) {
-		this.codDistrTxt = codDistrTxt;
-	}
-
-	public String getCodProvTxt() {
-		return codProvTxt;
-	}
-
-	public void setCodProvTxt(String codProvTxt) {
-		this.codProvTxt = codProvTxt;
-	}
-
-	public String getIdTxt() {
-		return idTxt;
-	}
-
-	public void setIdTxt(String idTxt) {
-		this.idTxt = idTxt;
-	}
-
-	public Integer getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(Integer tipo) {
-		this.tipo = tipo;
-	}
-
-	public String getTipoTxt() {
-		return tipoTxt;
-	}
-
-	public void setTipoTxt(String tipoTxt) {
-		this.tipoTxt = tipoTxt;
 	}			
 }

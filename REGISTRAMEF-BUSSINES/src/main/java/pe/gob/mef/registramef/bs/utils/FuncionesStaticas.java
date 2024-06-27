@@ -29,11 +29,14 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import org.apache.commons.lang.StringUtils;
+
+import org.apache.commons.lang.StringUtils;//CUSCATA - 18062024
 
 import pe.gob.mef.registramef.bs.domain.MsUsuarios;
 import pe.gob.mef.registramef.bs.transfer.MsUsuariosDto;
@@ -67,66 +70,6 @@ public class FuncionesStaticas implements Serializable {
 	public static Integer PAIS_DIST_LIMA = 1;
 
 	public FuncionesStaticas() {
-	}
-
-	public static String getTextFromFile(File fileName) throws Exception {
-		// Scanner in = new Scanner(new FileInputStream(fileName),
-		// "windows-1252");
-		// Scanner in = new Scanner(new FileInputStream(fileName),
-		// "ISO-8859-1");//SPRINT32 windows-1252
-		Scanner in = new Scanner(new FileInputStream(fileName), "ISO-8859-1");// SPRINT33
-																				// windows-1252
-		StringBuilder sb = new StringBuilder();
-		while (in.hasNextLine()) {
-			sb.append(in.nextLine());
-		}
-		in.close();
-		return sb.toString();
-	}
-
-	public static String getRutaFileNameSistemaSearchEncuest(String filename) {
-		String RUTAROOT = PropertiesMg.getString("RUTA_ENCUESTAS");
-		File F_RUTAROOT = new File(RUTAROOT);
-		if (!F_RUTAROOT.exists()) {
-			F_RUTAROOT.mkdirs();
-		}
-		if (F_RUTAROOT.exists()) {
-			// System.out.println("INICIANDO PROPIEDADES EN DIRECTORIO:
-			// "+F_RUTAROOT.getAbsolutePath());
-		} else {
-			// System.out.println("INICIANDO PROPIEDADES EN DIRECTORIO: NO SE
-			// ENCUENTRA EL DIRECTORIO"+F_RUTAROOT.getAbsolutePath());
-		}
-		String RUTA = F_RUTAROOT.getAbsolutePath();
-		return RUTA + System.getProperty("file.separator") + filename;
-	}
-
-	public static File getServerFile(String fileName) throws Exception {
-		if (fileName == null) {
-			return null;
-		} else {
-			String fullFileName = StringUtils.defaultString(fileName, "fileName");
-			return new File(FuncionesStaticas.getRutaFileNameSistemaSearchEncuest(fullFileName));
-		}
-	}
-	
-	public static String toString(Date date) {
-		return toString(date, null, false);
-	}
-	
-	public static String toString(Date date, String format, boolean withTime) {
-		if (date == null) {
-			return "";
-		} else {
-			// IVILLAFANA 30012019 INICIO
-			// SimpleDateFormat sdf = new
-			// SimpleDateFormat(format==null?"dd/MM/yyyy"+(withTime?"
-			// HH:mm:ss":""):format);
-			SimpleDateFormat sdf = new SimpleDateFormat(format == null ? "dd/MM/yyyy" + (withTime ? " HH:mm:ss" : "")
-					: format + (withTime ? " HH:mm:ss" : ""));
-			// IVILLAFANA 30012019 FIN
-			return sdf.format(date);
-		}
 	}
 
 	public static String geNombreCompletoDeTtUsuariosSistema(MsUsuarios nombre) {
@@ -1266,166 +1209,370 @@ public class FuncionesStaticas implements Serializable {
 			}
 		//PURIBE 14032024 - FIN-->
 		 
-	public static String getfechaLargaFormateadaSinHora(Timestamp fec) {
-		if (fec == null)
-			return "";
-
-		int S = 0, M = 0, A = 0, D = 0;
-		Date fechax = new Date(fec.getTime());
-		Calendar f = Calendar.getInstance();
-		f.setTime(fechax);
-		String di[] = { "", "DOMINGO", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO" };
-		String me[] = { "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE",
-				"OCTUBRE", "NOVIEMBRE", "DICIEMBRE" };
-		S = f.get(Calendar.DAY_OF_WEEK);
-		M = f.get(Calendar.MONTH);
-		D = f.get(Calendar.DAY_OF_MONTH);
-		A = f.get(Calendar.YEAR);
-
-		// return di[S] + " " + D + " DE " + me[M] + " DEL " + A + ". ";
-		return di[S] + " " + D + " DE " + me[M] + " DE " + A + ".  ";// SPRINT_3
-	}
-
-	public static String removerUltCaracter(String str) {
-		if (str == null || str.length() == 0) {
-			return str;
-		}
-		return str.substring(0, str.length() - 1);
-	}
-
-	public static String getRutaFileNameSistemaSearchSystem(String filename) {
-		Properties sistemaproperties = PropertiesMg.getSistemaProperties();
-		String RUTAROOT = sistemaproperties.getProperty(PropertiesMg.KEY_RUTA_REPORTE_RESUMEN,
-				PropertiesMg.DEFAULT_RUTA_REPORTE_RESUMEN);
-
-		File F_RUTAROOT = new File(RUTAROOT);
-		if (!F_RUTAROOT.exists()) {
-			if (!F_RUTAROOT.mkdirs()) {
-				return null;
+		// PURIBE 16042024 - INICIO-->
+			public static String replaceVariables(String cellValue, Timestamp fechaInicio, Timestamp fechaFin,String departamento,String entidad, String participante) {
+			        // Expresión regular para buscar texto entre paréntesis
+			        Pattern pattern = Pattern.compile("\\((.*?)\\)");
+			        Matcher matcher = pattern.matcher(cellValue);
+			        
+			        // Reemplazar las variables correspondientes dentro de paréntesis
+			        while (matcher.find()) {
+			            String variable = matcher.group(1);
+			            switch (variable) {
+			                case "FECHA INICIO":
+			                	String fechainicioformat = FuncionesStaticas.getFechaCorta(fechaInicio);
+			                    cellValue = cellValue.replace("(FECHA INICIO)", fechainicioformat);
+			                    break;
+			                case "FECHA FIN":
+			                	String fechafinformat = FuncionesStaticas.getFechaCorta(fechaFin);
+			                    cellValue = cellValue.replace("(FECHA FIN)", fechafinformat);
+			                    break;
+			                case "DEPARTAMENTO":
+			                	 if (departamento== null || departamento.isEmpty()) {
+			                		  cellValue = cellValue.replace("(DEPARTAMENTO)", "TODOS LOS DEPARTAMENTOS");
+			                	 }else{
+			                    cellValue = cellValue.replace("(DEPARTAMENTO)", departamento);
+			                	 }
+			                    break;
+			                case "ENTIDAD":
+			                	 if (entidad== null || entidad.isEmpty()) {
+			                		  cellValue = cellValue.replace("(ENTIDAD)", "TODOS LOS ENTIDADES");
+			                	 }else{
+			                    cellValue = cellValue.replace("(ENTIDAD)", entidad);
+			                	 }
+			                    break;
+			                case "PARTICIPANTE":
+			                	 if (participante== null || participante.isEmpty()) {
+			                		  cellValue = cellValue.replace("(PARTICIPANTE)", "TODOS LOS PARTICIPANTES");
+			                	 }else{
+			                    cellValue = cellValue.replace("(PARTICIPANTE)", participante);
+			                	 }
+			                    break;
+			              
+			              
+			            }
+			        }
+			        return cellValue;
+			    }
+			
+			  // PURIBE 16042024 - FIN-->
+			
+		////PURIBE 22042024 - INICIO-->
+			
+			
+			 public static String defaultString(String str, String defaultStr)
+			    {
+			      return ((str == null) ? defaultStr : str);
+			  }
+			
+			public static boolean contains(String[] array, String... str) throws Exception {
+				if (array == null || array.length == 0 || str == null) {
+					return false;
+				} else {
+					for (String string : str) {
+						int rs = indexOfAny(string, array);
+						if (rs > -1)
+							return true;
+					}
+				}
+				return false;
 			}
-		}
-		String RUTA = F_RUTAROOT.getAbsolutePath();
-		return RUTA + System.getProperty("file.separator") + filename;
-	}
-	
-	public static Object getAttributeValue(Object object, String attribute) throws Exception {
-		if (object == null || StringUtils.isEmpty(attribute))
-			return null;
-		Field field = object.getClass().getDeclaredField(attribute);
-		field.setAccessible(true);
-		return field.get(object);
-	}
-	
-	public static Date toDate(Object object) {
-		return toDate(object, null);
-	}
-	
-	public static Date toDate(Object object, Date nullDate) {
-		if (object == null) {
-			return nullDate;
-		} else {
-			return (Date) object;
-		}
-	}
-	
-	public static boolean contains(String[] array, String... str) throws Exception {
-		if (array == null || array.length == 0 || str == null) {
-			return false;
-		} else {
-			for (String string : str) {
-				int rs = StringUtils.indexOfAny(string, array);
-				if (rs > -1)
-					return true;
+			
+			
+			public static Date toDate(Object object, Date nullDate) {
+				if (object == null) {
+					return nullDate;
+				} else {
+					return (Date) object;
+				}
 			}
-		}
-		return false;
-	}
-	
-	public static String getfechaLargaFormateadaConEstilo(Timestamp fec) {
-		if (fec == null)
-			return "";
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		int S = 0, M = 0, A = 0, D = 0;
-		Date fechax = new Date(fec.getTime());
-		Calendar f = Calendar.getInstance();
-		f.setTime(fechax);
-		String di[] = { "", "DOMINGO", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO" };
-		String me[] = { "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE",
-				"OCTUBRE", "NOVIEMBRE", "DICIEMBRE" };
-		S = f.get(Calendar.DAY_OF_WEEK);
-		M = f.get(Calendar.MONTH);
-		D = f.get(Calendar.DAY_OF_MONTH);
-		A = f.get(Calendar.YEAR);
-		// return di[S] + " " + D + " DE " + me[M] + " DEL " + A + " A LAS "
-		// + sdf.format(fec) + "mm HORAS.";
-		return "<b style='font-size:20px;'>" + di[S] + " " + D + " DE " + me[M] + " DE " + A + "</b>"
-				+ " a las <b style='font-size:20px;'>" + sdf.format(fec) + " HORAS." + "</b>"; // SPRINT10
-	}
-	
-	public static String convertirFrasePrimerCaracMayúscula(String str) {
-		if (str == null || str.length() == 0) {
-			return str;
-		}
-		StringTokenizer stPalabras = new StringTokenizer(str);
-		String sPalabra="";
-		str="";
-		while (stPalabras.hasMoreTokens()) {
-			  sPalabra = stPalabras.nextToken();				  
-			  str=str+" "+  StringUtils.capitalize(sPalabra.trim().toLowerCase());			 
-		}
-		 
-		return str.trim();
-	}
-	
-	public static String getfechaLargaFormateadaSinHoraAnio(Timestamp fec) {
-		if (fec == null)
-			return "";
+			
+			public static Date toDate(Object object) {
+				return toDate(object, null);
+			}
 
-		int S = 0, M = 0, A = 0, D = 0;
-		Date fechax = new Date(fec.getTime());
-		Calendar f = Calendar.getInstance();
-		f.setTime(fechax);
-		String di[] = { "", "DOMINGO", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO" };
-		String me[] = { "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE",
-				"OCTUBRE", "NOVIEMBRE", "DICIEMBRE" };
-		S = f.get(Calendar.DAY_OF_WEEK);
-		M = f.get(Calendar.MONTH);
-		D = f.get(Calendar.DAY_OF_MONTH);
-		A = f.get(Calendar.YEAR);
+			  public static int indexOfAny(String str, String[] searchStrs)
+			    {
+			     if ((str == null) || (searchStrs == null)) {
+			        return -1;
+			      }
+			     int sz = searchStrs.length;
+			     int ret = 2147483647;
+			     int tmp = 0;
+			    for (int i = 0; i < sz; ++i) {
+			      String search = searchStrs[i];
+			      if (search == null) {
+			        continue;
+			       }
+			      tmp = str.indexOf(search);
+			    if (tmp == -1) {
+			         continue;
+			       }
+			   
+			      if (tmp < ret) {
+			          ret = tmp;
+			        }
+			    }
+			
+			    return ((ret == 2147483647) ? -1 : ret);
+			   }
+			  
+			  public static String toString(Date date) {
+					return toString(date, null, false);
+				}
+				
+				
+				public static Object getAttributeValue(Object object, String attribute) throws Exception {
+					if (object == null || StringUtils.isEmpty(attribute))
+						return null;
+					Field field = object.getClass().getDeclaredField(attribute);
+					field.setAccessible(true);
+					return field.get(object);
+				}
+				
+				
+				public static String toString(Date date, String format, boolean withTime) {
+					if (date == null) {
+						return "";
+					} else {
+						
+						SimpleDateFormat sdf = new SimpleDateFormat(format == null ? "dd/MM/yyyy" + (withTime ? " HH:mm:ss" : "")
+								: format + (withTime ? " HH:mm:ss" : ""));
+						return sdf.format(date);
+					}
+				}
+				
+			////PURIBE 22042024 - FIN-->
+				
+				//INICIO CUSCATA - 18062024
+				public static String getTextFromFile(File fileName) throws Exception {
+					// Scanner in = new Scanner(new FileInputStream(fileName),
+					// "windows-1252");
+					// Scanner in = new Scanner(new FileInputStream(fileName),
+					// "ISO-8859-1");//SPRINT32 windows-1252
+					Scanner in = new Scanner(new FileInputStream(fileName), "ISO-8859-1");// SPRINT33
+																							// windows-1252
+					StringBuilder sb = new StringBuilder();
+					while (in.hasNextLine()) {
+						sb.append(in.nextLine());
+					}
+					in.close();
+					return sb.toString();
+				}
+				
+				public static String getRutaFileNameSistemaSearchEncuest(String filename) {
+					String RUTAROOT = PropertiesMg.getString("RUTA_ENCUESTAS");
+					File F_RUTAROOT = new File(RUTAROOT);
+					if (!F_RUTAROOT.exists()) {
+						F_RUTAROOT.mkdirs();
+					}
+					if (F_RUTAROOT.exists()) {
+						// System.out.println("INICIANDO PROPIEDADES EN DIRECTORIO:
+						// "+F_RUTAROOT.getAbsolutePath());
+					} else {
+						// System.out.println("INICIANDO PROPIEDADES EN DIRECTORIO: NO SE
+						// ENCUENTRA EL DIRECTORIO"+F_RUTAROOT.getAbsolutePath());
+					}
+					String RUTA = F_RUTAROOT.getAbsolutePath();
+					return RUTA + System.getProperty("file.separator") + filename;
+				}
+				
+				public static File getServerFile(String fileName) throws Exception {
+					if (fileName == null) {
+						return null;
+					} else {
+						String fullFileName = StringUtils.defaultString(fileName, "fileName");
+						return new File(FuncionesStaticas.getRutaFileNameSistemaSearchEncuest(fullFileName));
+					}
+				}
+				
+				//INICIO CUSCATA - 18062024		 
+				public static String getfechaLargaFormateadaSinHora(Timestamp fec) {
+					if (fec == null)
+						return "";
 
-		// return di[S] + " " + D + " DE " + me[M] + " DEL " + A + ". ";
-		//return di[S] + " " + D + " DE " + me[M] + " DE " + A + ".  ";
-		return di[S] + " " + D + " DE " + me[M];
-	}
-	
-	public static String convertirFrasePrimerCaracMayuscula(String str) {
-		if (str == null || str.length() == 0) {
-			return str;
-		}
-		StringTokenizer stPalabras = new StringTokenizer(str);
-		String sPalabra="";
-		str="";
-		while (stPalabras.hasMoreTokens()) {
-			  sPalabra = stPalabras.nextToken();				  
-			  str=str+" "+  StringUtils.capitalize(sPalabra.trim().toLowerCase());			 
-		}
-		 
-		return str.trim();
-	}
-	
-	public static String getFileNameSistemaR(long id, long idusuario, int i, String solofilenameoriginal) {
-		int eslashDot = solofilenameoriginal.lastIndexOf("\\");
-		String filenameoriginal = solofilenameoriginal;
-		if (eslashDot > 0)
-			filenameoriginal = filenameoriginal.substring(eslashDot + 1);
-		int extDot = filenameoriginal.lastIndexOf('.');
-		String extension = filenameoriginal.substring(extDot + 1);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-		DecimalFormat df = new DecimalFormat("000000");
-		Timestamp diahoy = new Timestamp(System.currentTimeMillis());
-		String filename = df.format(id) + df.format(idusuario) + sdf.format(diahoy) + i + "." + extension;
-		return filename;
-	}
-	
+					int S = 0, M = 0, A = 0, D = 0;
+					Date fechax = new Date(fec.getTime());
+					Calendar f = Calendar.getInstance();
+					f.setTime(fechax);
+					String di[] = { "", "DOMINGO", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO" };
+					String me[] = { "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE",
+							"OCTUBRE", "NOVIEMBRE", "DICIEMBRE" };
+					S = f.get(Calendar.DAY_OF_WEEK);
+					M = f.get(Calendar.MONTH);
+					D = f.get(Calendar.DAY_OF_MONTH);
+					A = f.get(Calendar.YEAR);
+
+					// return di[S] + " " + D + " DE " + me[M] + " DEL " + A + ". ";
+					return di[S] + " " + D + " DE " + me[M] + " DE " + A + ".  ";// SPRINT_3
+				}
+
+				public static String removerUltCaracter(String str) {
+					if (str == null || str.length() == 0) {
+						return str;
+					}
+					return str.substring(0, str.length() - 1);
+				}
+
+				public static String getRutaFileNameSistemaSearchSystem(String filename) {
+					Properties sistemaproperties = PropertiesMg.getSistemaProperties();
+					String RUTAROOT = sistemaproperties.getProperty(PropertiesMg.KEY_RUTA_REPORTE_RESUMEN,
+							PropertiesMg.DEFAULT_RUTA_REPORTE_RESUMEN);
+
+					File F_RUTAROOT = new File(RUTAROOT);
+					if (!F_RUTAROOT.exists()) {
+						if (!F_RUTAROOT.mkdirs()) {
+							return null;
+						}
+					}
+					String RUTA = F_RUTAROOT.getAbsolutePath();
+					return RUTA + System.getProperty("file.separator") + filename;
+				}
+				
+//				public static Object getAttributeValue(Object object, String attribute) throws Exception {
+//					if (object == null || StringUtils.isEmpty(attribute))
+//						return null;
+//					Field field = object.getClass().getDeclaredField(attribute);
+//					field.setAccessible(true);
+//					return field.get(object);
+//				}
+				
+//				public static Date toDate(Object object) {
+//					return toDate(object, null);
+//				}
+//				
+//				public static Date toDate(Object object, Date nullDate) {
+//					if (object == null) {
+//						return nullDate;
+//					} else {
+//						return (Date) object;
+//					}
+//				}
+				
+//				public static boolean contains(String[] array, String... str) throws Exception {
+//					if (array == null || array.length == 0 || str == null) {
+//						return false;
+//					} else {
+//						for (String string : str) {
+//							int rs = StringUtils.indexOfAny(string, array);
+//							if (rs > -1)
+//								return true;
+//						}
+//					}
+//					return false;
+//				}
+				
+				public static String getfechaLargaFormateadaConEstilo(Timestamp fec) {
+					if (fec == null)
+						return "";
+					SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+					int S = 0, M = 0, A = 0, D = 0;
+					Date fechax = new Date(fec.getTime());
+					Calendar f = Calendar.getInstance();
+					f.setTime(fechax);
+					String di[] = { "", "DOMINGO", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO" };
+					String me[] = { "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE",
+							"OCTUBRE", "NOVIEMBRE", "DICIEMBRE" };
+					S = f.get(Calendar.DAY_OF_WEEK);
+					M = f.get(Calendar.MONTH);
+					D = f.get(Calendar.DAY_OF_MONTH);
+					A = f.get(Calendar.YEAR);
+					// return di[S] + " " + D + " DE " + me[M] + " DEL " + A + " A LAS "
+					// + sdf.format(fec) + "mm HORAS.";
+					return "<b style='font-size:20px;'>" + di[S] + " " + D + " DE " + me[M] + " DE " + A + "</b>"
+							+ " a las <b style='font-size:20px;'>" + sdf.format(fec) + " HORAS." + "</b>"; // SPRINT10
+				}
+				
+				public static String convertirFrasePrimerCaracMayúscula(String str) {
+					if (str == null || str.length() == 0) {
+						return str;
+					}
+					StringTokenizer stPalabras = new StringTokenizer(str);
+					String sPalabra="";
+					str="";
+					while (stPalabras.hasMoreTokens()) {
+						  sPalabra = stPalabras.nextToken();				  
+						  str=str+" "+  StringUtils.capitalize(sPalabra.trim().toLowerCase());			 
+					}
+					 
+					return str.trim();
+				}
+				
+				public static String getfechaLargaFormateadaSinHoraAnio(Timestamp fec) {
+					if (fec == null)
+						return "";
+
+					int S = 0, M = 0, A = 0, D = 0;
+					Date fechax = new Date(fec.getTime());
+					Calendar f = Calendar.getInstance();
+					f.setTime(fechax);
+					String di[] = { "", "DOMINGO", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO" };
+					String me[] = { "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE",
+							"OCTUBRE", "NOVIEMBRE", "DICIEMBRE" };
+					S = f.get(Calendar.DAY_OF_WEEK);
+					M = f.get(Calendar.MONTH);
+					D = f.get(Calendar.DAY_OF_MONTH);
+					A = f.get(Calendar.YEAR);
+
+					// return di[S] + " " + D + " DE " + me[M] + " DEL " + A + ". ";
+					//return di[S] + " " + D + " DE " + me[M] + " DE " + A + ".  ";
+					return di[S] + " " + D + " DE " + me[M];
+				}
+			//FIN CUSCATA - 18062024	
+				
+				//INICIO CUSCATA - 18062024
+				
+				// JPUYEN 14052024 - INICIO
+				
+				 public static String getFileNameSistemaR(long id, long idusuario, int i, String solofilenameoriginal) {
+						int eslashDot = solofilenameoriginal.lastIndexOf("\\");
+						String filenameoriginal = solofilenameoriginal;
+						if (eslashDot > 0)
+							filenameoriginal = filenameoriginal.substring(eslashDot + 1);
+						int extDot = filenameoriginal.lastIndexOf('.');
+						String extension = filenameoriginal.substring(extDot + 1);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+						DecimalFormat df = new DecimalFormat("000000");
+						Timestamp diahoy = new Timestamp(System.currentTimeMillis());
+						String filename = df.format(id) + df.format(idusuario) + sdf.format(diahoy) + i + "." + extension;
+						return filename;
+					}
+				 
+				 public static String getRutaFileNameSistema(String filename) {
+						
+					 	String RUTAROOT = PropertiesMg.getRootFolder().toString();
+					 
+						File F_RUTAROOT = new File(RUTAROOT);
+						if (!F_RUTAROOT.exists()) {
+							F_RUTAROOT.mkdirs();
+						}
+						if (F_RUTAROOT.exists()) {
+							System.out.println("INICIANDO PROPIEDADES EN DIRECTORIO: " + F_RUTAROOT.getAbsolutePath());
+						} else {
+							System.out.println("INICIANDO PROPIEDADES EN DIRECTORIO: NO SE ENCUENTRA EL DIRECTORIO"
+									+ F_RUTAROOT.getAbsolutePath());
+						}
+						String RUTA = F_RUTAROOT.getAbsolutePath();
+						// String RUTA = PropertiesMg.getROOTDOCS();
+						return RUTA + System.getProperty("file.separator") + filename;
+						// MPINARES 12082019 - FIN
+					}
+				 
+				// JPUYEN 14052024 - FIN
+				 
+				 public static String convertirFrasePrimerCaracMayuscula(String str) {
+						if (str == null || str.length() == 0) {
+							return str;
+						}
+						StringTokenizer stPalabras = new StringTokenizer(str);
+						String sPalabra="";
+						str="";
+						while (stPalabras.hasMoreTokens()) {
+							  sPalabra = stPalabras.nextToken();				  
+							  str=str+" "+  StringUtils.capitalize(sPalabra.trim().toLowerCase());			 
+						}
+						 
+						return str.trim();
+					}
 
 }

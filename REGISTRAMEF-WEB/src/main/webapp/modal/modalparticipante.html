@@ -1,5 +1,5 @@
 
-<md-dialog aria-label="Lista de Participantes" class="modal-width-854">
+<md-dialog aria-label="Lista de Participantes" style="width: 800px;"><!-- JPUYEN 14052024 - SE AGREGO style y se quito class-->
    <!--PURIBE 14032024 -INICIO-->
     <md-progress-linear md-mode="determinate" value="{{determinateValue}}"></md-progress-linear>
     <form ng-cloak name="dtVisitasForm" ng-submit="dtVisitasForm.$valid && hide()" novalidate>
@@ -20,13 +20,12 @@
             <md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}"
                         style="margin: 0px 30px;">
                 <div layout="row" layout-wrap class="modal-wrapped">
-                    <div class="letraenvoltura"  flex="auto">
-                        <label class="letraLabel" flex>Gestor/Especialidad:</label>    
-                        <md-input-container md-no-float="true" class="input-container-margen letraTexto"  flex="85">
+                    <div class="letraenvoltura"  ><!-- JPUYEN 14052024 - SE QUITO flex="auto"-->
+                        <label class="letraLabel" flex>Gestor/Especialista/Implantador:</label>    <!-- JPUYEN 14052024 - SE AGREGO Especialista/Implantador-->
+                        <md-input-container md-no-float="true" class="input-container-margen letraTexto" style="width: 600px;"><!-- JPUYEN 14052024 - SE AGREGO style-->
                             <md-select ng-model="usuario"   ng-change="changeSistemAd(usuario)" required
-                                       placeholder="Ingresar Gestor"
-                                       name="idparametrolugar"
-                                       >
+                                       placeholder="Ingresar Gestor/Especialista/Implantador"
+                                       name="idparametrolugar"> <!-- JPUYEN 14052024 - SE AGREGO Especialista/Implantador-->
                               <md-option ng-value="0">Sin Gestor</md-option>
                              <md-option ng-repeat="item in listainternoMsusuarios" ng-value="item" >
                                  {{item.idUsuinternoTxt}}
@@ -50,10 +49,11 @@
                         </div>
                          		 
                 </div>
+                </br></br><!-- JPUYEN 14052024 - SE AGREGO 2 </br>-->
                 <div layout="row" layout-wrap class="modal-wrapped">
                     <div class="letraenvoltura" flex="90">
                     <label class="letraLabel" flex>Tema:</label>    
-                    <md-input-container class="input-container-margen letraTexto">
+                    <md-input-container style="width: 600px;" class="input-container-margen letraTexto"><!-- JPUYEN 14052024 - SE AGREGO style -->
 
                     <md-select ng-model="tema"  ng-change="changetema(tema)" required
                        required placeholder="Seleccionar Tema" name="idTema">

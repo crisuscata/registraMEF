@@ -12,6 +12,7 @@ var listaPrtParametrosidparametroIdOrigenUrl = contexto+"/rs/ctrldtAsistencia/li
 var listaPrtParametrosidparametroIdModalidadUrl = contexto+"/rs/ctrldtAsistencia/listaPrtParametrosIdparametroIdModalidad";
 var listaPrtParametrosidparametroIdFinanciaUrl = contexto+"/rs/ctrldtAsistencia/listaPrtParametrosIdparametroIdFinancia";
 var descargarUrl = contexto+"/rs/ctrldtAsistencia/descargar/";
+var valorcrearlUrl = contexto+"/rs/ctrldtAsistencia/loadvalorcrear";// PURIBE 15042024 - INICIO -->
 
 // /URLs CARGA DE ARCHIVOS
 var insertDocUrl = contexto+"/rs/ctrldtAsistencia/insertarchivo";
@@ -94,7 +95,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	 
 	 $scope.limitOptions = [100, 500, 1000, 5000];
 	 $scope.query = {
-			    order: 'idAsistencia',
+			    order: '',
 			    limit: 100,
 			    page: 1
 			  };
@@ -142,9 +143,9 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 						.parent(angular.element(document.body))
 						.clickOutsideToClose(true)
 						.title('Buscar asistencias')
-						.textContent("la fecha de Inicio no puede ser mayor a la fecha de fin")
+						.textContent("La fecha de Inicio no puede ser mayor a la fecha de fin")
 						.ariaLabel('Lucky day')
-						.ok('OK')
+						.ok('ACEPTAR')
 				);
 				return;
 			}
@@ -159,20 +160,21 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	    	    		 $scope.total = res.data.contador;
 	    	    		 var tiempoenBD = res.data.tiempoenBD;
 	    	    		 var tiempoenproceso = res.data.tiempoenproceso;
-	    	    		 $scope.creadtAsistencia = res.data.creamodifica;
+	    	    		// $scope.creadtAsistencia = res.data.creamodifica; // PURIBE 15042024 - INICIO -->
+//	    	    		 $scope.creadtAsistencia = res.data.creamodifica;
 	    	    		 console.log("data " +$scope.datos.length+" DE "+ $scope.total);
 	    	    		 console.log("Tiempo respuesta BD dtAsistencia " +tiempoenBD+" Tiempo en Paginar "+tiempoenproceso);
 	    		 }else{
-	 				$mdDialog.show(
-							$mdDialog.alert()
-							.parent(angular.element(document.body))
-							.clickOutsideToClose(true)
-							.title('Buscar asistencias')
-							.textContent("No se encontraron resultados para la búsqueda")
-							.ariaLabel('Lucky day')
-							.ok('OK')
-					);
-					return;
+//	 				$mdDialog.show(
+//							$mdDialog.alert()
+//							.parent(angular.element(document.body))
+//							.clickOutsideToClose(true)
+//							.title('Buscar asistencias')
+//							.textContent("No se encontraron resultados para la búsqueda")
+//							.ariaLabel('Lucky day')
+//							.ok('ACEPTAR')
+//					);
+//					return;
 	    		 } 
 				},
 				function error(errResponse) {
@@ -193,7 +195,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 						        .title('Lista de asistencia técnica')
 						        .textContent(dato.message)
 						        .ariaLabel('ERROR')
-						        .ok('OK')
+						        .ok('ACEPTAR')
 						    );
 		            }
 		        });			 
@@ -300,6 +302,30 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		  
 		// MPINARES 24012023 - INICIO
 		  
+		//PURIBE 15042024  INICIO-->
+
+
+			$scope.valorcrear;
+			$scope.loadvalorcrear=function(){
+				$http.get(valorcrearlUrl).then(function(res){
+					$scope.valorcrear = res.data; 
+
+					if ($scope.valorcrear.id==2)
+					{
+					$scope.creadtAsistencia = true;
+					}
+					else
+					{
+						$scope.creadtAsistencia=false; 
+					}
+				},
+				function error(errResponse) {
+					console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+				});
+			};
+			$scope.loadvalorcrear();
+			//PURIBE 15042024  FIN-->
+		  
 			$scope.validateFormat = function(ev){
 				let key;
 				if (event.type === 'paste') {
@@ -319,6 +345,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 			
 		  $scope.firstDate = function(dia){
 			  dia.setDate(1);
+			  dia.setMonth(dia.getMonth() + 1);
 			  dia.setHours(0, 0, 0);
 			  dia.setMilliseconds(0);
 //			  dia.getTime();
@@ -337,7 +364,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		  
 		  $scope.getLastDayOfMonth = function(dia){
 			  const year = dia.getFullYear();
-			  const month = dia.getMonth() + 1; 
+			  const month = dia.getMonth() + 2; 
 			  dia = new Date(year, month, 0);
 			  dia.setHours(0, 0, 0);
 			  dia.setMilliseconds(0);
@@ -526,12 +553,42 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	    
 	    $scope.selectedAsist = [];
 		  $scope.selection = function(item){
-			  	$scope.cleardtAsistenciaAnular();
-		    	$scope.setDtAsistenciaAnular(item);
+//			  	$scope.cleardtAsistenciaAnular();
+//		    	$scope.setDtAsistenciaAnular(item);
 			    if(item.checked){
-			    	$scope.selectedAsist.push($scope.dtAsistenciaAnular);
+//			    	$scope.selectedAsist.push($scope.dtAsistenciaAnular);
+			    	$scope.selectedAsist.push({
+			    		idAsistencia : item.idAsistencia,
+			    		idEntidad : item.idEntidad,
+			    		idSede : item.idSede,
+			    		fechaAsistencia : item.fechaAsistencia,
+			    		idUsuinterno : item.idUsuinterno,
+			    		idSistAdm : item.idSistAdm,
+			    		idOrigen : item.idOrigen,
+			    		idProgramacion : item.idProgramacion,
+			    		estado : item.estado,
+			    		detalle : item.detalle,
+			    		idModalidad : item.idModalidad,
+			    		idFinancia : item.idFinancia,
+			    		fechaFinalizacion : item.fechaFinalizacion,
+			    		fechaProgramada : item.fechaProgramada,
+			    		fechaSoli : item.fechaSoli,
+			    		fechaSoliJUD : item.fechaSoliJUD,
+			    		fechaProgramadaJUD : item.fechaProgramadaJUD,
+			    		codEjecutora : item.codEjecutora,
+			    		dtAsistenciaTemasBkJSss : item.dtAsistenciaTemasBkJSss,
+			    		idEntidadTxt : item.idEntidadTxt,
+			    		idSedeTxt : item.idSedeTxt,
+			    		idUsuinternoTxt : item.idUsuinternoTxt,
+			    		idSistAdmTxt : item.idSistAdmTxt,
+			    		idOrigenTxt : item.idOrigenTxt,
+			    		idProgramacionTxt : item.idProgramacionTxt,
+			    		estadoTxt : item.estadoTxt,
+			    		idModalidadTxt : item.idModalidadTxt,
+			    		idFinanciaTxt : item.idFinanciaTxt
+		                })
 			    }else{
-			    	$scope.selectedAsist = $scope.selectedAsist.filter(val => val.idAsistencia !== $scope.dtAsistenciaAnular.idAsistencia);
+			    	$scope.selectedAsist = $scope.selectedAsist.filter(val => val.idAsistencia !== item.idAsistencia);
 			    }
 			    console.log('lista: '+ $scope.selectedAsist); 
 			  };
@@ -543,15 +600,15 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 							.parent(angular.element(document.body))
 							.clickOutsideToClose(true)
 							.title('Anular asistencia')
-							.textContent("Debe seleccionar al menos un registro")
+							.textContent("No se han seleccionado registros.")
 							.ariaLabel('Lucky day')
-							.ok('OK')
+							.ok('ACEPTAR')
 							.targetEvent(ev)
 					);
 				}else{
 					var confirm = $mdDialog.confirm()
 	                .title('Anular asistencia')
-	                .textContent('¿Está usted seguro de anular los registros?')
+	                .textContent('¿Está seguro que desea anular los registros seleccionados?')
 	                .ariaLabel('Lucky day')
 	                .targetEvent(ev)
 	                .ok('Si')
@@ -594,7 +651,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 				        .title('Anular asistencias')
 				        .textContent(dato.message)
 				        .ariaLabel('ERROR')
-				        .ok('OK')
+				        .ok('ACEPTAR')
 				        .targetEvent(ev)
 					   );
 		            }
@@ -651,7 +708,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 					        .title('Reactivar asistencia técnica')
 					        .textContent(dato.message)
 					        .ariaLabel('ERROR')
-					        .ok('OK')
+					        .ok('ACEPTAR')
 					        .targetEvent(ev)
 						   );
 			            }
@@ -787,6 +844,7 @@ $scope.dtAsistenciaModelo.idModalidadTxt = dtAsistenciaBk.idModalidadTxt;
 $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 
 			$scope.dtAsistenciaModelo.editopcion = dtAsistenciaBk.dtAsistenciaACL.editopcion;
+			$scope.dtAsistenciaModelo.addEntidad = dtAsistenciaBk.dtAsistenciaACL.addEntidad;
 		}
 	  
 	// MPINARES 24012023 - INICIO
@@ -852,7 +910,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 							        .title('Guardar asistencia técnica')
 							        .textContent("Asistencia técnica se guardó correctamente.")
 							        .ariaLabel('ERROR')
-							        .ok('OK')
+							        .ok('ACEPTAR')
 							        .targetEvent(ev)
 							    );
 		    				
@@ -876,7 +934,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 								        .title('Guardar asistencia técnica')
 								        .textContent(dato.message)
 								        .ariaLabel('ERROR')
-								        .ok('OK')
+								        .ok('ACEPTAR')
 								        .targetEvent(ev)
 								    );
 				            }
@@ -919,7 +977,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 					        .title('Eliminar asistencia técnica')
 					        .textContent(dato.message)
 					        .ariaLabel('ERROR')
-					        .ok('OK')
+					        .ok('ACEPTAR')
 					        .targetEvent(ev)
 						   );
 			            }
@@ -961,7 +1019,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 					        .title('Activar asistencia técnica')
 					        .textContent(dato.message)
 					        .ariaLabel('ERROR')
-					        .ok('OK')
+					        .ok('ACEPTAR')
 					        .targetEvent(ev)
 						   );
 			            }
@@ -980,7 +1038,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 								.title('Eliminar')
 								.textContent("No se han seleccionado registros para eliminar... ")
 								.ariaLabel('ERROR')
-								.ok('OK')
+								.ok('ACEPTAR')
 								.targetEvent(ev)
 						);
 				    	ev.target.disabled = false;
@@ -1002,7 +1060,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 					.title('Eliminar registros')
 					.textContent(dato)
 					.ariaLabel('Eliminar')
-					.ok('OK')
+					.ok('ACEPTAR')
 					.targetEvent(ev)
 			);		
 					},
@@ -1024,7 +1082,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 					        .title('Eliminar asistencia técnica')
 					        .textContent(dato.message)
 					        .ariaLabel('ERROR')
-					        .ok('OK')
+					        .ok('ACEPTAR')
 					        .targetEvent(ev)
 						   );
 			            }
@@ -1057,7 +1115,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 					        .title('Cargar asistencia técnica')
 					        .textContent(dato.message)
 					        .ariaLabel('ERROR')
-					        .ok('OK')
+					        .ok('ACEPTAR')
 						   );
 			            }			           
 			        });			        			        	
@@ -1107,7 +1165,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 								.title('Eliminar')
 								.textContent("No se han seleccionado registros para eliminar... ")
 								.ariaLabel('ERROR')
-								.ok('OK')
+								.ok('ACEPTAR')
 								.targetEvent(ev)
 						);
 				    	return;
@@ -1169,7 +1227,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 				                    .title('Buscar por ejecutora - Registramef')
 				                    .textContent(errData.message)
 				                    .ariaLabel('ERROR')
-				                    .ok('OK')
+				                    .ok('ACEPTAR')
 				                    .targetEvent(errData)
 				                );
 				                dato.idEntidadTxt = null;
@@ -1297,7 +1355,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 							        .title('Eliminar registro')
 							        .textContent(dato.message)
 							        .ariaLabel('ERROR')
-							        .ok('OK')
+							        .ok('ACEPTAR')
 							        .targetEvent(ev)
 								   );
 					            }
@@ -1605,10 +1663,20 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 							ev.target.disabled = true;
 							
 							if (!$scope.dtAsistenciaForm2.$valid) {
-								alert('El diálogo no cumple con los campos obligatorios...');
+								// PURIBE 15042024 - INICIO -->
+								$mdDialog.show(
+									$mdDialog.alert()
+									.parent(angular.element(document.body))
+									.clickOutsideToClose(true)
+									.title('Guardar asistencia técnica')
+									.textContent("El diálogo no cumple con los campos obligatorios...")
+									.ariaLabel('Lucky day')
+									.ok('ACEPTAR')
+							);
 								ev.target.disabled = false;
 								return;
 							}
+							// PURIBE 15042024 - FIN -->
 							
 							if ($scope.datoAsistenciaTema.filter(e => e.idSubtema === $scope.asistenciaTemasmodelo.idSubtema).length > 0) {
 								  /* vendors contains the element we're looking for */
@@ -1619,7 +1687,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 										.title('Guardar asistencia técnica')
 										.textContent("El subtema seleccionado ya existe")
 										.ariaLabel('Lucky day')
-										.ok('OK')
+										.ok('ACEPTAR')
 								);
 								ev.target.disabled = false;
 								return;
@@ -2306,7 +2374,7 @@ $scope.loadListaPrtParametrosIdCaracteristica=function(){
 					.title('Guardar entidad')
 					.textContent('La entidad se guardó correctamente')
 					.ariaLabel('Información')
-					.ok('OK')
+					.ok('ACEPTAR')
 					.targetEvent(ev)
 			);
 
@@ -2327,7 +2395,7 @@ $scope.loadListaPrtParametrosIdCaracteristica=function(){
 						.title('Guardar entidad')
 						.textContent(dato.message)
 						.ariaLabel('ERROR')
-						.ok('OK')
+						.ok('ACEPTAR')
 						.targetEvent(ev)
 				);
 			}
@@ -2406,7 +2474,7 @@ $scope.loadListaPrtParametrosIdCaracteristica=function(){
 			        .title('Eliminar registro')
 			        .textContent(dato.message)
 			        .ariaLabel('ERROR')
-			        .ok('OK')
+			        .ok('ACEPTAR')
 			        .targetEvent(ev)
 				   );
 	            }
@@ -2433,7 +2501,7 @@ $scope.loadListaPrtParametrosIdCaracteristica=function(){
 						.title('Guardar entidad')
 						.textContent("Debe seleccionar el sistema administrativo y la sede... ")
 						.ariaLabel('ERROR')
-						.ok('OK')
+						.ok('ACEPTAR')
 						.targetEvent(ev)
 				);
 		    	ev.target.disabled = false;
@@ -2457,7 +2525,7 @@ $scope.loadListaPrtParametrosIdCaracteristica=function(){
 							.title('Guardar entidad')
 							.textContent("El sistema administrativo y la sede ya existen")
 							.ariaLabel('Lucky day')
-							.ok('OK')
+							.ok('ACEPTAR')
 					);
 					ev.target.disabled = false;
 					return;

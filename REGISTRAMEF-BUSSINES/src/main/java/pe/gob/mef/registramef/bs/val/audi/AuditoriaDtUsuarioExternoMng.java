@@ -61,6 +61,7 @@ public class AuditoriaDtUsuarioExternoMng implements Serializable{
 					}
 				}
 				 
+		          //INICIO CUSCATA - 18062024
 		            if (dtUsuarioExternoBk.getApaterno() != null
 						&& dtUsuarioExterno.getApaterno() != null) {
 					if (!dtUsuarioExternoBk.getApaterno().equals(
@@ -120,6 +121,7 @@ public class AuditoriaDtUsuarioExternoMng implements Serializable{
 						dtUsuarioExterno.setAmaterno(dtUsuarioExternoBk.getAmaterno());
 					}
 				}
+                //FIN CUSCATA - 18062024
 				if (dtUsuarioExternoBk.getDireccion() != null
 							&& dtUsuarioExterno.getDireccion() != null) {
 						if (!dtUsuarioExternoBk.getDireccion().equals(

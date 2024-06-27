@@ -1,5 +1,6 @@
 package pe.gob.mef.registramef.bs.dao;
-
+//PURIBE 16012024 - INICIO- 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -11,10 +12,10 @@ import pe.gob.mef.registramef.bs.domain.TaFeriados;
 *
 *
 * @author  Carlos Aguilar
-* @version 2.0, 06/03/2024 23:27
+* @version 2.0, 18/12/2023 18:48
 * 
 *          /----------Nombre------------------------/---------fecha------/----------Motivo---------/
-*          /Carlos Aguilar Chamochumbi             / 06/03/2024 23:27         / Creación de la clase  /
+*          /Carlos Aguilar Chamochumbi             / 18/12/2023 18:48         / Creación de la clase  /
 * 
 */
 public interface TaFeriadosDao {
@@ -29,8 +30,10 @@ public interface TaFeriadosDao {
 	List<TaFeriados> getDesactivasTaFeriados();
 	Long getMaxIdVal();
 	
-	List<TaFeriados> getXFiltro(String feDesc,Timestamp feFchmod,Timestamp feFchcrear,Integer feEstado, int iniciar, int max);
-	List<TaFeriados> getXFiltro(String feDesc,Timestamp feFchmod,Timestamp feFchcrear,Integer feEstado);
-	long getTotalXFiltro(String feDesc,Timestamp feFchmod,Timestamp feFchcrear,Integer feEstado);
+	List<TaFeriados> getXFiltro(String feDesc, int iniciar, int max);
+	List<TaFeriados> getXFiltro(String feDesc);
+	List<TaFeriados> getByIdTaFeriados(java.util.Date id); 
+	//PURIBE 16012024 - FIN 
+	long getTotalXFiltro(String feDesc);
 	
 }

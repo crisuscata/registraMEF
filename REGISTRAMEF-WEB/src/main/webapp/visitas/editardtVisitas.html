@@ -43,34 +43,38 @@ data-ng-init="editdtVisitas()">
 
 
    <fieldset style="margin-left: 15px;">
-      <legend>Datos de la reunion</legend>
+      <legend>Datos de la reuni&oacute;n</legend><!--   PURIBE 04042024 - INICIO -->
       <md-content md-whiteframe="1" class="overflowEsconder noshadow"
          md-colors="{background: 'background-A100'}">
       <div layout="row" layout-aling="center start" flexstyle="margin-left: 20px; font-size: 14px;">
-               <div class="letraenvoltura" ng-if="dtVisitasModelo.editopcion < 2" flex="20">
+               <!--   PURIBE 22042024 - INICIO -->
+               <div class="letraenvoltura"  flex="20">
                   <md-input-container  
                      class="input-container-margen letraTexto"
                      md-no-float="true"> 
                      <label class="md-no-float" style="width: 200px;">Fecha de reuni&oacute;n</label>
                      <!--   PURIBE 22032024 - INICIO -->
                      <md-datepicker required  ng-model="dtVisitasModelo.fechaVisita" 
-                        md-placeholder="Fecha de reuni&oacute;n" 
+                        md-placeholder="Fecha de reuni&oacute;n"  ng-disabled="dtVisitasModelo.editopcion==2"
                         input-aria-describedby="datepicker-description"
                         input-aria-labelledby="datepicker-header ">
                      </md-datepicker>
                      <!--   PURIBE 22032024 - FIN -->
                   </md-input-container>
                   </div>
+                   <!--   PURIBE 22042024 - FIN -->
 
-                  <div class="letraenvoltura" ng-if="dtVisitasModelo.editopcion < 2" flex="auto">
+                                 <!--   PURIBE 22042024 - INICIO-->
+                  <div class="letraenvoltura"  flex="auto">
                      <md-input-container md-no-float="true" class="input-container-margen letraTexto"  flex="85">
                         <label class="letraLabel nocorte" style="width: 300px;" flex>Lugar de reuni&oacute;n</label>   
                    <!--   PURIBE 22032024 - INICIO -->
                         <md-select ng-model="dtVisitasModelo.idLugar"  required
                                     placeholder="Lugar de Reunion"
-                                    name="idparametrolugar"
+                                    name="idparametrolugar" ng-disabled="dtVisitasModelo.editopcion==2"
                                     >
                    <!--   PURIBE 22032024 - FIN-->
+                 
                            <md-option ng-value="0">SIN LUGAR DE REUNI&Oacute;N</md-option>
                           <md-option ng-repeat="item in listalugarMsparametros" ng-value="item.idparametro">
                               {{item.descripcion}}
@@ -81,19 +85,22 @@ data-ng-init="editdtVisitas()">
                     </div>
                       </md-input-container>
                      </div>
+                    
+                  <!--   PURIBE 22042024 - FIN-->
                       <div class="letraenvoltura" ng-if="dtVisitasModelo.editopcion > 1" flex="auto">  
                          <div class="letraLabel">Lugar de reuni&oacute;n:</div>
                          <div class="letraTexto">{{dtVisitasModelo.idLugarTxt}}</div> <!--   PURIBE 14032024 - INICIO*/ -->
                       </div>		
 
 
-                      <div class="letraenvoltura" ng-if="dtVisitasModelo.editopcion < 2" flex="auto">
+                      <!--   PURIBE 22042024 - INICIO-->
+                      <div class="letraenvoltura"  flex="auto">
                         <md-input-container md-no-float="true" class="input-container-margen letraTexto"  flex="85">
                            <label class="letraLabel nocorte" style="width: 300px;" flex>Tipo de financiamiento</label>    
                             <!--   PURIBE 22032024 - INICIO-->
                            <md-select ng-model="dtVisitasModelo.idFinancia"  required
                                        placeholder="Financiamiento"
-                                       name="idfinanciamiento"
+                                       name="idfinanciamiento" ng-disabled="dtVisitasModelo.editopcion==2"
                                        >    <!--   PURIBE 22032024 - FIN-->
                               <md-option ng-value="0">SIN FINANCIACI&Oacute;N</md-option>
                              <md-option ng-repeat="item in listafinanciamientoMsparametros" ng-value="item.idparametro" >
@@ -105,21 +112,25 @@ data-ng-init="editdtVisitas()">
                        </div>
                          </md-input-container>
                         </div>
+                          <!--   PURIBE 22042024 - FIN-->
                          <div class="letraenvoltura" ng-if="dtVisitasModelo.editopcion > 1" flex="auto">  
                             <div class="letraLabel">Tipo de financiaci&oacute;n:</div>
                             <div class="letraTexto">{{dtVisitasModelo.idFinanciaTxt}}</div>
                          </div>	
 
+                         <!--   PURIBE 22042024 - INICIO-->
                          <div class="letraenvoltura"
-                         ng-if="dtVisitasModelo.editopcion < 2" flex="40">
+                        flex="40">
                          <md-input-container
                             class="input-container-margen letraTexto nomarginbotottom"
                             flex="100" md-no-float="true" style="width: 150px;">
-                            <label class="letraLabel" style="width: 150px;" flex>Origen</label>    
+                            <label class="letraLabel" style="width: 150px;" flex>Origen</label>  
+                             <!--   PURIBE 22032024 - INICIO-->  
                             <md-select  required
-                                       placeholder="Origen" ng-disabled="true"
-                                       name="Origen" ng-model="dtVisitasModelo.idOrigen"
+                                       placeholder="Origen" ng-disabled="isEditablefecha()"
+                                       name="Origen" ng-model="dtVisitasModelo.idOrigen" ng-disabled="true"
                                        >
+                                        <!--   PURIBE 22032024 - FIN-->
                                        <md-option ng-value="-1">--seleccione origen--</md-option>
                                        <md-option ng-repeat="item in listaorigen" ng-value="item.idparametro" >
                                           {{item.descripcion}}
@@ -128,18 +139,20 @@ data-ng-init="editdtVisitas()">
                             </md-select>
                          </md-input-container>
                          </div>
+                      <!--   PURIBE 22042024 - FIN-->
 
 
                </div>
             </md-content>
       </fieldset>
 
+<!--   PURIBE 22042024 - INICIO-->
 <fieldset style="margin-left: 15px;">
    <legend>Datos de la entidad</legend>
    <md-content md-whiteframe="1" class="overflowEsconder noshadow"
       md-colors="{background: 'background-A100'}">
    <div layout="row" layout-aling="center start" flexstyle="margin-left: 20px; font-size: 14px;">
-            <div class="letraenvoltura" ng-if="dtVisitasModelo.editopcion < 2" flex="20">
+            <div class="letraenvoltura"  flex="20">
                <md-input-container  
                   class="input-container-margen letraTexto nomarginbotottom"
                   md-no-float="true"> 
@@ -151,24 +164,29 @@ data-ng-init="editdtVisitas()">
                   placeholder="Buscar por C&oacute;digo"/> 
                   <!--PURIBE 29032024   FIN-->
                   <md-button
-                  aria-label="Buscar por Cod. ejecutora"
+                  aria-label="Buscar por Cod. ejecutora" ng-disabled="dtVisitasModelo.editopcion==2"
                   class="md-icon-button md-mini iconoEnLinea"
                   id="idbuscarCodEjecutora" ng-click="buscarxcodEjec(dtVisitasModelo)"
                   > <md-icon
                   md-font-set="material-icons">search</md-icon> </md-button> </md-input-container>
 
             </div>
+                 <!--   PURIBE 22042024 - FIN-->
+
+  <!--   PURIBE 22042024 - INICIO-->
             <div class="letraenvoltura"
-               ng-if="dtVisitasModelo.editopcion < 2" flex="40">
+               flex="40">
                <md-input-container
                   class="input-container-margen letraTexto nomarginbotottom"
                   flex="100" md-no-float="true" style="width: 400%;">
                <!-- 				<input id="razonSocial" ng-model="dtAsistenciaModelo.idEntidadTxt" -->
                <!-- 					placeholder="Raz&oacute;n Social">  --> 
+                <!--PURIBE 04042024   INICIO-->  
+                    <label   style="width: 100px;">Raz&oacute;n social</label>
+                      <!--PURIBE 04042024   INICIO--> 
                <md-autocomplete
-                  required md-input-name="nameMsInstitucionesIdprovee"
+                  required md-input-name="nameMsInstitucionesIdprovee" ng-disabled="dtVisitasModelo.editopcion==2"
                   md-input-minlength="2" md-input-maxlength="255"
-                  ng-disabled="ctrlMsInstitucionesIdprovee.isDisabled"
                   md-no-cache="ctrlMsInstitucionesIdprovee.noCache"
                   md-selected-item="ctrlMsInstitucionesIdprovee.selectedItem"
                   md-search-text-change="searchTextChangeMsInstitucionesIdprovee(dtVisitasModelo.idEntidadTxt)"
@@ -181,8 +199,10 @@ data-ng-init="editdtVisitas()">
                <md-item-template> <span
                   md-highlight-text="dtVisitasModelo.idEntidadTxt"
                   md-highlight-flags="^i"> {{item.razSocial}} </span> </md-item-template> <md-not-found>
-               No hay concidencias para "{{dtAsistenciaModelo.idEntidadTxt}}". <a
-                  ng-click="newStateMsInstitucionesIdprovee(dtVisitasModelo.idEntidadTxt)">, no existe o no esta vinculado a su sistema administrativo</a> </md-not-found>
+              No hay concidencias para "{{dtVisitasModelo.idEntidadTxt}}". <a
+                  ng-click="newStateMsInstitucionesIdprovee(dtVisitasModelo.idEntidadTxt)">Crea
+                  uno nuevo!</a> </md-not-found>
+                   <!--PURIBE 04042024   FIN-->
                <div
                   ng-messages="dtVisitasForm.nameMsInstitucionesIdprovee.$error"
                   ng-if="dtVisitasForm.nameMsInstitucionesIdprovee.$touched">
@@ -198,22 +218,22 @@ data-ng-init="editdtVisitas()">
                </md-autocomplete> </md-input-container>
 
             </div>
-
+     <!--   PURIBE 22042024 - FIN-->
            
    </div>
    </md-content>
 </fieldset>
 
+                   <!--   PURIBE 22042024 - INICIO-->
                    <fieldset style="margin-left: 15px;">
                      <legend>Participantes</legend>
 
-
                      <div layout="row" layout-align="center center" class="letraenvoltura"
-                     ng-if="dtVisitasModelo.editopcion < 2" flex="100">
+                    flex="100">
                   
                         <div>
                            
-                           <md-button class="md-raised"
+                           <md-button class="md-raised" ng-disabled="dtVisitasModelo.editopcion==2"
 							  aria-label="Agregar Participante"
 								ng-click="agregarparticipante($event)">
 							  <md-icon md-font-set="material-icons" style="color: grey;">work_outline</md-icon>
@@ -221,8 +241,10 @@ data-ng-init="editdtVisitas()">
 							</md-button>
                         </div>
                      </div>
+                       <!--   PURIBE 22042024 - FIN-->
                      <md-divider style="margin-top: 20px;"></md-divider>
 <!-------------------------------------------------------------------------------------->
+
             <div layout="row" layout-align="center">
                <md-table-container>
                   <table resize md-table md-row-select="options.rowSelection"
@@ -253,11 +275,13 @@ data-ng-init="editdtVisitas()">
                            ng-if="dato.estado !== 2"  ng-repeat-start="dato in visitausuarios">   
                            <!--   PURIBE 22032024 - FIN -->
                            <td>
-                              <md-button class="md-icon-button"
+                                <!--   PURIBE 22042024 - INICIO-->
+                              <md-button class="md-icon-button"  ng-disabled="dtVisitasModelo.editopcion==2"
                                           ng-click="eliminarParticipante($index)">
                                  <md-icon md-font-set="material-icons">cancel
                                  </md-icon>
                               </md-button>
+                                <!--   PURIBE 22042024 - FIN-->
                            </td>
                            <td md-cell>{{$index + 1}}</td>
                          
@@ -302,258 +326,27 @@ data-ng-init="editdtVisitas()">
 
                     
                   </fieldset>
+                  
+                  <!--   PURIBE 04042024 - INICIO-->
+<div layout="column" layout-aling="center start" ng-if="dtVisitasModelo.editentidad==2"  flex> 
+   <md-fab-speed-dial md-open="isOpenxx" md-direction="up"
+         class="md-scale md-fab-bottom-right" ng-mouseenter="isOpenxx=true"
+         ng-mouseleave="isOpenxx=false"> 
+            <md-fab-trigger>
+               <md-button aria-label="menu" class="md-fab md-warn" style="background-color: #009688;"> <md-icon
+               md-font-set="material-icons" style="color: rgb(255,255,255)">add</md-icon> </md-button> 
+               </md-fab-trigger> 
+               <md-fab-actions>
+               <md-button aria-label="Nueva entidad" class="md-fab md-raised md-mini"
+               ng-click="showdlgInstitucionDialog()" > 
+               <md-tooltip md-direction="left" md-visible="tooltipVisible">Nueva entidad</md-tooltip>
+               <md-icon md-font-set="material-icons" >add</md-icon> 
+               </md-button> 
+            </md-fab-actions> 
+      </md-fab-speed-dial>
+</div>
+<!--   PURIBE 04042024 - FIN -->
 
-
-
-
-                 
-
-
-<!--  fieldset>
-<legend>Datos de Asistencia Tecnica</legend>
-<md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}">
- <div layout="row" layout-aling="center start" flex> 
-        <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2" flex="50">
-        <label class="letraLabel labelTamanioFijo" flex="50">Fecha De Asistencia Tecnica</label>    
-        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="60">
-            <md-datepicker required ng-model="dtAsistenciaModelo.fechaAsistenciaJUD" 
-                     md-placeholder="Ingrese la Fecha De Asistencia Tecnica"
-                     input-aria-describedby="datepicker-description"
-                     input-aria-labelledby="datepicker-header ">
-            </md-datepicker>
-         </md-input-container>
-        </div>
-         <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion > 1" flex="50">  
-            <div class="letraLabel labelTamanioFijo">Fecha De Asistencia Tecnica:</div>
-            <div class="letraTexto">{{dtAsistenciaModelo.fechaAsistencia}}</div>
-         </div>			 
- </div><div layout="row" layout-aling="center start"> 
-        <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2" flex="auto">
-        <label class="letraLabel" flex>Detalle</label>    
-        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
-            <input type="text" md-maxlength="300" required name="detalle" ng-model="dtAsistenciaModelo.detalle"
-                   placeholder="Ingresar Detalle"
-                   >
-           <div ng-messages="dtAsistenciaForm.detalle.$error">
-            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
-            <div ng-message="required">Se requiere el Detalle.</div>
-            <div ng-message="maxlength">El Detalle tiene un m&aacute;ximo de 300 caracteres.</div>
-            </div>
-         </md-input-container>
-        </div>
-         <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion > 1" flex="auto">  
-            <div class="letraLabel">Detalle:</div>
-            <div class="letraTexto">{{dtAsistenciaModelo.detalle}}</div>
-         </div>			 
- </div><div layout="row" layout-aling="center start"> 
-        <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2" flex="auto">
-        <label class="letraLabel" flex>Usuario Interno</label>    
-        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
-            <input type="text" md-maxlength="10" required name="idUsuinterno" ng-model="dtAsistenciaModelo.idUsuinterno"
-                   placeholder="Ingresar Usuario interno"
-                   >
-           <div ng-messages="dtAsistenciaForm.idUsuinterno.$error">
-            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
-            <div ng-message="required">Se requiere el Usuario Interno.</div>
-            <div ng-message="maxlength">El Usuario Interno tiene un m&aacute;ximo de 10 caracteres.</div>
-            </div>
-         </md-input-container>
-        </div>
-         <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion > 1" flex="auto">  
-            <div class="letraLabel">Usuario Interno:</div>
-            <div class="letraTexto">{{dtAsistenciaModelo.idUsuinterno}}</div>
-         </div>			 
- </div><div layout="row" layout-aling="center start">       
-        <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2" flex="auto">
-        <label class="letraLabel" flex>Entidad</label>    
-        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
-            <md-select ng-model="dtAsistenciaModelo.idEntidad" ng-change="changeIdEntidad()" required
-                       placeholder="Ingresar Entidad"
-                       name="idEntidad"
-                       >
-             <md-option ng-repeat="item in listaDtEntidadesIdEntidad" ng-value="item.id">
-                 {{item.valor}}
-             </md-option>
-            </md-select>
-            <div ng-messages="dtAsistenciaForm.idEntidad.$error">
-	      <div ng-message="required">Se requiere seleccione la sede.</div>
-	    </div>
-         </md-input-container>
-        </div>
-         <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion > 1" flex="auto">  
-            <div class="letraLabel">Entidad:</div>
-            <div class="letraTexto">{{dtAsistenciaModelo.idEntidadTxt}}</div>
-         </div>			 
- </div><div layout="row" layout-aling="center start">       
-        <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2" flex="auto">
-        <label class="letraLabel" flex>Origen</label>    
-        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
-            <md-select ng-model="dtAsistenciaModelo.idOrigen" ng-change="changeIdOrigen()" required
-                       placeholder="Ingresar Origen"
-                       name="idOrigen"
-                       >
-             <md-option ng-repeat="item in listaPrtParametrosIdOrigen" ng-value="item.id">
-                 {{item.valor}}
-             </md-option>
-            </md-select>
-            <div ng-messages="dtAsistenciaForm.idOrigen.$error">
-	      <div ng-message="required">Se requiere seleccione la sede.</div>
-	    </div>
-         </md-input-container>
-        </div>
-         <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion > 1" flex="auto">  
-            <div class="letraLabel">Origen:</div>
-            <div class="letraTexto">{{dtAsistenciaModelo.idOrigenTxt}}</div>
-         </div>			 
- </div><div layout="row" layout-aling="center start"> 
-        <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2" flex="auto">
-        <label class="letraLabel" flex>Programacion</label>    
-        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
-            <input type="text" md-maxlength="10" required name="idProgramacion" ng-model="dtAsistenciaModelo.idProgramacion"
-                   placeholder="Ingresar Programaci�n"
-                   >
-           <div ng-messages="dtAsistenciaForm.idProgramacion.$error">
-            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
-            <div ng-message="required">Se requiere el Programaci�n.</div>
-            <div ng-message="maxlength">El Programaci�n tiene un m&aacute;ximo de 10 caracteres.</div>
-            </div>
-         </md-input-container>
-        </div>
-         <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion > 1" flex="auto">  
-            <div class="letraLabel">Programaci�n:</div>
-            <div class="letraTexto">{{dtAsistenciaModelo.idProgramacion}}</div>
-         </div>			 
- </div>
- 
- <div layout="row" layout-aling="center start">       
-        <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2" flex="auto">
-        <label class="letraLabel" flex>Modalidad</label>    
-        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
-            <md-select ng-model="dtAsistenciaModelo.idModalidad" ng-change="changeIdModalidad()" required
-                       placeholder="Ingresar Modalidad"
-                       name="idModalidad"
-                       >
-             <md-option ng-repeat="item in listaPrtParametrosIdModalidad" ng-value="item.id">
-                 {{item.valor}}
-             </md-option>
-            </md-select>
-            <div ng-messages="dtAsistenciaForm.idModalidad.$error">
-	      <div ng-message="required">Se requiere seleccione la sede.</div>
-	    </div>
-         </md-input-container>
-        </div>
-         <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion > 1" flex="auto">  
-            <div class="letraLabel">Modalidad:</div>
-            <div class="letraTexto">{{dtAsistenciaModelo.idModalidadTxt}}</div>
-         </div>			 
- </div>
- <div layout="row" layout-aling="center start"> 
-        <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2" flex="auto">
-        <label class="letraLabel" flex>Sede</label>    
-        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
-            <input type="text" md-maxlength="10" required name="idSede" ng-model="dtAsistenciaModelo.idSede"
-                   placeholder="Ingresar Sede"
-                   >
-           <div ng-messages="dtAsistenciaForm.idSede.$error">
-            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
-            <div ng-message="required">Se requiere el Sede.</div>
-            <div ng-message="maxlength">El Sede tiene un m&aacute;ximo de 10 caracteres.</div>
-            </div>
-         </md-input-container>
-        </div>
-         <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion > 1" flex="auto">  
-            <div class="letraLabel">Sede:</div>
-            <div class="letraTexto">{{dtAsistenciaModelo.idSede}}</div>
-         </div>			 
- </div><div layout="row" layout-aling="center start"> 
-        <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2" flex="auto">
-        <label class="letraLabel" flex>Sistema Administrativo</label>    
-        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
-            <input type="text" md-maxlength="10" required name="idSistAdm" ng-model="dtAsistenciaModelo.idSistAdm"
-                   placeholder="Ingresar Sistema administrativo"
-                   >
-           <div ng-messages="dtAsistenciaForm.idSistAdm.$error">
-            <div ng-message="minlength">El N&uacute;mero de caracteres es muy corto</div>    
-            <div ng-message="required">Se requiere el Sistema Administrativo.</div>
-            <div ng-message="maxlength">El Sistema Administrativo tiene un m&aacute;ximo de 10 caracteres.</div>
-            </div>
-         </md-input-container>
-        </div>
-         <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion > 1" flex="auto">  
-            <div class="letraLabel">Sistema Administrativo:</div>
-            <div class="letraTexto">{{dtAsistenciaModelo.idSistAdm}}</div>
-         </div>			 
- </div>
- <div layout="row" layout-aling="center start">       
-        <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2" flex="auto">
-        <label class="letraLabel" flex>Tipo De Financiamiento</label>    
-        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="85">
-            <md-select ng-model="dtAsistenciaModelo.idFinancia" ng-change="changeIdFinancia()" required
-                       placeholder="Ingresar Tipo de financiamiento"
-                       name="idFinancia"
-                       >
-             <md-option ng-repeat="item in listaPrtParametrosIdFinancia" ng-value="item.id">
-                 {{item.valor}}
-             </md-option>
-            </md-select>
-            <div ng-messages="dtAsistenciaForm.idFinancia.$error">
-	      <div ng-message="required">Se requiere seleccione la sede.</div>
-	    </div>
-         </md-input-container>
-        </div>
-         <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion > 1" flex="auto">  
-            <div class="letraLabel">Tipo De Financiamiento:</div>
-            <div class="letraTexto">{{dtAsistenciaModelo.idFinanciaTxt}}</div>
-         </div>			 
- </div><div layout="row" layout-aling="center start" flex> 
-        <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2" flex="50">
-        <label class="letraLabel labelTamanioFijo" flex="50">Fecha De Finalizaci�n</label>    
-        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="60">
-            <md-datepicker required ng-model="dtAsistenciaModelo.fechaFinalizacionJUD" 
-                     md-placeholder="Ingrese la Fecha De Finalizaci�n"
-                     input-aria-describedby="datepicker-description"
-                     input-aria-labelledby="datepicker-header ">
-            </md-datepicker>
-         </md-input-container>
-        </div>
-         <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion > 1" flex="50">  
-            <div class="letraLabel labelTamanioFijo">Fecha De Finalizaci�n:</div>
-            <div class="letraTexto">{{dtAsistenciaModelo.fechaFinalizacion}}</div>
-         </div>			 
- </div><div layout="row" layout-aling="center start" flex> 
-        <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2" flex="50">
-        <label class="letraLabel labelTamanioFijo" flex="50">Fecha Del Servicio Programada</label>    
-        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="60">
-            <md-datepicker required ng-model="dtAsistenciaModelo.fechaProgramadaJUD" 
-                     md-placeholder="Ingrese la Fecha Del Servicio Programada"
-                     input-aria-describedby="datepicker-description"
-                     input-aria-labelledby="datepicker-header ">
-            </md-datepicker>
-         </md-input-container>
-        </div>
-         <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion > 1" flex="50">  
-            <div class="letraLabel labelTamanioFijo">Fecha Del Servicio Programada:</div>
-            <div class="letraTexto">{{dtAsistenciaModelo.fechaProgramada}}</div>
-         </div>			 
- </div>
- <div layout="row" layout-aling="center start" flex> 
-        <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2" flex="50">
-        <label class="letraLabel labelTamanioFijo" flex="50">Fecha De Solicitud Del Servicio</label>    
-        <md-input-container md-no-float="true" class="input-container-margen letraTexto" flex="60">
-            <md-datepicker required ng-model="dtAsistenciaModelo.fechaSoliJUD" 
-                     md-placeholder="Ingrese la Fecha De Solicitud Del Servicio"
-                     input-aria-describedby="datepicker-description"
-                     input-aria-labelledby="datepicker-header ">
-            </md-datepicker>
-         </md-input-container>
-        </div>
-         <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion > 1" flex="50">  
-            <div class="letraLabel labelTamanioFijo">Fecha De Solicitud Del Servicio:</div>
-            <div class="letraTexto">{{dtAsistenciaModelo.fechaSoli}}</div>
-         </div>			 
- </div>
-</md-content>
-</fieldset -->
 </div>
 <div>&nbsp;</div>
 

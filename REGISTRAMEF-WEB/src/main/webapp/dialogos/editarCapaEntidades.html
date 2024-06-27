@@ -49,12 +49,12 @@
 										md-items="item in querySearchMsInstitucionesIdprovee(capaEntidadmodelo.idEntidadTxt)"
 										md-item-text="item.razSocial" md-min-length="4"
 										input-aria-labelledby="raz&oacute;n social" md-delay="3000"
-										placeholder="Raz&oacute;n social">
+										>
 									<md-item-template> <span
 										md-highlight-text="capaEntidadmodelo.idEntidadTxt"
 										md-highlight-flags="^i"> {{item.razSocial}} </span> </md-item-template> <md-not-found>
 									No hay concidencias para "{{capaEntidadmodelo.idEntidadTxt}}". <a
-										ng-click="newStateMsInstitucionesIdprovee(capaEntidadmodelo.idEntidadTxt)">, no existe o no esta vinculado a su sistema administrativo</a> </md-not-found>
+										ng-click="newStateMsInstitucionesIdprovee(capaEntidadmodelo.idEntidadTxt)"> No existe o no está vinculado a su sistema administrativo</a> </md-not-found>
 									<div
 										ng-messages="dtCapacitacionForm2.nameMsInstitucionesIdprovee.$error"
 										ng-if="dtCapacitacionForm2.nameMsInstitucionesIdprovee.$touched">

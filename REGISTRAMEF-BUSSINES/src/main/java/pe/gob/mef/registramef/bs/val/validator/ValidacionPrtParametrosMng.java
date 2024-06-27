@@ -34,10 +34,11 @@ public class ValidacionPrtParametrosMng implements Serializable{
 //	prtParametrosBk.setIdpadre(null);
 	
 //}
-        //PURIBE 25012024 - FIN
-	        if(prtParametrosBk.getEstado()!=null && prtParametrosBk.getEstado().longValue()<=0){
-			prtParametrosBk.setEstado(null);
-		}
+		//PURIBE 16012024 - INICIO
+	       // if(prtParametrosBk.getEstado()!=null && prtParametrosBk.getEstado().longValue()<=0){
+			//prtParametrosBk.setEstado(null);
+		//}
+	      //PURIBE 16012024 - INICIO
 	        
 		//VALIDANDO
 		//validarIdpadre(prtParametrosBk.getIdpadre());

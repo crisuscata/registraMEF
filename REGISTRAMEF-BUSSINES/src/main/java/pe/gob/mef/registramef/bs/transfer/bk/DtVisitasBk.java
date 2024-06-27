@@ -43,6 +43,8 @@ public class DtVisitasBk implements java.io.Serializable {
 	private Long idFinancia = null;
 	private Timestamp fechaFinalizacion = null;
 	private Timestamp fechaProgramada = null;
+	private Timestamp fechaReprogramada = null; //PURIBE 22042024 - INICIO-->
+	private boolean vistaProgramado = false;//PURIBE 22042024 - INICIO-->
 	
 	
 	//ADICIONALES
@@ -66,6 +68,7 @@ public class DtVisitasBk implements java.io.Serializable {
 	private String codEjecutora = null;//puribe
 	private Long idusuario = null;//puribe
 	private List<DtVisitasUsuinternosBk> visitaUsuarios;//puribe
+	private List<DtVisitasUsuexternosBk> visitaExternos;//PURIBE 22042024 - INICIO-->
 	
 
 	private DtVisitasACL dtVisitasACL = null;		
@@ -402,9 +405,7 @@ public class DtVisitasBk implements java.io.Serializable {
 	}
 		
 	
-	public DtVisitasACL getDtVisitasACL() {
-		return dtVisitasACL;
-	}
+	
 
 	public void setDtVisitasACL(DtVisitasACL dtVisitasACL) {
 		this.dtVisitasACL = dtVisitasACL;
@@ -453,5 +454,42 @@ public class DtVisitasBk implements java.io.Serializable {
 	public void setEsEliminado(boolean esEliminado) {		
 	}
 	 /*PURIBE 14032024 - FIN-->*/
+	
+	
+	//PURIBE 22042024 - INICIO-->
+		public Timestamp getFechaReprogramada() {
+			return fechaReprogramada;
+		}
+
+		public void setFechaReprogramada(Timestamp fechaReprogramada) {
+			this.fechaReprogramada = fechaReprogramada;
+		}
+		
+		public boolean isVistaProgramado() {
+			return vistaProgramado;
+		}
+
+		public void setVistaProgramado(boolean vistaProgramado) {
+			this.vistaProgramado = vistaProgramado;
+		}
+		
+		public DtVisitasACL getDtVisitasACL() {
+			
+			if (estado >= Estado.ACTIVO.getValor()) {
+	            dtVisitasACL.setFinalizar(true);
+	        } else {
+	            dtVisitasACL.setFinalizar(false);
+	        }
+			return dtVisitasACL;
+		}
+		
+		public List<DtVisitasUsuexternosBk> getVisitaExternos() {
+			return visitaExternos;
+		}
+
+		public void setVisitaExternos(List<DtVisitasUsuexternosBk> visitaExternos) {
+			this.visitaExternos = visitaExternos;
+		}
+		//PURIBE 22042024 - FIN->
 	
 }

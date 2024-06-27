@@ -60,6 +60,37 @@ public class AuditoriaTaFeriadosMng implements Serializable{
 						taFeriados.setFeDesc(taFeriadosBk.getFeDesc());
 					}
 				}
+		            
+//PURIBE 16012024 - INICIO-->
+		            
+		        	if (taFeriadosBk.getFeEstado() != null
+							&& taFeriados.getFeEstado() != null) {
+						if (!taFeriadosBk.getFeEstado().equals(
+								taFeriados.getFeEstado())) {						
+								if(nivel>0){
+								log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"prtParametros:Estado"+" :: "+taFeriadosBk.getFeFecha().toString()+" :: "+ taFeriados.getFeEstado() + " :: "+ taFeriadosBk.getFeEstado());
+								}
+							cambios = true;
+							taFeriados.setFeEstado(taFeriadosBk.getFeEstado());
+						}
+					} else if (taFeriadosBk.getFeEstado() == null
+							&& taFeriados.getFeEstado() != null) {						
+							if(nivel>0){
+							log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"prtParametros:Estado"+" :: "+taFeriadosBk.getFeFecha().toString()+" :: "+  taFeriados.getFeEstado() + " :: "+ taFeriadosBk.getFeEstado());
+								}
+							cambios = true;
+							taFeriados.setFeEstado(taFeriadosBk.getFeEstado());
+						
+					} else if (taFeriadosBk.getFeEstado() != null
+							&& taFeriados.getFeEstado() == null) {						
+							if(nivel>0){
+							log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"prtParametros:Estado"+" :: "+taFeriadosBk.getFeFecha().toString()+" :: "+ taFeriados.getFeEstado() + " :: "+ taFeriadosBk.getFeEstado());
+								}
+							cambios = true;			
+							taFeriados.setFeEstado(taFeriadosBk.getFeEstado());
+					}
+				
+		        	//PURIBE 16012024 -- FIN-->
 				
 			
 			return cambios;

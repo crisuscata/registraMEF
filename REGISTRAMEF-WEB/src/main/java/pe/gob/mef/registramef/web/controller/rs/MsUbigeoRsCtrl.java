@@ -337,6 +337,11 @@ public class MsUbigeoRsCtrl {
 
 		MsUbigeoBk msUbigeoC = new MsUbigeoBk();
 		FuncionesStaticas.copyPropertiesObject(msUbigeoC, msUbigeoJS);
+		msUbigeoC.setRtmaddress(adressRemoto);
+		msUbigeoC.setRtmaddressrst(adressRemoto);
+		//PURIBE 20012024 - INICIO--
+		//msUbigeoC.setEstado(1L);
+		//PURIBE 20012024 - FIN--
 
 		try {
 			msUbigeoC = servicio.saveorupdateMsUbigeoBk(msUbigeoC, msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto);
@@ -1146,19 +1151,26 @@ public class MsUbigeoRsCtrl {
     		Principal usuario = req.getUserPrincipal();
     		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
+    		//PURIBE 04042024 -INICIO-->
     		if (msUsuariosBk == null)
     			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
     					.entity(new GenericEntity<RespuestaError>(
-    							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
+    							new RespuestaError("Error no tiene autorización para realizar esta operación.",
     									HttpURLConnection.HTTP_UNAUTHORIZED)) {
     					}).build();
-
-    		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.MSUSUARIOS_CREA))
+		//PURIBE 04042024 -FIN-->
+    			//PURIBE 04042024 -INICIO-->
+			if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+					&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+					&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+					&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+				
     			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
     					.entity(new GenericEntity<RespuestaError>(
-    							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
+    							new RespuestaError("Error no tiene autorización para realizar esta operación.",
     									HttpURLConnection.HTTP_UNAUTHORIZED)) {
     					}).build();
+				//PURIBE 04042024 -FIN-->
 
     		try {
     			List<IIDValorDto> iDValorDtosss = servicio.getDepartamentosV();

@@ -90,6 +90,34 @@ public class AuditoriaMsRolesMng implements Serializable{
 						msRoles.setRol(msRolesBk.getRol());
 					}
 				}
+		            
+		            if (msRolesBk.getEstado() != null
+							&& msRoles.getEstado() != null) {
+						if (!msRolesBk.getEstado().equals(
+							msRoles.getEstado())) {						
+							if(nivel>0){
+							log.log(Level.INFO,"CAMBIO :: " + iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"msRoles:Estado"+" :: "+msRolesBk.getEstado().toString()+" :: "+ msRoles.getEstado() + " :: "+ msRolesBk.getEstado());								
+							}
+							cambios = true;
+							msRoles.setEstado(msRolesBk.getEstado());
+						}
+					} else if (msRolesBk.getEstado() == null
+							&& msRoles.getEstado() != null) {					
+							if(nivel>0){
+								log.log(Level.INFO,"CAMBIO :: " + iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"msRoles:Estado"+" :: "+msRolesBk.getEstado().toString()+" :: "+ msRoles.getEstado() + " :: "+ msRolesBk.getEstado());
+							}
+							cambios = true;
+							msRoles.setEstado(msRolesBk.getEstado());
+					} else if (msRolesBk.getEstado() != null
+							&& msRoles.getEstado() == null) {						
+							if(nivel>0){
+								log.log(Level.INFO,"CAMBIO :: " + iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"msRoles:Estado"+" :: "+msRolesBk.getEstado().toString()+" :: "+ msRoles.getEstado() + " :: "+ msRolesBk.getEstado());
+							}
+							cambios = true;
+							msRoles.setEstado(msRolesBk.getEstado());
+						}
+		            
+		            
 				
 			
 			return cambios;

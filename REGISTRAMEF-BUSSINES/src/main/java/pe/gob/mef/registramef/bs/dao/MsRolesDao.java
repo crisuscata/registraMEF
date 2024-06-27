@@ -34,4 +34,5 @@ public interface MsRolesDao {
 	long getTotalXFiltro(String username,String rol);
 	MsRoles getXUserRol(String username, String rol);
 	public boolean isRolAdministradorOGC(Long idUsuario) throws Validador;//MPINARES 24012023 - INICIO
+	List<MsRoles> getXFiltro(String username);
 }

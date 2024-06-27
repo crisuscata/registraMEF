@@ -31,7 +31,8 @@ public interface DtVisitasDao {
 	
 	List<DtVisitas> getXFiltro(Timestamp fechaVisita,Long idSistAdm,Long idSede,Long idOrigen,Long idProgramacion,Long estado, int iniciar, int max);
 	List<DtVisitas> getXFiltro(Timestamp fechaVisita,Long idSistAdm,Long idSede,Long idOrigen,Long idProgramacion,Long estado);
-	List<DtVisitas> getXFiltro(Timestamp fechaVisita,Long idOrigen,Long idProgramacion,Long idModalidad,Long idTipo,Long idLugar,Long idEntidad,Long idSede,Long idSistAdm,Long idFinancia,Timestamp fechaProgramada,Timestamp fechaInicio,Timestamp fechaFin);// PURIBE 14032024 - INICIO -->
+//	List<DtVisitas> getXFiltro(Timestamp fechaVisita,Long idOrigen,Long idProgramacion,Long idModalidad,Long idTipo,Long idLugar,Long idEntidad,Long idSede,Long idSistAdm,Long idFinancia,Timestamp fechaProgramada,Timestamp fechaInicio,Timestamp fechaFin);// PURIBE 14032024 - INICIO -->
+	List<DtVisitas> getXFiltro(Timestamp fechaVisita,Long idOrigen,Long idProgramacion,Long idModalidad,Long idTipo,Long idLugar,Long idEntidad,Long idSede,Long idSistAdm,Long idFinancia,Timestamp fechaProgramada,Timestamp fechaInicio,Timestamp fechaFin,Long idUsuario);// PURIBE 04042024 - INICIO -->// PURIBE 14032024 - INICIO -->
 	long getTotalXFiltro(Timestamp fechaVisita,Long idSistAdm,Long idSede,Long idOrigen,Long idProgramacion,Long estado);
 	
 }

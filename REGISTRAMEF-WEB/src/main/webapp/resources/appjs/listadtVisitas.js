@@ -11,6 +11,20 @@ var listaMsUsuarios = contexto+"/rs/ctrldtVisitas/listausuarios";//PURIBE
 var listaMsparametrosUrl = contexto+"/rs/ctrldtVisitas/prtParametros/";//PURIBE
 var listaMStema  = contexto+"/rs/ctrldtVisitas/listamstemas/";//PURIBE
 var modalparticipanteUrl= 'modal'+'/modalparticipante.html';//PURIBE
+var listaMsSedesUrl = contexto+"/rs/ctrldtAsistencia/listamsSedes";// PURIBE 04042024 - INICIO -->
+var ubigeodefectoUrl = contexto+"/rs/ctrldtAsistencia/ubigeodefecto"; // PURIBE 04042024 - INICIO -->
+var listamsSisAdminUrl = contexto+"/rs/ctrldtAsistencia/listamsSisAdmin"; // PURIBE 04042024 - INICIO -->
+var listaPrtParametrosidparametroIdCaracteristicaUrl = contexto+"/rs/ctrldtAsistencia/listaPrtParametrosIdparametroIdCaracteristica"; // PURIBE 04042024 - INICIO -->
+var listaPaisesUrl = contexto+"/rs/ctrldtAsistencia/listaPaises"; // PURIBE 04042024 - INICIO -->
+var listaCoddptosUrl = contexto+"/rs/ctrldtAsistencia/listaCoddptos";// PURIBE 04042024 - INICIO -->
+var ubigeodefectoUrl = contexto+"/rs/ctrldtAsistencia/ubigeodefecto";// PURIBE 04042024 - INICIO -->
+var listaCodprovUrl = contexto+"/rs/ctrldtAsistencia/listaCodprov/";// PURIBE 04042024 - INICIO -->
+var listaCoddistUrl = contexto+"/rs/ctrldtAsistencia/listaCoddist/";// PURIBE 04042024 - INICIO -->
+var insertdtEntidadesUrl = contexto+"/rs/ctrldtAsistencia/salvardtEntidades";// PURIBE 04042024 - INICIO -->
+var listamsSisAdminUrl = contexto+"/rs/ctrldtAsistencia/listamsSisAdmin";// PURIBE 04042024 - INICIO -->
+var valorperfilUrl = contexto+"/rs/ctrldtVisitas/loadvalorperfil";// PURIBE 04042024 - INICIO -->
+var valorcrearlUrl = contexto+"/rs/ctrldtVisitas/loadvalorcrear";// PURIBE 04042024 - INICIO -->
+var listaPrtParametrosidparametroIdTipoEntidadUrl = contexto+"/rs/ctrldtAsistencia/listaPrtParametrosIdparametroIdTipoEntidad"; // PURIBE 04042024 - INICIO -->
 
 var editardtVisitasUrl = contexto+"/rs/ctrldtVisitas/editardtVisitas/";
 var listaPrtParametrosidparametroIdOrigenUrl = contexto+"/rs/ctrldtVisitas/listaPrtParametrosIdparametroIdOrigen";
@@ -20,7 +34,7 @@ var listaMsSedesidSedeIdSedeUrl = contexto+"/rs/ctrldtVisitas/listaMsSedesIdSede
 var listaPrtParametrosidparametroIdFinanciaUrl = contexto+"/rs/ctrldtVisitas/listaPrtParametrosIdparametroIdFinancia";
 var descargarUrl = contexto+"/rs/ctrldtVisitas/descargar/";
 /*PURIBE 01022024 - INICIO-->*/
-var listaMsUbigeocodDptoCodDptoUrl = contexto+"/rs/ctrldtVisitas/listaCoddptos";
+var listaMsUbigeocodDptoCodDptoUrl = contexto+"/rs/ctrldtVisitas/listaCoddptos"; 
 var listadtEntidadesUrl = contexto+"/rs/ctrldtEntidades/listaViewdtEntidades";
 /*PURIBE 01022024 - FIN-->*/
 
@@ -42,7 +56,7 @@ myapp = angular.module('MyApp');
 
 myapp.config(function($routeProvider) {
 	  $routeProvider
-	  .when("/editar/:idVisita/:fechaInicio/:fechaFin", {
+	  .when("/editar/:idVisita", { 	/* PURIBE 04042024 - INICIO*/
 		  templateUrl : "visitas/editardtVisitas.html",
 		  controller : "ctrlListadtVisitas"
 	  })
@@ -207,29 +221,20 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 
 				});	
 	    /* PURIBE 01022024 - FIN */
-				//PURIBE 29032024  INICIO-->
+		//PURIBE 29032024  INICIO-->
+			//PURIBE 04042024  INICIO-->
 	    		 if(res.data.contador>0)
 				 {
 	    		 $scope.total = res.data.contador;
 	    		 var tiempoenBD = res.data.tiempoenBD;
 	    		 var tiempoenproceso = res.data.tiempoenproceso;
-	    		 $scope.creadtVisitas = res.data.creamodifica;
+	    //		 $scope.creadtVisitas = res.data.creamodifica;
 	    		 console.log("data " +$scope.datos.length+" DE "+ $scope.total);
 	    		 console.log("Tiempo respuesta BD dtVisitas " +tiempoenBD+" Tiempo en Paginar "+tiempoenproceso);
 				 $scope.refrescar=0; //puribe
 				 }
-				 else
-				 {
-					$mdDialog.show(
-						$mdDialog.alert()
-					   .parent(angular.element(document.body))
-					   .clickOutsideToClose(true)
-					   .title('Lista de Visitas')
-					   .textContent("No se encontro resultados")
-					   .ariaLabel('WARNING')
-					   .ok('ACEPTAR') 
-				   );
-				 }
+			
+				//PURIBE 04042024  FIN->
 				 //PURIBE 29032024  FIN->
 				},
 				function error(errResponse) {
@@ -251,13 +256,61 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 	     //}, 500);
 	  };
 	 	  
+	//PURIBE 04042024  INICIO-->
+	  $scope.valorperfil;
+	  $scope.loadvalorperfil=function(){
+		  $http.get(valorperfilUrl).then(function(res){
+			  $scope.valorperfil = res.data; 
 
+			  if ($scope.valorperfil.id==2)
+			  {
+			  $scope.dtVisitasModelo.editentidad=2; 
+			  }
+			  else
+			  {
+			  $scope.dtVisitasModelo.editentidad=1; 
+			  }
+		  },
+		  function error(errResponse) {
+			  console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+		  });
+	  };
+	//PURIBE 04042024  FIN-->
+	//PURIBE 04042024  INICIO-->
+	$scope.valorcrear;
+	$scope.loadvalorcrear=function(){
+		$http.get(valorcrearlUrl).then(function(res){
+			$scope.valorcrear = res.data; 
+
+			if ($scope.valorcrear.id==2)
+			{
+			$scope.creadtVisitas = true;
+			}
+			else
+			{
+				$scope.creadtVisitas=false; 
+			}
+		},
+		function error(errResponse) {
+			console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+		});
+	};
+	$scope.loadvalorcrear();
+  //PURIBE 04042024  FIN-->
+ 
 
 	  $scope.getURLEjecutora=function(){
           var origen="?oferta=127";
-		  var programada="&programada=121";
+		  var programada="&programada="+$scope.programada;  // PURIBE 22042024  INICIO
 		  return origen+programada;
 	  }
+	// PURIBE 22042024  INICIO
+	  $scope.getURLEdit=function(){
+		var programada="?programada="+$scope.programada;  
+		return programada;
+		
+	}
+		// PURIBE 22042024  FIN
 
 	  $scope.getURLParametros=function(){
 		    var elprimero = true;
@@ -386,6 +439,12 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 			return reactivardtVisitasUrl  +$scope.getURLParametros();
 			
 		}
+		/* PURIBE 22042024 - INICIO*/
+		$scope.getURLeditar=function(idVisita){		    	 
+				return editardtVisitasUrl+idVisita +$scope.getURLEdit();
+				
+			}
+			/* PURIBE 22042024 - FIN*/
 		$scope.getURLeliminar=function(){		    	 
 			return eliminardtVisitasUrl  +$scope.getURLParametros();
 			
@@ -431,7 +490,10 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 			{
 				
 				var fechaActual = new Date();
-
+				/* PURIBE 04042024 - INICIO*/	
+				$scope.loadvalorperfil();
+            
+				/* PURIBE 04042024 - FIN*/
 				fechaActual.setDate(1);
 				$scope.dtVisitasModelo.fechaVisita=fechaActual;
 				$scope.dtVisitasModelo.fechaVisita.setMonth($scope.dtVisitasModelo.fechaVisita.getMonth() + 1);
@@ -590,10 +652,10 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 
 		function obtenerLimitesDelMes(fecha) {
 			// Clonamos la fecha para no modificar la original
-			var primeraFechaDelMes = new Date(fecha.getFullYear(), fecha.getMonth(), 1);
+			var primeraFechaDelMes = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 1); // PURIBE 12042024 - INICIO -->
 			
 			// Obtenemos el último día del mes siguiente y restamos un día
-			var ultimoDiaDelMes = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0);
+			var ultimoDiaDelMes = new Date(fecha.getFullYear(), fecha.getMonth() + 2, 0); // PURIBE 12042024 - INICIO -->
 		  
 			return {
 			  primerDia: primeraFechaDelMes,
@@ -634,7 +696,7 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 							$mdDialog.alert()
 							.parent(angular.element(document.body))
 							.clickOutsideToClose(true)
-							.title('BUSCAR POR CODIGO EJECUTORA')
+							.title('BUSCAR POR CÓDIGO EJECUTORA')
 							.textContent("NO SE ENCONTRARON DATOS CON "+dato.codEjecutora)
 							.ariaLabel('BUSQUEDA')
 							.ok('ACEPTAR') //PURIBE 29032024  INICIO-->
@@ -696,7 +758,7 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 		//				    		$scope.listaMsInstitucionesIdprovee.filter($scope.createFilterForMsInstitucionesIdprovee(query))
 		//				    		: $scope.listaMsInstitucionesIdprovee,
 		//				    		return results;
-						var programada="?programada=121";
+						var programada="?programada="+$scope.programada;  // PURIBE 22042024  INICIO
 						var sUrl = listaMsInstitucionesidproveeUrl+query+programada;
 						return $http.get(sUrl).then(function(res){
 							$scope.listaMsInstitucionesIdprovee = res.data;
@@ -727,24 +789,8 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 						}
 					}
 		//				    	AUTOCOMPLETE FIN
-					   //PURIBE
-					$scope.showdlgInstitucionDialog = function(ev) {		
-		//				    		$scope.loadubigeodefecto();
-		//				    		$scope.loadlistaPaises();
-		//				    		$scope.loadlistaCoddptos();		
-						$mdDialog.show({
-							templateUrl: contexto+"/dialogos/entidades.html",
-							clickOutsideToClose: true,
-							scope: $scope,
-							preserveScope: true,
-							controller: mdDialogInstitucionCtrl,                	
-							parent: angular.element(document.body),
-							targetEvent: ev,
-							clickOutsideToClose: true
-						}).then($scope.closeDialog, $scope.cancelDialod);
-					};
-				
-						//MPINARES 24012023 - FIN
+					 //PURIBE 04042024 - INICIO
+						//PURIBE 04042024 - FIN
 					///ADICIONALES
 					//SELECT INI
 					$scope.listaDtEntidadesIdEntidad=[];
@@ -859,30 +905,30 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 				})
 					.then(function (visitausuario) {
 						console.log(visitausuario);
-						//PURIBE 29032024  INICIO-->
-						
-						  for (var i = 0; i < $scope.visitausuarios.length;i++)
-						  {
-						
-							if  ($scope.visitausuarios[i].idTema ==visitausuario.idTema
-								  &&  $scope.visitausuarios[i].idUsuinterno==visitausuario.idUsuinterno
-								  &&  $scope.visitausuarios[i].estado==3)
-								  {
+ 					//PURIBE 29032024  INICIO-->
+				
+					  for (var i = 0; i < $scope.visitausuarios.length;i++)
+					  {
+					
+						if  ($scope.visitausuarios[i].idTema ==visitausuario.idTema
+							  &&  $scope.visitausuarios[i].idUsuinterno==visitausuario.idUsuinterno
+							  &&  $scope.visitausuarios[i].estado==3)
+							  {
 
-									$mdDialog.show(
-										$mdDialog.alert()
-										.parent(angular.element(document.body))
-										.clickOutsideToClose(true)
-										.title('AGREGAR PARTICIPANTE')
-										.textContent("ERROR,YA EXISTE EL TEMA SELECCIONADO CON EL PARTICIPANTE")
-										.ariaLabel('WARNING')
-										.ok('ACEPTAR') 
-									);
-										return;
-								  }
-						
-						  }  
-						 //PURIBE 29032024  FIN-->
+								$mdDialog.show(
+									$mdDialog.alert()
+									.parent(angular.element(document.body))
+									.clickOutsideToClose(true)
+									.title('AGREGAR PARTICIPANTE')
+									.textContent("ERROR, ya existe el tema seleccionado con el participante") //PURIBE 04042024  INICIO-->
+									.ariaLabel('WARNING')
+									.ok('ACEPTAR') 
+								);
+									return;
+							  }
+					
+					  }  
+					 //PURIBE 29032024  FIN-->
 						$scope.visitausuarios.push(visitausuario);
 						console.log($scope.visitausuarios);
 					}, function () {
@@ -890,38 +936,37 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 					});
 			}
 
-
-	// PURIBE 29032024 - INICIO-->
-	$scope.editarparticipant = function (ev,dato) {
-		$mdDialog.show({
-			controller: ParticipanteDialogController,
-			templateUrl: modalparticipanteUrl,
-			parent: angular.element(document.body),
-			targetEvent: ev,
-			clickOutsideToClose: true,
-			fullscreen: false,
-			locals: {
-				visitausuario: dato // Pasar el objeto visitausuario al modal
-			}
-		})
-			.then(function (visitausuario) {
-				console.log(visitausuario);
-				//$scope.instancias.forEach((element) => element.instanciaActual =  0);
-				$scope.visitausuarios.push(visitausuario);
-				console.log($scope.visitausuarios);
-			}, function () {
-
-			});
-	}
-	// PURIBE 29032024 - FIN-->
+				// PURIBE 29032024 - INICIO-->
+				$scope.editarparticipant = function (ev,dato) {
+					$mdDialog.show({
+						controller: ParticipanteDialogController,
+						templateUrl: modalparticipanteUrl,
+						parent: angular.element(document.body),
+						targetEvent: ev,
+						clickOutsideToClose: true,
+						fullscreen: false,
+						locals: {
+							visitausuario: dato // Pasar el objeto visitausuario al modal
+						}
+					})
+						.then(function (visitausuario) {
+							console.log(visitausuario);
+							//$scope.instancias.forEach((element) => element.instanciaActual =  0);
+							$scope.visitausuarios.push(visitausuario);
+							console.log($scope.visitausuarios);
+						}, function () {
+			
+						});
+				}
+				// PURIBE 29032024 - FIN-->
 
 		
-	// PURIBE 29032024 - INICIO-->
-	$scope.eliminarParticipante = function (index) {
-		$scope.visitausuarios[index].estado = 2;
-	//	$scope.visitausuarios.splice(index, 1);
-	}
-	// PURIBE 29032024 - FIN -->
+			// PURIBE 29032024 - INICIO-->
+			$scope.eliminarParticipante = function (index) {
+				$scope.visitausuarios[index].estado = 2;
+			//	$scope.visitausuarios.splice(index, 1);
+			}
+			// PURIBE 29032024 - FIN -->
 
 
 
@@ -958,7 +1003,8 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 		codEjecutora: null,//PURIBE
 		visitaUsuarios: [], //PURIBE
 
-		    editopcion: 1
+		    editopcion: 1,
+			editentidad:1 /* PURIBE 04042024 - INICIO*/
 		};
 	  
 	  $scope.cleardtVisitas = function(){
@@ -990,8 +1036,10 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 			$scope.dtVisitasModelo.idusuario= null;
 			$scope.dtVisitasModelo.codEjecutora = null;
 			$scope.dtVisitasModelo.visitaUsuarios=null; //puribe
+			
 
 		    $scope.dtVisitasModelo.editopcion = 1;
+			$scope.dtVisitasModelo.editentidad = 1;/* PURIBE 04042024 - INICIO*/
 	 } 
 	 
 	  $scope.setDtVisitasModelo = function(dtVisitasBk) {
@@ -1035,6 +1083,7 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 				$scope.dtVisitasModelo.codEjecutora=  dtVisitasBk.codEjecutora; /* PURIBE 29032024 - INICIO*/
 
 			$scope.dtVisitasModelo.editopcion = dtVisitasBk.dtVisitasACL.editopcion;
+			$scope.dtVisitasModelo.editentidad = dtVisitasBk.dtVisitasACL.editentidad;/* PURIBE 04042024 - INICIO*/
 		}
 	  // ////////////////////////////////////////////////
 	
@@ -1059,7 +1108,7 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 			//$scope.filtro.fechaInicio = limitesDelMesActual.primerDia;
 			//$scope.filtro.fechaFin = limitesDelMesActual.ultimoDia;  
 
-			$location.url('/editar/' + $scope.dtVisitasModelo.idVisita+ '/' +$scope.filtro.fechaInicio+ '/' +$scope.filtro.fechaFin);
+			$location.url('/editar/' + $scope.dtVisitasModelo.idVisita); 	/* PURIBE 04042024 - INICIO */
 		//	+ '/' + $scope.msUbigeoModelo.codProv + '/' + msUbigeoBk.id.codDistr);
 			$scope.nuevo = false;
 	  }
@@ -1067,7 +1116,7 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 	    //puribe
 	  $scope.nuevoDtVisitas = function() {
 		    $scope.cleardtVisitas();
-			$location.url('/nuevo/'+$scope.filtro.fechaInicio+ '/' +$scope.filtro.fechaFin);
+			$location.url('/nuevo/');/* PURIBE 04042024 - INICIO */
 			$scope.nuevo = true;
 	  }
 	  	    //puribe
@@ -1124,7 +1173,8 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 
 				}
 
-				/* PURIBE 29032024 - INICIO*/
+
+					/* PURIBE 29032024 - INICIO*/
 				// Verifica si todos los elementos tienen el estado 2
 			var todosEstado2 = $scope.dtVisitasModelo.visitaUsuarios.every(function(usuario) {
 				return usuario.estado === 2;
@@ -1154,57 +1204,57 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 			}
 	    //puribe
 
-				 /* PURIBE 29032024 - INICIO*/
-				else{
-					var datainsert = angular.toJson($scope.dtVisitasModelo);
-					 
-						console.log("datainsert = " + angular.toJson(datainsert));	
+				  /* PURIBE 29032024 - INICIO*/
+			else{
+				var datainsert = angular.toJson($scope.dtVisitasModelo);
+				 
+					console.log("datainsert = " + angular.toJson(datainsert));	
 
-						var surl = $scope.getURLsalvar();	
+					var surl = $scope.getURLsalvar();	
 
-			        		$http.post(surl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
-								var dato = res.data;
+		        		$http.post(surl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
+							var dato = res.data;
 
-//			    				$scope.datos.push(dato); 
-							$scope.visitausuarios = dato.visitaUsuarios;
-			    				$scope.total = $scope.datos.length;
-			    				
-			    				$scope.setDtVisitasModelo(dato);
-							//	setDtVisitasusuario
-			    				
-			    				$mdDialog.show(
+//		    				$scope.datos.push(dato); 
+						$scope.visitausuarios = dato.visitaUsuarios;
+		    				$scope.total = $scope.datos.length;
+		    				
+		    				$scope.setDtVisitasModelo(dato);
+						//	setDtVisitasusuario
+		    				
+		    				$mdDialog.show(
+							         $mdDialog.alert()
+							        .parent(angular.element(document.body))
+							        .clickOutsideToClose(true)
+							        .title('Guardar reunión de trabajo')  //PURIBE 29032024  INICIO-->
+							        .textContent("Reunión de trabajo se guardó correctamente.")//PURIBE 29032024  INICIO-->
+							        .ariaLabel('ERROR')
+							        .ok('ACEPTAR')
+							        .targetEvent(ev)
+							    );
+		    				
+		    				$scope.nuevo = false;
+						},
+						function error(errResponse) {
+				            console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+				            var dato = errResponse.data;
+				            if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+				            	$mdDialog.show(
 								         $mdDialog.alert()
 								        .parent(angular.element(document.body))
 								        .clickOutsideToClose(true)
-								        .title('Guardar reunión de trabajo')  //PURIBE 29032024  INICIO-->
-								        .textContent("Reunión de trabajo se guardó correctamente.")//PURIBE 29032024  INICIO-->
+								        .title('Guardar reunión de trabajo') //PURIBE 29032024  INICIO-->
+								        .textContent(dato.message)
 								        .ariaLabel('ERROR')
 								        .ok('ACEPTAR')
 								        .targetEvent(ev)
 								    );
-			    				
-			    				$scope.nuevo = false;
-							},
-							function error(errResponse) {
-					            console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
-					            var dato = errResponse.data;
-					            if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
-					            	$mdDialog.show(
-									         $mdDialog.alert()
-									        .parent(angular.element(document.body))
-									        .clickOutsideToClose(true)
-									        .title('Guardar reunión de trabajo') //PURIBE 29032024  INICIO-->
-									        .textContent(dato.message)
-									        .ariaLabel('ERROR')
-									        .ok('ACEPTAR')
-									        .targetEvent(ev)
-									    );
-					            }
-					        });		
-			        			        	
-			        	ev.target.disabled = false;
-		 		 }
-				 /* PURIBE 29032024 - FIN*/
+				            }
+				        });		
+		        			        	
+		        	ev.target.disabled = false;
+	 		 }
+			 /* PURIBE 29032024 - FIN*/
 			 };
 			 
 	   $scope.eliminardtVisitas = function(ev){		
@@ -1237,7 +1287,7 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 					         $mdDialog.alert()
 					        .parent(angular.element(document.body))
 					        .clickOutsideToClose(true)
-					        .title('Eliminar reuniones de trabajo') //PURIBE 29032024  INICIO-->
+					        .title('Anular reuniones de trabajo') //PURIBE 29032024  INICIO-->//PURIBE 04042024  INICIO-->
 					        .textContent(dato.message)
 					        .ariaLabel('ERROR')
 					        .ok('ACEPTAR') //PURIBE 29032024  INICIO-->
@@ -1279,7 +1329,7 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 						 $mdDialog.alert()
 						.parent(angular.element(document.body))
 						.clickOutsideToClose(true)
-						.title('Eliminar Visitas')
+						.title('Reactivar reuniones de trabajo')  //PURIBE 04042024  INICIO-->
 						.textContent(dato.message)
 						.ariaLabel('ERROR')
 						.ok('ACEPTAR') //PURIBE 29032024  INICIO-->
@@ -1298,8 +1348,11 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 			};
 
 			//puribe
-		$scope.cargardtVisitas = function(idVisita){		
-			var surl = editardtVisitasUrl+idVisita;
+		$scope.cargardtVisitas = function(idVisita){
+			/* PURIBE 22042024 - INICIO*/		
+			var surl = $scope.getURLeditar(idVisita);
+			//editardtVisitasUrl+idVisita;
+				/* PURIBE 22042024 - FIN*/
 			$http.get(surl).then(function(res){
 				var dato = res.data;
 				dato.fechaVisita = $scope.formatD(dato.fechaVisita);
@@ -1324,47 +1377,46 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 			        });			        			        	
 			 };
 			 //PURIBE 12022024 - INICIO-->
-			//PURIBE 12022024 - INICIO-->
-				$scope.showConfirmEliminar= function(ev, dtVisitasBk) {
-					//PURIBE 29032024  INICIO-->
-					if ($scope.listaDtVisitas.length>0) 
-					{
-						    var confirm = $mdDialog.confirm()
-						      .title('Eliminar reuniones de trabajo')
-						      .textContent('¿Está usted seguro de eliminar el registro?')
-						      .ariaLabel('Lucky day')
-						      .targetEvent(ev)
-						      .ok('Si')
-						      .cancel('No');
+		$scope.showConfirmEliminar= function(ev, dtVisitasBk) {
+			 //PURIBE 29032024  INICIO-->
+			if ($scope.listaDtVisitas.length>0) 
+			{
+				    var confirm = $mdDialog.confirm()
+				      .title('Anular reuniones de trabajo') //PURIBE 04042024  INICIO-->
+				      .textContent('¿Está usted seguro de anular el registro?')//PURIBE 04042024  INICIO-->
+				      .ariaLabel('Lucky day')
+				      .targetEvent(ev)
+				      .ok('Si')
+				      .cancel('No');
 
-						    $mdDialog.show(confirm).then(function () {
-						      $scope.status = 'SI';
-						      $scope.eliminardtVisitas(ev, dtVisitasBk);
-						    }, function () {
-						      $scope.status = 'NO';
-						    });
-						}
-						 //PURIBE 29032024  FIN-->
+				    $mdDialog.show(confirm).then(function () {
+				      $scope.status = 'SI';
+				      $scope.eliminardtVisitas(ev, dtVisitasBk);
+				    }, function () {
+				      $scope.status = 'NO';
+				    });
+				}
+				 //PURIBE 29032024  FIN-->
 				  };		  
 				 
 			$scope.showConfirmReactivar= function(ev, dtVisitasBk) {
-				 //PURIBE 29032024  INICIO-->
-				var confirm = $mdDialog.confirm()
-					.title('Reactivar Reunión de trabajo')
-					.textContent('Está usted seguro de reactivar el registro?')
-					.ariaLabel('Lucky day')
-					.targetEvent(ev)
-					.ok('Si')
-					.cancel('No');
+					 //PURIBE 29032024  INICIO-->
+			var confirm = $mdDialog.confirm()
+				.title('Reactivar Reunión de trabajo')
+				.textContent('Está usted seguro de reactivar el registro?')
+				.ariaLabel('Lucky day')
+				.targetEvent(ev)
+				.ok('Si')
+				.cancel('No');
 
-				$mdDialog.show(confirm).then(function () {
-					$scope.status = 'SI';
-					$scope.reactivardtVisitas(ev, dtVisitasBk);
-					//$scope.eliminardtVisitas(ev, dtVisitasBk);
-				}, function () {
-					$scope.status = 'NO';
-				});
-					 //PURIBE 29032024  FIN-->
+			$mdDialog.show(confirm).then(function () {
+				$scope.status = 'SI';
+				$scope.reactivardtVisitas(ev, dtVisitasBk);
+				//$scope.eliminardtVisitas(ev, dtVisitasBk);
+			}, function () {
+				$scope.status = 'NO';
+			});
+				 //PURIBE 29032024  FIN-->
 			};	
 				   //PURIBE 12022024 - FIN-->
 ///ADICIONALES
@@ -1475,27 +1527,27 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 		console.log('dtVisitasModelo.idFinancia ' + newValue+' -- '+oldValue);
 		//CARGAR DATOS DEL SIGUIENTE SELECT
 	});
-//SELECT FIN    
-        
-      //PURIBE 29032024  INICIO-->
-        $scope.validateFormat = function(ev){
-        	let key;
-        	if (event.type === 'paste') {
-        		key = event.clipboardData.getData('text/plain');
-        	} else {
-        		key = event.keyCode;
-        		key = String.fromCharCode(key);
-        	}
-        	const regex = /[0-9]|\./;
-        	if (!regex.test(key)) {
-        		event.returnValue = false;
-        		if (event.preventDefault) {
-        			event.preventDefault();
-        		}
-        	}
-        };
-        //PURIBE 29032024  FIN-->
+//SELECT FIN                
 
+
+//PURIBE 29032024  INICIO-->
+$scope.validateFormat = function(ev){
+	let key;
+	if (event.type === 'paste') {
+		key = event.clipboardData.getData('text/plain');
+	} else {
+		key = event.keyCode;
+		key = String.fromCharCode(key);
+	}
+	const regex = /[0-9]|\./;
+	if (!regex.test(key)) {
+		event.returnValue = false;
+		if (event.preventDefault) {
+			event.preventDefault();
+		}
+	}
+};
+//PURIBE 29032024  FIN-->
 
 //DESCARGAR
     	$scope.descargar = function(){
@@ -1716,9 +1768,466 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 							$scope.quitarClasePlaceholder();
 						});  
 				   /*PURIBE 01022024 - FIN-->*/
+ 			  /*PURIBE 04042024 - INICIO-->*/
+				   $scope.showdlgInstitucionDialog = function(ev) {		
+				
+					$mdDialog.show({
+						templateUrl: contexto+"/dialogos/entidades.html",
+						clickOutsideToClose: true,
+						scope: $scope,
+						preserveScope: true,
+						controller: mdDialogInstitucionCtrl,                	
+						parent: angular.element(document.body),
+						targetEvent: ev,
+						clickOutsideToClose: true
+					}).then($scope.closeDialog, $scope.cancelDialod);
+				};
+
+
+// MPINARES 24012023 - INICIO
+var mdDialogInstitucionCtrl = function ($scope, $http, $mdDialog) { 
+
+	$scope.dtEntidadesModelo = {
+			idEntidad : null,
+			codEjec: null,
+			razSocial: null,
+			direccion: null,
+			ruc: null,
+			idTipo: null,
+			idCaract: null,
+			codDpto: null,
+			codProv: null,
+			codDistr: null,
+			idpais: null,
+			idSistAdmi: null,
+			idSede: null,
+			geozona: null,
+			
+                        // ADICIONALES
+	        estadoTxt: null,
+			idTipoTxt: null,
+			idCaractTxt: null,
+			codDptoTxt: null,
+			codProvTxt: null,
+			codDistrTxt: null,
+			idpaisTxt: null,
+			idSistAdmiTxt: null,
+
+		    editopcion: 1
+		};
+
+// if($scope.msInstitucionesModelo.codpais==null){
+// $scope.msInstitucionesModelo.codpais=$scope.ubigeodefectos.xDefectoCodpais;
+// }
+// if($scope.msInstitucionesModelo.coddpto==null){
+// $scope.msInstitucionesModelo.coddpto=$scope.ubigeodefectos.xDefectoCoddpto;
+// }
+// if($scope.msInstitucionesModelo.codprov==null){
+// $scope.msInstitucionesModelo.codprov=$scope.ubigeodefectos.xDefectoCodprov;
+// }
+// if($scope.msInstitucionesModelo.coddist==null){
+// $scope.msInstitucionesModelo.coddist=$scope.ubigeodefectos.xDefectoCoddist;
+// }
+
+	$scope.setDtEntidadesModelo = function(dtEntidadesBk) {
+		  $scope.dtEntidadesModelo.idEntidad = dtEntidadesBk.idEntidad;
+			$scope.dtEntidadesModelo.codEjec = dtEntidadesBk.codEjec;
+			$scope.dtEntidadesModelo.razSocial = dtEntidadesBk.razSocial;
+			$scope.dtEntidadesModelo.direccion = dtEntidadesBk.direccion;
+			$scope.dtEntidadesModelo.ruc = dtEntidadesBk.ruc;
+			$scope.dtEntidadesModelo.idTipo = dtEntidadesBk.idTipo;
+			$scope.dtEntidadesModelo.idCaract = dtEntidadesBk.idCaract;
+			$scope.dtEntidadesModelo.codDpto = dtEntidadesBk.codDpto;
+			$scope.dtEntidadesModelo.codProv = dtEntidadesBk.codProv;
+			$scope.dtEntidadesModelo.codDistr = dtEntidadesBk.codDistr;
+			$scope.dtEntidadesModelo.idpais = dtEntidadesBk.idpais;
+			$scope.dtEntidadesModelo.idSistAdmi = dtEntidadesBk.idSistAdmi;
+			$scope.dtEntidadesModelo.idSede = dtEntidadesBk.idSede;
+			$scope.dtEntidadesModelo.geozona = dtEntidadesBk.geozona;
+			
+                      // ADICIONALES
+	        $scope.dtEntidadesModelo.estadoTxt = dtEntidadesBk.estadoTxt;
+			$scope.dtEntidadesModelo.idTipoTxt = dtEntidadesBk.idTipoTxt;
+			$scope.dtEntidadesModelo.idCaractTxt = dtEntidadesBk.idCaractTxt;
+			$scope.dtEntidadesModelo.codDptoTxt = dtEntidadesBk.codDptoTxt;
+			$scope.dtEntidadesModelo.codProvTxt = dtEntidadesBk.codProvTxt;
+			$scope.dtEntidadesModelo.codDistrTxt = dtEntidadesBk.codDistrTxt;
+			$scope.dtEntidadesModelo.idpaisTxt = dtEntidadesBk.idpaisTxt;
+			$scope.dtEntidadesModelo.idSistAdmiTxt = dtEntidadesBk.idSistAdmiTxt;
+
+			$scope.dtEntidadesModelo.editopcion = dtEntidadesBk.dtEntidadesACL.editopcion;
+		}
+	
+	
+    // SELECT INI
+    $scope.listaMsSedes=[];
+$scope.loadlistaMsSedes=function(){
+	$http.get(listaMsSedesUrl).then(function(res){
+		$scope.listaMsSedes = res.data; 
+	},
+	function error(errResponse) {
+		console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+	});
+};
+    $scope.changeIdSede=function(){
+      // /BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
+    }
+    $scope.$watch('dtEntidadesModelo.idSede', function (newValue, oldValue) {
+	console.log('dtEntidadesModelo.idSede ' + newValue+' -- '+oldValue);
+	// CARGAR DATOS DEL SIGUIENTE SELECT
+});
+// SELECT FIN
+    
+  // SELECT INI
+    $scope.listaPrtParametrosIdTipoEntidad=[];
+$scope.loadListaPrtParametrosIdTipoEntidad=function(){
+	$http.get(listaPrtParametrosidparametroIdTipoEntidadUrl).then(function(res){
+		$scope.listaPrtParametrosIdTipoEntidad = res.data; 
+	},
+	function error(errResponse) {
+		console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+	});
+};
+    $scope.changeIdTipoEntidad=function(){
+      // /BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
+    }
+    $scope.$watch('dtEntidadesModelo.idTipo', function (newValue, oldValue) {
+	console.log('dtEntidadesModelo.idTipo ' + newValue+' -- '+oldValue);
+	// CARGAR DATOS DEL SIGUIENTE SELECT
+});
+// SELECT FIN
+    
+$scope.ubigeodefectos=null;
+$scope.loadubigeodefecto=function(){
+	if($scope.ubigeodefectos==null){
+		$http.get(ubigeodefectoUrl).then(function(res){
+			$scope.ubigeodefectos = res.data;			
+		},
+		function error(errResponse) {
+			console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+		});
+	}
+};
+
+$scope.listaMsSisAdmin=[];
+$scope.loadlistaMsSisAdmin=function(){
+$http.get(listamsSisAdminUrl).then(function(res){
+	$scope.listaMsSisAdmin = res.data; 
+},
+function error(errResponse) {
+	console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+});
+};
+
+
+    // SELECT INI
+    $scope.listaPrtParametrosIdCaracteristica=[];
+$scope.loadListaPrtParametrosIdCaracteristica=function(){
+	$http.get(listaPrtParametrosidparametroIdCaracteristicaUrl).then(function(res){
+		$scope.listaPrtParametrosIdCaracteristica = res.data; 
+	},
+	function error(errResponse) {
+		console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+	});
+};
+    $scope.changeIdCaracteristica=function(){
+      // /BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
+    }
+    $scope.$watch('dtEntidadesModelo.idCaract', function (newValue, oldValue) {
+	console.log('dtEntidadesModelo.idCaract ' + newValue+' -- '+oldValue);
+	// CARGAR DATOS DEL SIGUIENTE SELECT
+});
+// SELECT FIN
+    
+    $scope.listaPaisess=[];
+	$scope.loadlistaPaises=function(){			
+		if(!$scope.isArray($scope.listaPaisess) || $scope.listaPaisess.length<=0){
+			$http.get(listaPaisesUrl).then(function(res){
+				$scope.listaPaisess = res.data; 
+			},
+			function error(errResponse) {
+				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+			});
+		}
+	};
+
+	$scope.listaCoddptoss=[];
+	$scope.loadlistaCoddptos=function(){
+		if(!$scope.isArray($scope.listaCoddptoss) || $scope.listaCoddptoss.length<=0){
+			$http.get(listaCoddptosUrl).then(function(res){
+				$scope.listaCoddptoss = res.data; 
+			},
+			function error(errResponse) {
+				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+			});
+		}
+	};
+	
+	$scope.changeCoddpto=function(){
+		$scope.dtEntidadesModelo.codProv = null;
+		$scope.dtEntidadesModelo.codDistr = null;
+	}
+
+	$scope.changeCodprov=function(){
+		$scope.dtEntidadesModelo.codDistr = null;
+	}
+	
+	$scope.listaCodprovs=[];
+	$scope.loadlistaCodprov=function(){
+		if($scope.dtEntidadesModelo.codDpto){
+			var surl = listaCodprovUrl+$scope.dtEntidadesModelo.codDpto;
+			$http.get(surl).then(function(res){
+				$scope.listaCodprovs = res.data; 
+			},
+			function error(errResponse) {
+				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+			});
+		}else{
+			$scope.listaCodprovs=[];
+		}
+	};
+
+	$scope.listaCoddists=[];
+	$scope.loadlistaCoddist=function(){
+		if($scope.dtEntidadesModelo.codDpto &&
+				$scope.dtEntidadesModelo.codProv){
+			var surl = listaCoddistUrl+$scope.dtEntidadesModelo.codDpto+'/'+$scope.dtEntidadesModelo.codProv;
+			$http.get(surl).then(function(res){
+				$scope.listaCoddists = res.data; 
+			},
+			function error(errResponse) {
+				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+			});
+		}else{
+			$scope.listaCoddists=[];
+		}
+	};
+
+
+	$scope.loadubigeodefecto();
+		$scope.loadlistaPaises();
+		$scope.loadlistaCoddptos();	
+		$scope.loadlistaMsSedes();
+		$scope.loadlistaMsSisAdmin();
+		$scope.loadListaPrtParametrosIdTipoEntidad();
+		$scope.loadListaPrtParametrosIdCaracteristica();
+
+	$scope.visualizarUbigeo = true;	
+	$scope.$watch('dtEntidadesModelo.codpais', function (newValue, oldValue) {
+		console.log('dtEntidadesModelo.codpais ' + newValue+' -- '+oldValue);
+		if($scope.ubigeodefectos!=null){
+			if($scope.ubigeodefectos.xDefectoCodpais == newValue){
+				$scope.visualizarUbigeo = true;
+			}else{
+				$scope.visualizarUbigeo = false;
+			}
+		}else{
+			$scope.loadubigeodefecto();
+		}
+	});
+//
+	$scope.$watch('dtEntidadesModelo.codDpto', function (newValue, oldValue) {
+		console.log('dtEntidadesModelo.codDpto ' + newValue+' -- '+oldValue);
+		$scope.loadlistaCodprov();
+// $scope.msInstitucionesModelo.codprov = null;
+// $scope.msInstitucionesModelo.coddist = null;
+	});
+
+	$scope.$watch('dtEntidadesModelo.codProv', function (newValue, oldValue) {
+		console.log('dtEntidadesModelo.codProv ' + newValue+' -- '+oldValue);
+		$scope.loadlistaCoddist();
+// $scope.msInstitucionesModelo.coddist = null;
+	});
+	
+	$scope.salvarDtEntidades = function(ev){	
+		
+		if($scope.isArray($scope.datoEntidadSisAdmin)){
+			if($scope.datoEntidadSisAdmin.length>0){
+				$scope.dtEntidadesModelo.dtEntidadSisAdminBkJSss = $scope.datoEntidadSisAdmin;
+			}}
+		
+		ev.target.disabled = true;
+		var datainsert = angular.toJson($scope.dtEntidadesModelo);
+		console.log("datainsert = "+datainsert);	
+		$http.post(insertdtEntidadesUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
+			var dato = res.data;
+
+			$scope.setDtEntidadesModelo(dato);
+
+			$mdDialog.show(
+					$mdDialog.alert()
+					.parent(angular.element(document.body))
+					.clickOutsideToClose(true)
+					.title('Guardar entidad')
+					.textContent('La entidad se guardó correctamente')
+					.ariaLabel('Información')
+					.ok('OK')
+					.targetEvent(ev)
+			);
+
+// $scope.tdAtencionesModelo.ruc = dato.ruc;
+// $scope.tdAtencionesModelo.razonSocial = dato.razSocial;
+// $scope.tdAtencionesModelo.idprovee = dato.idEntidad;
+// $scope.tdAtencionesModelo.tipoentidad = dato.idTipo;
+			$scope.selectedItem = dato;
+		},
+		function error(errResponse) {
+			console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+			var dato = errResponse.data;
+			if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+				$mdDialog.show(
+						$mdDialog.alert()
+						.parent(angular.element(document.body))
+						.clickOutsideToClose(true)
+						.title('Guardar entidad')
+						.textContent(dato.message)
+						.ariaLabel('ERROR')
+						.ok('OK')
+						.targetEvent(ev)
+				);
+			}
+		});		
+
+		ev.target.disabled = false;
+	};
+	
+	$scope.datoEntidadSisAdmin = [
+		{contador: 1, identidadSisadm: "", idSistAdmi: "", idSede: "", add: true}
+    ];
+	
+	$scope.settingFlagAddAndRemoveEntidadSisAdmin = function () {
+        let sizeTemas = $scope.datoEntidadSisAdmin.length;
+        $scope.datoEntidadSisAdmin.map(function (obj) {
+
+        	if (obj.contador == sizeTemas) {
+                obj.add = true;
+            } else {
+                obj.add = false;
+            }
+
+        });
+    }
+	
+	$scope.removeEntidadSisAdmin = function (ev,dato) {
+    	if(dato.identidadSisadm!=null && dato.identidadSisadm>0){
+    		$scope.showConfirmDeleteEntidadSisAdmin(ev, dato);
+    	}else{
+    		$scope.datoEntidadSisAdmin = $scope.datoEntidadSisAdmin.filter(val => val.contador !== dato.contador);
+    	} 
+    }
+	
+	$scope.showConfirmDeleteEntidadSisAdmin = function(ev, dtEntidadSisAdminBk) {
+	    var confirm = $mdDialog.confirm()
+	      .title('Eliminar registro')
+	      .textContent('¿Está usted seguro de eliminar el registro?')
+	      .ariaLabel('Lucky day')
+	      .targetEvent(ev)
+	      .ok('Si')
+	      .cancel('No');
+
+	    $mdDialog.show(confirm).then(function () {
+	      $scope.status = 'SI';
+	      $scope.eliminarEntidadSisAdmin(ev, dtEntidadSisAdminBk);
+	    }, function () {
+	      $scope.status = 'NO';
+	    });
+	  };
+	  
+	  
+	  $scope.eliminarEntidadSisAdmin = function(ev,dtEntidadSisAdminBk){		
+		    ev.target.disabled = true;
+		    var datainsert = angular.toJson(dtEntidadSisAdminBk);
+			console.log("datainsert = "+datainsert);	
+		$http.post(eliminardtEntidadSisAdminUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
+				var dato = res.data;
+				var instrumentos = $scope.datos;
+		        var index = $scope.datos.findIndex(obj => obj.identidadSisadm === dato.identidadSisadm);
+				console.log("INDEX " + index);
+		        if(instrumentos.length>index){
+		        	instrumentos.splice(index, 1);
+			        $scope.datos = instrumentos;
+			        $scope.total = $scope.datos.length;
+		        }	
+// $scope.editdtAsistencia();
+			},
+			function error(errResponse) {
+	            console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+	            var dato = errResponse.data;
+	            if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+	            	$mdDialog.show(
+			         $mdDialog.alert()
+			        .parent(angular.element(document.body))
+			        .clickOutsideToClose(true)
+			        .title('Eliminar registro')
+			        .textContent(dato.message)
+			        .ariaLabel('ERROR')
+			        .ok('OK')
+			        .targetEvent(ev)
+				   );
+	            }
+	        });			        			        	
+    	ev.target.disabled = false;
+	 };
+	 
+	 $scope.nuevoEntidadSisAdmin= function (ev,dato) {
+		 if(dato.idSede!=null && dato.idSede>0 && dato.idSistAdmi!=null && dato.idSistAdmi>0){
+		        $scope.datoEntidadSisAdmin.push({
+		        	contador: $scope.datoEntidadSisAdmin.length + 1,
+		        	identidadSisadm: "",
+		        	idSistAdmi: "", 
+		        	idSede: "", 	           
+		            add: false
+		        })
+
+		        $scope.settingFlagAddAndRemoveEntidadSisAdmin();
+		 }else{
+			 $mdDialog.show(
+						$mdDialog.alert()
+						.parent(angular.element(document.body))
+						.clickOutsideToClose(true)
+						.title('Guardar entidad')
+						.textContent("Debe seleccionar el sistema administrativo y la sede... ")
+						.ariaLabel('ERROR')
+						.ok('OK')
+						.targetEvent(ev)
+				);
+		    	ev.target.disabled = false;
+			return;
+		 }
+		 
+
+	    };
+	    
+	    $scope.changeIdSedeEnti=function(ev,dato){
+        	///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
+        	if($scope.datoEntidadSisAdmin.length > 1){
+        		if ($scope.datoEntidadSisAdmin.filter(e => e.idSistAdmi === dato.idSistAdmi && e.idSede === dato.idSede).length > 1 ) {
+					  /* vendors contains the element we're looking for */
+        			dato.idSistAdmi="";
+        			dato.idSede="";
+					$mdDialog.show(
+							$mdDialog.alert()
+							.parent(angular.element(document.body))
+							.clickOutsideToClose(true)
+							.title('Guardar entidad')
+							.textContent("El sistema administrativo y la sede ya existen")
+							.ariaLabel('Lucky day')
+							.ok('OK')
+					);
+					ev.target.disabled = false;
+					return;
+					}
+        	
+	        }
+        };
+};
 
 
 
+
+
+
+   			/*PURIBE 04042024 - FIN-->*/
 				   function ParticipanteDialogController($scope, $mdDialog) {
 
 					$scope.formCol1WidthPercentage = 20;
@@ -1856,15 +2365,9 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 					$scope.loadlistamsusuarios();
 						
 
-
-
-
-
 					//$scope.loadEtapas();
 				}
 			
-
-
 // PURIBE 21032024 - FIN -->
 
 }]);

@@ -21,44 +21,37 @@ import pe.gob.mef.registramef.bs.transfer.bk.MsUbigeoBk;
 public class ValidacionMsUbigeoMng implements Serializable{
 	public static final Logger log = Logger.getLogger(ValidacionMsUbigeoMng.class.getName());
 	
-	public static void validarMsUbigeoBk(MsUbigeoBk msUbigeoBk)
-	 throws Validador
-	{
-		if(msUbigeoBk.getCodDpto()==null){
-			msUbigeoBk.setCodDpto(0);
-		}
-		
-		if(msUbigeoBk.getCodProv()==null){
-			msUbigeoBk.setCodProv(0);
-		}
-		if(msUbigeoBk.getCodDistr()==null){
-			msUbigeoBk.setCodDistr(0);
-		}
-                //FORANEAS
-                
-		//VALIDANDO
-		
-		//validarDescripcion(msUbigeoBk.getDescripcion());
-		if(msUbigeoBk.getDescripcion()!=null){
-				if(msUbigeoBk.getDescripcion().trim().length()>50)
-					throw new Validador(MessageFormat.format(
-							Messages.getStringToKey("msUbigeo.noexceder"),
-							Messages.getStringToKey("msUbigeo.descripcion"),
-							Messages.getStringToKey("msUbigeo.titulotabla"),
-							50,
-							Messages.getStringToKey("msUbigeo.articuloDescripcion")
-									));				
-//				msUbigeoBk.setDescripcion(msUbigeoBk.getDescripcion().toUpperCase());
-				}
+	//PURIBE 15012024 - INICIO
+		public static void validarMsUbigeoBk(MsUbigeoBk msUbigeoBk)
+		 throws Validador
+		{
+	                //FORANEAS
+	                
+			//VALIDANDO
+			
+			//validarDescripcion(msUbigeoBk.getDescripcion());
+			if(msUbigeoBk.getDescripcion()!=null){
+					if(msUbigeoBk.getDescripcion().trim().length()>50)
+						throw new Validador(MessageFormat.format(
+								Messages.getStringToKey("msUbigeo.noexceder"),
+								Messages.getStringToKey("msUbigeo.descripcion"),
+								Messages.getStringToKey("msUbigeo.titulotabla"),
+								50,
+								Messages.getStringToKey("msUbigeo.articuloDescripcion")
+										));				
+//					msUbigeoBk.setDescripcion(msUbigeoBk.getDescripcion().toUpperCase());
+					}
 
-		
-		
-		
-//		validarCodDpto(msUbigeoBk.getCodDpto());
+			
+			
+			
+			validarCodDpto(msUbigeoBk.getId().getCodDpto());
 
-//		validarCodProv(msUbigeoBk.getCodProv());
+			validarCodProv(msUbigeoBk.getId().getCodProv());
 
-		
+			
+			
+			//PURIBE 15012024 - FIN
 		
 		
 		

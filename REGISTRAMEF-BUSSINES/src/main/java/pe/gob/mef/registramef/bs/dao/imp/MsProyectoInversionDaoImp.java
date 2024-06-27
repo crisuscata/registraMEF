@@ -217,9 +217,10 @@ public class MsProyectoInversionDaoImp extends
 				sb.append("ORDER BY tablaa.nombre asc ");
 				return super.find(sb.toString());
 			}
-
-	@Override
-	public MsProyectoInversion findByPk(Long id) {
-		return super.findById(id);
-	}
-}
+	  
+	//CUSCATA - 18062024
+		@Override
+		public MsProyectoInversion findByPk(Long id) {
+			return super.findById(id);
+		}
+}//CUSCATA - 18062024

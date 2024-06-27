@@ -25,6 +25,8 @@ public interface MsUsuariosDao {
 	MsUsuarios getMsUsuarios(Long idusuario);
 	List<MsUsuarios> getNativeSQLMsUsuarios(String queryString, Object[] params);
 	List<MsUsuarios> getActivasMsUsuarios();
+	List<MsUsuarios> getActivasMsUsuariosFilter(); 
+	List<MsUsuarios> getActivasMsUsuariosFilterXsede(Long sede); //JPUYEN 14052024
 	List<MsUsuarios> getActivasMsUsuariosCero();
 	List<MsUsuarios> getDesactivasMsUsuarios();
 	Long getMaxIdVal();

@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import pe.gob.mef.registramef.bs.domain.DtEntidadesUsuexternos;
 import pe.gob.mef.registramef.bs.transfer.bk.DtEntidadesUsuexternosBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtVisitasUsuexternosBk;
 
 /**
  * DT_ENTIDADES_USUEXTERNOS SERVICIO AUDITORIA Y CAMBIO: ALMACENA LAS ENTIDADES A LA QUE PERTENECE EL USUARIO EXTERNO "ENTIDAD DEL USUARIO EXTERNO"
@@ -86,6 +87,52 @@ public class AuditoriaDtEntidadesUsuexternosMng implements Serializable{
 			
 			return cambios;
 	}
+	
+	// JPUYEN 14052024 - INICIO
+	
+		public static boolean auditarCambiosDtVisitasUsuexternos(DtVisitasUsuexternosBk dtEntidadesUsuexternosBk, DtEntidadesUsuexternos dtEntidadesUsuexternos, 
+				Long iduser, 
+				String user, 
+				String rmtaddress, 
+				int nivel 
+				)
+				{
+					boolean cambios = false;
+					
+					
+							if (dtEntidadesUsuexternosBk.getIdUsuexterno() != null
+										&& dtEntidadesUsuexternos.getIdUsuexterno() != null) {
+									if (!dtEntidadesUsuexternosBk.getIdUsuexterno().equals(
+											dtEntidadesUsuexternos.getIdUsuexterno())) {						
+											if(nivel>0){
+											log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"dtEntidadesUsuexternos:IdUsuexterno"+" :: "+dtEntidadesUsuexternosBk.getIdUsuexterno().toString()+" :: "+ dtEntidadesUsuexternos.getIdUsuexterno() + " :: "+ dtEntidadesUsuexternosBk.getIdUsuexterno());
+											}
+										cambios = true;
+										dtEntidadesUsuexternos.setIdUsuexterno(dtEntidadesUsuexternosBk.getIdUsuexterno());
+									}
+								} else if (dtEntidadesUsuexternosBk.getIdUsuexterno() == null
+										&& dtEntidadesUsuexternos.getIdUsuexterno() != null) {						
+										if(nivel>0){
+										log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"dtEntidadesUsuexternos:IdUsuexterno"+" :: "+dtEntidadesUsuexternosBk.getIdUsuexterno().toString()+" :: "+ dtEntidadesUsuexternos.getIdUsuexterno() + " :: "+ dtEntidadesUsuexternosBk.getIdUsuexterno());
+											}
+										cambios = true;
+										dtEntidadesUsuexternos.setIdUsuexterno(dtEntidadesUsuexternosBk.getIdUsuexterno());
+									
+								} else if (dtEntidadesUsuexternosBk.getIdUsuexterno() != null
+										&& dtEntidadesUsuexternos.getIdUsuexterno() == null) {						
+										if(nivel>0){
+										log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"dtEntidadesUsuexternos:IdUsuexterno"+" :: "+dtEntidadesUsuexternosBk.getIdUsuexterno().toString()+" :: "+ dtEntidadesUsuexternos.getIdUsuexterno() + " :: "+ dtEntidadesUsuexternosBk.getIdUsuexterno());
+											}
+										cambios = true;			
+										dtEntidadesUsuexternos.setIdUsuexterno(dtEntidadesUsuexternosBk.getIdUsuexterno());
+								}
+							
+						
+						return cambios;
+				}
+		
+		
+		// JPUYEN 14052024 - FIN
 	
         public static boolean cambiosEnAuditoriaDtEntidadesUsuexternos(DtEntidadesUsuexternosBk dtEntidadesUsuexternosBk, DtEntidadesUsuexternos dtEntidadesUsuexternos, 
 	Long iduser, 

@@ -175,6 +175,9 @@
          </tr>
       </thead>
       <tbody md-body>
+      <tr ng-if="datos.length === 0">
+               <td colspan="15" style="text-align: center;">No se encontraron registros para mostrar</td>
+             </tr>
          <tr class="primary triddtAsistencia md-table-cuerpo" md-row md-select="dato" md-on-select="logItem" md-auto-select="options.autoSelect"   
              ng-disabled="dato.idAsistencia > 0" ng-repeat-start="dato in datos">
           <td md-cell>{{$index + 1}}</td>

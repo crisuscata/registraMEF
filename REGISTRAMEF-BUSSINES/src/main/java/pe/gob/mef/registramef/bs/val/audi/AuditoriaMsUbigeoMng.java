@@ -272,32 +272,37 @@ public class AuditoriaMsUbigeoMng implements Serializable{
 					}
                                 
 				                                 
-                                      if (msUbigeoBk.getEstado() != null
-							&& msUbigeo.getEstado() != null) {
-						if (!msUbigeoBk.getEstado().equals(
-								msUbigeo.getEstado())) {						
-								if(nivel>0){
-								log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"msUbigeo:Estado"+" :: "+msUbigeoBk.getId().toString()+" :: "+ msUbigeo.getEstado() + " :: "+ msUbigeoBk.getEstado());
-								}
-							cambios = true;
-							msUbigeo.setEstado(msUbigeoBk.getEstado());
-						}
-					} else if (msUbigeoBk.getEstado() == null
-							&& msUbigeo.getEstado() != null) {						
-							if(nivel>0){
-							log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"msUbigeo:Estado"+" :: "+msUbigeoBk.getId().toString()+" :: "+ msUbigeo.getEstado() + " :: "+ msUbigeoBk.getEstado());
-								}
-							cambios = true;
-							msUbigeo.setEstado(msUbigeoBk.getEstado());
-						
-					} else if (msUbigeoBk.getEstado() != null
-							&& msUbigeo.getEstado() == null) {						
-							if(nivel>0){
-							log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"msUbigeo:Estado"+" :: "+msUbigeoBk.getId().toString()+" :: "+ msUbigeo.getEstado() + " :: "+ msUbigeoBk.getEstado());
-								}
-							cambios = true;			
-							msUbigeo.setEstado(msUbigeoBk.getEstado());
-					}
+                                    //PURIBE 20012024 - INICIO--
+                  		            if (msUbigeoBk.getEstado() != null
+                  							&& msUbigeo.getEstado() != null) {
+                  						if (!msUbigeoBk.getEstado().equals(
+                  							msUbigeo.getEstado())) {						
+                  							if(nivel>0){
+                  							log.log(Level.INFO,"CAMBIO :: " + iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"msUbigeo:Estado"+" :: "+msUbigeoBk.getEstado().toString()+" :: "+ msUbigeo.getEstado() + " :: "+ msUbigeoBk.getEstado());								
+                  							}
+                  							cambios = true;
+                  							msUbigeo.setEstado(msUbigeoBk.getEstado());
+                  						}
+                  					} else if (msUbigeoBk.getEstado() == null
+                  							&& msUbigeo.getEstado() != null) {
+                  										
+                  							if(nivel>0){
+                  							log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"msUbigeo:Estado"+" :: "+msUbigeoBk.getEstado().toString()+" :: "+ msUbigeo.getEstado() + " :: "+ msUbigeoBk.getEstado());
+                  							}
+                  							cambios = true;
+                  							msUbigeo.setEstado(msUbigeoBk.getEstado());
+                  						
+                  					} else if (msUbigeoBk.getEstado() != null
+                  							&& msUbigeo.getEstado() == null) {
+                  									
+                  							if(nivel>0){
+                  							log.log(Level.INFO,"CAMBIO :: "+ iduser + " :: "+ user + " :: "+ rmtaddress+" :: "+"msUbigeo:Estado"+" :: "+msUbigeoBk.getEstado().toString()+" :: "+ msUbigeo.getEstado() + " :: "+ msUbigeoBk.getEstado());
+                  							}
+                  							cambios = true;
+                  							msUbigeo.setEstado(msUbigeoBk.getEstado());
+                  						
+                  					}
+                  		        	//PURIBE 20012024 - FIN--
                                 
 				                                 
                                       if (msUbigeoBk.getRtmaddress() != null

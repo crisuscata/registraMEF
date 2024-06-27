@@ -1,6 +1,6 @@
 <div md-whiteframe="6" layout="column" ng-controller="tituloCtrl as ctrl" data-ng-init="inicializacion()" >
 <div layout="row" layout-align="space-between center" hide-xs show-gt-sm>   
-   <div class="titulo-registramef">REGISTRAMEF</div>
+   <div class="titulo-registramef" ng-click="redirectlandingUrl()" style="cursor: pointer;">REGISTRAMEF</div><!--//PURIBE 04042024 - INICIO -->
    <div layout="column" layout-align="center center" flex="55">
    <div class="md-headline-sub">
          Bienvenido(a): <b>{{msUsuariosPerfilJS.nombrecompleto}}</b>
@@ -12,7 +12,9 @@
          Sede: <b>{{msUsuariosPerfilJS.sede}}</b>
    </div>
    </div>
-   <div layout="row" layout-align="center center" flex>
+   <!--    //PURIBE 04042024 - INICIO -->
+   <div layout="row" layout-align="center center" style="display: inline;" flex>
+      <!--    //PURIBE 04042024 - FIN-->
    <img src="resources/imagen/u14-1.png" style="width: 180px; height: 50px;"/>
    <!--    //MPINARES 14022024 - INICIO -->
       <md-button class="md-icon-button md-primary" aria-label="busqueda" ng-click="buscarServicio($event)">

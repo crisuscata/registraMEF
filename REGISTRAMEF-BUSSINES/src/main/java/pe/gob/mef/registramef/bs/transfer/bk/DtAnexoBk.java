@@ -40,7 +40,10 @@ public class DtAnexoBk implements java.io.Serializable {
 	private String idTiposervicioTxt = null;
 	private String tipoAnexoTxt = null;
 	
-	private DtAnexoACL dtAnexoACL = null;		
+	private DtAnexoACL dtAnexoACL = null;	
+	
+	private String data = null; // JPUYEN 14052024
+	private byte[] databyte = null; // JPUYEN 14052024
 		
 	public DtAnexoBk() {
 	}
@@ -225,4 +228,23 @@ public class DtAnexoBk implements java.io.Serializable {
 
 	public void setEsEliminado(boolean esEliminado) {		
 	}
+	
+	// JPUYEN 14052024 - INICIO
+		public String getData() {
+			return data;
+		}
+
+		public void setData(String data) {
+			this.data = data;
+		}
+
+		public byte[] getDatabyte() {
+			return databyte;
+		}
+
+		public void setDatabyte(byte[] databyte) {
+			this.databyte = databyte;
+		}
+		
+		// JPUYEN 14052024 - FIN
 }

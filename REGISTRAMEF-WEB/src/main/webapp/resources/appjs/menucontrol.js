@@ -38,7 +38,9 @@ myapp.config(['$mdPanelProvider', function ($mdPanelProvider) {
 	          '      </md-button>' +
 	          '    </div>' +
 	          '    <md-divider class="menu-divider"></md-divider>' +
-	          '    <div class="menu-item" ng-repeat="item in ctrl.items">' +	          
+	        //PURIBE 04042024 - INICIO
+	          '    <div class="menu-item" ng-repeat="item in ctrl.items | filter: {activo: true}">' +	 
+			  //PURIBE 04042024 - FIN  	          
 	          '      <md-button href="{{item.refe}}" ng-disabled="{{!item.activo}}" ng-if="!item.submenu" ng-mousedown="ctrl.cambiarIconoBoton($event, item.name);">' +
 	          '        <span>{{item.name}}</span>' +
 	          '      </md-button>' +
@@ -265,7 +267,7 @@ myapp.controller('menuCtrl', ['$scope','$mdPanel','$mdDialog','$http', function 
 			      items: [
 			    	  {'name':'Asistencias técnicas','refe':'asistencia/listadtAsistenciaNoProg.html','activo':true},//MPINARES 14022024 - INICIO
 			    	  {'name':'Capacitaciones','refe':'capacitacion/listadtCapacitacion.html','activo':true},
-			    	  {'name':'Reuniones de trabajo','refe':'visitas/listadtVisitas.html','activo':true},
+			    	  {'name':'Reuniones de trabajo','refe':'visitas/listadtVisitasNoProg.html','activo':true},//PURIBE 04042024 - INICIO
 			    	  {'name':'Consultas','refe':'consultas/listadtConsultas.html','activo':true}	//MPINARES 24012023 - INICIO
 			      ]
 			    };
@@ -402,6 +404,14 @@ myapp.controller('menuCtrl', ['$scope','$mdPanel','$mdDialog','$http', function 
 					$scope.configuracion.items[1].activo = dato.usuarios;
 					$scope.configuracion.items[2].activo = dato.ubigeo;
 					$scope.configuracion.items[3].activo = dato.parametros;
+					$scope.programacion.items[0].activo = dato.programacionasistencia;
+					$scope.programacion.items[1].activo = dato.programacioncapacitacion;
+					$scope.registro.items[0].activo = dato.registroasistencia;
+					$scope.registro.items[1].activo = dato.registrocapacitacion;
+					//PURIBE 04042024 - INICIO
+					$scope.programacion.items[2].activo = dato.programacionreunion;
+					$scope.registro.items[2].activo = dato.registroreunion;
+					//PURIBE 04042024 - FIN
 					$scope.setPerfil(dato);										
 				},
 				function error(errResponse) {

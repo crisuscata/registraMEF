@@ -291,7 +291,7 @@ input {
     border-width: 0px;
     position: absolute;
     left: 49px;
-    top: 470px;
+    top: 476px;
     width: 262px;
     height: 56px;
     font-family: 'Calibri Bold', 'Calibri Regular', 'Calibri';
@@ -1325,7 +1325,7 @@ body.a {  background-color:rgba(255, 255, 255, 0.447058823529412);
     font-family: 'Calibri';
     font-weight: 400;
     font-style: normal;
-    font-size: 16px;
+    font-size: 15px;
     text-decoration: none;
     color: #000000;
     text-align: left;
@@ -1409,7 +1409,9 @@ body.a {  background-color:rgba(255, 255, 255, 0.447058823529412);
   width:350px;
   word-wrap:break-word;
   font-family: 'Calibri Negrita', 'Calibri Normal', Calibri;
-  font-size: 8px;
+  font-size: 12px;
+  color: #d2161e;
+  font-weight: bold;
 }
 
 #u2_state1 {

@@ -77,6 +77,33 @@ public class MenuRsCtrl {
 				menuaccesosJS.setParametros(true);
 			}
 			
+			// PURIBE 04042024 - INICIO-->
+			
+						if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PERFIL_ADMINISTRADOR)|| roles.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT) ||
+								roles.contains(Roles.PERFIL_USU_OGC) || roles.contains(Roles.DTVISITAS_VE) ||roles.contains(Roles.PERFIL_GC)) {
+							menuaccesosJS.setProgramacionreunion(true);
+						}			
+						if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PERFIL_ADMINISTRADOR)|| roles.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT) ||
+								roles.contains(Roles.PERFIL_USU_OGC) || roles.contains(Roles.DTVISITAS_VE) ||roles.contains(Roles.PERFIL_GC)) {
+							menuaccesosJS.setRegistroreunion(true);
+						}
+					
+						// PURIBE 04042024 - FIN-->
+						
+						if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PERFIL_ADMINISTRADOR)|| roles.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT) ||
+								roles.contains(Roles.PERFIL_USU_OGC) || roles.contains(Roles.DTASISTENCIA_VE)  || roles.contains(Roles.DTASISTENCIA_CREA) || roles.contains(Roles.PERFIL_GC) ) {
+							menuaccesosJS.setRegistroasistencia(true);
+							menuaccesosJS.setProgramacionasistencia(true);
+						}
+						
+						if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PERFIL_ADMINISTRADOR)|| roles.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT) ||
+								roles.contains(Roles.PERFIL_USU_OGC) || roles.contains(Roles.DTCAPACITACION_VE)  || roles.contains(Roles.DTCAPACITACION_CREA) || roles.contains(Roles.PERFIL_GC) ) {
+							menuaccesosJS.setRegistrocapacitacion(true);
+							menuaccesosJS.setProgramacioncapacitacion(true);
+						}
+						
+						
+			
 			GenericEntity<MenuaccesosJS> registrosx = new GenericEntity<MenuaccesosJS>(menuaccesosJS) {
 			};
 			return Response.status(200).entity(registrosx).build();

@@ -47,7 +47,7 @@ public class StyleUtils implements Serializable{
         newCellStyle.setFont( workbook.getFontAt( cellStyle.getFontIndex() ));
         newCellStyle.setFillBackgroundColor( cellStyle.getFillBackgroundColor());
         newCellStyle.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
-      //  newCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+//      newCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND); //CUSCATA - 18062024
         cell.setCellStyle(newCellStyle);
     }
     
@@ -60,7 +60,7 @@ public class StyleUtils implements Serializable{
         	newCellStyleVerde.setFont( workbook.getFontAt( cellStyle.getFontIndex() ));
         	newCellStyleVerde.setFillBackgroundColor(IndexedColors.GREEN.getIndex());
         	newCellStyleVerde.setFillForegroundColor(cellStyle.getFillForegroundColor());
-        //	newCellStyleVerde.setFillPattern(cellStyle.getFillPattern());
+//        	newCellStyleVerde.setFillPattern(cellStyle.getFillPattern());//CUSCATA - 18062024
         }
         cell.setCellStyle(newCellStyleVerde);
     }
@@ -74,7 +74,7 @@ public class StyleUtils implements Serializable{
         	newCellStyleRojo.setFont( workbook.getFontAt( cellStyle.getFontIndex() ));
         	newCellStyleRojo.setFillBackgroundColor(IndexedColors.RED.getIndex());
         	newCellStyleRojo.setFillForegroundColor(cellStyle.getFillForegroundColor());
-        //	newCellStyleRojo.setFillPattern(cellStyle.getFillPattern());
+//        	newCellStyleRojo.setFillPattern(cellStyle.getFillPattern());//CUSCATA - 18062024
         }
         cell.setCellStyle(newCellStyle);
     }
@@ -87,7 +87,7 @@ public class StyleUtils implements Serializable{
         	newCellStyleAmarillo.setFont( workbook.getFontAt( cellStyle.getFontIndex() ));
         	newCellStyleAmarillo.setFillBackgroundColor(IndexedColors.YELLOW.getIndex());
         	newCellStyleAmarillo.setFillForegroundColor(cellStyle.getFillForegroundColor());
-        //	newCellStyleAmarillo.setFillPattern(cellStyle.getFillPattern());
+//        	newCellStyleAmarillo.setFillPattern(cellStyle.getFillPattern());//CUSCATA - 18062024
         }
         cell.setCellStyle(newCellStyleAmarillo);
     }
@@ -118,9 +118,9 @@ public class StyleUtils implements Serializable{
 //        	newCellStyleAlingCenter.setFont( workbook.getFontAt( cellStyle.getFontIndex() ));        	
         	newCellStyleAlingCenter.setFillBackgroundColor(cellStyle.getFillBackgroundColor());
         	newCellStyleAlingCenter.setFillForegroundColor(cellStyle.getFillForegroundColor());
-        //	newCellStyleAlingCenter.setFillPattern(cellStyle.getFillPattern());
-        //	newCellStyleAlingCenter.setAlignment(CellStyle.ALIGN_CENTER);
-        //	newCellStyleAlingCenter.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+//        	newCellStyleAlingCenter.setFillPattern(cellStyle.getFillPattern());//CUSCATA - 18062024
+            //	newCellStyleAlingCenter.setAlignment(CellStyle.ALIGN_CENTER);//CUSCATA - 18062024
+            //	newCellStyleAlingCenter.setVerticalAlignment(CellStyle.VERTICAL_CENTER);//CUSCATA - 18062024
         }
         cell.setCellStyle(newCellStyleAlingCenter);
     }
@@ -220,7 +220,7 @@ public class StyleUtils implements Serializable{
     private Font createFont(Workbook workbook, short fontColor, short fontHeight, boolean fontBold) {
     	Font font = workbook.createFont();
     	if(fontBold)
-		//font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+    		//font.setBoldweight(Font.BOLDWEIGHT_BOLD);//CUSCATA - 18062024
 		font.setColor(fontColor);
 		font.setFontName("Arial");
 		font.setFontHeightInPoints(fontHeight);
@@ -243,14 +243,14 @@ public class StyleUtils implements Serializable{
         	newCellStyleBorder.setFont( workbook.getFontAt(cellStyle.getFontIndex() ));
         	newCellStyleBorder.setFillBackgroundColor(cellStyle.getFillBackgroundColor());
         	newCellStyleBorder.setFillForegroundColor(cellStyle.getFillForegroundColor());
-        //	newCellStyleBorder.setFillPattern(cellStyle.getFillPattern());
-        //	newCellStyleBorder.setFillPattern(CellStyle.SOLID_FOREGROUND);
+//        	newCellStyleBorder.setFillPattern(cellStyle.getFillPattern());//CUSCATA - 18062024
+            //	newCellStyleBorder.setFillPattern(CellStyle.SOLID_FOREGROUND);//CUSCATA - 18062024
         	newCellStyleBorder.setFillForegroundColor((short) 44);
-        //	newCellStyleBorder.setBorderBottom(CellStyle.BORDER_THIN);
-        //	newCellStyleBorder.setBorderLeft(CellStyle.BORDER_THIN);
-        //	newCellStyleBorder.setBorderRight(CellStyle.BORDER_THIN);
-        //	newCellStyleBorder.setBorderTop(CellStyle.BORDER_THIN);
-        //	newCellStyleBorder.setAlignment(CellStyle.ALIGN_LEFT);        	
+//        	newCellStyleBorder.setBorderBottom(CellStyle.BORDER_THIN);//CUSCATA - 18062024
+            //	newCellStyleBorder.setBorderLeft(CellStyle.BORDER_THIN);//CUSCATA - 18062024
+            //	newCellStyleBorder.setBorderRight(CellStyle.BORDER_THIN);//CUSCATA - 18062024
+            //	newCellStyleBorder.setBorderTop(CellStyle.BORDER_THIN);//CUSCATA - 18062024
+            //	newCellStyleBorder.setAlignment(CellStyle.ALIGN_LEFT);        	//CUSCATA - 18062024       	
         }
         cell.setCellStyle(newCellStyleBorder);
     }
@@ -266,7 +266,7 @@ public class StyleUtils implements Serializable{
 //        	newCellStyleTitulo.setFillPattern(CellStyle.SOLID_FOREGROUND); 
         	newCellStyleTitulo.setFillBackgroundColor(IndexedColors.BLUE.getIndex());
 //        	newCellStyleTitulo.setFillForegroundColor(IndexedColors.DARK_GREEN.getIndex());
-        	//newCellStyleTitulo.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        	//newCellStyleTitulo.setFillPattern(CellStyle.SOLID_FOREGROUND);//CUSCATA - 18062024
 //        	newCellStyleTitulo.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 //        	newCellStyleTitulo.setAlignment(CellStyle.ALIGN_CENTER);
 //        	newCellStyleTitulo.setVerticalAlignment(CellStyle.VERTICAL_CENTER);

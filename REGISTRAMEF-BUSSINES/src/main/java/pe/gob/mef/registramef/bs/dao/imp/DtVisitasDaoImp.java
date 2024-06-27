@@ -79,10 +79,12 @@ public class DtVisitasDaoImp extends
 				+ " t where t.estado > "+Estado.ELIMINADO.getValor());
 	}
 	
-	public List<DtVisitas> getActivasDtVisitasCero() {
-		return super.find("from " + getDomainClass().getName()
-				+ " t where t.estado >= "+Estado.ELIMINADO.getValor());
-	}
+	//PURIBE 01022024 - INICIO-->
+		public List<DtVisitas> getActivasDtVisitasCero() {
+			return super.find("from " + getDomainClass().getName()
+					+ " t where id_programacion=121 and t.estado >= 0 and ROWNUM <= 10");
+		}
+		   //PURIBE 01022024 - FIN-->
 
 	public List<DtVisitas> getDesactivasDtVisitas() {
 		return super.find("from " + getDomainClass().getName()
@@ -248,9 +250,10 @@ public class DtVisitasDaoImp extends
 	}
 	
 	// PURIBE 14032024 - INICIO -->
+	// PURIBE 04042024 - INICIO -->
 			@Override
-			public List<DtVisitas> getXFiltro(Timestamp fechaVisita,Long idOrigen,Long idProgramacion,Long idModalidad,Long idTipo,Long idLugar,Long idEntidad,Long idSede,Long idSistAdm,Long idFinancia,Timestamp fechaProgramada,Timestamp fechaInicio,Timestamp fechaFin) {
-
+			public List<DtVisitas> getXFiltro(Timestamp fechaVisita,Long idOrigen,Long idProgramacion,Long idModalidad,Long idTipo,Long idLugar,Long idEntidad,Long idSede,Long idSistAdm,Long idFinancia,Timestamp fechaProgramada,Timestamp fechaInicio,Timestamp fechaFin,Long idUsuario) {
+				
 				StringBuffer sb = new StringBuffer(100);
 				List<Object> hs = new ArrayList<Object>();
 				sb.append("select t from " + getDomainClass().getName() + " t where t.estado >= 0 ");
@@ -300,6 +303,12 @@ public class DtVisitasDaoImp extends
 					sb.append("and t.fechaProgramada = ? ");
 					hs.add(fechaProgramada);
 				}		
+				
+				if (idUsuario != null) {
+					sb.append("and t.idusserCrea = ? ");
+					hs.add(idUsuario);
+				}	
+				// PURIBE 04042024 - FIN -->
 			
 				
 				if (fechaInicio != null) {

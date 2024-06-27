@@ -1289,20 +1289,27 @@ public class DtEntidadesRsCtrl {
 		Principal usuario = req.getUserPrincipal();
 		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+		//PURIBE 04042024 -INICIO-->
+				if (msUsuariosBk == null)
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+			//PURIBE 04042024 -FIN->
 
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.MSUBIGEO_CREA)
-				&& !req.isUserInRole(Roles.MSUBIGEO_VE))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+				//PURIBE 04042024 -INICIO-->
+				if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+						&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+						&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+					
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación..",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+				//PURIBE 04042024 -FIN-->
 
 		try {
 			List<IIDValorDto> iDValorDtosss = servicio.getDepartamentosV();

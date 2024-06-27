@@ -22,6 +22,7 @@ public interface DtUsuarioExternoDao {
 	void updateDtUsuarioExterno(DtUsuarioExterno param);
 	void deleteDtUsuarioExterno(DtUsuarioExterno param);
 	List<DtUsuarioExterno> getAllDtUsuarioExterno();
+	List<DtUsuarioExterno> getXFiltroList(String palabra);//PURIBE 22042024 - INICIO-->
 	DtUsuarioExterno getDtUsuarioExterno(Long idUsuexterno);
 	List<DtUsuarioExterno> getNativeSQLDtUsuarioExterno(String queryString, Object[] params);
 	List<DtUsuarioExterno> getActivasDtUsuarioExterno();
@@ -36,6 +37,7 @@ public interface DtUsuarioExternoDao {
 	long getTotalXFiltro(String nombre,String aPaterno,String aMaterno,String direccion,Integer codDpto,Integer codProv,Integer codDistr,String numDocum);//PURIBE 14032024 - INICIO-->
 	
 	List<DtUsuarioExterno> getListaNombre(String nombre);
-	List<DtUsuarioExterno> getDtUsuarioExtByNombreapellido(String[] nombreapellido);
+	List<DtUsuarioExterno> getDtUsuarioExtByNombreapellido(String[] nombreapellido);//CUSCATA - 18062024
+	List<DtUsuarioExterno> getDtUsuarioExtByDni(String dni);
 	
 }

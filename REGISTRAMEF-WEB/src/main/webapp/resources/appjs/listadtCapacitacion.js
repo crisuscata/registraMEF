@@ -16,6 +16,7 @@ var listaPrtParametrosidparametroIdPrestacionUrl = contexto+"/rs/ctrldtCapacitac
 var listaPrtParametrosidparametroIdTipoUrl = contexto+"/rs/ctrldtCapacitacion/listaPrtParametrosIdparametroIdTipo";
 var listaPrtParametrosidparametroIdFinanciaUrl = contexto+"/rs/ctrldtCapacitacion/listaPrtParametrosIdparametroIdFinancia";
 var descargarUrl = contexto+"/rs/ctrldtCapacitacion/descargar/";
+var valorcrearlUrl = contexto+"/rs/ctrldtCapacitacion/loadvalorcrear";// PURIBE 15042024 - INICIO -->
 
 ///URLs CARGA DE ARCHIVOS
 var insertDocUrl = contexto+"/rs/ctrldtCapacitacion/insertarchivo";
@@ -103,7 +104,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 	 
 	 $scope.limitOptions = [100, 500, 1000, 5000];
 	 $scope.query = {
-			    order: 'idCapacitacion',
+			    order: '',
 			    limit: 100,
 			    page: 1
 			  };
@@ -142,6 +143,29 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
     // ///////////////////////////////////////////
 	$scope.datos = [];
 	$scope.total = 0;
+	
+	//PURIBE 15042024  INICIO-->
+
+	$scope.valorcrear;
+	$scope.loadvalorcrear=function(){
+		$http.get(valorcrearlUrl).then(function(res){
+			$scope.valorcrear = res.data; 
+
+			if ($scope.valorcrear.id==2)
+			{
+			$scope.creadtCapacitacion = true;
+			}
+			else
+			{
+				$scope.creadtCapacitacion =false; 
+			}
+		},
+		function error(errResponse) {
+			console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+		});
+	};
+	$scope.loadvalorcrear();
+	//PURIBE 15042024  FIN-->
 
 	$scope.loaddtCapacitacions = function () {
 		if($scope.isDate($scope.filtro.fechaInicio) && $scope.isDate($scope.filtro.fechaFin)){
@@ -151,9 +175,9 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 						.parent(angular.element(document.body))
 						.clickOutsideToClose(true)
 						.title('Buscar capacitaciones')
-						.textContent("la fecha de Inicio no puede ser mayor a la fecha de fin")
+						.textContent("La fecha de Inicio no puede ser mayor a la fecha de fin")
 						.ariaLabel('Lucky day')
-						.ok('OK')
+						.ok('ACEPTAR')
 				);
 				return;
 			}
@@ -168,7 +192,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 			    		 $scope.total = res.data.contador;
 			    		 var tiempoenBD = res.data.tiempoenBD;
 			    		 var tiempoenproceso = res.data.tiempoenproceso;
-			    		 $scope.creadtCapacitacion = res.data.creamodifica;
+//			    		 $scope.creadtCapacitacion = res.data.creamodifica; // PURIBE 15042024 - INICIO -->
 			    		 console.log("data " +$scope.datos.length+" DE "+ $scope.total);
 			    		 console.log("Tiempo respuesta BD dtCapacitacion " +tiempoenBD+" Tiempo en Paginar "+tiempoenproceso);
 	    		 }else{
@@ -179,7 +203,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 								.title('Buscar capacitaciones')
 								.textContent("No se encontraron resultados para la búsqueda")
 								.ariaLabel('Lucky day')
-								.ok('OK')
+								.ok('ACEPTAR')
 						);
 						return;
 	    		 }
@@ -202,11 +226,12 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 						        .title('Lista de capacitaciones')
 						        .textContent(dato)
 						        .ariaLabel('ERROR')
-						        .ok('OK')
+						        .ok('ACEPTAR')
 						    );
 		            }
 		        });			 
 	     //}, 500);
+	    	$scope.loadlistaMsSedes();// SELECT
 	  };
 	 	  
 	  $scope.getURLParametros=function(){
@@ -310,6 +335,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 				
 		  $scope.firstDate = function(dia){
 			  dia.setDate(1);
+			  dia.setMonth(dia.getMonth() + 1);
 			  dia.setHours(0, 0, 0);
 			  dia.setMilliseconds(0);
 			  return dia; 
@@ -317,7 +343,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 		  
 		  $scope.getLastDayOfMonth = function(dia){
 			  const year = dia.getFullYear();
-			  const month = dia.getMonth() + 1; 
+			  const month = dia.getMonth() + 2; 
 			  dia = new Date(year, month, 0);
 			  dia.setHours(0, 0, 0);
 			  dia.setMilliseconds(0);
@@ -583,7 +609,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 							.title('Acumular capacitación')
 							.textContent("Debe seleccionar al menos dos registros para acumular")
 							.ariaLabel('Lucky day')
-							.ok('OK')
+							.ok('ACEPTAR')
 							.targetEvent(ev)
 					);
 				}else{
@@ -634,7 +660,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 				        .title('Acumular capacitación')
 				        .textContent(dato.message)
 				        .ariaLabel('ERROR')
-				        .ok('OK')
+				        .ok('ACEPTAR')
 				        .targetEvent(ev)
 					   );
 		            }
@@ -713,10 +739,21 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 					ev.target.disabled = true;
 					
 					if (!$scope.dtCapacitacionForm2.$valid) {
-						alert('El diálogo no cumple con los campos obligatorios...');
+						// PURIBE 15042024 - INICIO -->
+						$mdDialog.show(
+							$mdDialog.alert()
+							.parent(angular.element(document.body))
+							.clickOutsideToClose(true)
+							.title('Guardar capacitación')
+							.textContent("El diálogo no cumple con los campos obligatorios...")
+							.ariaLabel('Lucky day')
+							.ok('ACEPTAR')
+					);
 						ev.target.disabled = false;
 						return;
-					}
+					
+				// PURIBE 15042024 - FIN-->	
+				}
 					
 			        var datoactual = Object.assign({}, $scope.capaEntidadmodelo);		
 					if($scope.isNull(datoactual.idCapaEnti) || $scope.isUndefined(datoactual.idCapaEnti)){
@@ -786,10 +823,22 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 					ev.target.disabled = true;
 					
 					if (!$scope.dtCapacitacionForm3.$valid) {
-						alert('El diálogo no cumple con los campos obligatorios...');
+						
+						// PURIBE 15042024 - INICIO -->
+						$mdDialog.show(
+							$mdDialog.alert()
+							.parent(angular.element(document.body))
+							.clickOutsideToClose(true)
+							.title('Guardar capacitación')
+							.textContent("El diálogo no cumple con los campos obligatorios...")
+							.ariaLabel('Lucky day')
+							.ok('ACEPTAR')
+					);
 						ev.target.disabled = false;
 						return;
-					}
+					
+					// PURIBE 15042024 - FIN-->					
+			}
 					
 					if ($scope.datoCapasTema.filter(e => e.idSubtema === $scope.capaTemasmodelo.idSubtema).length > 0) {
 						  /* vendors contains the element we're looking for */
@@ -800,7 +849,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 								.title('Guardar capacitación')
 								.textContent("El subtema seleccionado ya existe")
 								.ariaLabel('Lucky day')
-								.ok('OK')
+								.ok('ACEPTAR')
 						);
 						ev.target.disabled = false;
 						return;
@@ -839,7 +888,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 								.title('Buscar situación de mi trámite')
 								.textContent("No se ha ingresado texto en el año y/o número de expediente...")
 								.ariaLabel('ERROR')
-								.ok('OK')
+								.ok('ACEPTAR')
 								.targetEvent(ev)
 						);
 						return;
@@ -856,7 +905,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 									.title('Buscar situación de mi trámite')
 									.textContent("El número ingresado no corresponde a un expediente...")
 									.ariaLabel('ERROR')
-									.ok('OK')
+									.ok('ACEPTAR')
 									.targetEvent(ev));
 							return;
 						}else if((!$scope.isString($scope.dtCapacitacionModelo.stdNumeroAnio) ||  
@@ -871,7 +920,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 									.title('Buscar situación de mi trámite')
 									.textContent("El año ingresado no corresponde a un expediente...")
 									.ariaLabel('ERROR')
-									.ok('OK')
+									.ok('ACEPTAR')
 									.targetEvent(ev));
 							return;
 						}else{
@@ -902,7 +951,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 									.title('Buscar situación de mi trámite')
 									.textContent(dato.message)
 									.ariaLabel('ERROR')
-									.ok('OK')
+									.ok('ACEPTAR')
 									.targetEvent(ev)
 							);
 						}			           
@@ -1102,7 +1151,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 								        .title('Guardar capacitaciones')
 								        .textContent("la Capacitación acumulada se guardó correctamente en ID: " + dato.idCapacitacion)
 								        .ariaLabel('ERROR')
-								        .ok('OK')
+								        .ok('ACEPTAR')
 								        .targetEvent(ev)
 								    );
 			    				
@@ -1119,7 +1168,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 									        .title('Guardar capacitaciones')
 									        .textContent(dato.message)
 									        .ariaLabel('ERROR')
-									        .ok('OK')
+									        .ok('ACEPTAR')
 									        .targetEvent(ev)
 									    );
 					            }
@@ -1299,16 +1348,72 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 	      
 	      $scope.selectedCapaci = [];
 	      $scope.selection = function(item){
-	          $scope.cleardtCapacitacionAnular();
-	          $scope.setDtCapacitacionAnular(item);
+//	          $scope.cleardtCapacitacionAnular();
+//	          $scope.setDtCapacitacionAnular(item);
 	          if(item.checked){
-	            $scope.selectedCapaci.push($scope.dtCapacitacionAnular);
-//	        	  $scope.selectedCapaci.push({
-//	        		  idCapacitacion: item.idCapacitacion,
-//	        		  detalleCapa: item.detalleCapa
-//	                })
+//	            $scope.selectedCapaci.push(item);
+	        	  $scope.selectedCapaci.push({
+	        		  idCapacitacion : item.idCapacitacion,
+	        		  fechaInic : item.fechaInic,
+	        		  fechaFin : item.fechaFin,
+	        		  nomEvento : item.nomEvento,
+	        		  idSistAdm : item.idSistAdm,
+	        		  idUsuinterno : item.idUsuinterno,
+	        		  flagPubli : item.flagPubli,
+	        		  idModalidad : item.idModalidad,
+	        		  idProgramacion : item.idProgramacion,
+	        		  estado : item.estado,
+	        		  cantPartic : item.cantPartic,
+	        		  publicObj : item.publicObj,
+	        		  detalleCapa : item.detalleCapa,
+	        		  idLocal : item.idLocal,
+	        		  idModo : item.idModo,
+	        		  idNivel : item.idNivel,
+	        		  idOrigen : item.idOrigen,
+	        		  idPrestacion : item.idPrestacion,
+	        		  cantParticAsist : item.cantParticAsist,
+	        		  idTipo : item.idTipo,
+	        		  idcapaPadre : item.idcapaPadre,
+	        		  idSede : item.idSede,
+	        		  idFinancia : item.idFinancia,
+	        		  fechaFinalizacion : item.fechaFinalizacion,
+	        		  detalleCapaVirtual : item.detalleCapaVirtual,
+	        		  fechaIniProgramada : item.fechaIniProgramada,
+	        		  fechaFinProgramada : item.fechaFinProgramada,
+	        		  fechaSoli : item.fechaSoli,
+	        		  fechaSoliJUD : item.fechaSoliJUD,
+	        		  fechaInicJUD : item.fechaInicJUD,
+	        		  fechaFinJUD : item.fechaFinJUD,
+	        		  stdIddoc : item.stdIddoc,
+	        		  stdNumeroSid : item.stdNumeroSid,
+	        		  stdNumeroAnio : item.stdNumeroAnio,
+	        		  stdNumeroDoc : item.stdNumeroDoc,
+	        		  stdAsunto : item.stdAsunto,
+	        		  stdTipoDoc : item.stdTipoDoc,
+	        		  stdFechaRecepcion : item.stdFechaRecepcion,
+	        		  stdModalidadIng : item.stdModalidadIng,
+	        		  flagEjec : item.flagEjec,
+	        		  motivoEjec : item.motivoEjec,
+	        		  idSistAdmTxt : item.idSistAdmTxt,
+	        		  idUsuinternoTxt : item.idUsuinternoTxt,
+	        		  idModalidadTxt : item.idModalidadTxt,
+	        		  idProgramacionTxt : item.idProgramacionTxt,
+	        		  estadoTxt : item.estadoTxt,
+	        		  idLocalTxt : item.idLocalTxt,
+	        		  idModoTxt : item.idModoTxt,
+	        		  idNivelTxt : item.idNivelTxt,
+	        		  idOrigenTxt : item.idOrigenTxt,
+	        		  idPrestacionTxt : item.idPrestacionTxt,
+	        		  idTipoTxt : item.idTipoTxt,
+	        		  idSedeTxt : item.idSedeTxt,
+	        		  idFinanciaTxt : item.idFinanciaTxt,
+	        		  dtCapaTemasBkJSss : item.dtCapaTemasBkJSss,
+	        		  dtCapaEntidadesBkJSss : item.dtCapaEntidadesBkJSss,
+	        		  dtCapaPublicoBkJSss : item.dtCapaPublicoBkJSss
+	                })
 	          }else{
-	            $scope.selectedCapaci = $scope.selectedCapaci.filter(val => val.idCapacitacion !== $scope.dtCapacitacionAnular.idCapacitacion);
+//	            $scope.selectedCapaci = $scope.selectedCapaci.filter(val => val.idCapacitacion !== $scope.dtCapacitacionAnular.idCapacitacion);
+	        	  $scope.selectedCapaci = $scope.selectedCapaci.filter(val => val.idCapacitacion !== item.idCapacitacion);
 	          }
 	          console.log('lista: '+ $scope.selectedCapaci); 
 	        };
@@ -1322,7 +1427,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 								.title('Anular capacitación')
 								.textContent("Debe seleccionar al menos un registro")
 								.ariaLabel('Lucky day')
-								.ok('OK')
+								.ok('ACEPTAR')
 								.targetEvent(ev)
 						);
 					}else{
@@ -1371,7 +1476,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 					        .title('Anular capacitación')
 					        .textContent(dato.message)
 					        .ariaLabel('ERROR')
-					        .ok('OK')
+					        .ok('ACEPTAR')
 					        .targetEvent(ev)
 						   );
 			            }
@@ -1389,7 +1494,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 									.title('Pre-publicar capacitación')
 									.textContent("Debe seleccionar al menos un registro")
 									.ariaLabel('Lucky day')
-									.ok('OK')
+									.ok('ACEPTAR')
 									.targetEvent(ev)
 							);
 						}else{
@@ -1437,7 +1542,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 						        .title('Pre-publicar capacitación')
 						        .textContent(dato.message)
 						        .ariaLabel('ERROR')
-						        .ok('OK')
+						        .ok('ACEPTAR')
 						        .targetEvent(ev)
 							   );
 				            }
@@ -1491,7 +1596,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 					        .title('Reactivar capacitaciones')
 					        .textContent(dato.message)
 					        .ariaLabel('ERROR')
-					        .ok('OK')
+					        .ok('ACEPTAR')
 					        .targetEvent(ev)
 						   );
 			            }
@@ -1738,6 +1843,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 //MPINARES 14022024 - FIN
 
 			$scope.dtCapacitacionModelo.editopcion = dtCapacitacionBk.dtCapacitacionACL.editopcion;
+			$scope.dtCapacitacionModelo.addEntidad = dtCapacitacionBk.dtCapacitacionACL.addEntidad;
 		}
 	  
 	//MPINARES 14022024 - INICIO
@@ -1809,7 +1915,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 							        .title('Guardar capacitaciones')
 							        .textContent("Capacitaciones se guardó correctamente.")
 							        .ariaLabel('ERROR')
-							        .ok('OK')
+							        .ok('ACEPTAR')
 							        .targetEvent(ev)
 							    );
 		    				
@@ -1833,7 +1939,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 								        .title('Guardar capacitaciones')
 								        .textContent(dato.message)
 								        .ariaLabel('ERROR')
-								        .ok('OK')
+								        .ok('ACEPTAR')
 								        .targetEvent(ev)
 								    );
 				            }
@@ -1876,7 +1982,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 					        .title('Eliminar capacitaciones')
 					        .textContent(dato)
 					        .ariaLabel('ERROR')
-					        .ok('OK')
+					        .ok('ACEPTAR')
 					        .targetEvent(ev)
 						   );
 			            }
@@ -1918,7 +2024,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 					        .title('Activar capacitaciones')
 					        .textContent(dato)
 					        .ariaLabel('ERROR')
-					        .ok('OK')
+					        .ok('ACEPTAR')
 					        .targetEvent(ev)
 						   );
 			            }
@@ -1937,7 +2043,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 								.title('Eliminar')
 								.textContent("No se ha seleccionado registros para eliminar... ")
 								.ariaLabel('ERROR')
-								.ok('OK')
+								.ok('ACEPTAR')
 								.targetEvent(ev)
 						);
 				    	ev.target.disabled = false;
@@ -1959,7 +2065,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 					.title('Eliminar registros')
 					.textContent(dato)
 					.ariaLabel('Eliminar')
-					.ok('OK')
+					.ok('ACEPTAR')
 					.targetEvent(ev)
 			);		
 					},
@@ -1981,7 +2087,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 					        .title('Eliminar capacitaciones')
 					        .textContent(dato)
 					        .ariaLabel('ERROR')
-					        .ok('OK')
+					        .ok('ACEPTAR')
 					        .targetEvent(ev)
 						   );
 			            }
@@ -2014,7 +2120,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 					        .title('Cargar capacitaciones')
 					        .textContent(dato)
 					        .ariaLabel('ERROR')
-					        .ok('OK')
+					        .ok('ACEPTAR')
 						   );
 			            }			           
 			        });			        			        	
@@ -2086,7 +2192,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 				                    .title('Buscar por ejecutora - Registramef')
 				                    .textContent(errData.message)
 				                    .ariaLabel('ERROR')
-				                    .ok('OK')
+				                    .ok('ACEPTAR')
 				                    .targetEvent(errData)
 				                );
 				                dato.idEntidadTxt = null;
@@ -2118,7 +2224,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 									.title('Público objetivo')
 									.textContent("Debe seleccionar el público objetivo... ")
 									.ariaLabel('ERROR')
-									.ok('OK')
+									.ok('ACEPTAR')
 									.targetEvent(ev)
 							);
 					    	ev.target.disabled = false;
@@ -2354,7 +2460,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 											.title('Público objetivo')
 											.textContent("El Público objetivo seleccionado ya existe")
 											.ariaLabel('Lucky day')
-											.ok('OK')
+											.ok('ACEPTAR')
 									);
 									ev.target.disabled = false;
 									return;
@@ -2429,7 +2535,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 								.title('Eliminar')
 								.textContent("No se ha seleccionado registros para eliminar... ")
 								.ariaLabel('ERROR')
-								.ok('OK')
+								.ok('ACEPTAR')
 								.targetEvent(ev)
 						);
 				    	return;
@@ -2471,8 +2577,14 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 			}
 		});
 	};
-        $scope.changeIdModalidad=function(){
+        $scope.changeRadioIdModalidad=function(idModalidad){
           ///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
+        	if(idModalidad!=null && idModalidad==137){
+        		$scope.dtCapacitacionModelo.idLocal = null;
+        	}
+        	if(idModalidad!=null && idModalidad==138){
+        		$scope.dtCapacitacionModelo.detalleCapaVirtual = null;
+        	}
         }
         $scope.$watch('dtCapacitacionModelo.idModalidad', function (newValue, oldValue) {
 		console.log('dtCapacitacionModelo.idModalidad ' + newValue+' -- '+oldValue);
@@ -3180,7 +3292,7 @@ $scope.loadlistaMsSedes=function(){
 					.title('Guardar entidad')
 					.textContent('La entidad se guardó correctamente')
 					.ariaLabel('Información')
-					.ok('OK')
+					.ok('ACEPTAR')
 					.targetEvent(ev)
 			);
 
@@ -3197,7 +3309,7 @@ $scope.loadlistaMsSedes=function(){
 						.title('Guardar entidad')
 						.textContent(dato.message)
 						.ariaLabel('ERROR')
-						.ok('OK')
+						.ok('ACEPTAR')
 						.targetEvent(ev)
 				);
 			}
@@ -3276,7 +3388,7 @@ $scope.loadlistaMsSedes=function(){
 			        .title('Eliminar registro')
 			        .textContent(dato.message)
 			        .ariaLabel('ERROR')
-			        .ok('OK')
+			        .ok('ACEPTAR')
 			        .targetEvent(ev)
 				   );
 	            }
@@ -3303,7 +3415,7 @@ $scope.loadlistaMsSedes=function(){
 						.title('Guardar entidad')
 						.textContent("Debe seleccionar el sistema administrativo y la sede... ")
 						.ariaLabel('ERROR')
-						.ok('OK')
+						.ok('ACEPTAR')
 						.targetEvent(ev)
 				);
 		    	ev.target.disabled = false;
@@ -3327,7 +3439,7 @@ $scope.loadlistaMsSedes=function(){
 							.title('Guardar entidad')
 							.textContent("El sistema administrativo y la sede ya existen")
 							.ariaLabel('Lucky day')
-							.ok('OK')
+							.ok('ACEPTAR')
 					);
 					ev.target.disabled = false;
 					return;

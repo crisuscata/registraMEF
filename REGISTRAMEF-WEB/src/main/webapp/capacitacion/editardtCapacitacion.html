@@ -1,3 +1,11 @@
+<style type="text/css">
+table.md-table td.md-cell {
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 14px !important;
+    border-top: 1px rgba(0, 0, 0, 0.12) solid;
+}
+</style>
+
 <div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
 data-ng-init="editdtCapacitacion()">
 <!-- //MPINARES 14022024 - INICIO - SE CAMBIA TODO -->
@@ -307,7 +315,8 @@ data-ng-init="editdtCapacitacion()">
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
 						<label style="margin-bottom: 27px;font-size: 12px;">Modalidad</label>
-						<md-radio-group ng-model="dtCapacitacionModelo.idModalidad" aria-labelledby="favoriteFruit" layout="row">
+						<md-radio-group ng-model="dtCapacitacionModelo.idModalidad" aria-labelledby="favoriteFruit" 
+						ng-change="changeRadioIdModalidad(dtCapacitacionModelo.idModalidad)" layout="row">
 							<md-radio-button ng-repeat="datox in listaPrtParametrosIdModalidad"
 			                       ng-value="datox.id"
 			                       aria-label="{{it.title}}">{{datox.valor}}
@@ -327,7 +336,7 @@ data-ng-init="editdtCapacitacion()">
 				style="font-size: 14px;margin-left: 26px;margin-bottom: 20px;">
 				
 				<div class="letraenvoltura"
-					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="50">
+					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93 && dtCapacitacionModelo.idModalidad!=137" flex="50">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
@@ -340,6 +349,16 @@ data-ng-init="editdtCapacitacion()">
 					<div ng-messages="dtCapacitacionForm.idModo.$error">
 						<div ng-message="required">Seleccione el Lugar.</div>
 					</div>
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93 && dtCapacitacionModelo.idModalidad==137"" flex="50">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label>Enlace de conexion virtual</label>
+						<input id="nomEvento" ng-model="dtCapacitacionModelo.detalleCapaVirtual">
 					</md-input-container>
 				</div>
 				
@@ -470,7 +489,7 @@ data-ng-init="editdtCapacitacion()">
 									<md-input-container class="input-container-margen letraTexto">
 
 									<md-select ng-model="dato.idCargo"  ng-change="changeIdCargo($event,dato)"
-										required placeholder="Seleccionar Publico" name="idCargo">
+										required placeholder="Seleccionar P&uacute;blico" name="idCargo">
 									<md-option ng-repeat="item in listaPrtParametrosIdPublico"
 										ng-value="item.id"> {{item.valor}} </md-option> </md-select> </md-input-container>
 								</div>
@@ -636,7 +655,7 @@ data-ng-init="editdtCapacitacion()">
 	
 </fieldset>
 
-	<div layout="column" layout-aling="center start" flex> 
+	<div layout="column" layout-aling="center start" flex ng-if="dtCapacitacionModelo.addEntidad"> 
 			<md-fab-speed-dial md-open="isOpenxx" md-direction="up"
 					class="md-scale md-fab-bottom-right" ng-mouseenter="isOpenxx=true"
 					ng-mouseleave="isOpenxx=false"> 

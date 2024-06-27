@@ -36,8 +36,10 @@ public class Roles implements Serializable {
 	
 	//PURIBE 14032024 - INICIO-->
 
-		public static final String REACTIVA = "REGISTRAMEF_REACTIVA_SERV";//
-		public static final String ADMINISTRADOR_VISITAS_EDITOR = "REGISTRAMEF_DTVISITAS_EDITOR";
+	//PURIBE 04042024 - INICIO-->
+			//public static final String REACTIVA = "REGISTRAMEF_REACTIVA_SERV";//
+			//public static final String ADMINISTRADOR_VISITAS_EDITOR = "REGISTRAMEF_DTVISITAS_EDITOR";
+		//PURIBE 04042024 - FIN-->
 	//PURIBE 14032024 - FIN->
 
 	//// ROLES DTCAPAENTIDADES
@@ -205,10 +207,6 @@ public class Roles implements Serializable {
 	public static final String PERFIL_USUARIO_EXTERNO_OGC = "REGISTRAMEF_USUARIO_EXTERNO_OGC";
 	public static final String PERFIL_ADMINISTRADOR = "REGISTRAMEF_ADMINISTRADOR_OGTI";
 	//PURIBE 14032024 - FIN->
-	
-	public static final String PERFIL_ASIST_GS = "Asistente de Gestión de Servicios";
-	public static final String PERFIL_COMISIONADO = "Comisionado";
-	public static final String PERFIL_ESPECIALISTA = "Especialista";
 
 //	public static final String ADMINISTRADOR_OGC = "REGISTRAMEF_ADMINISTRADOR_OGC";//MPINARES 24012023 - INICIO
 	

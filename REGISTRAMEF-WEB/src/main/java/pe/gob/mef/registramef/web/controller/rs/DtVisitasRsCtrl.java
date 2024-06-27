@@ -15,14 +15,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors; //PURIBE 01022024 - INICIO-->
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -42,6 +45,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -53,20 +57,25 @@ import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.resources.Messages;
 import pe.gob.mef.registramef.bs.service.Servicio;
 import pe.gob.mef.registramef.bs.transfer.DtEntidadesDto;//PURIBE
+import pe.gob.mef.registramef.bs.transfer.DtUsuarioExternoDto;
 import pe.gob.mef.registramef.bs.transfer.IDValorDto;
 import pe.gob.mef.registramef.bs.transfer.IIDValorDto;
 import pe.gob.mef.registramef.bs.transfer.MsUsuariosDto;//PURIBE
+import pe.gob.mef.registramef.bs.transfer.bk.DtAnexoBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtEntidadSisAdminBk;//PURIBE
 import pe.gob.mef.registramef.bs.transfer.bk.DtEntidadesBk;//PURIBE
 import pe.gob.mef.registramef.bs.transfer.bk.DtUsuarioExternoBk;//PURIBE
 import pe.gob.mef.registramef.bs.transfer.bk.DtVisitasBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtVisitasUsuexternosBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtVisitasUsuinternosBk;//PURIBE
 import pe.gob.mef.registramef.bs.transfer.bk.MsTemaBk;//PURIBE
 import pe.gob.mef.registramef.bs.transfer.bk.MsUsuariosBk;
 import pe.gob.mef.registramef.bs.transfer.bk.PrtParametrosBk;
+import pe.gob.mef.registramef.bs.utils.Estado;
 import pe.gob.mef.registramef.bs.utils.FuncionesStaticas;
 import pe.gob.mef.registramef.bs.utils.PropertiesMg; //PURIBE
 import pe.gob.mef.registramef.web.controller.DtVisitasData;
+import pe.gob.mef.registramef.web.controller.rs.data.DtAnexosJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtVisitasJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtVisitasLC;
 import pe.gob.mef.registramef.web.controller.rs.data.RespuestaError;
@@ -92,20 +101,24 @@ public class DtVisitasRsCtrl {
 		Principal usuario = req.getUserPrincipal();
 		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-				&& !req.isUserInRole(Roles.DTVISITAS_VE))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+		//PURIBE 04042024 -INICIO-->
+				if (msUsuariosBk == null)
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+				
+				if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+						&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+						&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();	
+				//PURIBE 04042024 -FIN-->
 
 		try {
 			String sorder = req.getParameter("order");
@@ -144,6 +157,22 @@ public class DtVisitasRsCtrl {
 
 			String sestado = req.getParameter("estado");
 			
+			// PURIBE 04042024 - INICIO-->
+						int rol=-1;
+						if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
+						{
+							rol =0;
+						}else if (req.isUserInRole(Roles.PERFIL_GC))
+							{
+							rol =1;
+								}
+						else if (req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+						{
+						rol =2;
+						}
+						
+						// PURIBE 04042024 - FIN-->
+			
 			int reload = Integer.parseInt(req.getParameter("reload"));
 			int programada = Integer.parseInt(req.getParameter("programada"));
 
@@ -170,7 +199,7 @@ public class DtVisitasRsCtrl {
 			
 			//puribe
 			List<DtVisitasBk> dtVisitasSinfiltro = dtVisitasData.getDtVisitasActivos(servicio,
-					msUsuariosBk.getIdusuario(),fechaInicio,fechaFin,reload,programada);
+					msUsuariosBk.getIdusuario(),fechaInicio,fechaFin,reload,programada,msUsuariosBk.getIdSede(),rol,msUsuariosBk.getIdSistAdmi());//PURIBE 04042024 - INICIO-->
 			//puribe
 			//puribe
 			// PURIBE 29032024 - INICIO-->
@@ -187,9 +216,11 @@ public class DtVisitasRsCtrl {
 			long lfinal = System.currentTimeMillis() - inicio;
 			dtVisitasLC.setTiempoenBD(lfinal);
 
-			if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.DTVISITAS_CREA)) {
-				dtVisitasLC.setCreamodifica(true);
-			}
+//			// PURIBE 04042024 - INICIO-->
+			//if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.DTVISITAS_CREA)) {
+			//	dtVisitasLC.setCreamodifica(true);
+			//	}
+			// PURIBE 04042024 - FIN-->
 
 			/////
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
@@ -365,90 +396,111 @@ public class DtVisitasRsCtrl {
 	}
 
 	// PURIBE
-	@GET
-	@Path("/buscarcodejec/{codigoEjecutora}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response listaInstitucionesXCodEjec(@Context HttpServletRequest req, @Context HttpServletResponse res,
-			@HeaderParam("authorization") String authString, @PathParam("codigoEjecutora") String codigoEjecutora) {
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+	// PURIBE
+		@GET
+		@Path("/buscarcodejec/{codigoEjecutora}")
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response listaInstitucionesXCodEjec(@Context HttpServletRequest req, @Context HttpServletResponse res,
+				@HeaderParam("authorization") String authString, @PathParam("codigoEjecutora") String codigoEjecutora) {
+			SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
-		Principal usuario = req.getUserPrincipal();
-		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+			Principal usuario = req.getUserPrincipal();
+			MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+			if (msUsuariosBk == null)
+				return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+						.entity(new GenericEntity<RespuestaError>(
+								new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
+										HttpURLConnection.HTTP_UNAUTHORIZED)) {
+						}).build();
 
-   		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-				&& !req.isUserInRole(Roles.DTVISITAS_VE))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+	   				//PURIBE 04042024 -INICIO-->
+					if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+							&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+							&& !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+							&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+						//PURIBE 04042024 -FIN-->
+				return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+								new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
+						}).build();
 
-		try {
-			
-			Long sprogramada = Long.parseLong(req.getParameter("programada"));
-			Long soferta = Long.parseLong(req.getParameter("oferta"));
-			
-			List<DtEntidadesDto> msInstitucionesDtosss= servicio.getMsInstitucionesXCodigoEjecutora(codigoEjecutora,msUsuariosBk.getIdSistAdmi()); //PURIBE 14032024 - INICIO-->
-			boolean isFound = true;
-			if (msInstitucionesDtosss != null && msInstitucionesDtosss.size() > 0) {
-
-				Long idProgramacion = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
-						PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
-				Long idOrigen = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDORIGEN_OFERTA,
-						PropertiesMg.DEFOULT_PRTPARAMETROS_IDORIGEN_OFERTA);
+			try {
+				
+				//PURIBE 22042024 -INICIO-->
+				Long sprogramada = Long.parseLong(req.getParameter("programada"));
+				Long soferta = Long.parseLong(req.getParameter("oferta"));
+				
+				
+	   			Long idProgramacion=0l;
+	  			if (sprogramada ==1)
+	  			{
+	  			 idProgramacion = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
+	  						PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
+	  			}
+	  			else if(sprogramada ==0)
+	  			{
+	  				idProgramacion = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_NOPROGRAMADA,
+	  						PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_NOPROGRAMADA);
+	  			}
+				
+				
+				List<DtEntidadesDto> msInstitucionesDtosss= servicio.getMsInstitucionesXCodigoEjecutora(codigoEjecutora,msUsuariosBk.getIdSistAdmi()); //PURIBE 14032024 - INICIO-->
+				boolean isFound = true;
+				if (msInstitucionesDtosss != null && msInstitucionesDtosss.size() > 0) {
 
 				
-				if(soferta==idOrigen && sprogramada==idProgramacion){
-				
+					Long idOrigen = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDORIGEN_OFERTA,
+							PropertiesMg.DEFOULT_PRTPARAMETROS_IDORIGEN_OFERTA);
+
 					
-					if (msInstitucionesDtosss.get(0).getIdEntidad() != null
-							&& msInstitucionesDtosss.get(0).getIdEntidad().intValue() > 0) {
-						Long sisAdminUser=msUsuariosBk.getIdSistAdmi();
-						List<DtEntidadSisAdminBk> dtEntidadSistemaAdminList=servicio.getDtEntidadSisAdminXFiltro(msInstitucionesDtosss.get(0).getIdEntidad(),msUsuariosBk.getIdusuario());
-						if(dtEntidadSistemaAdminList!=null && dtEntidadSistemaAdminList.size()>0){
-							boolean estaVinculado=false;
-							for(DtEntidadSisAdminBk dtEntidadSistemaAdminBkko:dtEntidadSistemaAdminList){
-								if(dtEntidadSistemaAdminBkko.getIdSistAdmi()!=null && dtEntidadSistemaAdminBkko.getIdSistAdmi().longValue()>0){
-									if(dtEntidadSistemaAdminBkko.getIdSistAdmi().longValue()==sisAdminUser){
-										estaVinculado=true;
+					if(soferta==idOrigen && idProgramacion==PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
+	  						PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA)){
+						//PURIBE 22042024 -FIN-->
+					
+						
+						if (msInstitucionesDtosss.get(0).getIdEntidad() != null
+								&& msInstitucionesDtosss.get(0).getIdEntidad().intValue() > 0) {
+							Long sisAdminUser=msUsuariosBk.getIdSistAdmi();
+							List<DtEntidadSisAdminBk> dtEntidadSistemaAdminList=servicio.getDtEntidadSisAdminXFiltro(msInstitucionesDtosss.get(0).getIdEntidad(),msUsuariosBk.getIdusuario());
+							if(dtEntidadSistemaAdminList!=null && dtEntidadSistemaAdminList.size()>0){
+								boolean estaVinculado=false;
+								for(DtEntidadSisAdminBk dtEntidadSistemaAdminBkko:dtEntidadSistemaAdminList){
+									if(dtEntidadSistemaAdminBkko.getIdSistAdmi()!=null && dtEntidadSistemaAdminBkko.getIdSistAdmi().longValue()>0){
+										if(dtEntidadSistemaAdminBkko.getIdSistAdmi().longValue()==sisAdminUser){
+											estaVinculado=true;
+										}
 									}
 								}
-							}
-							if(estaVinculado==false){
+								if(estaVinculado==false){
+									throw new Validador("LA ENTIDAD NO ESTA VINCULADA A SUS SISTEMA ADMINISTRATIVO");
+								}
+									
+								
+							}else{
 								throw new Validador("LA ENTIDAD NO ESTA VINCULADA A SUS SISTEMA ADMINISTRATIVO");
 							}
-								
-							
-						}else{
-							throw new Validador("LA ENTIDAD NO ESTA VINCULADA A SUS SISTEMA ADMINISTRATIVO");
-						}
-					  }
-					
+						  }
+						
+						
+					}
+				}
+				else {
+					throw new Validador("NO SE ENCONTRÓ LA ENTIDAD CON CÓDIGO EJECUTORA");
 					
 				}
-			}
-			else {
-				throw new Validador("NO SE ENCONTRÓ LA ENTIDAD CON CÓDIGO EJECUTORA");
-				
-			}
 
-			GenericEntity<List<DtEntidadesDto>> registrosx = new GenericEntity<List<DtEntidadesDto>>(
-					msInstitucionesDtosss) {
-			};
-			return Response.status(200).entity(registrosx).build();
-		} catch (Validador e) {
-			String mensaje = e.getMessage();
-			System.out.println("ERROR: " + mensaje);
-			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
-					new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
-					}).build();
+				GenericEntity<List<DtEntidadesDto>> registrosx = new GenericEntity<List<DtEntidadesDto>>(
+						msInstitucionesDtosss) {
+				};
+				return Response.status(200).entity(registrosx).build();
+			} catch (Validador e) {
+				String mensaje = e.getMessage();
+				System.out.println("ERROR: " + mensaje);
+				return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+						new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+						}).build();
+			}
 		}
-	}
 
 
 	   @GET
@@ -465,26 +517,45 @@ public class DtVisitasRsCtrl {
    					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
    			}).build();
 
-   		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-				&& !req.isUserInRole(Roles.DTVISITAS_VE))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+   	//PURIBE 04042024 -INICIO-->
+   			if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+   					&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+   					&& !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+   					&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+   				//PURIBE 04042024 -FIN-->
+   				return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+   								new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
+   						}).build();
 
    		try {
-   			Long idProgramacion = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
-					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
+   		//PURIBE 22042024 -INICIO-->
    			Long sprogramada = Long.parseLong(req.getParameter("programada"));
+   			Long idProgramacion=0l;
+  			if (sprogramada ==1)
+  			{
+  			 idProgramacion = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
+  						PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
+  			}
+  			else if(sprogramada ==0)
+  			{
+  				idProgramacion = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_NOPROGRAMADA,
+  						PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_NOPROGRAMADA);
+  			}
    			
    			List<DtEntidadesBk> datos ;
-   			if(sprogramada==idProgramacion){
+   	
+   			//valida que sea programada id=121
+
+   			if(idProgramacion==PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
+						PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA)){
    			
    			datos= servicio.getMsInstitucionesIdprovee(idprovee,msUsuariosBk.getIdSistAdmi()); 
    			}
    			else
    			{
-   				datos =  new ArrayList<DtEntidadesBk>();
+   				datos= servicio.getMsInstitucionesActivas(idprovee);
    			//activas
+   			//PURIBE 22042024 -FIN-->
    			}
    			
    			GenericEntity<List<DtEntidadesBk>> registrosx = new GenericEntity<List<DtEntidadesBk>>(datos) {
@@ -516,8 +587,12 @@ public class DtVisitasRsCtrl {
 	   					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
 	   			}).build();
 	
-	   		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTUSUARIOEXTERNO_CREA) && !req.isUserInRole(Roles.PERFIL_USU_OGC)
-	   				&& !req.isUserInRole(Roles.DTVISITAS_CREA) && !req.isUserInRole(Roles.DTVISITAS_VE))// PURIBE 14032024 - INICIO -->
+	   	//PURIBE 04042024 -INICIO-->
+			if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+					&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+					&& !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+					&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+				//PURIBE 04042024 -FIN-->
 				return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
 						.entity(new GenericEntity<RespuestaError>(
 								new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
@@ -581,8 +656,12 @@ public class DtVisitasRsCtrl {
 						new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
 				}).build();
 
+			//PURIBE 04042024 -INICIO-->
 			if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-					&& !req.isUserInRole(Roles.DTVISITAS_VE))
+					&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+					&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+					&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+				//PURIBE 04042024 -FIN-->
 				return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
 								new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
 						}).build();
@@ -626,18 +705,32 @@ public class DtVisitasRsCtrl {
 						new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
 				}).build();
 
-			if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-					&& !req.isUserInRole(Roles.DTVISITAS_VE))
-				return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-								new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
-						}).build();
+			//PURIBE 04042024 - INICIO--
+			int pProfile =0;
+			if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
+			{
+				pProfile = 1; // ADMINISTRADOR
+			}
+			else if (req.isUserInRole(Roles.PERFIL_GC) || req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)) {
+				pProfile= 3; // Especialista
+			}
+			else
+			{
+				return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+					.entity(new GenericEntity<RespuestaError>(
+							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
+									HttpURLConnection.HTTP_UNAUTHORIZED)) {
+					}).build();
+
+			}
 			
 			try {
 			//	Long idPadre = PropertiesMg.getSistemLong(
 				//		PropertiesMg.KEY_PRTPARAMETROS_IDPARAMLUGARVISITA,
 					//	PropertiesMg.DEFOULT_PRTPARAMETROS_IDPARAMLUGARVISITA);
-				
-				List<MsUsuariosDto>prtUsuariosE = servicio.getMsUsuariosCachee();
+				Long idSede=msUsuariosBk.getIdSede();
+				List<MsUsuariosDto>prtUsuariosE = servicio.getMsUsuariosCache(idSede,pProfile,msUsuariosBk.getUsername());
+				//PURIBE 04042024 - FIN--
 				
 				  GenericEntity<List<MsUsuariosDto>> registrosx = 
 						  new GenericEntity<List<MsUsuariosDto>>(
@@ -670,8 +763,12 @@ public class DtVisitasRsCtrl {
 						new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
 				}).build();
 
+			//PURIBE 04042024 -INICIO-->
 			if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-					&& !req.isUserInRole(Roles.DTVISITAS_VE))
+					&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+					&& !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+					&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+				//PURIBE 04042024 -FIN-->
 				return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
 								new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
 						}).build();
@@ -721,94 +818,52 @@ public class DtVisitasRsCtrl {
 									HttpURLConnection.HTTP_UNAUTHORIZED)) {
 					}).build();
 		
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-				&& !req.isUserInRole(Roles.ADMINISTRADOR_VISITAS_EDITOR) && !req.isUserInRole(Roles.PERFIL_USU_OGC))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+		//PURIBE 15042024 -INICIO-->
+				//PURIBE 04042024 -INICIO-->
+						if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+								&&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+								&& !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+								&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+							//PURIBE 04042024 -FIN-->
+							//PURIBE 15042024 -FIN-->
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
 
 		String adressRemoto = getRemoteAdress(req);
 
 	//	DtVisitasBk dtVisitasC = new DtVisitasBk();
 	//	FuncionesStaticas.copyPropertiesObject(dtVisitasC, dtVisitasJS);
 
-		try {
-			
-			Long idProgram = PropertiesMg.getSistemLong(
-					PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
-					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
-		
-
-			SimpleDateFormat sdff = new SimpleDateFormat("yyyy-MM-dd");
-			Date fechaDateIni = sdff.parse(req.getParameter("fechaInicio"));
-			Date fechaDateFin = sdff.parse(req.getParameter("fechaFin"));
-
-			Timestamp fechaInicio = new Timestamp(fechaDateIni.getTime());
-			Timestamp fechaFin = new Timestamp(fechaDateFin.getTime());
-			int programada = Integer.parseInt(req.getParameter("programada"));
-			
-			//if (dtVisitasBk.getIdProgramacion()!=null && 
-				//	dtVisitasBk.getIdProgramacion().compareTo(idProgram)==0 &&
-				//	pagOrigen!=null && pagOrigen.compareTo(pagOriProg)==0 ){
-				//dtVisitasBk.setFechaVisita(dtVisitasBk.getFechaReprogramable());
-			//}
-			
-			
-			if (!(dtVisitasJS.getVisitaUsuarios().size()>0)) {
-				throw new Validador("LISTA VACIA DE TEMAS AGENDADOS");
+		try {//puribe 22042024 INICIO
+			 DtVisitasBk dtVisitasC = new DtVisitasBk();
+			 dtVisitasC = salvar(req,dtVisitasJS,msUsuariosBk);
+			//puribe 22042024 FIN
+			 
+			// JPUYEN 14052024 - INICIO
 				
-			}
-			
-			DtVisitasBk dtVisitasC = new DtVisitasBk();
-			 FuncionesStaticas.copyPropertiesObject(dtVisitasC,dtVisitasJS);
-			 dtVisitasC.setIdSede(msUsuariosBk.getIdSede());
-			 dtVisitasC.setIdSistAdm(msUsuariosBk.getIdSistAdmi());
-			 
-			 dtVisitasC.setIdProgramacion(idProgram);
-			 
-			// if (dtVisitasC.getIdProgramacion()!=null ){
-			 dtVisitasC.setFechaProgramada(dtVisitasC.getFechaVisita());
-			 dtVisitasC.setFechaFinalizacion(null);
-			 
-
-				//}
-			// dtVisitasJS.setEditopcion(dtVisitasC.getdtVisitasACL().getEditopcion());
-			
-			dtVisitasC = servicio.saveorupdateDtVisitasBk(dtVisitasC, msUsuariosBk.getUsername(),
-					msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede(), adressRemoto);
-			// dtVisitasJS = new DtVisitasJS();
-			// FuncionesStaticas.copyPropertiesObject(dtVisitasJS, dtVisitasC);
-			// dtVisitasJS.setEditopcion(dtVisitasC.getdtVisitasACL().getEditopcion());
-			List<DtVisitasUsuinternosBk> ouserVisitJS = new ArrayList<>();
-		
-			
-			
-			if (dtVisitasC !=null) {
-				// Save Participantes
-				for (DtVisitasUsuinternosBk oUserVisit : dtVisitasJS.getVisitaUsuarios()) {
-					oUserVisit.setIdVisita(dtVisitasC.getIdVisita());
-					DtVisitasUsuinternosBk ouserVisitBK = new DtVisitasUsuinternosBk();
-					
-					
-					ouserVisitBK =servicio.saveorupdateDtVisitasUsuinternosBk(oUserVisit, 
-							msUsuariosBk.getUsername(),
-							msUsuariosBk.getIdusuario(),
-							msUsuariosBk.getIdSede(),
-							adressRemoto
-							);
-					
-					ouserVisitJS.add(ouserVisitBK);
-				}				
-			}
-			
-			
-			DtVisitasData dtVisitasData = (DtVisitasData) req.getSession().getAttribute("DtVisitasData");
-			if (dtVisitasData == null) {
-				dtVisitasData = new DtVisitasData();
-				req.getSession().setAttribute("DtVisitasData", dtVisitasData);
-			}
-			dtVisitasData.add(servicio, msUsuariosBk.getIdusuario(), dtVisitasC,fechaInicio,fechaFin,programada);
-			dtVisitasC.setVisitaUsuarios(ouserVisitJS);
+				
+				
+				if (dtVisitasJS.getVisitaUsuariosExterno() != null) {
+					List<DtVisitasUsuexternosBk> ouserVisitExterJS = new ArrayList<>();
+				
+					for (DtVisitasUsuexternosBk oUserVisitExterno : dtVisitasJS.getVisitaUsuariosExterno()) {
+						oUserVisitExterno.setIdVisita(dtVisitasC.getIdVisita());
+						DtVisitasUsuexternosBk ouserVisitBK = new DtVisitasUsuexternosBk();
+						
+						
+						ouserVisitBK =servicio.saveorupdateDtEntidadesUsuexternosBk(oUserVisitExterno, 
+								msUsuariosBk.getUsername(),
+								msUsuariosBk.getIdusuario(),
+								msUsuariosBk.getIdSede(),
+								adressRemoto
+								);
+						
+						ouserVisitExterJS.add(ouserVisitBK);
+					}	
+				}
+				
+				// JPUYEN 14052024 - FIN
 
 			GenericEntity<DtVisitasBk> registrors = new GenericEntity<DtVisitasBk>(dtVisitasC) {
 			};
@@ -857,9 +912,15 @@ public class DtVisitasRsCtrl {
 					}).build();
 		//PURIBE 29032024  FIN->
 
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.ADMINISTRADOR_VISITAS_EDITOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-				&& !req.isUserInRole(Roles.PERFIL_USU_OGC)) //PURIBE 14032024 - INICIO-->
-			//PURIBE 29032024  INICIO-->
+		//PURIBE 04042024 -INICIO-->
+		//PURIBE 15042024 -INICIO-->
+		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+			 &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+				&& !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+				&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+			//PURIBE 04042024 -FIN-->
+			//PURIBE 15042024 -FIN-->
+					//PURIBE 04042024 -FIN-->
 			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
 					.entity(new GenericEntity<RespuestaError>(
 							new RespuestaError("Error no tiene autorización para realizar esta operación.", 
@@ -869,6 +930,22 @@ public class DtVisitasRsCtrl {
 
 		String adressRemoto = getRemoteAdress(req);
 		List<DtVisitasBk> dtVisitasCL = new ArrayList<>();
+		
+		// PURIBE 04042024 - INICIO-->
+		int rol=-1;
+		if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
+		{
+			rol =0;
+		}else if (req.isUserInRole(Roles.PERFIL_GC))
+			{
+			rol =1;
+				}
+		else if (req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+		{
+		rol =2;
+		}
+		
+		// PURIBE 04042024 - FIN-->
 
 		// FuncionesStaticas.copyPropertiesObject(dtVisitasC, dtVisitasE);
 
@@ -897,7 +974,7 @@ public class DtVisitasRsCtrl {
 				dtVisitasData = new DtVisitasData();
 				req.getSession().setAttribute("DtVisitasData", dtVisitasData);
 			}
-			dtVisitasData.refrescar(servicio, msUsuariosBk.getIdusuario(),fechaInicio,fechaFin,programada);
+			dtVisitasData.refrescar(servicio, msUsuariosBk.getIdusuario(),fechaInicio,fechaFin,programada,msUsuariosBk.getIdSede(),rol,msUsuariosBk.getIdSistAdmi());		//PURIBE 04042024 -INICIO-->;
 
 			// GenericEntity<DtVisitasBk> registro = new
 			// GenericEntity<DtVisitasBk>(dtVisitasCL) {
@@ -928,18 +1005,49 @@ public class DtVisitasRsCtrl {
 		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
 		if (msUsuariosBk == null)
+			//PURIBE 04042024 -INICIO-->
 			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
 					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
+							new RespuestaError("Error no tiene autorización para realizar esta operación.",
 									HttpURLConnection.HTTP_UNAUTHORIZED)) {
 					}).build();
+					//PURIBE 04042024 -FIN-->
+
+			//PURIBE 04042024 -INICIO-->
+				if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+						&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+						&& !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+				
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+				//PURIBE 04042024 -FIN-->
 
 		if (dtVisitasE == null) {
-			String mensaje = "SELECCIONE EL REGISTRO";
+			String mensaje = "Seleccione el registro"; //PURIBE 04042024 -INICIO-->
 			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
 					new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
 					}).build();
 		}
+		
+		// PURIBE 04042024 - INICIO-->
+		int rol=-1;
+		if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
+		{
+			rol =0;
+		}else if (req.isUserInRole(Roles.PERFIL_GC))
+			{
+			rol =1;
+				}
+		else if (req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+		{
+		rol =2;
+		}
+		
+		// PURIBE 04042024 - FIN-->
 
 		String adressRemoto = getRemoteAdress(req);
 
@@ -970,7 +1078,7 @@ public class DtVisitasRsCtrl {
 				dtVisitasData = new DtVisitasData();
 				req.getSession().setAttribute("DtVisitasData", dtVisitasData);
 			}
-			dtVisitasData.refrescar(servicio, msUsuariosBk.getIdusuario(),fechaInicio,fechaFin,programada);
+			dtVisitasData.refrescar(servicio, msUsuariosBk.getIdusuario(),fechaInicio,fechaFin,programada,msUsuariosBk.getIdSede(),rol,msUsuariosBk.getIdSistAdmi());//PURIBE 04042024 -INICIO-->
 
 			GenericEntity<DtVisitasBk> registro = new GenericEntity<DtVisitasBk>(dtVisitasC) {
 			};
@@ -998,25 +1106,51 @@ public class DtVisitasRsCtrl {
 		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
 		if (msUsuariosBk == null)
+			//PURIBE 04042024 -INICIO-->
 			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
 					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
+							new RespuestaError("Error no tiene autorización para realizar esta operación.",
 									HttpURLConnection.HTTP_UNAUTHORIZED)) {
 					}).build();
+			//PURIBE 04042024 -FIN-->
 
+		//PURIBE 04042024 -INICIO-->
+		//PURIBE 15042024 -INICIO-->
 		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-				&& !req.isUserInRole(Roles.DTVISITAS_VE))
+				&&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+				&& !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+				&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+
 			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
 					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
+							new RespuestaError("Error no tiene autorización para realizar esta operación.",
 									HttpURLConnection.HTTP_UNAUTHORIZED)) {
 					}).build();
+		//PURIBE 15042024 -FIN-->
+				  //PURIBE 04042024 -FIN-->
 
 		try {
 			DtVisitasBk dtVisitasE = servicio.getDtVisitasBkXid(idVisita, msUsuariosBk.getIdusuario());
 			
 			
 			dtVisitasE.setVisitaUsuarios(servicio.getDtVisitasUsuinternosXFiltro(idVisita,msUsuariosBk.getIdusuario()));
+			
+			//PURIBE 22042024 -INICIO-->
+			int programada = Integer.parseInt(req.getParameter("programada"));
+			if (programada==1)
+			{
+				boolean ver = servicio.validarFechaEdit(dtVisitasE);
+			//	ValidacionDtVisitasMng valida = new ValidacionDtVisitasMng();
+			//	boolean ver=valida.validarFechaEdit(dtVisitasE);
+				if (ver==true){
+				dtVisitasE.getDtVisitasACL().setEditopcion(1);
+				}
+				else if (ver==false)
+				{
+					dtVisitasE.getDtVisitasACL().setEditopcion(2);
+				}
+			}
+			//PURIBE 22042024 -FIN-->
 			
 			GenericEntity<DtVisitasBk> registro = new GenericEntity<DtVisitasBk>(dtVisitasE) {
 			};
@@ -1088,18 +1222,26 @@ public class DtVisitasRsCtrl {
 		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
 		if (msUsuariosBk == null)
+			//PURIBE 04042024 -INICIO-->
 			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
 					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
+							new RespuestaError("Error no tiene autorización para realizar esta operación.",
 									HttpURLConnection.HTTP_UNAUTHORIZED)) {
 					}).build();
+		//PURIBE 04042024 -FIN-->
 
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA))
+		//PURIBE 04042024 -INICIO-->
+			if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+					&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+					&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+					&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+				
 			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
 					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
+							new RespuestaError("Error no tiene autorización para realizar esta operación.",
 									HttpURLConnection.HTTP_UNAUTHORIZED)) {
 					}).build();
+					//PURIBE 04042024 -FIN-->
 
 		try {
 			List<IDValorDto> datos = servicio.getPrtParametrosIdparametroIdOrigen();
@@ -1125,19 +1267,26 @@ public class DtVisitasRsCtrl {
 		Principal usuario = req.getUserPrincipal();
 		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+		//PURIBE 04042024 -INICIO-->
+				if (msUsuariosBk == null)
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+				//PURIBE 04042024 -FIN-->
+				//PURIBE 04042024 -INICIO-->
+				if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+						&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+						&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+					
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+				//PURIBE 04042024 -FIN-->
 
 		try {
 			List<IDValorDto> datos = servicio.getPrtParametrosIdparametroIdModalidad();
@@ -1163,19 +1312,26 @@ public class DtVisitasRsCtrl {
 		Principal usuario = req.getUserPrincipal();
 		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+		//PURIBE 04042024 -INICIO-->
+				if (msUsuariosBk == null)
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+			//PURIBE 04042024 -FIN->
+				//PURIBE 04042024 -INICIO-->
+				if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+						&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+						&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+					
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+				//PURIBE 04042024 -FIN-->
 
 		try {
 			List<IDValorDto> datos = servicio.getPrtParametrosIdparametroIdTipo();
@@ -1201,19 +1357,25 @@ public class DtVisitasRsCtrl {
 		Principal usuario = req.getUserPrincipal();
 		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+		//PURIBE 04042024 -INICIO-->
+				if (msUsuariosBk == null)
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización a realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+			//PURIBE 04042024 -FIN-->
+				//PURIBE 04042024 -INICIO-->
+				if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+						&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+						&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+					//PURIBE 04042024 -FIN-->
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización a realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
 
 		try {
 			List<IDValorDto> datos = servicio.getMsSedesIdSedeIdSede();
@@ -1240,20 +1402,25 @@ public class DtVisitasRsCtrl {
 		Principal usuario = req.getUserPrincipal();
 		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
 
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-				&& !req.isUserInRole(Roles.DTVISITAS_VE))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
-					.entity(new GenericEntity<RespuestaError>(
-							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
-									HttpURLConnection.HTTP_UNAUTHORIZED)) {
-					}).build();
+		//PURIBE 04042024 -INICIO-->
+				if (msUsuariosBk == null)
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+			//PURIBE 04042024 -FIN-->
+				//PURIBE 04042024 -INICIO-->
+				if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+						&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+						&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+								new RespuestaError("Error no tiene autorización para realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+				//PURIBE 04042024 -FIN-->
 
 		// DESPUES DE VALIDAR valor del filtro if(filtroValue==null) continue;
 		// else if(filtroValue.toString().length()<1) continue;
@@ -1296,8 +1463,27 @@ public class DtVisitasRsCtrl {
 			int reload = Integer.parseInt(req.getParameter("reload"));
 			int programada = Integer.parseInt(req.getParameter("programada"));
 			//puribe 
+			String Departamento = req.getParameter("Departamento");// PURIBE 16042024 - INICIO-->
+			String Entidad = req.getParameter("Entidad");// PURIBE 16042024 - INICIO-->
+			String Participante = req.getParameter("idParticipanteTxt"); // PURIBE 16042024 - INICIO-->
 
 			String sestado = req.getParameter("estado");
+			
+			// PURIBE 04042024 - INICIO-->
+			int rol=-1;
+			if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
+			{
+				rol =0;
+			}else if (req.isUserInRole(Roles.PERFIL_GC))
+				{
+				rol =1;
+					}
+			else if (req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+			{
+			rol =2;
+			}
+			
+			// PURIBE 04042024 - FIN-->
 
 			Integer iestado = null;
 			if (sestado != null) {
@@ -1319,14 +1505,26 @@ public class DtVisitasRsCtrl {
 
 			DtVisitasLC dtVisitasLC = new DtVisitasLC();
 			long inicio = System.currentTimeMillis();
-			List<DtVisitasBk> dtVisitassss = dtVisitasData.getDtVisitasActivos(servicio, msUsuariosBk.getIdusuario(),fechaInicio,fechaFin,reload,programada);
+			List<DtVisitasBk> dtVisitasSinfiltro = dtVisitasData.getDtVisitasActivos(servicio, msUsuariosBk.getIdusuario(),fechaInicio,fechaFin,reload,programada,msUsuariosBk.getIdSede(),rol,msUsuariosBk.getIdSistAdmi());//PURIBE 04042024 - INICIO--	// PURIBE 16042024 - INICIO-->>
 			long lfinal = System.currentTimeMillis() - inicio;
 			dtVisitasLC.setTiempoenBD(lfinal);
 
-			if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.DTVISITAS_CREA)) {
-				dtVisitasLC.setCreamodifica(true);
-			}
-
+			// PURIBE 04042024 - INICIO-->
+						//if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.DTVISITAS_CREA)) {
+							//dtVisitasLC.setCreamodifica(true);
+						//	}
+						// PURIBE 04042024 - FIN-->
+			
+			// PURIBE 16042024 - INICIO-->
+						List<DtVisitasBk> dtVisitassss  = dtVisitasSinfiltro.stream()
+								.filter(registro -> Departamento == null || Departamento.isEmpty()
+										|| registro.getIdSedeTxt().toLowerCase().contains(Departamento.toLowerCase()))
+								.filter(registro -> Entidad == null || Entidad.isEmpty()
+										|| registro.getIdEntidadTxt().toLowerCase().contains(Entidad.toLowerCase()))
+								.filter(registro -> Participante == null || Participante.isEmpty()
+										|| contieneCoincidencia(registro.getIdParticipanteTxt(), Participante))
+								.collect(Collectors.toList());
+						// PURIBE 16042024 - FIN-->
 			/////
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
 			List<DtVisitasBk> dtVisitassssData = new ArrayList<DtVisitasBk>();
@@ -1529,85 +1727,139 @@ public class DtVisitasRsCtrl {
 			Sheet hoja = wb.getSheetAt(sheetIndxResumen);
 			wb.setSheetName(sheetIndxResumen, "RT_" + sdf.format(hoy));
 			StyleUtils styleUtils = new StyleUtils(wb);
-			String titulo = "VISITAS" + "\nTOTAL DE REGISTROS " + dataSize;
+			String titulo = "LISTA DE REUNIONES DE TRABAJO"; //+ dataSize;  //crea el titulo // PURIBE 16042024 - INICIO-->
 
-			Row row0 = hoja.getRow(0);
-			if (row0 == null) {
-				row0 = hoja.createRow(0);
-			}
-			Cell cellE4 = row0.getCell(4);
-			if (cellE4 == null) {
-				cellE4 = row0.createCell(4);
-			}
-			cellE4.setCellValue(titulo);
+			// PURIBE 16042024 - INICIO-->
+						Row row0 = hoja.getRow(0);
+						if (row0 == null) {
+							row0 = hoja.createRow(0);
+						}
+						
+						Row row4 = hoja.getRow(4);
+						if (row4== null) {
+							row4 = hoja.createRow(4);
+						}
+						
+						//total 
+						Row row7 = hoja.getRow(7);
+						if (row7 == null) {
+							row7 = hoja.createRow(7);
+						}
+						Cell cellF8 = row7.getCell(5);
+						if (cellF8 == null) {
+							cellF8 = row7.createCell(5);
+						}
+						cellF8.setCellValue(dataSize);
+						//total 
+						
+					
+					//titulo 
+						Row row3 = hoja.getRow(3);
+						if (row3 == null) {
+							row3 = hoja.createRow(3);
+						}
+						//puribe
+						// titulo 
+						Cell cellA4 = row3.getCell(0);
+						if (cellA4 == null) {
+							cellA4 = row3.createCell(0);
+						}
+						cellA4.setCellValue(titulo);
+						
+						//titulo 
+						
+						
+						//usuario
+						Row row6 = hoja.getRow(6);
+						if (row6 == null) {
+							row6 = hoja.createRow(6);
+						}
+					
+						// usuario 
+						Cell cellC7 = row6.getCell(2);
+						if (cellC7 == null) {
+							cellC7 = row6.createCell(2);
+						}
+						cellC7.setCellValue(msUsuariosBk.getNombreCompleto());
+						
+						//usuario
+						
+						
 
-			Row row3 = hoja.getRow(3);
-			if (row3 == null) {
-				row3 = hoja.createRow(3);
-			}
+						// fecha y hora
+						Row row5 = hoja.getRow(5);
+						if (row5 == null) {
+							row5 = hoja.createRow(5);
+						}
 
-			Cell cell3D = row3.getCell(3);
-			if (cell3D == null) {
-				cell3D = row3.createCell(3);
-			}
-			cell3D.setCellValue(hoy);
+						Cell cell6C = row5.getCell(2);
+						if (cell6C == null) {
+							cell6C = row5.createCell(2);
+						}
+						cell6C.setCellValue(hoy);
+						// fecha y hora 
 
-			Row row1 = hoja.getRow(1);
-			if (row1 == null) {
-				row1 = hoja.createRow(1);
-			}
+						Row row1 = hoja.getRow(1);
+						if (row1 == null) {
+							row1 = hoja.createRow(1);
+						}
 
-			Row row2 = hoja.getRow(2);
-			if (row2 == null) {
-				row2 = hoja.createRow(2);
-			}
+						Row row2 = hoja.getRow(2);
+						if (row2 == null) {
+							row2 = hoja.createRow(2);
+						}
 
-			Row row4 = hoja.getRow(4);
-			if (row4 == null) {
-				row4 = hoja.createRow(4);
-			}
-			Cell cell4D = row4.getCell(3);
-			if (cell4D == null) {
-				cell4D = row4.createCell(3);
-			}
-			cell4D.setCellValue(filtrosaplicados.toString());
+					
+						//estilo CABECERA 
+						Row row8 = hoja.getRow(8);
+						if (row8 == null) {
+							row8 = hoja.createRow(8);
+						}
+						Cell cell9A= row8.getCell(0);
+						if (cell9A == null) {
+							cell9A = row8.createCell(0);
+						}
+						CellStyle cellStyleTITULO = cell9A.getCellStyle();
+						//estilo CABECERA 
+						
+						//estilo datos
+						Row row9 = hoja.getRow(9);
+						if (row9 == null) {
+							row9 = hoja.createRow(9);
+						}
+						Cell cell10A = row9.getCell(0);
+						if (cell10A == null) {
+							cell10A = row9.createCell(0);
+						}
+					
+						CellStyle cellStyleDATO = cell10A.getCellStyle();
+						
+						   for (int i = 0; i < hoja.getNumMergedRegions(); i++) {
+				                CellRangeAddress mergedRegion = hoja.getMergedRegion(i);
+				                int firstRow = mergedRegion.getFirstRow();
+				                int lastRow = mergedRegion.getLastRow();
+				                int firstColumn = mergedRegion.getFirstColumn();
+				                int lastColumn = mergedRegion.getLastColumn();
 
-			Cell cell0Q = row0.getCell(16);
-			if (cell0Q == null) {
-				cell0Q = row0.createCell(16);
-			}
-			Cell cell1Q = row1.getCell(16);
-			if (cell1Q == null) {
-				cell1Q = row1.createCell(16);
-			}
-			Cell cell2Q = row2.getCell(16);
-			if (cell2Q == null) {
-				cell2Q = row2.createCell(16);
-			}
+				                // Verificar si la celda combinada contiene texto y aplicar las variables correspondientes dentro de paréntesis
+				                for (int rowIndex = firstRow; rowIndex <= lastRow; rowIndex++) {
+				                    Row row = hoja.getRow(rowIndex);
+				                    if (row != null) {
+				                        for (int columnIndex = firstColumn; columnIndex <= lastColumn; columnIndex++) {
+				                            Cell cell = row.getCell(columnIndex);
+				                            if (cell != null && cell.getCellType() == Cell.CELL_TYPE_STRING) {
+				                                String cellValue = cell.getStringCellValue();
+				                                String updatedValue = FuncionesStaticas.replaceVariables(cellValue, fechaInicio, fechaFin,Departamento,Entidad,Participante);
+				                                cell.setCellValue(updatedValue);
+				                            }
+				                        }
+				                    }
+				                }
+				            }
+						
+					
 
-			CellStyle cellStyleV = cell0Q.getCellStyle();
-			CellStyle cellStyleA = cell1Q.getCellStyle();
-			CellStyle cellStyleR = cell2Q.getCellStyle();
-
-			/////
-			Row row6 = hoja.getRow(6);
-			if (row6 == null) {
-				row6 = hoja.createRow(6);
-			}
-			Cell cell6A = row6.getCell(0);
-			if (cell6A == null) {
-				cell6A = row6.createCell(0);
-			}
-			CellStyle cellStyleTITULO = cell6A.getCellStyle();
-			Row row7 = hoja.getRow(7);
-			if (row7 == null) {
-				row7 = hoja.createRow(7);
-			}
-			Cell cell7A = row7.getCell(0);
-			if (cell7A == null) {
-				cell7A = row7.createCell(0);
-			}
-			CellStyle cellStyleDATO = cell7A.getCellStyle();
+			         // PURIBE 16042024 - FIN-->
 
 			// PURIBE 29032024 - INICIO
 						List<String> caposvista = Arrays.asList("idVisita", "fechaProgramada", "idSistAdmTxt", "idParticipanteTxt",
@@ -1617,7 +1869,7 @@ public class DtVisitasRsCtrl {
 																					// INICIO-->
 						// PURIBE 29032024 - FIN
 			int tituloscontador = 1;
-			int titulofilacontador = 6;
+			int titulofilacontador = 8; 	// PURIBE 16042024 - INICIO-->
 			Row rowX = hoja.getRow(titulofilacontador);
 			if (rowX == null) {
 				rowX = hoja.createRow(titulofilacontador);
@@ -1632,7 +1884,8 @@ public class DtVisitasRsCtrl {
 				tituloscontador++;
 			}
 
-			int contador = 7;
+			//llena la data, la fila y columna empiezan A contar en 0
+			int contador = 9; // PURIBE 16042024 - INICIO-->
 			int contadorfor = 1;
 			for (DtVisitasBk dtVisitasBk : dtVisitassssData) {
 				rowX = hoja.getRow(contador);
@@ -1641,15 +1894,15 @@ public class DtVisitasRsCtrl {
 				Cell cellAAX = rowX.getCell(0);
 				cellAAX.setCellValue(contadorfor);
 
-				if (dtVisitasBk.getCclase() != null) {
-					if (dtVisitasBk.getCclase().equals("cverde")) {
-						cellAAX.setCellStyle(cellStyleV);
-					} else if (dtVisitasBk.getCclase().equals("camarillo")) {
-						cellAAX.setCellStyle(cellStyleA);
-					} else if (dtVisitasBk.getCclase().equals("crojo")) {
-						cellAAX.setCellStyle(cellStyleR);
-					}
-				}
+//				if (dtVisitasBk.getCclase() != null) {
+//					if (dtVisitasBk.getCclase().equals("cverde")) {
+//						cellAAX.setCellStyle(cellStyleV);
+//					} else if (dtVisitasBk.getCclase().equals("camarillo")) {
+//						cellAAX.setCellStyle(cellStyleA);
+//					} else if (dtVisitasBk.getCclase().equals("crojo")) {
+//						cellAAX.setCellStyle(cellStyleR);
+//					}
+//				}
 
 				int columna = 1;
 				for (String camponame : caposvista) {
@@ -1771,4 +2024,764 @@ public class DtVisitasRsCtrl {
  					}).build();
  		}
  	}
+	 
+	// PURIBE 04042024 - INICIO
+				@GET
+				@Path("/loadvalorperfil")
+				@Produces(MediaType.APPLICATION_JSON)
+				public Response loadvalorperfil(@Context HttpServletRequest req, @Context HttpServletResponse res,
+						@HeaderParam("authorization") String authString) {
+					SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+					Principal usuario = req.getUserPrincipal();
+					MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+					
+					if (msUsuariosBk == null)
+						
+						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+								.entity(new GenericEntity<RespuestaError>(
+										new RespuestaError("Error no tiene autorización para realizar esta operación.",
+												HttpURLConnection.HTTP_UNAUTHORIZED)) {
+								}).build();
+				
+					
+					if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+							&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+							&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+							&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+						
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+						
+
+				try {
+		
+					IDValorDto  datos = new IDValorDto();
+					List<String> roles = msUsuariosBk.getRolesSistema();
+							
+				if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.DTENTIDADES_CREA) || roles.contains(Roles.PERFIL_ADMINISTRADOR) 
+						|| roles.contains(Roles.PERFIL_USU_OGC)) {
+					
+					datos.setId(2L);
+									
+					}else {
+						datos.setId(1L);
+					}
+					
+					GenericEntity<IDValorDto> registrosx = new GenericEntity<IDValorDto>(datos) {
+					};
+					return Response.status(200).entity(registrosx).build();
+				} catch (Exception e) {
+					String mensaje = e.getMessage();
+					System.out.println("ERROR: " + mensaje);
+					return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+							new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+							}).build();
+				}
+				}
+
+				// PURIBE 04042024 - FIN
+		
+		
+	// PURIBE 04042024 - INICIO
+			@GET
+			@Path("/loadvalorcrear")
+			@Produces(MediaType.APPLICATION_JSON)
+			public Response loadvalorcrear(@Context HttpServletRequest req, @Context HttpServletResponse res,
+					@HeaderParam("authorization") String authString) {
+				SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+				Principal usuario = req.getUserPrincipal();
+				MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+				if (msUsuariosBk == null)
+					
+					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+							.entity(new GenericEntity<RespuestaError>(
+									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+							}).build();
+			
+				
+				if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+						&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+						&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+					
+				return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+						.entity(new GenericEntity<RespuestaError>(
+								new RespuestaError("Error no tiene autorización para realizar esta operación.",
+										HttpURLConnection.HTTP_UNAUTHORIZED)) {
+						}).build();
+					
+
+			try {
+
+				IDValorDto  datos = new IDValorDto();
+				List<String> roles = msUsuariosBk.getRolesSistema();
+						
+				if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PERFIL_ADMINISTRADOR) 
+						|| roles.contains(Roles.DTVISITAS_CREA)
+						|| roles.contains(Roles.PERFIL_USU_OGC) || roles.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))  {
+								datos.setId(2L);
+								
+							}else {
+								datos.setId(1L);
+							}
+							
+				GenericEntity<IDValorDto> registrosx = new GenericEntity<IDValorDto>(datos) {
+				};
+				return Response.status(200).entity(registrosx).build();
+			} catch (Exception e) {
+				String mensaje = e.getMessage();
+				System.out.println("ERROR: " + mensaje);
+				return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+						new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+						}).build();
+			}
+			}
+
+			// PURIBE 04042024 - FIN
+			
+			
+			//PURIBE 22042024 -INICIO-->
+			   @GET
+			   	@Path("/listarMsUsuExternoNombre/{nombre}")
+			   	@Produces(MediaType.APPLICATION_JSON)
+			   	public Response listarMsUsuExternoNombre(@Context HttpServletRequest req, @Context HttpServletResponse res,
+			   			@HeaderParam("authorization") String authString, @PathParam("nombre") String nombre) {
+			       	SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+			   		Principal usuario = req.getUserPrincipal();
+			   		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+			   		if (msUsuariosBk == null)
+			   			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+			   					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			   			}).build();
+			
+			   	//PURIBE 04042024 -INICIO-->
+					if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+							&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+							&& !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+							&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+						//PURIBE 04042024 -FIN-->
+						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+								.entity(new GenericEntity<RespuestaError>(
+										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
+												HttpURLConnection.HTTP_UNAUTHORIZED)) {
+								}).build();
+			   		
+			   		
+
+			   		try {
+			   			Long idProgramacion = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
+								PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
+			   			
+			   			
+			   			
+				   			if(nombre == null || nombre.trim().isEmpty()) {
+								throw new Validador("Ingrese documento"); 
+							}
+						
+			   			
+			   			List<DtUsuarioExternoBk> datos;
+			   			
+			   			datos= servicio.getDtUsuarioExternoXFiltro2(nombre,msUsuariosBk.getIdusuario()); 
+			   			
+			   		
+			   			 if (datos.size()==0)
+			   			{
+			   				throw new Validador("Persona no encontrada");
+			   			}
+			   			 
+			   		
+			   			GenericEntity<List<DtUsuarioExternoBk>>registrosx = new GenericEntity<List<DtUsuarioExternoBk>>(datos) {
+			   			};
+			   			return Response.status(200).entity(registrosx).build();
+			   		} catch (Validador e) {
+			   			String mensaje = e.getMessage();
+			   			System.out.println("ERROR: " + mensaje);
+			   			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+			   					new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+			   					}).build();
+			   		}
+			   	}
+			   
+			// JPUYEN 14052024 - INICIO
+				@POST
+				@Path("/finalizardtVisitas")
+				@Produces(MediaType.APPLICATION_JSON)
+				public Response finalizarDtVisitas(@Context HttpServletRequest req, @Context HttpServletResponse res,
+						@HeaderParam("authorization") String authString,DtVisitasJS dtVisitasJS) throws ParseException {
+
+					SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+					Principal usuario = req.getUserPrincipal();
+					MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+					if (msUsuariosBk == null)
+						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+								.entity(new GenericEntity<RespuestaError>(
+										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
+												HttpURLConnection.HTTP_UNAUTHORIZED)) {
+								}).build();
+					
+					if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+							&& !req.isUserInRole(Roles.DTVISITAS_VE) && !req.isUserInRole(Roles.PERFIL_USU_OGC))
+						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
+								}).build();
+
+					String adressRemoto = getRemoteAdress(req);
+
+					try {
+						
+						Long idProgram = PropertiesMg.getSistemLong(
+								PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
+								PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
+					
+
+						SimpleDateFormat sdff = new SimpleDateFormat("yyyy-MM-dd");
+						Date fechaDateIni = sdff.parse(req.getParameter("fechaInicio"));
+						Date fechaDateFin = sdff.parse(req.getParameter("fechaFin"));
+
+						Timestamp fechaInicio = new Timestamp(fechaDateIni.getTime());
+						Timestamp fechaFin = new Timestamp(fechaDateFin.getTime());
+						int programada = Integer.parseInt(req.getParameter("programada"));
+						
+
+						
+						DtVisitasBk dtVisitasC = new DtVisitasBk();
+						 FuncionesStaticas.copyPropertiesObject(dtVisitasC,dtVisitasJS);
+						 dtVisitasC.setIdSede(msUsuariosBk.getIdSede());
+						 dtVisitasC.setIdSistAdm(msUsuariosBk.getIdSistAdmi());
+						 
+						 dtVisitasC.setIdProgramacion(idProgram);
+						 
+					
+						 dtVisitasC.setFechaProgramada(dtVisitasC.getFechaVisita());
+						 
+						 Timestamp hoy = new Timestamp(System.currentTimeMillis());
+						 dtVisitasC.setFechaFinalizacion(hoy);
+						 dtVisitasC.setEstado(Estado.FINALIZADO.getValor());
+				
+//						dtVisitasC = servicio.finalizarDtVisita(dtVisitasC, msUsuariosBk.getUsername(),
+//								msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede(), adressRemoto);
+						 
+						 dtVisitasC = servicio.finalizarDtVisita(dtVisitasC, msUsuariosBk.getIdSistAdmi(), msUsuariosBk.getIdusuario());
+
+						List<DtVisitasUsuinternosBk> ouserVisitJS = new ArrayList<>();
+						
+					
+					
+						
+						
+						if (dtVisitasJS.getDtAnexosJSss() != null) {
+							List<DtAnexoBk> ouserVisitExterJS = new ArrayList<>();
+						
+							for (DtAnexosJS oUserVisitExterno : dtVisitasJS.getDtAnexosJSss()) {
+								
+								Random rand = new Random();
+								int max = 9;
+								int min = 1;
+								int randomNum = rand.nextInt((max - min) + 1) + min;
+
+								byte[] bytes = null;
+								
+					
+								
+								FileOutputStream fos = null;
+							
+					
+							
+								
+								
+								Long idTiposervicio = PropertiesMg
+										.getSistemLong(
+												PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA,
+												PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA);
+								DtAnexoBk dtAnexoBka = new DtAnexoBk();
+								dtAnexoBka.setFilenameoriginal(oUserVisitExterno.getFilenameoriginal());
+								dtAnexoBka.setIdmaestro(dtVisitasJS.getIdVisita());
+								dtAnexoBka.setIdTiposervicio(idTiposervicio);
+								
+								
+								DtAnexoBk ouserVisitBK = new DtAnexoBk();
+								
+								ouserVisitBK = servicio.saveorupdateDtAnexoBk(dtAnexoBka,
+										msUsuariosBk.getUsername(),
+										msUsuariosBk.getIduserModif(), dtVisitasJS.getIdSede(), 
+										dtVisitasJS.getRtmaddress());
+								
+							
+								
+								ouserVisitExterJS.add(ouserVisitBK);
+							}	
+						}
+						
+					
+						
+					
+						
+						
+						
+						DtVisitasData dtVisitasData = (DtVisitasData) req.getSession().getAttribute("DtVisitasData");
+						if (dtVisitasData == null) {
+							dtVisitasData = new DtVisitasData();
+							req.getSession().setAttribute("DtVisitasData", dtVisitasData);
+						}
+//						dtVisitasData.add(servicio, msUsuariosBk.getIdusuario(), dtVisitasC,fechaInicio,fechaFin,programada);
+//						dtVisitasData.add(servicio, msUsuariosBk.getIdusuario(), dtVisitasC, fechaInicio, fechaFin, programada, sede, rol, sistemaadmi);
+						dtVisitasC.setVisitaUsuarios(ouserVisitJS);
+
+						GenericEntity<DtVisitasBk> registrors = new GenericEntity<DtVisitasBk>(dtVisitasC) {
+						};
+						return Response.status(200).entity(registrors).build();
+					} catch (Validador e) {
+						// e.printStackTrace();
+						String mensaje = e.getMessage();
+						System.out.println("ERROR: " + mensaje);
+						return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+								new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+								}).build();
+					}
+				}
+				// JPUYEN 14052024 - FIN
+			   
+			   public  DtVisitasBk  salvar(@Context HttpServletRequest req,DtVisitasJS dtVisitasJS,MsUsuariosBk msUsuariosBk) throws Validador
+				{
+					try
+					{
+					
+					Long idProgram = PropertiesMg.getSistemLong(
+							PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
+							PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
+				
+					SimpleDateFormat sdff = new SimpleDateFormat("yyyy-MM-dd");
+					Date fechaDateIni = sdff.parse(req.getParameter("fechaInicio"));
+					Date fechaDateFin = sdff.parse(req.getParameter("fechaFin"));
+
+					Timestamp fechaInicio = new Timestamp(fechaDateIni.getTime());
+					Timestamp fechaFin = new Timestamp(fechaDateFin.getTime());
+					int programada = Integer.parseInt(req.getParameter("programada"));
+					
+					String adressRemoto = getRemoteAdress(req);
+					
+					// PURIBE 04042024 - INICIO-->
+					int rol=-1;
+					if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
+					{
+						rol =0;
+					}else if (req.isUserInRole(Roles.PERFIL_GC))
+						{
+						rol =1;
+							}
+					else if (req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+					{
+					rol =2;
+					}
+					
+					// PURIBE 04042024 - FIN-->
+					
+					//if (dtVisitasBk.getIdProgramacion()!=null && 
+						//	dtVisitasBk.getIdProgramacion().compareTo(idProgram)==0 &&
+						//	pagOrigen!=null && pagOrigen.compareTo(pagOriProg)==0 ){
+						//dtVisitasBk.setFechaVisita(dtVisitasBk.getFechaReprogramable());
+					//}
+					
+					
+					if (!(dtVisitasJS.getVisitaUsuarios().size()>0)) {
+						throw new Validador("LISTA VACIA DE TEMAS AGENDADOS");
+						
+					}
+					
+					 DtVisitasBk dtVisitasC = new DtVisitasBk();
+					 FuncionesStaticas.copyPropertiesObject(dtVisitasC,dtVisitasJS);
+					 
+					 dtVisitasC.setIdSede(msUsuariosBk.getIdSede());
+					 dtVisitasC.setIdSistAdm(msUsuariosBk.getIdSistAdmi());
+						// PURIBE 22042024 - INICIO-->
+					 
+					 
+					 
+						if(programada==1){
+							dtVisitasC.setVistaProgramado(true);
+						}else if (programada==0){
+							dtVisitasC.setVistaProgramado(false);
+						}
+					 
+					 
+					 
+					 if(dtVisitasC.getIdProgramacion()==null && programada==1)
+					 {
+					 dtVisitasC.setIdProgramacion(idProgram);
+					 }
+					 else if (dtVisitasC.getIdProgramacion()==null && programada==0)
+					 {
+						 Long idNoProgram = PropertiesMg.getSistemLong(
+									PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_NOPROGRAMADA,
+									PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_NOPROGRAMADA);
+						 dtVisitasC.setIdProgramacion(idNoProgram);
+					 }
+					 
+					
+							if (dtVisitasC.getIdProgramacion()!=null && dtVisitasC.getIdProgramacion()==idProgram  && programada==0)
+							{
+							dtVisitasC.setFechaVisita(dtVisitasC.getFechaReprogramada());
+							}
+							 dtVisitasC.setFechaProgramada(dtVisitasC.getFechaVisita());
+							 dtVisitasC.setFechaFinalizacion(null);
+					 
+								// PURIBE 22042024 - FIN-->
+				
+					// dtVisitasJS.setEditopcion(dtVisitasC.getdtVisitasACL().getEditopcion());
+					
+					dtVisitasC = servicio.saveorupdateDtVisitasBk(dtVisitasC, msUsuariosBk.getUsername(),
+							msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede(), adressRemoto);
+					// dtVisitasJS = new DtVisitasJS();
+					// FuncionesStaticas.copyPropertiesObject(dtVisitasJS, dtVisitasC);
+					// dtVisitasJS.setEditopcion(dtVisitasC.getdtVisitasACL().getEditopcion());
+					List<DtVisitasUsuinternosBk> ouserVisitJS = new ArrayList<>();
+				
+					
+					
+					if (dtVisitasC !=null) {
+						// Save Participantes
+						for (DtVisitasUsuinternosBk oUserVisit : dtVisitasJS.getVisitaUsuarios()) {
+							oUserVisit.setIdVisita(dtVisitasC.getIdVisita());
+							DtVisitasUsuinternosBk ouserVisitBK = new DtVisitasUsuinternosBk();
+							
+							
+							ouserVisitBK =servicio.saveorupdateDtVisitasUsuinternosBk(oUserVisit, 
+									msUsuariosBk.getUsername(),
+									msUsuariosBk.getIdusuario(),
+									msUsuariosBk.getIdSede(),
+									adressRemoto
+									);
+							
+							ouserVisitJS.add(ouserVisitBK);
+						}				
+					
+					
+					
+					// PURIBE 22042024 - INICIO-->
+						if (dtVisitasJS.getVisitaUsuariosExterno() !=null) {
+									for (DtVisitasUsuexternosBk dtVisitasUsuexternosBka : dtVisitasJS.getVisitaUsuariosExterno()) {
+										
+										
+											dtVisitasUsuexternosBka.setIdVisita(dtVisitasC.getIdVisita());
+											servicio.saveorupdateDtVisitasUsuexternosBk(
+													dtVisitasUsuexternosBka, msUsuariosBk.getUsername(),
+													msUsuariosBk.getIdusuario(), null, adressRemoto);
+											
+											//ACTUALIZAR DATOS DE CORREO Y TELEFONO EN TABLA DTUSUARIOS
+											if(dtVisitasUsuexternosBka.getIdUsuexterno()!=null && dtVisitasUsuexternosBka.getIdUsuexterno().longValue()>0){
+												DtUsuarioExternoBk dtUsuarioExternoBka=new DtUsuarioExternoBk();
+												dtUsuarioExternoBka=servicio.getDtUsuarioExternoBkXid(dtVisitasUsuexternosBka.getIdUsuexterno(),msUsuariosBk.getIdusuario());
+												if(dtUsuarioExternoBka!=null){
+													dtUsuarioExternoBka.setCorreo(dtVisitasUsuexternosBka.getCorreoUsuext());
+													dtUsuarioExternoBka.setOtroTelefono(dtVisitasUsuexternosBka.getFijoUsuext());
+													dtUsuarioExternoBka.setOtroCelular(dtVisitasUsuexternosBka.getCelularUsuext());
+													servicio.saveorupdateDtUsuarioExternoBk(dtUsuarioExternoBka,msUsuariosBk.getUsername(),
+															msUsuariosBk.getIdusuario(), null,adressRemoto);
+												}
+											}
+										
+			
+									}
+						}
+								//	dtVisitasUsuexternosBkList=null;
+									//getDtVisitasUsuexternosBkList();
+						}
+					
+					
+					// PURIBE 22042024 - FIN-->
+					
+					DtVisitasData dtVisitasData = (DtVisitasData) req.getSession().getAttribute("DtVisitasData");
+					if (dtVisitasData == null) {
+						dtVisitasData = new DtVisitasData();
+						req.getSession().setAttribute("DtVisitasData", dtVisitasData);
+					}
+//					dtVisitasData.add(servicio, msUsuariosBk.getIdusuario(), dtVisitasC,fechaInicio,fechaFin,programada);
+					dtVisitasC.setVisitaUsuarios(ouserVisitJS);
+					
+					return dtVisitasC;
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new Validador(e.getMessage());
+				}
+					
+				}
+			   
+			   
+			   
+				//PURIBE 22042024 -FIN-->
+			   
+			// JPUYEN 14052024 - INICIO
+				@GET
+				@Path("/buscarDtUsuarioXdni/{dniUser}")
+				@Produces(MediaType.APPLICATION_JSON)
+				public Response listaDtUsuarioXDNI(@Context HttpServletRequest req, @Context HttpServletResponse res,
+						@HeaderParam("authorization") String authString, @PathParam("dniUser") String dniUser) {
+					SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+					Principal usuario = req.getUserPrincipal();
+					MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+					if (msUsuariosBk == null)
+						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+								.entity(new GenericEntity<RespuestaError>(
+										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
+												HttpURLConnection.HTTP_UNAUTHORIZED)) {
+								}).build();
+
+			   		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+							&& !req.isUserInRole(Roles.DTVISITAS_VE))
+						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
+								}).build();
+
+					try {
+						DtUsuarioExternoBk dtUsuarioExternoBk = new DtUsuarioExternoBk();
+						DtUsuarioExternoDto dtoUsuarioExternoDto= new DtUsuarioExternoDto();
+						
+						if (dniUser != null && dniUser.length() == 8) {
+						
+							dtUsuarioExternoBk = servicio.getMsUsuariosExternoBkXDni(dniUser);
+							
+							if(dtUsuarioExternoBk!=null && dtUsuarioExternoBk.getIdUsuexterno()!=null){
+								dtoUsuarioExternoDto.setIdUsuexterno(dtUsuarioExternoBk.getIdUsuexterno());
+								dtoUsuarioExternoDto.setNumDocum(dtUsuarioExternoBk.getNumDocum());
+								dtoUsuarioExternoDto.setNombresCompletos(dtUsuarioExternoBk.getApaterno()+" "+dtUsuarioExternoBk.getAmaterno()+" "+dtUsuarioExternoBk.getNombre());
+								dtoUsuarioExternoDto.setCorreo(dtUsuarioExternoBk.getCorreo());
+								
+								String otroCelular = dtUsuarioExternoBk.getOtroCelular();
+								if(otroCelular!=null && !otroCelular.trim().isEmpty()){
+									 try {
+											dtoUsuarioExternoDto.setTelefCell(Long.parseLong(otroCelular));
+									    } catch (NumberFormatException e) {
+									        e.printStackTrace();
+											dtoUsuarioExternoDto.setTelefCell(null);
+									    }
+								}
+								
+								String otroTelefono = dtUsuarioExternoBk.getOtroTelefono();
+								if(otroTelefono!=null && !otroTelefono.trim().isEmpty()){
+									 try {
+										 dtoUsuarioExternoDto.setTelefFijo(Long.parseLong(otroTelefono));
+									    } catch (NumberFormatException e) {
+									        e.printStackTrace();
+									        dtoUsuarioExternoDto.setTelefFijo(null);
+									    }
+								}
+								
+								
+								//dtoUsuarioExternoDto.setTelefFijo(Long.parseLong(dtUsuarioExternoBk.getOtroTelefono()));
+								//dtoUsuarioExternoDto.setTelefCell(Long.parseLong(dtUsuarioExternoBk.getOtroCelular()));
+								dtoUsuarioExternoDto.setUsucargos(dtUsuarioExternoBk.getUsucargos());
+							}
+							
+						}else{
+							throw new Validador("EL DNI INGRESADO NO SE ENCUENTRA REGISTRADO, POR FAVOR COMPLETE LOS DATOS");
+						}
+						
+						
+						GenericEntity<DtUsuarioExternoDto> registrosx = new GenericEntity<DtUsuarioExternoDto>(
+								dtoUsuarioExternoDto) {
+						};
+						return Response.status(200).entity(registrosx).build();
+					} catch (Validador e) {
+						String mensaje = e.getMessage();
+						System.out.println("ERROR: " + mensaje);
+						return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+								new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+								}).build();
+					}
+				}
+				
+				
+				@GET
+			   	@Path("/buscarDtUsuarioXnombre/{nombreapellidos}")
+			   	@Produces(MediaType.APPLICATION_JSON)
+			   	public Response listaDtUsuarioXNombre(@Context HttpServletRequest req, @Context HttpServletResponse res,
+			   			@HeaderParam("authorization") String authString, @PathParam("nombreapellidos") String nombreapellidos) {
+			       	SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+			   		Principal usuario = req.getUserPrincipal();
+			   		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+			   		if (msUsuariosBk == null)
+			   			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+			   					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			   			}).build();
+
+			   		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+							&& !req.isUserInRole(Roles.DTVISITAS_VE))
+						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
+								}).build();
+
+			   		try {
+			   			
+			   			List<DtUsuarioExternoBk> listaUserExterBK = new ArrayList<DtUsuarioExternoBk>();
+			   					
+			   			listaUserExterBK = servicio.getMsUsuariosExternoBkXnombreapellido(nombreapellidos);
+			   			
+			   			List<DtUsuarioExternoDto> listaUserExtDTO=listaUserExterBK.stream().map(this::convertToDto).collect(Collectors.toList());
+			   			
+			   			
+			   			GenericEntity<List<DtUsuarioExternoDto>> registrosOut = new GenericEntity<List<DtUsuarioExternoDto>>(listaUserExtDTO) {
+						};
+						return Response.status(200).entity(registrosOut).build();
+			   			
+			   		} catch (Exception e) {
+			   			String mensaje = e.getMessage();
+			   			System.out.println("ERROR: " + mensaje);
+			   			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+			   					new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+			   					}).build();
+			   		}
+			   	}	
+				
+				
+				private DtUsuarioExternoDto convertToDto(DtUsuarioExternoBk bk) {
+				    DtUsuarioExternoDto dto = new DtUsuarioExternoDto();
+				    dto.setIdUsuexterno(bk.getIdUsuexterno());
+				    dto.setNombre(bk.getNombre());
+				    dto.setAPaterno(bk.getApaterno());
+				    dto.setAMaterno(bk.getAmaterno());
+				    dto.setNombresCompletos(bk.getNombresCompletos());
+				    dto.setCorreo(bk.getCorreo());
+				    dto.setNumDocum(bk.getNumDocum());
+				    dto.setOtroTelefono(bk.getOtroTelefono());
+				    dto.setOtroCelular(bk.getOtroCelular());
+				    return dto;
+				}
+
+			// JPUYEN 14052024 - FIN
+				// JPUYEN 14052024 - INICIO
+				 @POST
+				@Path("/insertarchivo/{idVisita}")
+				@Produces(MediaType.APPLICATION_JSON)
+				@Consumes(MediaType.APPLICATION_JSON)
+				public Response insertArchivo(@Context HttpServletRequest req, @Context HttpServletResponse res,
+						@HeaderParam("authorization") String authString, DtAnexosJS dtAnexosJS, @PathParam("idVisita") Long idVisita) {
+					
+					 SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+					Principal usuario = req.getUserPrincipal();
+					MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+					
+					if (msUsuariosBk == null)
+						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+								.entity(new GenericEntity<RespuestaError>(
+										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
+												HttpURLConnection.HTTP_UNAUTHORIZED)) {
+								}).build();
+					
+					if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+							&& !req.isUserInRole(Roles.DTVISITAS_VE) && !req.isUserInRole(Roles.PERFIL_USU_OGC))
+						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
+								}).build();
+					
+					SimpleDateFormat sdff = new SimpleDateFormat("yyyy-MM-dd");
+					Date fechaDateIni = new Date();
+					Date fechaDateFin = new Date();
+					try {
+						fechaDateIni = sdff.parse(req.getParameter("fechaInicio")); 
+						fechaDateFin = sdff.parse(req.getParameter("fechaFin"));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+
+					Timestamp fechaInicio = new Timestamp(fechaDateIni.getTime());
+					Timestamp fechaFin = new Timestamp(fechaDateFin.getTime());
+					int programada = Integer.parseInt(req.getParameter("programada"));
+					Long idVisitas = idVisita;
+					
+					int reload = Integer.parseInt(req.getParameter("reload"));
+					
+					DtVisitasData dtVisitasData = (DtVisitasData) req.getSession().getAttribute("DtVisitasData");
+					if (dtVisitasData == null) {
+						dtVisitasData = new DtVisitasData();
+						req.getSession().setAttribute("DtVisitasData", dtVisitasData);
+					}
+
+					DtVisitasLC dtVisitasLC = new DtVisitasLC();
+					long inicio = System.currentTimeMillis();
+//					List<DtVisitasBk> dtVisitassss = dtVisitasData.getDtVisitasActivos(servicio, msUsuariosBk.getIdusuario(),fechaInicio,fechaFin,reload,programada);
+					List<DtVisitasBk> dtVisitassss = dtVisitasData.getDtVisitasActivos(servicio, msUsuariosBk.getIdusuario(), fechaInicio, fechaFin, reload, programada, msUsuariosBk.getIdSede(), 1, msUsuariosBk.getIdSistAdmi());
+					long lfinal = System.currentTimeMillis() - inicio;
+					dtVisitasLC.setTiempoenBD(lfinal);
+
+					if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.DTVISITAS_CREA)) {
+						dtVisitasLC.setCreamodifica(true);
+					}
+
+
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+					List<DtVisitasBk> dtVisitassssData = new ArrayList<DtVisitasBk>();
+					
+
+					String sdata = dtAnexosJS.getData().substring(dtAnexosJS.getData().indexOf(";base64,") + 8);
+					byte[] data = Base64.getDecoder().decode(sdata);
+					
+					String filename = null;
+					String rutaFilename = null;
+					if (dtAnexosJS.getFilename() == null) {
+						if (dtAnexosJS.getIdAnexo() != null && dtAnexosJS.getIdAnexo().longValue() > 0
+								&& idVisita != null && idVisita.longValue() > 0) {
+							filename = FuncionesStaticas.getFileNameSistema(idVisita, dtAnexosJS.getIdAnexo(),
+									msUsuariosBk.getIdusuario(), msUsuariosBk.getIdCargo());
+						/*	Random rand = new Random();
+							int max = 9;
+							int min = 1;
+							int randomNum = rand.nextInt((max - min) + 1) + min;
+							
+							String nombreenelsistema = FuncionesStaticas
+									.getFileNameSistemaR(
+											idVisita,
+											msUsuariosBk.getIduserModif(),
+											randomNum, filename);
+							nombreenelsistema = "V" + nombreenelsistema;
+							
+							rutaFilename = FuncionesStaticas
+									.getRutaFileNameSistema(nombreenelsistema);
+							File ffilename = new File(rutaFilename);*/
+						} else {
+							filename = FuncionesStaticas.getFileNameTempSistema(msUsuariosBk.getIdusuario(),
+									msUsuariosBk.getIdCargo());
+						}
+						rutaFilename = FuncionesStaticas.getFileNameRutaSistema(filename);
+					} else {
+						filename = dtAnexosJS.getFilename();
+						rutaFilename = FuncionesStaticas.getFileNameRutaSistema(filename);
+					}
+
+					try {
+						FileOutputStream fos = new FileOutputStream(rutaFilename, true);
+						fos.write(data);
+						fos.close();
+
+						dtAnexosJS.setDatabyte(data);
+						dtAnexosJS.setFilename(filename);
+
+						GenericEntity<DtAnexosJS> registrors = new GenericEntity<DtAnexosJS>(dtAnexosJS) {
+						};
+						return Response.status(200).entity(registrors).build();
+					} catch (Exception e) {
+						// e.printStackTrace();
+						String mensaje = e.getMessage();
+						System.out.println("ERROR: " + mensaje);
+						return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+								new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+								}).build();
+					}
+					
+					}
+				 
+				// JPUYEN 14052024 - FIN
 }

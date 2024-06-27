@@ -668,7 +668,8 @@ public class DtCapacitacionRsCtrl {
 			}).build();
 
 		try {			
-			List<IDValorDto> datos = servicio.getMsLocalIdLocalIdLocal();			
+//			List<IDValorDto> datos = servicio.getMsLocalIdLocalIdLocal();	
+			List<IDValorDto> datos = servicio.getIDValorMsLocalBksssXSede(msUsuariosBk.getIdSede());
 			   GenericEntity<List<IDValorDto>> registrosx = new GenericEntity<List<IDValorDto>>(datos){
 			};
 			return Response.status(HttpURLConnection.HTTP_OK).entity(registrosx).build();
@@ -910,6 +911,7 @@ public class DtCapacitacionRsCtrl {
 		    //filtrosaplicados.append(Messages.getStringToKey("dtCapacitacion."+camponame)).append("=").append(filtroValue).append(" ");
 		    StringBuffer filtrosaplicados = new StringBuffer();
                     boolean primerregistro = true;
+                    boolean primerfiltro = true;
             ///////////////IGUAL QUE AL LISTAR
 		try {
 			String sorder = req.getParameter("order"); 
@@ -944,7 +946,7 @@ public class DtCapacitacionRsCtrl {
 			
 //			DtCapacitacionFiltro dtCapacitacionFiltro = new DtCapacitacionFiltro(fechaInic,fechaFin,nomEvento,idSistAdm,idUsuinterno,flagPubli,idModalidad,idProgramacion,estado,cantPartic,iestado);
 			//MPINARES 14022024 - INICIO
-            DtCapacitacionFiltro dtCapacitacionFiltro = new DtCapacitacionFiltro(fechaInicio, fechaFin, idSedeTxt, entidadesTxt, idProgramacion, idCapacitacion, nomEvento, 
+            DtCapacitacionFiltro dtCapacitacionFiltro = new DtCapacitacionFiltro(fechaInicio, fechaFin, idSedeTxt, entidadesTxt, "", idCapacitacion, nomEvento, 
                             idSistAdmTxt, idUsuinternoTxt, temasTxt, flagPubliTxt, idModoTxt, estadoTxt, iestado);
                             //MPINARES 14022024 - FIN	
 			
@@ -993,8 +995,17 @@ public class DtCapacitacionRsCtrl {
 						if(filtroValue==null) continue;
 						else if(filtroValue.toString().length()<1) continue;
                                                 
-                                                if(primerregistro)
-                                                filtrosaplicados.append(Messages.getStringToKey("dtCapacitacion."+camponame)).append("=").append(filtroValue).append(" ");
+                                                if(primerregistro){
+                                                	if(primerfiltro){
+                                                		filtrosaplicados.append(Messages.getStringToKey("dtCapacitacion."+camponame)).append("=").append(filtroValue).append(" ");
+                                                		primerfiltro=false;
+                                                	}else{
+                                                		filtrosaplicados.append(", ").append(Messages.getStringToKey("dtCapacitacion."+camponame)).append("=").append(filtroValue).append(" ");
+                                                	}
+                                                		
+                                                	
+                                                }
+                                                
 
 						Method claseMethod = dtCapacitacionAct.getClass().getMethod(claseGetMetod, types);
 						Object claseValue = claseMethod.invoke(dtCapacitacionAct, new Object[0]);
@@ -1389,7 +1400,8 @@ public class DtCapacitacionRsCtrl {
     			}).build();
 
     		try {			
-    			List<IDValorDto> datos = servicio.getMsSedesIdSedeIdSede();			
+//    			List<IDValorDto> datos = servicio.getMsSedesIdSedeIdSede();	
+    			List<IDValorDto> datos = servicio.getMsSedesIdSedeIdSedeExTodas();
     			   GenericEntity<List<IDValorDto>> registrosx = new GenericEntity<List<IDValorDto>>(datos){
     			};
     			return Response.status(200).entity(registrosx).build();
@@ -1621,8 +1633,8 @@ public class DtCapacitacionRsCtrl {
     			}).build();
 
     		try {
-//    			String endpointstdventanilla = "http://localhost:8380/tramite/webservice/consultasstd";
-    			String endpointstdventanilla = servicio.getEndpointVentanilla();
+    			String endpointstdventanilla = "http://localhost:8380/tramite/webservice/consultasstd";
+//    			String endpointstdventanilla = servicio.getEndpointVentanilla();
     			ConsultasstdProxy consultasstdProxy=new ConsultasstdProxy(endpointstdventanilla);
 				 ExpedienteRegWSDto expedienteDto=consultasstdProxy.consultaExpedienteReg(anio, numero);
 				 
@@ -1636,8 +1648,8 @@ public class DtCapacitacionRsCtrl {
 //    			String mensaje = e.getMessage().toUpperCase();
     			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
     			System.out.println("ERROR: " + mensaje);
-    			if (mensaje != null && mensaje.startsWith("Method Parameter: expediente cannot be null"))
-    				mensaje = "EXPEDIENTE NO ENCONTRADO...";
+    			if (mensaje != null && mensaje.contains("expediente cannot be null"))
+    				mensaje = "Expediente no encontrado...";
     			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
     					new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
     					}).build();
@@ -2286,5 +2298,64 @@ public class DtCapacitacionRsCtrl {
     	}
         
       //MPINARES 14022024 - FIN
+        
+     // PURIBE 15042024 - INICIO
+     			@GET
+     			@Path("/loadvalorcrear")
+     			@Produces(MediaType.APPLICATION_JSON)
+     			public Response loadvalorcrear(@Context HttpServletRequest req, @Context HttpServletResponse res,
+     					@HeaderParam("authorization") String authString) {
+     				SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+     				Principal usuario = req.getUserPrincipal();
+     				MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+     				if (msUsuariosBk == null)
+     					
+     					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+     							.entity(new GenericEntity<RespuestaError>(
+     									new RespuestaError("Error no tiene autorización para realizar esta operación.",
+     											HttpURLConnection.HTTP_UNAUTHORIZED)) {
+     							}).build();
+     			
+     				
+     				if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+     						&& !req.isUserInRole(Roles.DTCAPACITACION_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
+     						&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+     						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+     					
+     				return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+     						.entity(new GenericEntity<RespuestaError>(
+     								new RespuestaError("Error no tiene autorización para realizar esta operación.",
+     										HttpURLConnection.HTTP_UNAUTHORIZED)) {
+     						}).build();
+     					
+
+     			try {
+
+     				IDValorDto  datos = new IDValorDto();
+     				List<String> roles = msUsuariosBk.getRolesSistema();
+     						
+     				if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PERFIL_ADMINISTRADOR) 
+     						|| roles.contains(Roles.DTCAPACITACION_CREA)
+     						|| roles.contains(Roles.PERFIL_USU_OGC) || roles.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))  {
+     								datos.setId(2L);
+     								
+     							}else {
+     								datos.setId(1L);
+     							}
+     							
+     				GenericEntity<IDValorDto> registrosx = new GenericEntity<IDValorDto>(datos) {
+     				};
+     				return Response.status(200).entity(registrosx).build();
+     			} catch (Exception e) {
+     				String mensaje = e.getMessage();
+     				System.out.println("ERROR: " + mensaje);
+     				return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+     						new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+     						}).build();
+     			}
+     			}
+
+     			// PURIBE 15042024 - FIN
 
 }

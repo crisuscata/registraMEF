@@ -77,9 +77,11 @@ public class ValidacionDtAsistenciaMng implements Serializable{
 			dtAsistenciaBk.setIdFinancia(null);
 		}
 	        
-		
+		//VALIDANDO
+		//validarFechaAsistencia(dtAsistenciaBk.getFechaAsistencia());
 
 		
+		//validarDetalle(dtAsistenciaBk.getDetalle());
 		if(dtAsistenciaBk.getDetalle()!=null){
 				if(dtAsistenciaBk.getDetalle().trim().length()>300)
 					throw new Validador(MessageFormat.format(
@@ -89,6 +91,7 @@ public class ValidacionDtAsistenciaMng implements Serializable{
 							300,
 							Messages.getStringToKey("dtAsistencia.articuloDetalle")
 									));				
+//				dtAsistenciaBk.setDetalle(dtAsistenciaBk.getDetalle().toUpperCase());
 				}
 
 		
@@ -96,7 +99,29 @@ public class ValidacionDtAsistenciaMng implements Serializable{
 		
 		
 		
+		//validarIdUsuinterno(dtAsistenciaBk.getIdUsuinterno());
+
+		//validarIdEntidad(dtAsistenciaBk.getIdEntidad());
+
+		//validarIdOrigen(dtAsistenciaBk.getIdOrigen());
+
+		//validarIdProgramacion(dtAsistenciaBk.getIdProgramacion());
+
 		
+		
+		//validarIdModalidad(dtAsistenciaBk.getIdModalidad());
+
+		//validarIdSede(dtAsistenciaBk.getIdSede());
+
+		//validarIdSistAdm(dtAsistenciaBk.getIdSistAdm());
+
+		//validarIdFinancia(dtAsistenciaBk.getIdFinancia());
+
+		//validarFechaFinalizacion(dtAsistenciaBk.getFechaFinalizacion());
+
+		//validarFechaProgramada(dtAsistenciaBk.getFechaProgramada());
+
+		//validarFechaSoli(dtAsistenciaBk.getFechaSoli());
 
 				
 	}
@@ -155,7 +180,7 @@ public class ValidacionDtAsistenciaMng implements Serializable{
 			 throws Validador
 				{				
 								if(idEntidad==null)
-									throw new Validador(MessageFormat.format(Messages.getStringToKey("dtAsistencia.invalidoingrese"),
+									throw new Validador(MessageFormat.format(Messages.getStringToKey("dtAsistencia.invalidoingresea"),
 						Messages.getStringToKey("dtAsistencia.idEntidad"),
 						Messages.getStringToKey("dtAsistencia.titulotabla"),
 						Messages.getStringToKey("dtAsistencia.articuloIdEntidad")));
@@ -192,7 +217,7 @@ public class ValidacionDtAsistenciaMng implements Serializable{
 			 throws Validador
 				{				
 								if(idModalidad==null)
-									throw new Validador(MessageFormat.format(Messages.getStringToKey("dtAsistencia.invalidoingrese"),
+									throw new Validador(MessageFormat.format(Messages.getStringToKey("dtAsistencia.invalidoingresea"),
 						Messages.getStringToKey("dtAsistencia.idModalidad"),
 						Messages.getStringToKey("dtAsistencia.titulotabla"),
 						Messages.getStringToKey("dtAsistencia.articuloIdModalidad")));
