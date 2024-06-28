@@ -33,5 +33,6 @@ public interface DtAsistenciaUsuexternosDao {
 	
 	List<DtAsistenciaUsuexternos> getByIdAsistDtAsisteUsuariosExt(Long idAsiste);//MPINARES 24012023 - INICIO
 	void updateDtAsistenciaUsuexCorreo(Long id);
+	Long getEstadoEliminado();
 	
 }

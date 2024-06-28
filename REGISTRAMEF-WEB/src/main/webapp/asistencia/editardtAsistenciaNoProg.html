@@ -26,7 +26,7 @@
 		</div>
 <!-- INICIO CUSCATA - 18062024-->
 		<md-button class="md-button-borde md-sm"
-			ng-click="showConfirmFinalizar($event)"   aria-label="FINALIZAR" style="color: white; margin-bottom: 8px;" ng-if="showButtonsFinalizarFormat">
+			ng-click="showConfirmFinalizar($event)"   aria-label="FINALIZAR" style="color: white; margin-bottom: 8px;" ng-if="showButtonsFinalizar">
 		<span ng-if="nuevo">Finalizar</span> 
 		<span ng-if="!nuevo">Finalizar</span> 
 		</md-button>
@@ -40,9 +40,9 @@
 		 -->
 		
 		<md-button class="md-button-borde md-sm"
-			ng-click="validateGenerarFormato($event)"  aria-label="DESCARGAR" style="color: white; margin-bottom: 8px;" >
-		<span ng-if="nuevo">Generar Formato</span> 
-		<span ng-if="!nuevo">Generar Formato</span> 
+			ng-click="validateGenerarFormato($event)"  aria-label="DESCARGAR" style="color: white; margin-bottom: 8px;" ng-if="showButtonsFormato">
+		<span ng-if="nuevo">Descargar Formato</span> 
+		<span ng-if="!nuevo">Descargar Formato</span> 
 		</md-button>
 		
 		
@@ -394,12 +394,10 @@
 		
 		  <fieldset style="margin-left: 15px;" ng-if="showPanelDocumentos">  
 	<!--	<fieldset style="margin-left: 15px;" > -->
-			<legend>Adjuntar lista de participantes y programa del evento</legend>
+			<legend>Adjuntar evidencia</legend>
 			
 			<div layout="row" layout-aling="center start"  flex> 
-			        <div flex="12">
-			        	<label class="letraLabel-personal-baja" >Adjuntar archivo</label>    
-			        	 </div>
+			        
 			        <div flex="90">
 				        <input type="file" ng-file-model multiple letter="A" style="font-size: 83%;margin-top: 17px;"/> 
 				    <!--    <button type="button" ng-click="uploadFile(file)" ng-disabled="uploadForm.file.$invalid">Upload</button>   -->
@@ -425,6 +423,7 @@
 							  </tr>
 						</table>  
 			         </div>
+			         <br />
 			 </div>
  <!-- 
 			  <div  ng-if="dtAsistenciaModelo.tdAnexosJSss.length > 0" flex="auto">   

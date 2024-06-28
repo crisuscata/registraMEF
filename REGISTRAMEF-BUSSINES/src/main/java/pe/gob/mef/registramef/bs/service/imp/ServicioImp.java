@@ -2360,6 +2360,32 @@ public class ServicioImp implements Servicio, Serializable {
 						
 						
 	}
+	
+	@Override
+	public DtAsistenciaBk validarCambiosAsistencia(DtAsistenciaBk asistenciaJS, Long kyUsuarioMod) throws Validador {
+		
+		
+		DtAsistenciaBk dtAsistenciaBk = this.getDtAsistenciaBkXid(asistenciaJS.getIdAsistencia(), kyUsuarioMod);
+		
+		
+		if(asistenciaJS.getDtAsistenciaTemasBkJSss()!=null && asistenciaJS.getDtAsistenciaTemasBkJSss()!=null && asistenciaJS.getDtAsistenciaTemasBkJSss().size()!=dtAsistenciaBk.getDtAsistenciaTemasBkJSss().size()){			
+			throw new Validador(MessageFormat.format("DEBE DE GUARDAR PRIMERO",
+					Messages.getStringToKey("dtAsistencias.titulotabla"))); 
+		}
+		
+		if(asistenciaJS.getDtAsistenciaUsuariosBkJSss()!=null && dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss()!=null && asistenciaJS.getDtAsistenciaUsuariosBkJSss().size()!=dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss().size()){			
+			throw new Validador(MessageFormat.format("DEBE DE GUARDAR PRIMERO",
+					Messages.getStringToKey("dtAsistencias.titulotabla"))); 
+		}
+		
+		if(asistenciaJS.getCodEjecutora()!= null && dtAsistenciaBk.getCodEjecutora()!= null && !asistenciaJS.getCodEjecutora().equals(dtAsistenciaBk.getCodEjecutora())) {
+			throw new Validador(MessageFormat.format("DEBE DE GUARDAR PRIMERO",
+					Messages.getStringToKey("dtAsistencias.titulotabla"))); 
+		}
+		
+		
+		return dtAsistenciaBk;
+	}
 
 	@Override
 	public DtAsistenciaBk saveorupdateDtAsistenciaBk(
@@ -3275,37 +3301,104 @@ public class ServicioImp implements Servicio, Serializable {
 
 		}
 		
-		private void saveOrUpdateAsistenciaUsuarioExt(DtAsistenciaBk dtAsistenciaBk, DtAsistencia dtAsistencia,
-				Timestamp hoy, Long kyUsuarioMod, String rmtaddress, String user) {
+		@Override
+		public DtAsistenciaUsuexternosBk saveorupdateDtAsistenciaUsuexternosBk(
+				DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user, Long kyUsuarioMod, Long kyAreaMod,
+				String rmtaddress) throws Validador {
+
+			ValidacionDtAsistenciaUsuexternosMng.validarDtAsistenciaUsuexternosBk(dtAsistenciaUsuexternosBk);
+
+			DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
+			Timestamp hoy = new Timestamp(System.currentTimeMillis());
+
+			int nivel = 1;
 
 			try {
+				if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
+						&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
 
-				if (dtAsistenciaBk != null && dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss() != null
-						&& !dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss().isEmpty()) {
-					for (DtAsistenciaUsuexternosBk asistenciaUsuarioBK : dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss()) {
-						
-						if (asistenciaUsuarioBK.getIdAsistUsuext() != null && asistenciaUsuarioBK.getIdUsuexterno() != 0L) {
+					dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
+							.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
+
+					boolean cambios = AuditoriaDtAsistenciaUsuexternosMng.auditarCambiosDtAsistenciaUsuexternos(
+							dtAsistenciaUsuexternosBk, dtAsistenciaUsuexternos, kyUsuarioMod, user, rmtaddress, nivel);
+
+					if (cambios) {
+						dtAsistenciaUsuexternos.setRtmaddressrst(rmtaddress);
+						dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
+						dtAsistenciaUsuexternos.setFechaModif(hoy);
+						dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
+					}
+				} else {
+					dtAsistenciaUsuexternosBk.setRtmaddress(rmtaddress);
+					dtAsistenciaUsuexternosBk.setRtmaddressrst(rmtaddress);
+
+					dtAsistenciaUsuexternosBk.setFechaCrea(hoy);
+					dtAsistenciaUsuexternosBk.setIdusserCrea(kyUsuarioMod);
+					dtAsistenciaUsuexternosBk.setIdusserModif(kyUsuarioMod);
+					dtAsistenciaUsuexternosBk.setFechaModif(hoy);
+					dtAsistenciaUsuexternosBk.setEstado(Estado.ACTIVO.getValor());
+
+					dtAsistenciaUsuexternos = new DtAsistenciaUsuexternos();
+
+					FuncionesStaticas.copyPropertiesObject(dtAsistenciaUsuexternos, dtAsistenciaUsuexternosBk);
+					dtAsistenciaUsuexternosDao.saveDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
+
+					log.log(Level.INFO,
+							"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+									+ "CREADO dtAsistenciaUsuexternos" + " :: "
+									+ dtAsistenciaUsuexternos.getIdAsistUsuext().toString() + " :: " + "0" + " :: " + "1");
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new Validador(e.getMessage());
+			}
+
+			dtAsistenciaUsuexternosBk = getDtAsistenciaUsuexternosBkXid(dtAsistenciaUsuexternos.getIdAsistUsuext(),
+					kyUsuarioMod);
+			return dtAsistenciaUsuexternosBk;
+		}
+		
+		private void saveOrUpdateAsistenciaUsuarioExt(DtAsistenciaBk dtAsistenciaBk, DtAsistencia dtAsistencia,
+				Timestamp hoy, Long kyUsuarioMod, String rmtaddress, String user) {
+			
+			DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
+			try {
+				if (dtAsistenciaBk != null && 
+						dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss() != null &&
+						 !dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss().isEmpty()) {
+					for (DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk : dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss()) {
+						if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
+								&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
 							
-							saveorupdateDtAsistenciaUsuexternosBk(asistenciaUsuarioBK, user, kyUsuarioMod, null,
-									rmtaddress);
+							dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
+									.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
+							
+							dtAsistenciaUsuexternos.setRtmaddressrst(rmtaddress);
+							dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
+							dtAsistenciaUsuexternos.setFechaModif(hoy);
+							dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
 							
 						} else {
-							asistenciaUsuarioBK.setIdAsistUsuext(null);
-							asistenciaUsuarioBK.setIdAsistencia(dtAsistencia.getIdAsistencia());
-							asistenciaUsuarioBK.setEstado(Estado.ACTIVO.getValor());
-							asistenciaUsuarioBK.setFechaCrea(hoy);
-							asistenciaUsuarioBK.setFechaModif(hoy);
-							asistenciaUsuarioBK.setIdusserCrea(kyUsuarioMod);
-							asistenciaUsuarioBK.setIdusserModif(kyUsuarioMod);
-							asistenciaUsuarioBK.setRtmaddress(rmtaddress);
-							asistenciaUsuarioBK.setRtmaddressrst(rmtaddress);
+							dtAsistenciaUsuexternosBk.setIdAsistencia(dtAsistencia.getIdAsistencia());
+							dtAsistenciaUsuexternosBk.setRtmaddress(rmtaddress);
+							dtAsistenciaUsuexternosBk.setRtmaddressrst(rmtaddress);
+							dtAsistenciaUsuexternosBk.setFechaCrea(hoy);
+							dtAsistenciaUsuexternosBk.setIdusserCrea(kyUsuarioMod);
+							dtAsistenciaUsuexternosBk.setIdusserModif(kyUsuarioMod);
+							dtAsistenciaUsuexternosBk.setFechaModif(hoy);
+							dtAsistenciaUsuexternosBk.setEstado(Estado.ACTIVO.getValor());
 
-							saveorupdateDtAsistenciaUsuexternosBk(asistenciaUsuarioBK, user, kyUsuarioMod, null,
-									rmtaddress);
+							dtAsistenciaUsuexternos = new DtAsistenciaUsuexternos();
 
+							FuncionesStaticas.copyPropertiesObject(dtAsistenciaUsuexternos, dtAsistenciaUsuexternosBk);
+							dtAsistenciaUsuexternosDao.saveDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
 						}
 					}
 				}
+				
+				
 			} catch (Exception e) {
 				log.warning("Error: " + e.getMessage());
 
@@ -8915,65 +9008,41 @@ public class ServicioImp implements Servicio, Serializable {
 		}
 
 	}
-
-	@Override
-	public DtAsistenciaUsuexternosBk saveorupdateDtAsistenciaUsuexternosBk(
-			DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user, Long kyUsuarioMod, Long kyAreaMod,
-			String rmtaddress) throws Validador {
-
-		ValidacionDtAsistenciaUsuexternosMng.validarDtAsistenciaUsuexternosBk(dtAsistenciaUsuexternosBk);
-
-		DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
-		Timestamp hoy = new Timestamp(System.currentTimeMillis());
-
-		int nivel = 1;
-
+	
+	public void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user,
+			Long kyUsuarioMod, Long kyAreaMod, Long kySedeMod, String rmtaddress) throws Validador {
 		try {
+			DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
 			if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
 					&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
 
 				dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
 						.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
 
-				boolean cambios = AuditoriaDtAsistenciaUsuexternosMng.auditarCambiosDtAsistenciaUsuexternos(
-						dtAsistenciaUsuexternosBk, dtAsistenciaUsuexternos, kyUsuarioMod, user, rmtaddress, nivel);
+				// Date hoy = new Date(System.currentTimeMillis());
+				Timestamp hoy = new Timestamp(System.currentTimeMillis());
 
-				if (cambios) {
-					dtAsistenciaUsuexternos.setRtmaddressrst(rmtaddress);
-					dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
-					dtAsistenciaUsuexternos.setFechaModif(hoy);
-					dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
-				}
-			} else {
-				dtAsistenciaUsuexternosBk.setRtmaddress(rmtaddress);
-				dtAsistenciaUsuexternosBk.setRtmaddressrst(rmtaddress);
+				dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
+				dtAsistenciaUsuexternos.setFechaModif(hoy);
+				Long estadoanterior = dtAsistenciaUsuexternos.getEstado();
+				dtAsistenciaUsuexternos.setEstado(dtAsistenciaUsuexternosDao.getEstadoEliminado());
 
-				dtAsistenciaUsuexternosBk.setFechaCrea(hoy);
-				dtAsistenciaUsuexternosBk.setIdusserCrea(kyUsuarioMod);
-				dtAsistenciaUsuexternosBk.setIdusserModif(kyUsuarioMod);
-				dtAsistenciaUsuexternosBk.setFechaModif(hoy);
-				dtAsistenciaUsuexternosBk.setEstado(Estado.ACTIVO.getValor());
-
-				dtAsistenciaUsuexternos = new DtAsistenciaUsuexternos();
-
-				FuncionesStaticas.copyPropertiesObject(dtAsistenciaUsuexternos, dtAsistenciaUsuexternosBk);
-				dtAsistenciaUsuexternosDao.saveDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
+				dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
 
 				log.log(Level.INFO,
 						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
-								+ "CREADO dtAsistenciaUsuexternos" + " :: "
-								+ dtAsistenciaUsuexternos.getIdAsistUsuext().toString() + " :: " + "0" + " :: " + "1");
+								+ "ELIMINADO dtAsistenciaUsuexternos" + " :: "
+								+ dtAsistenciaUsuexternos.getIdAsistUsuext().toString() + " :: " + estadoanterior
+								+ " :: " + "0");
 
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Validador(e.getMessage());
 		}
-
-		dtAsistenciaUsuexternosBk = getDtAsistenciaUsuexternosBkXid(dtAsistenciaUsuexternos.getIdAsistUsuext(),
-				kyUsuarioMod);
-		return dtAsistenciaUsuexternosBk;
 	}
+
+	
 
 	@Override
 	public void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user,
@@ -20082,4 +20151,41 @@ public class ServicioImp implements Servicio, Serializable {
 			dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexCorreo(id);
 			
 		}
+
+		@Override
+		public void deleteDtAsistenciaUsuario(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user, Long kyUsuarioMod,
+				Long kyAreaMod, String rmtaddress) throws Validador {
+			
+			DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
+			
+			try {
+				if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
+						&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
+					dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
+							.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
+					
+					Timestamp hoy = new Timestamp(System.currentTimeMillis());
+					
+					dtAsistenciaUsuexternos.setRtmaddressrst(rmtaddress);
+					dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
+					dtAsistenciaUsuexternos.setFechaModif(hoy);
+					Long estadoanterior = dtAsistenciaUsuexternos.getEstado();
+					dtAsistenciaUsuexternos.setEstado(Estado.ELIMINADO.getValor());
+
+					dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
+					
+					log.log(Level.INFO,
+							"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+									+ "ELIMINADO DtAsistenciaUsuexternos" + " :: " + dtAsistenciaUsuexternos.getIdAsistUsuext().toString()
+									+ " :: " + estadoanterior + " :: " + "0");
+					
+				}
+			} catch (Exception e) {
+				throw new Validador(e.getMessage());
+			}
+				
+			
+		}
+
+		
 }

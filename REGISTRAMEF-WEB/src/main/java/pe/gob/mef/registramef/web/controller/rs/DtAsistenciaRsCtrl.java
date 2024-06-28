@@ -84,6 +84,7 @@ import pe.gob.mef.registramef.web.controller.rs.data.DtAnexosJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaLC;
 import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaTemasJS;
+import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaUsuexternosJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtEntidadesJS;
 import pe.gob.mef.registramef.web.controller.rs.data.RespuestaError;
 import pe.gob.mef.registramef.web.controller.rs.data.UbigeoXDefectoJS;
@@ -1589,6 +1590,49 @@ public class DtAsistenciaRsCtrl {
     		}
     	}
         
+        @POST
+    	@Path("/validarCambiosAsistencia")
+    	@Produces(MediaType.APPLICATION_JSON)
+    	public Response validarCambiosAsistencia(@Context HttpServletRequest req, @Context HttpServletResponse res,
+    			@HeaderParam("authorization") String authString, DtAsistenciaJS dtAsistenciaJS) {
+        	SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    		Principal usuario = req.getUserPrincipal();
+    		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+    		if (msUsuariosBk == null)
+    			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+    					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    			}).build();
+    		
+    		if(!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
+    			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+    					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    			}).build();
+    		
+    		String adressRemoto = getRemoteAdress(req);
+
+    		DtAsistenciaBk dtAsistenciaC = new DtAsistenciaBk();
+    		FuncionesStaticas.copyPropertiesObject(dtAsistenciaC, dtAsistenciaJS);
+    		
+    		try {
+    			//DtAsistenciaData dtAsistenciaData = (DtAsistenciaData) req.getSession().getAttribute("DtAsistenciaData");
+    			//dtAsistenciaData.
+    			
+    			dtAsistenciaC = servicio.validarCambiosAsistencia(dtAsistenciaC, msUsuariosBk.getIdusuario());
+    			
+    			
+    			GenericEntity<DtAsistenciaBk> registrors = new GenericEntity<DtAsistenciaBk>(dtAsistenciaC) {
+    			};
+    			return Response.status(HttpURLConnection.HTTP_OK).entity(registrors).build();
+    		} catch (Validador e) {
+    			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
+    			System.out.println("ERROR: " + mensaje);
+    			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+    					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+    					}).build();
+    		}
+        }
+        
         @GET
     	@Path("/descargarFormato/{idAsistencia}")
     	@Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -1955,6 +1999,49 @@ public class DtAsistenciaRsCtrl {
 //    			dtAsistenciaData.refrescar(servicio, msUsuariosBk.getIdusuario());
     			
     			GenericEntity<DtAsistenciaTemasBk> registro = new GenericEntity<DtAsistenciaTemasBk>(dtAsistenciaTemasC) {
+    			};
+    			return Response.status(200).entity(registro).build();
+    		} catch (Validador e) {
+    			// e.printStackTrace();
+//    			String mensaje = e.getMessage().toUpperCase();
+    			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
+    			System.out.println("ERROR: " + mensaje);
+    			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+    					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+    					}).build();
+    		}
+    	}
+        
+        @POST
+    	@Path("/eliminardtAsistenciaUsuario")
+    	@Produces(MediaType.APPLICATION_JSON)
+    	public Response eliminardtAsistenciaUsuario(@Context HttpServletRequest req, 
+    												@Context HttpServletResponse res,
+    												@HeaderParam("authorization") String authString, 
+    												DtAsistenciaUsuexternosJS dtAsistenciaUsuexternosJS) {
+        	
+    		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    		Principal usuario = req.getUserPrincipal();
+    		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+    		if (msUsuariosBk == null)
+    			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+    					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    			}).build();
+
+    		if(!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
+    			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+    					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    			}).build();
+    		
+    		String adressRemoto = getRemoteAdress(req);
+    		DtAsistenciaUsuexternosBk dtAsistenciaUsuarioC = new DtAsistenciaUsuexternosBk();
+    		FuncionesStaticas.copyPropertiesObject(dtAsistenciaUsuarioC, dtAsistenciaUsuexternosJS);
+
+    		try {
+    			servicio.deleteDtAsistenciaUsuario(dtAsistenciaUsuarioC, msUsuariosBk.getUsername(), msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede(), adressRemoto);
+    			
+    			GenericEntity<DtAsistenciaUsuexternosBk> registro = new GenericEntity<DtAsistenciaUsuexternosBk>(dtAsistenciaUsuarioC) {
     			};
     			return Response.status(200).entity(registro).build();
     		} catch (Validador e) {

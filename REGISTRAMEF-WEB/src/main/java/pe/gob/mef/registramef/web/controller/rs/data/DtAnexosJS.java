@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import pe.gob.mef.registramef.bs.ctlracceso.DtAnexoACL;
+
 /**
  * MSUSUARIOS BAKING: ANEXOS
  * 
@@ -61,12 +63,15 @@ public class DtAnexosJS implements java.io.Serializable {
 	// ADICIONALES
 	private String iduserCreaTxt = null;
 	private String iduserModifTxt = null;
-	/*
+	
 	private String estadoTxt = null;
 	private String idTiposervicioTxt=null;
-	private String tipoAnexoTxt = null;*/
+	private String tipoAnexoTxt = null;
+	
+	private DtAnexoACL dtAnexoACL = null;	
+	
 			
-		public Long getIddocumento() {
+	public Long getIddocumento() {
 		return iddocumento;
 	}
 
@@ -357,6 +362,46 @@ public class DtAnexosJS implements java.io.Serializable {
 
 		public void setDatabyte(byte[] databyte) {
 			this.databyte = databyte;
+		}
+
+
+		public DtAnexoACL getDtAnexoACL() {
+			return dtAnexoACL;
+		}
+
+
+		public void setDtAnexoACL(DtAnexoACL dtAnexoACL) {
+			this.dtAnexoACL = dtAnexoACL;
+		}
+
+
+		public String getEstadoTxt() {
+			return estadoTxt;
+		}
+
+
+		public void setEstadoTxt(String estadoTxt) {
+			this.estadoTxt = estadoTxt;
+		}
+
+
+		public String getIdTiposervicioTxt() {
+			return idTiposervicioTxt;
+		}
+
+
+		public void setIdTiposervicioTxt(String idTiposervicioTxt) {
+			this.idTiposervicioTxt = idTiposervicioTxt;
+		}
+
+
+		public String getTipoAnexoTxt() {
+			return tipoAnexoTxt;
+		}
+
+
+		public void setTipoAnexoTxt(String tipoAnexoTxt) {
+			this.tipoAnexoTxt = tipoAnexoTxt;
 		}
 
 

@@ -193,6 +193,8 @@ public interface Servicio {
 	DtAsistenciaBk saveorupdateDtAsistenciaBk(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador;
 	
+	DtAsistenciaBk validarCambiosAsistencia(DtAsistenciaBk dtAsistenciaBk, Long kyUsuarioMod) throws Validador;
+	
 	DtAsistenciaBk enviarConstanciaAtencion(DtAsistenciaBk dtAsistenciaBk, String url, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
 	
@@ -483,6 +485,9 @@ public interface Servicio {
 
 	void deleteDtAsistenciaTemas(DtAsistenciaTemasBk dtAsistenciaTemasBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
+	
+	void deleteDtAsistenciaUsuario(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user, Long kyUsuarioMod,
+			Long kyAreaMod, String rmtaddress) throws Validador;
 
 	List<DtAsistenciaTemasBk> getDtAsistenciaTemasXFiltro(String detalle, Long idAsistencia, Long idTema,
 			Long idSubtema, int inicial, int MAX, Long kyUsuarioMod);
@@ -513,6 +518,9 @@ public interface Servicio {
 
 	void deleteDtUsuarioExterno(DtUsuarioExternoBk dtUsuarioExternoBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador;
+	
+	void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user,
+			Long kyUsuarioMod, Long kyAreaMod, Long kySedeMod, String rmtaddress) throws Validador;
 /// ADICIONALES
 
 	List<IDValorDto> getPrtParametrosIdparametroIdTipodocumento();

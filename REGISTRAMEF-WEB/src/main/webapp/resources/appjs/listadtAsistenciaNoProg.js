@@ -4,6 +4,7 @@ var pglogoff = window.location.origin+contexto+'/logoff.htm';
 var principalUrl = window.location.origin+contexto+'/index.htm';
 var listadtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/listadtAsistencia";
 var insertdtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/salvardtAsistencia";
+var validarCambiosAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/validarCambiosAsistencia";
 var finalizardtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/finalizardtAsistencia";
 var eliminardtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/eliminardtAsistencia";
 var editardtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/editardtAsistencia/";
@@ -29,6 +30,7 @@ var listaMsTemaidTemaIdTemaUrl = contexto+"/rs/ctrldtAsistencia/listaMsTemaIdTem
 var listaMsSubtemaidSubtemaIdSubtemaUrl = contexto+"/rs/ctrldtAsistencia/listaMsSubtemaIdSubtemaIdSubtema/";
 var listaMsSedesUrl = contexto+"/rs/ctrldtAsistencia/listamsSedes";
 var eliminardtAsistenciaTemasUrl = contexto+"/rs/ctrldtAsistencia/eliminardtAsistenciaTema";
+var eliminardtAsistenciaUsuariosUrl = contexto+"/rs/ctrldtAsistencia/eliminardtAsistenciaUsuario";
 var listaMsInstitucionesidproveeUrl = contexto+"/rs/ctrldtAsistencia/listaMsInstitucionesIdprovee/";
 var listaPrtParametrosidparametroIdTipoEntidadUrl = contexto+"/rs/ctrldtAsistencia/listaPrtParametrosIdparametroIdTipoEntidad";
 var listaPrtParametrosidparametroIdCaracteristicaUrl = contexto+"/rs/ctrldtAsistencia/listaPrtParametrosIdparametroIdCaracteristica";
@@ -897,22 +899,26 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 				fileUploadSrv.uploadFileToUrl(pos,$scope.archivos[pos],insertDocUrl);
 			});
 	  });
+	  
+	  $scope.addTemaAndUsers= function(){	
+		  var propertiesToRemove = ['contador', 'add'];
+		  
+		    if($scope.isArray($scope.datoAsistenciaTema)) {
+				if($scope.datoAsistenciaTema.length>0) {
+						$scope.dtAsistenciaModelo.dtAsistenciaTemasBkJSss =  $scope.removePropertiesFromList(angular.copy($scope.datoAsistenciaTema), propertiesToRemove);
+				}
+			}
+		    
+		    if($scope.isArray($scope.datoUsuario)) {
+				if($scope.datoUsuario.length>0) {
+						$scope.dtAsistenciaModelo.dtAsistenciaUsuariosBkJSss = $scope.removePropertiesFromList(angular.copy($scope.datoUsuario), propertiesToRemove);
+				}
+			}
+	  }
 	  			  
 	  $scope.salvarDtAsistencia = function(ev){	
 		  
-		  			var propertiesToRemove = ['contador', 'add'];
-		  
-				    if($scope.isArray($scope.datoAsistenciaTema)) {
-						if($scope.datoAsistenciaTema.length>0) {
-								$scope.dtAsistenciaModelo.dtAsistenciaTemasBkJSss =  $scope.removePropertiesFromList(angular.copy($scope.datoAsistenciaTema), propertiesToRemove);
-						}
-					}
-				    
-				    if($scope.isArray($scope.datoUsuario)) {
-						if($scope.datoUsuario.length>0) {
-								$scope.dtAsistenciaModelo.dtAsistenciaUsuariosBkJSss = $scope.removePropertiesFromList(angular.copy($scope.datoUsuario), propertiesToRemove);
-						}
-					}
+		  			$scope.addTemaAndUsers();
 				    
 				    //FILES
 				    if($scope.isArray($scope.archivos)){
@@ -971,8 +977,10 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		    				}
 		    				
 		    				if($scope.dtAsistenciaModelo.idModalidad == idPadreModPresencial){
-		    					$scope.showButtonsFinalizarFormat = 1;
+		    					$scope.showButtonsFormato = 1;
 		    				}
+		    				
+		    				$scope.showButtonsFinalizar = 1;
 		    				
 		    				$mdDialog.show(
 							         $mdDialog.alert()
@@ -1268,23 +1276,6 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 					    });
 					  };
 					  
-					  $scope.showConfirmDeleteUsuario = function(ev, usuarioBK) {
-						    var confirm = $mdDialog.confirm()
-						      .title('Eliminar registro')
-						      .textContent('¿Está usted seguro de eliminar el registro?')
-						      .ariaLabel('Lucky day')
-						      .targetEvent(ev)
-						      .ok('Si')
-						      .cancel('No');
-
-						    $mdDialog.show(confirm).then(function () {
-						      $scope.status = 'SI';
-						      $scope.eliminardUsuario(ev, usuarioBK);
-						    }, function () {
-						      $scope.status = 'NO';
-						    });
-						  };
-					  
 					  $scope.eliminardtAsistenciaTemas = function(ev,dtAsistenciaTemasBk){		
 						    ev.target.disabled = true;
 						    var datainsert = angular.toJson(dtAsistenciaTemasBk);
@@ -1319,6 +1310,60 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 					        });			        			        	
 				      	ev.target.disabled = false;
 					 };
+					  
+					  $scope.showConfirmDeleteUsuario = function(ev, usuarioBK) {
+						    var confirm = $mdDialog.confirm()
+						      .title('Eliminar registro')
+						      .textContent('¿Está usted seguro de eliminar el registro?')
+						      .ariaLabel('Lucky day')
+						      .targetEvent(ev)
+						      .ok('Si')
+						      .cancel('No');
+
+						    $mdDialog.show(confirm).then(function () {
+						      $scope.status = 'SI';
+						      $scope.eliminardUsuario(ev, usuarioBK);
+						    }, function () {
+						      $scope.status = 'NO';
+						    });
+						  };
+						  
+						  $scope.eliminardUsuario = function(ev,usuarioBK){		
+							    ev.target.disabled = true;
+							    var datainsert = angular.toJson(usuarioBK);
+								console.log("datainsert usuarioBK = "+datainsert);	
+							$http.post(eliminardtAsistenciaUsuariosUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
+									var dato = res.data;
+									var instrumentos = $scope.datos;
+							        var index = $scope.datos.findIndex(obj => obj.idAsistUsuext === dato.idAsistUsuext);
+									console.log("INDEX " + index);
+							        if(instrumentos.length>index){
+							        	instrumentos.splice(index, 1);
+								        $scope.datos = instrumentos;
+								        $scope.total = $scope.datos.length;
+							        }	
+							        $scope.editdtAsistencia();
+								},
+								function error(errResponse) {
+						            console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+						            var dato = errResponse.data;
+						            if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+						            	$mdDialog.show(
+								         $mdDialog.alert()
+								        .parent(angular.element(document.body))
+								        .clickOutsideToClose(true)
+								        .title('Eliminar registro')
+								        .textContent(dato.message)
+								        .ariaLabel('ERROR')
+								        .ok('OK')
+								        .targetEvent(ev)
+									   );
+						            }
+						        });			        			        	
+					      	ev.target.disabled = false;
+						 };
+					  
+					  
 					
 					 $scope.nuevoAsistenciaTemas= function () {
 					        $scope.datoAsistenciaTema.push({
@@ -1816,7 +1861,8 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		$scope.listaCargos=[];
 		$scope.activar = 0;
 		$scope.showPanelDocumentos = 0;
-		$scope.showButtonsFinalizarFormat = 0;
+		$scope.showButtonsFinalizar = 0;
+		$scope.showButtonsFormato = 0;
 		$scope.archivos = [];
 		$scope.guardadoExitoso = 0;
 		$scope.buscarxdni = function(dato){
@@ -1959,21 +2005,44 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	    };
 	    
 	    $scope.validateGenerarFormato = function(ev){
-	    	//var urlDescargarFormato = descargarFormatoUrl+$scope.dtAsistenciaModelo.idAsistencia;
-	    //	var urlDescargarFormato = descargarFormatoUrl+345925;
-
-	    	$http.get(descargarFormatoUrl+345925).then(function(res){
-				///$scope.listaMsTemaIdTema = res.data; 
-				//return res;
-	    		$scope.data = res.data;
-	    		
-	    		location.href = $scope.generarFormato();
-	    		
-			},
-			function error(errResponse) {
-				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
-			});
-		    
+	    	
+	    	$scope.addTemaAndUsers();
+	    	
+	    	var propertiesToRemove = ['dtAnexoACL', 'cestado', 'esEliminado', 'cclase'];
+	    	
+	    	if ( typeof($scope.dtAsistenciaModelo.tdAnexosJSss) !== "undefined" && $scope.dtAsistenciaModelo.tdAnexosJSss !== null ) {
+	    		$scope.dtAsistenciaModelo.tdAnexosJSss =  $scope.removePropertiesFromList(angular.copy($scope.dtAsistenciaModelo.tdAnexosJSss), propertiesToRemove);
+	    	}
+	    	
+	    	
+	    	
+	    	ev.target.disabled = true;
+		    var datainsert = angular.toJson($scope.dtAsistenciaModelo);
+ 			console.log("datainsert to validate = "+datainsert);	
+        		$http.post(validarCambiosAsistenciaUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
+        			var dato = res.data;
+					if(dato!=null){
+						location.href = $scope.generarFormato();
+					}
+				},
+				function error(errResponse) {
+		            console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+		            var dato = errResponse.data;
+		            if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+		            	$mdDialog.show(
+						         $mdDialog.alert()
+						        .parent(angular.element(document.body))
+						        .clickOutsideToClose(true)
+						        .title('Guardar asistencia técnica')
+						        .textContent(dato.message)
+						        .ariaLabel('ERROR')
+						        .ok('OK')
+						        .targetEvent(ev)
+						    );
+		            }
+		        });		
+        			        	
+        	ev.target.disabled = false;
 		    
 		    
 	    }
