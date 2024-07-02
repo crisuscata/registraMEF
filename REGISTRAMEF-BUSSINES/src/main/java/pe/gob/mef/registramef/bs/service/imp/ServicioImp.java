@@ -2396,11 +2396,11 @@ public class ServicioImp implements Servicio, Serializable {
 													String rmtaddress,		
 													List<DtAnexoBk> tdAnexosBkss) throws Validador{
 
-//		ValidacionDtAsistenciaMng.validarDtAsistenciaBk(dtAsistenciaBk);
-		//MPINARES 24012023 - INICIO
-				
-				dtAsistenciaBk.setVistaProgramado(false);
-				if(dtAsistenciaBk.isVistaProgramado()){
+				Long idProgramacion = PropertiesMg.getSistemLong(
+						PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
+						PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);	
+	
+				if(String.valueOf(idProgramacion).equals(String.valueOf(dtAsistenciaBk.getIdProgramacion()))) {
 					dtAsistenciaBk.setFechaAsistencia(dtAsistenciaBk.getFechaProgramada());
 				}
 				
@@ -2872,9 +2872,9 @@ public class ServicioImp implements Servicio, Serializable {
 			dtAsistenciaBk.setFechaModif(hoy);
 			dtAsistenciaBk.setEstado(estadoFinalizado);
 			
-			DtAsistenciaBk dtAsistenciaBkFinalizado = this.saveorupdateDtAsistenciaBk(dtAsistenciaBk, user, kyUsuarioMod, kyAreaMod, rmtaddress, null);
+			 this.saveorupdateDtAsistenciaBk(dtAsistenciaBk, user, kyUsuarioMod, kyAreaMod, rmtaddress, null);
 			
-			if(dtAsistenciaBkFinalizado != null) {
+			if(dtAsistenciaBk != null) {
 				Long idTipoServicioAsistencia = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN, 
 																		   PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
 
@@ -2887,11 +2887,11 @@ public class ServicioImp implements Servicio, Serializable {
 											hoy);	
 				
 				
-				this.encuesta(dtAsistenciaBkFinalizado, kyUsuarioMod, idTipoServicioAsistencia);
+				this.encuesta(dtAsistenciaBk, kyUsuarioMod, idTipoServicioAsistencia);
 				
 			}
 			
-			return dtAsistenciaBkFinalizado;
+			return dtAsistenciaBk;
 		}
 		
 		private void encuesta(DtAsistenciaBk dtAsistenciaBk, Long kyUsuarioMod, Long idTipoServicioAsistencia) throws Validador {
@@ -2899,8 +2899,9 @@ public class ServicioImp implements Servicio, Serializable {
 			encuesta = this.getIdEncuesta(idTipoServicioAsistencia,
 												dtAsistenciaBk.getFechaAsistencia().getTime(),
 												dtAsistenciaBk.getIdAsistencia());// SPRINT_6
-			
-			encuesta.setIdusserModif(kyUsuarioMod);
+			if(encuesta != null) {
+				encuesta.setIdusserModif(kyUsuarioMod);
+			}
 			
 			if (encuesta == null || encuesta.getIdEncuesta() == null
 					|| encuesta.getIdEncuesta().longValue() < 1) {
@@ -3109,7 +3110,7 @@ public class ServicioImp implements Servicio, Serializable {
 		}
 
 		public DtEncuestaBk getIdEncuesta(Long idTipoServicio, Long fechaServicio, Long idServicio) throws Validador {
-			DtEncuesta encuesta = null; 
+			DtEncuesta encuestaResultante = null; 
 			Long idOrigen = 0L;
 			Long idPresta = 0L;
 			Long idTipoServicioAsistencia = getParametro(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
@@ -3121,21 +3122,25 @@ public class ServicioImp implements Servicio, Serializable {
 			Long idTipoServicioConsulta = getParametro(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CONSULTA,
 					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CONSULTA);
 
-			if (idTipoServicio.longValue() == idTipoServicioAsistencia.longValue()) {
+			//if (idTipoServicio.longValue() == idTipoServicioAsistencia.longValue()) {
+			if (String.valueOf(idTipoServicio).equals(String.valueOf(idTipoServicioAsistencia))) {
 				DtAsistencia dtAsistencia = dtAsistenciaDao.getDtAsistencia(idServicio);
 				if (dtAsistencia != null)
 					idOrigen = dtAsistencia.getIdOrigen();
-			} else if (idTipoServicio.longValue() == idTipoServicioCapacitacion.longValue()) {
+			//} else if (idTipoServicio.longValue() == idTipoServicioCapacitacion.longValue()) {
+			} else if (String.valueOf(idTipoServicio).equals(String.valueOf(idTipoServicioCapacitacion))) {
 				DtCapacitacion dtCapacitacion = dtCapacitacionDao.getDtCapacitacion(idServicio);
 				if (dtCapacitacion != null) {
 					idOrigen = dtCapacitacion.getIdOrigen();
 					idPresta = dtCapacitacion.getIdPrestacion();
 				}
-			} else if (idTipoServicio.longValue() == idTipoServicioVisita.longValue()) {
+			//} else if (idTipoServicio.longValue() == idTipoServicioVisita.longValue()) {
+			} else if (String.valueOf(idTipoServicio).equals(String.valueOf(idTipoServicioVisita))) {
 				DtVisitas dtVisitas = dtVisitasDao.getDtVisitas(idServicio);
 				if (dtVisitas != null)
 					idOrigen = dtVisitas.getIdOrigen();
-			} else if (idTipoServicio.longValue() == idTipoServicioConsulta.longValue()) {
+			//} else if (idTipoServicio.longValue() == idTipoServicioConsulta.longValue()) {
+			} else if (String.valueOf(idTipoServicio).equals(String.valueOf(idTipoServicioConsulta))) {
 				DtConsultas dtConsultas = dtConsultasDao.getDtConsultas(idServicio);
 				if (dtConsultas != null)
 					idOrigen = dtConsultas.getIdOrigen();
@@ -3145,36 +3150,52 @@ public class ServicioImp implements Servicio, Serializable {
 			if (lstEncuesta != null && lstEncuesta.size() > 0) {
 
 				// SPRINT_6.2 INICIO
-				for (DtEncuesta ent : lstEncuesta) {
-					if (ent.getIdEncuesta() != null) {
-						if (ent.getIdOrigen() != null && ent.getIdPrestacion() != null) {
-							if (idPresta != null && idOrigen != null && idOrigen.compareTo(ent.getIdOrigen()) == 0
-									&& idPresta.compareTo(ent.getIdPrestacion()) == 0) {
-								encuesta = ent;
+				for (DtEncuesta encuesta : lstEncuesta) {
+					if (encuesta.getIdEncuesta() != null) {
+						
+						if (encuesta.getIdOrigen() != null && encuesta.getIdPrestacion() != null) {
+							if (idPresta != null && idOrigen != null && idOrigen.compareTo(encuesta.getIdOrigen()) == 0
+									&& idPresta.compareTo(encuesta.getIdPrestacion()) == 0) {
+								encuestaResultante = encuesta;
 								break;
 							}
-						} else if (ent.getIdOrigen() != null) {
-							if (idOrigen != null && idOrigen.compareTo(ent.getIdOrigen()) == 0) {
-								encuesta = ent;
+						} else if (encuesta.getIdOrigen() != null) {
+							if (idOrigen != null &&
+									idOrigen.compareTo(encuesta.getIdOrigen()) == 0) {
+								encuestaResultante = encuesta;
 							}
-						} else if (ent.getIdPrestacion() != null) {
-							if (idPresta != null && idPresta.compareTo(ent.getIdPrestacion()) == 0) {
-								encuesta = ent;
+						} else if (encuesta.getIdPrestacion() != null) {
+							if (idPresta != null &&
+									idPresta.compareTo(encuesta.getIdPrestacion()) == 0) {
+								encuestaResultante = encuesta;
 							}
 						}
 
-						if (encuesta == null && (ent.getIdOrigen() == null || ent.getIdOrigen().intValue() == 0)
-								&& (ent.getIdPrestacion() == null || ent.getIdPrestacion().intValue() == 0)) {// SPRINT_6.3
-							encuesta = ent;
+						if (encuesta == null &&
+								(encuesta.getIdOrigen() == null || 
+								encuesta.getIdOrigen().intValue() == 0)
+								&& (encuesta.getIdPrestacion() == null || encuesta.getIdPrestacion().intValue() == 0)) {// SPRINT_6.3
+							encuestaResultante = encuesta;
 						}
+						
+						/*if(idOrigen==encuesta.getIdOrigen() && idTipoServicioAsistencia == idTipoServicio) {
+							encuestaResultante = encuesta;
+							break;
+						}*/
+						//PARA PROBAR
+						if(String.valueOf(idTipoServicioAsistencia).equals(String.valueOf(idTipoServicio))) {
+							encuestaResultante = encuesta;
+						}
+						
+						
 					}
 
 				}
 				
 			}
 
-			DtEncuestaBk encuestaBk = toBeanBk(encuesta, DtEncuestaBk.class);
-			if (encuestaBk == null) {
+			DtEncuestaBk encuestaBk = toBeanBk(encuestaResultante, DtEncuestaBk.class);
+			/*if (encuestaBk == null) {
 				PrtParametrosBk parametro = getParametro(idTipoServicio);
 				if (parametro == null)
 					return encuestaBk; // throw new Validador("No se encontró el
@@ -3184,7 +3205,8 @@ public class ServicioImp implements Servicio, Serializable {
 										
 			} else {
 				return encuestaBk;
-			}
+			}*/
+			return encuestaBk;
 			
 		}
 		

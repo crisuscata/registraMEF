@@ -79,6 +79,50 @@ public class DtAsistenciaData implements Serializable{
 		return dtAsistenciaBksss;		
 	}
 	
+	public List<DtAsistenciaBk> getDtAsistenciaNoProgActivos(Servicio servicio, Long kyUsuarioMod, String fechaInicio, String fechaFin,String idProgramacion){
+		List<DtAsistenciaBk> dtAsistenciaBksss = null;
+		String key = DtAsistenciaBk.class.getSimpleName();
+		if(dataCache.containsKey(key)){
+			Entrada entrada = dataCache.get(key);
+			dtAsistenciaBksss = (List<DtAsistenciaBk>) entrada.getLista();
+			long ultimoacceso = entrada.getUltimoacceso();
+			entrada.setUltimoacceso(System.currentTimeMillis());
+			if((ultimoacceso+entrada.getTiempomuerto())<System.currentTimeMillis()){
+				new Thread() {
+		            public void run() {
+		                try {
+		                	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
+		                	Date fechaIniciod=sdformat.parse(fechaInicio);
+		                	Date fechaFind=sdformat.parse(fechaFin);
+		                	List<DtAsistenciaBk> dtAsistenciaBkssss = servicio.getDtAsistenciaXFiltroV(fechaIniciod, fechaFind, null, kyUsuarioMod);
+		    				entrada.setLista(dtAsistenciaBkssss);
+		    				entrada.setUltimoacceso(System.currentTimeMillis());
+		                } catch (Exception ex) {
+		                	log.info(ex.getMessage());
+		                    
+		                } 
+		            }		 
+		        }.start();				
+			}
+		}else{
+			try {
+				Entrada entrada = new Entrada();
+	        	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
+	        	Date fechaIniciod=sdformat.parse(fechaInicio);
+	        	Date fechaFind=sdformat.parse(fechaFin);
+				dtAsistenciaBksss = servicio.getDtAsistenciaXFiltroV(fechaIniciod, fechaFind, null, kyUsuarioMod);
+				
+				entrada.setLista(dtAsistenciaBksss);
+				entrada.setTiempomuerto(60000);
+				entrada.setUltimoacceso(System.currentTimeMillis());
+				dataCache.put(key, entrada);
+			} catch (Exception ex) {
+            	log.info(ex.getMessage());
+            } 
+		}
+		return dtAsistenciaBksss;		
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void add(Servicio servicio, Long kyUsuarioMod, DtAsistenciaBk dtAsistenciaC){		
 		List<DtAsistenciaBk> dtAsistenciaBksss = null;

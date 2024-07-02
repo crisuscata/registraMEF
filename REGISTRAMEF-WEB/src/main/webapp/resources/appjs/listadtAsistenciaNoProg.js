@@ -2,8 +2,8 @@
 var contexto = window.location.pathname.substring(0,window.location.pathname.indexOf('/',2));
 var pglogoff = window.location.origin+contexto+'/logoff.htm';
 var principalUrl = window.location.origin+contexto+'/index.htm';
-var listadtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/listadtAsistencia";
-var insertdtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/salvardtAsistencia";
+var listadtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/listadtAsistenciaNoProg";
+var insertdtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/salvardtAsistenciaNoProg";
 var validarCambiosAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/validarCambiosAsistencia";
 var finalizardtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/finalizardtAsistencia";
 var eliminardtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/eliminardtAsistencia";
@@ -445,7 +445,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 			  idSistAdmTxt: null,
 			  idOrigenTxt: null,
 			  estadoTxt: null,
-			  idProgramacion: 121
+			  idProgramacion: null
 		}; 
 	
 	  
@@ -664,8 +664,8 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 			detalle: null,
 			idUsuinterno: null,
 			idEntidad: null,
-			idOrigen: 127,
-			idProgramacion: 121,
+			idOrigen: 140,
+			idProgramacion: null,
 			idModalidad: null,
 			idSede: null,
 			idSistAdm: null,
@@ -810,8 +810,23 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 			$scope.dtAsistenciaModelo.idSedeTxt = dtAsistenciaBk.idSedeTxt;
 			$scope.dtAsistenciaModelo.idSistAdmTxt = dtAsistenciaBk.idSistAdmTxt;
 			$scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
-
-			$scope.dtAsistenciaModelo.editopcion = dtAsistenciaBk.dtAsistenciaACL.editopcion;
+			
+			if(dtAsistenciaBk.idAsistencia!=null && dtAsistenciaBk.idAsistencia!=0){
+				
+				var idPadreAsisProgramado = 121;
+				var idPadreAsisNoProgramado = 122;
+				
+				if(dtAsistenciaBk.idProgramacion == idPadreAsisNoProgramado){
+					$scope.dtAsistenciaModelo.editopcion = 2;
+				} else if(dtAsistenciaBk.idProgramacion == idPadreAsisProgramado){
+					$scope.dtAsistenciaModelo.editopcion = 3;
+				}
+				
+			} else{
+				$scope.dtAsistenciaModelo.editopcion = dtAsistenciaBk.dtAsistenciaACL.editopcion;
+			}
+			
+			
 		}
 	
 	  $scope.addAsistTema = function (asistenciaTema, i, size) {
@@ -870,8 +885,8 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	  }
 	
 	  // ////////////////////////////////////////////////
-	  $scope.editarDtAsistencia = function(ev, dtAsistenciaBk) {		  
-		    $scope.setDtAsistenciaModelo(dtAsistenciaBk);		  
+	  $scope.editarDtAsistencia = function(ev, dtAsistenciaBk) {
+		    $scope.setDtAsistenciaModelo(dtAsistenciaBk);  
 			$location.url('/editar/' + $scope.dtAsistenciaModelo.idAsistencia);
 			$scope.nuevo = false;
 	  }
@@ -915,47 +930,49 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 				}
 			}
 	  }
+	  
+	  $scope.uploadFileTotdAnexoJsModel = function(){
+		  	//FILES
+		    if($scope.isArray($scope.archivos)){
+				if($scope.archivos.length>0){
+					for(var i = 0; i < $scope.archivos.length; i++)
+					{
+						var archivo = $scope.archivos[i];
+						if(archivo.filename!=null &&  archivo.data!=null){
+							$mdDialog.show(
+									$mdDialog.alert()
+									.parent(angular.element(document.body))
+									.clickOutsideToClose(true)
+									.title('Cargar archivos')
+									.textContent("TODAVÍA SE ESTA CARGANDO EL ARCHIVO "+archivo.filenameoriginal+" ESPERE QUE CULMINE LA OPERACIÓN...")
+									.ariaLabel('ERROR')
+									.ok('OK')
+									.targetEvent(ev)
+							);
+							return;
+						}else if(archivo.filename===null && archivo.data!=null){					
+							$mdDialog.show(
+									$mdDialog.alert()
+									.parent(angular.element(document.body))
+									.clickOutsideToClose(true)
+									.title('Cargar archivos')
+									.textContent("TODAVÍA SE ESTA CARGANDO EL ARCHIVO "+archivo.filenameoriginal+" ESPERE QUE CULMINE LA OPERACIÓN...")
+									.ariaLabel('ERROR')
+									.ok('OK')
+									.targetEvent(ev)
+							);
+							return;
+						}
+					}
+					
+					$scope.dtAsistenciaModelo.tdAnexosJSss = $scope.archivos;
+				}}
+	  }	
 	  			  
 	  $scope.salvarDtAsistencia = function(ev){	
 		  
 		  			$scope.addTemaAndUsers();
-				    
-				    //FILES
-				    if($scope.isArray($scope.archivos)){
-						if($scope.archivos.length>0){
-							for(var i = 0; i < $scope.archivos.length; i++)
-							{
-								var archivo = $scope.archivos[i];
-								if(archivo.filename!=null &&  archivo.data!=null){
-									$mdDialog.show(
-											$mdDialog.alert()
-											.parent(angular.element(document.body))
-											.clickOutsideToClose(true)
-											.title('Cargar archivos')
-											.textContent("TODAVÍA SE ESTA CARGANDO EL ARCHIVO "+archivo.filenameoriginal+" ESPERE QUE CULMINE LA OPERACIÓN...")
-											.ariaLabel('ERROR')
-											.ok('OK')
-											.targetEvent(ev)
-									);
-									return;
-								}else if(archivo.filename===null && archivo.data!=null){					
-									$mdDialog.show(
-											$mdDialog.alert()
-											.parent(angular.element(document.body))
-											.clickOutsideToClose(true)
-											.title('Cargar archivos')
-											.textContent("TODAVÍA SE ESTA CARGANDO EL ARCHIVO "+archivo.filenameoriginal+" ESPERE QUE CULMINE LA OPERACIÓN...")
-											.ariaLabel('ERROR')
-											.ok('OK')
-											.targetEvent(ev)
-									);
-									return;
-								}
-							}
-							
-							$scope.dtAsistenciaModelo.tdAnexosJSss = $scope.archivos;
-						}}
-				    
+		  			$scope.uploadFileTotdAnexoJsModel();
 				    
 				    
 				    ev.target.disabled = true;
@@ -2059,6 +2076,39 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
     	
     	
     	$scope.showConfirmFinalizar = function(ev) {
+    		
+    		if($scope.datoUsuario.length==0) {
+    			$mdDialog.show(
+						$mdDialog.alert()
+						.parent(angular.element(document.body))
+						.clickOutsideToClose(true)
+						.title('ASISTENCIA TECNICA')
+						.textContent("PARA FINALIZAR EL SERVICIO DEBE REGISTRAR EL USUARIO ATENDIDO")
+						.ok('OK')
+				);
+    			return;
+    		}
+    		
+    		var idPadreModVirtual = 137;
+			var idPadreModPresencial = 138;
+			
+			if($scope.dtAsistenciaModelo.idModalidad == idPadreModVirtual || 
+					$scope.dtAsistenciaModelo.idModalidad == idPadreModPresencial){
+				if($scope.archivos.length==0){
+					$mdDialog.show(
+							$mdDialog.alert()
+							.parent(angular.element(document.body))
+							.clickOutsideToClose(true)
+							.title('ASISTENCIA TECNICA')
+							.textContent("PARA FINALIZAR EL SERVICIO DEBE ADJUNTAR EL ARCHIVO DIGITAL")
+							.ok('OK')
+					);
+	    			return;
+				} else{
+					$scope.uploadFileTotdAnexoJsModel();
+				}
+			}
+    		
 		    var confirm = $mdDialog.confirm()
 		      .title('Finalizar asistencia técnica')
 		      .textContent('¿Está usted seguro de finalizar el registro?')
@@ -2069,9 +2119,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 
 		    $mdDialog.show(confirm).then(function () {
 		      $scope.status = 'SI';
-		      var datainsertFinalizar = angular.toJson($scope.dtAsistenciaModelo);
-	 			//console.log("datainsertFinalizar= "+datainsertFinalizar);	
-		      //console.log("dtAsistenciaBk:" + JSON.stringify(dtAsistenciaBk));
+		     // var datainsertFinalizar = angular.toJson($scope.dtAsistenciaModelo);
 		      
 		      $scope.finalizardtAsistencia(ev, $scope.dtAsistenciaModelo);
 		    }, function () {
@@ -2081,8 +2129,11 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		  
 		  $scope.finalizardtAsistencia = function(ev,dtAsistenciaBk){		
 			    ev.target.disabled = true;
+			    
 			    var datainsert = angular.toJson(dtAsistenciaBk);
+			    
 				console.log("datainsertFinalizar = "+datainsert);	
+				
 			$http.post(finalizardtAsistenciaUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
 				var dato = res.data;
 

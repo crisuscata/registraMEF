@@ -372,6 +372,252 @@ public class DtAsistenciaRsCtrl {
 		}
 	}
 
+	
+	@GET
+	@Path("/listadtAsistenciaNoProg")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response listadtAsistenciaNoProg(
+			@Context HttpServletRequest req, 
+			@Context HttpServletResponse res,
+			@HeaderParam("authorization") String authString			
+			) {
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+		Principal usuario = req.getUserPrincipal();
+		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+		if (msUsuariosBk == null)
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			}).build();
+
+		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA) && !req.isUserInRole(Roles.DTASISTENCIA_VE))
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			}).build();
+
+		try {
+			String sorder = req.getParameter("order"); 
+			String slimit = req.getParameter("limit");
+			String spage = req.getParameter("page");
+			
+			String fechaInicio = req.getParameter("fechaInicio");
+			String fechaFin = req.getParameter("fechaFin");
+			String idSedeTxt = req.getParameter("idSedeTxt");
+			String idEntidadTxt = req.getParameter("idEntidadTxt");
+			String idProgramacion = req.getParameter("idProgramacion");
+			
+			String idAsistencia = req.getParameter("idAsistencia");
+			String dniUserTxt = req.getParameter("dniUserTxt");
+			String usuExtTxt = req.getParameter("usuExtTxt");
+			String codEjecutora = req.getParameter("codEjecutora");
+			String idUsuinternoTxt = req.getParameter("idUsuinternoTxt");
+			String idSistAdmTxt = req.getParameter("idSistAdmTxt");
+			String idOrigenTxt = req.getParameter("idOrigenTxt");
+			String estadoTxt = req.getParameter("estadoTxt");
+			
+            String sestado = req.getParameter("estado");
+			
+			Integer iestado = null;
+			if(sestado!=null){
+				try{
+					iestado = Integer.parseInt(sestado);
+				}catch(Exception e){}
+			}		
+			
+			DtAsistenciaFiltro dtAsistenciaFiltro = new DtAsistenciaFiltro(fechaInicio, fechaFin, idSedeTxt, idEntidadTxt, idProgramacion, 
+					idAsistencia, dniUserTxt, usuExtTxt, codEjecutora, idUsuinternoTxt, idSistAdmTxt, idOrigenTxt, estadoTxt, iestado);	
+			
+			DtAsistenciaData dtAsistenciaData = (DtAsistenciaData) req.getSession().getAttribute("DtAsistenciaData");
+			if(dtAsistenciaData==null){
+				dtAsistenciaData = new DtAsistenciaData();
+				req.getSession().setAttribute("DtAsistenciaData",dtAsistenciaData);
+			}
+			
+			DtAsistenciaLC dtAsistenciaLC = new DtAsistenciaLC();
+			long inicio = System.currentTimeMillis();
+			List<DtAsistenciaBk> dtAsistenciasss = dtAsistenciaData.getDtAsistenciaNoProgActivos(servicio,msUsuariosBk.getIdusuario(), fechaInicio, fechaFin, idProgramacion); 
+			long lfinal =System.currentTimeMillis()-inicio;
+			dtAsistenciaLC.setTiempoenBD(lfinal);
+			
+			if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.DTASISTENCIA_CREA)){
+				dtAsistenciaLC.setCreamodifica(true);
+			}			
+			
+			/////
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+			List<DtAsistenciaBk> dtAsistenciasssData = new ArrayList<DtAsistenciaBk> ();
+			if(dtAsistenciaFiltro.isActivo()){
+			//filter
+//				int contador = 0;
+	        for(DtAsistenciaBk dtAsistenciaAct : dtAsistenciasss){
+	            boolean match = true;	            
+	            Field camposdea[] = dtAsistenciaFiltro.getClass().getDeclaredFields();
+				for (int i = 0; i < camposdea.length; i++) {
+					String camponame = camposdea[i].getName();
+					if(camponame.indexOf("serial")>-1 || camponame.indexOf("activo")>-1 || camponame.indexOf("fechaInicio")>-1 || camponame.indexOf("fechaFin")>-1) continue;//MPINARES 24012023 - INICIO
+					
+					String filtroGetMetod = "get" + Character.toUpperCase(camponame.charAt(0)) + camponame.substring(1);
+					String claseGetMetod = "get" + Character.toUpperCase(camponame.charAt(0)) + camponame.substring(1);					
+					Class<?>[] types = new Class[] {};
+					try {
+						Method filtroMethod = dtAsistenciaFiltro.getClass().getMethod(filtroGetMetod, types);												
+						Object filtroValue = filtroMethod.invoke(dtAsistenciaFiltro, new Object[0]);
+						if(filtroValue==null) continue;
+						else if(filtroValue.toString().length()<1) continue;
+						Method claseMethod = dtAsistenciaAct.getClass().getMethod(claseGetMetod, types);
+						Object claseValue = claseMethod.invoke(dtAsistenciaAct, new Object[0]);
+						if(claseValue!=null){
+							if(claseValue.getClass().getName().indexOf("Timestamp") > -1){
+								String claseValueTxt = sdf.format(claseValue);
+								String filterValueString = filtroValue.toString();
+								if(filterValueString.trim().length()<1){
+									continue;
+								}
+								if(filterValueString.contains("-")){
+									filterValueString = filterValueString.replace("-","");
+								}
+    							if (claseValueTxt.startsWith(filterValueString)) {
+    								match = true;
+    							}else {
+    								match = false;
+    								break;
+    							}
+							}else if (claseValue instanceof java.lang.Number) {
+									String claseValueTxt = String.valueOf(claseValue).toLowerCase();
+									String filterValueString = filtroValue.toString().toLowerCase();
+									if(filterValueString.startsWith("*")){
+										filterValueString = filterValueString.substring(1);
+										if(claseValueTxt.contains(filterValueString)){
+											match = true;
+										}else{
+											match = false;
+		    								break;
+										}
+									}else
+									if (claseValueTxt.equals(filterValueString)) {
+										match = true;
+									} else {
+										match = false;
+										break;
+									}
+								}
+                                                        else{
+								String claseValueTxt = String.valueOf(claseValue).toLowerCase();
+								String filterValueString = filtroValue.toString().toLowerCase();
+								if(filterValueString.startsWith("*")){
+									filterValueString = filterValueString.substring(1);
+									if(claseValueTxt.contains(filterValueString)){
+										match = true;
+									}else{
+										match = false;
+	    								break;
+									}
+								}else{
+									if(claseValueTxt.startsWith(filterValueString)){
+										match = true;
+									}else{
+										match = false;
+	    								break;
+									}
+								}								
+							}
+						}else{
+							match = false;
+							break;
+						}						
+					} catch (NoSuchMethodException exception) {
+						System.out.println("Error Exception: " + exception.getMessage());
+						continue;
+					} catch (Exception exception) {
+						System.out.println("Error Exception: " + exception.getMessage());
+						continue;
+					}					
+				}
+				if(match) {
+					dtAsistenciasssData.add(dtAsistenciaAct);
+	            }	            
+	        }}else{
+	        	dtAsistenciasssData = dtAsistenciasss;
+	        }	 
+	        //sort
+	        if(sorder != null && sorder.trim().length()>1) {
+	            Collections.sort(dtAsistenciasssData, new Comparator<DtAsistenciaBk>() {
+	                @SuppressWarnings({ "unchecked", "rawtypes" })
+					public int compare(DtAsistenciaBk dtAsistencia1, DtAsistenciaBk dtAsistencia2) {	                	
+	                	boolean sortorden = true;
+	                	String order = sorder;
+	                	if(order.startsWith("-")){
+	                		sortorden = false;
+	                		order = order.substring(1);
+	                	}	                	
+	                	try{
+	                	String getMetod = "get" + Character.toUpperCase(order.charAt(0))+order.substring(1);
+	                	Class<?>[] types = new Class[] {};
+						Method method = DtAsistenciaBk.class.getMethod(getMetod, types);
+						Object value1 = method.invoke(dtAsistencia1, new Object[0]);
+						Object value2 = method.invoke(dtAsistencia2, new Object[0]);
+						if(value1==null && value2==null) return 0;
+						else if(value1==null) return 1;
+						else if(value2==null) return -1;
+						int value = ((Comparable)value1).compareTo(value2);						
+						return sortorden ? value : -1 * value;
+	                	}catch(Exception e){
+	                		return 0;
+	                	}
+	                }
+	            });
+	        }
+	 
+	        //rowCount
+	        int dataSize = dtAsistenciasssData.size();
+	        int pageSize = 100;
+	        try{
+	        	if(slimit!=null && slimit.trim().length()>0){
+	        		pageSize = Integer.parseInt(slimit);
+	        	}
+	        	if(pageSize<0)pageSize*=-1;
+	        }catch(Exception e){}
+	        int first = 1;
+	        try{
+	        	if(spage!=null && spage.trim().length()>0){
+	        		first = Integer.parseInt(spage);
+	        	}
+	        	if(first<0)first*=-1;
+	        }catch(Exception e){}
+	        
+	        //paginate
+	        dtAsistenciaLC.setContador(dataSize);
+			
+	        if(dataSize > pageSize) {
+	        	int iniciodelista = ((first-1)*pageSize);
+	            try {
+	                dtAsistenciaLC.setData(dtAsistenciasssData.subList(iniciodelista, iniciodelista+pageSize));
+	            }
+	            catch(IndexOutOfBoundsException e) {
+	            	dtAsistenciaLC.setData(dtAsistenciasssData.subList(iniciodelista, iniciodelista+(dataSize % pageSize)));
+	            }
+	        }else{
+	        	dtAsistenciaLC.setData(dtAsistenciasssData);
+	        }
+	        lfinal =System.currentTimeMillis()-inicio;
+			 System.out.println("EJECUCIÓN EN: "+(lfinal)+" MILISEGUNDOS.");
+			 dtAsistenciaLC.setTiempoenproceso(lfinal);
+			/////			
+			
+			GenericEntity<DtAsistenciaLC> registrosx = new GenericEntity<DtAsistenciaLC>(dtAsistenciaLC) {
+			};
+			return Response.status(HttpURLConnection.HTTP_OK).entity(registrosx).build();
+		} catch (Exception e) {
+//			String mensaje = e.getMessage().toUpperCase();
+			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
+			System.out.println("ERROR: " + mensaje);
+			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+					}).build();
+		}
+	}
+	
 	@POST
 	@Path("/salvardtAsistencia")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -401,9 +647,98 @@ public class DtAsistenciaRsCtrl {
 		dtAsistenciaC.setIdSistAdm(msUsuariosBk.getIdSistAdmi());
 		dtAsistenciaC.setIdUsuinterno(msUsuariosBk.getIdusuario());
 		//MPINARES 24012023 - FIN
+		//dtAsistenciaModelo.fechaProgramadaJUD
+		dtAsistenciaC.setFechaSoli( new Timestamp(dtAsistenciaJS.getFechaSoliJUD().getTime()) );
+		if(dtAsistenciaJS.getFechaProgramadaJUD()!=null) {
+			dtAsistenciaC.setFechaAsistencia( new Timestamp(dtAsistenciaJS.getFechaProgramadaJUD().getTime()) );
+		} 
 		
+		
+		try {
+			
+			Long idProgramacion = PropertiesMg.getSistemLong(
+					PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
+			Long idOrigen = PropertiesMg.getSistemLong(
+					PropertiesMg.KEY_PRTPARAMETROS_IDORIGEN_OFERTA,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDORIGEN_OFERTA);
+			
+			if(dtAsistenciaJS.getIdProgramacion()!=null 
+					&& dtAsistenciaJS.getIdProgramacion()!=0L 
+					&& dtAsistenciaJS.getIdOrigen()!=null 
+					&& dtAsistenciaJS.getIdOrigen()!=0L) {
+				dtAsistenciaC.setIdProgramacion(dtAsistenciaJS.getIdProgramacion());
+				dtAsistenciaC.setIdOrigen(dtAsistenciaJS.getIdOrigen());
+			} else {
+				dtAsistenciaC.setIdProgramacion(idProgramacion);
+				dtAsistenciaC.setIdOrigen(idOrigen);
+			}
+			
+			List<DtAnexosJS> tdAnexosJSsss = dtAsistenciaJS.getTdAnexosJSss();
+			List<DtAnexoBk> tdAnexosBkss = null;
+			if (tdAnexosJSsss != null && !tdAnexosJSsss.isEmpty()) {
+				tdAnexosBkss = new ArrayList<DtAnexoBk>();
+				for (DtAnexosJS tdAnexosJS : tdAnexosJSsss) {
+					DtAnexoBk tdAnexosBk = new DtAnexoBk();
+					FuncionesStaticas.copyPropertiesObject(tdAnexosBk, tdAnexosJS);
+					tdAnexosBkss.add(tdAnexosBk);
+				}
+			}
+			
+			dtAsistenciaC = servicio.saveorupdateDtAsistenciaBk(dtAsistenciaC, msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto, tdAnexosBkss);
+			
+			DtAsistenciaData dtAsistenciaData = (DtAsistenciaData) req.getSession().getAttribute("DtAsistenciaData");
+			if(dtAsistenciaData==null){
+				dtAsistenciaData = new DtAsistenciaData();
+				req.getSession().setAttribute("DtAsistenciaData",dtAsistenciaData);
+			}
+			dtAsistenciaData.add(servicio, msUsuariosBk.getIdusuario(), dtAsistenciaC);
+			
+			GenericEntity<DtAsistenciaBk> registrors = new GenericEntity<DtAsistenciaBk>(dtAsistenciaC) {
+			};
+			return Response.status(HttpURLConnection.HTTP_OK).entity(registrors).build();
+		} catch (Validador e) {
+			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
+			System.out.println("ERROR: " + mensaje);
+			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+					}).build();
+		}
+	}
+	
+	@POST
+	@Path("/salvardtAsistenciaNoProg")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response salvardtAsistenciaNoProg(@Context HttpServletRequest req, @Context HttpServletResponse res,
+			@HeaderParam("authorization") String authString, DtAsistenciaJS dtAsistenciaJS) {
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+		Principal usuario = req.getUserPrincipal();
+		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+		if (msUsuariosBk == null)
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			}).build();
+		
+		if(!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			}).build();
+		
+		String adressRemoto = getRemoteAdress(req);
+
+		DtAsistenciaBk dtAsistenciaC = new DtAsistenciaBk();
+		FuncionesStaticas.copyPropertiesObject(dtAsistenciaC, dtAsistenciaJS);
+		//MPINARES 24012023 - INICIO
+		dtAsistenciaC.setVistaProgramado(dtAsistenciaJS.isVistaProgramado());
+		dtAsistenciaC.setIdSede(msUsuariosBk.getIdSede());
+		dtAsistenciaC.setIdSistAdm(msUsuariosBk.getIdSistAdmi());
+		dtAsistenciaC.setIdUsuinterno(msUsuariosBk.getIdusuario());
+		//MPINARES 24012023 - FIN
+		//dtAsistenciaModelo.fechaProgramadaJUD
 		dtAsistenciaC.setFechaSoli( new Timestamp(dtAsistenciaJS.getFechaSoliJUD().getTime()) );
 		dtAsistenciaC.setFechaAsistencia( new Timestamp(dtAsistenciaJS.getFechaServicioJUD().getTime()) );
+		
 
 		try {
 			
@@ -414,12 +749,24 @@ public class DtAsistenciaRsCtrl {
 					PropertiesMg.KEY_PRTPARAMETROS_IDORIGEN_DEMANDA,
 					PropertiesMg.DEFOULT_PRTPARAMETROS_IDORIGEN_DEMANDA);
 			
-			dtAsistenciaC.setIdProgramacion(idProgramacion);
-			dtAsistenciaC.setIdOrigen(idOrigen);
+			/*if(dtAsistenciaJS.getIdProgramacion()!=null 
+					&& dtAsistenciaJS.getIdProgramacion()!=0L 
+					&& dtAsistenciaJS.getIdOrigen()!=null 
+					&& dtAsistenciaJS.getIdOrigen()!=0L) {*/
+				
+			//	dtAsistenciaC.setIdOrigen(dtAsistenciaJS.getIdOrigen());
+			/*} else {
+				dtAsistenciaC.setIdProgramacion(idProgramacion);
+				dtAsistenciaC.setIdOrigen(idOrigen);
+			}*/
+				
+				if(dtAsistenciaJS.getIdProgramacion()!=null 
+						&& dtAsistenciaJS.getIdProgramacion()!=0L) {
+					dtAsistenciaC.setIdProgramacion(dtAsistenciaJS.getIdProgramacion());
+				} else {
+					dtAsistenciaC.setIdProgramacion(idProgramacion);
+				}
 			
-			Long pagOrigen = PropertiesMg.getSistemLong(
-					PropertiesMg.KEY_PAGINA_ORIGEN_NO_PROGRAMADO,
-					PropertiesMg.DEFAULT_PAGINA_ORIGEN_NO_PROGRAMADO);
 			
 			List<DtAnexosJS> tdAnexosJSsss = dtAsistenciaJS.getTdAnexosJSss();
 			List<DtAnexoBk> tdAnexosBkss = null;

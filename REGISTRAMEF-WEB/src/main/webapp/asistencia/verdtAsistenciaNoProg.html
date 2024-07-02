@@ -97,91 +97,116 @@
            <th class="md-title ttaedireact" md-column style="padding-right: 0;"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
            <th class="md-title ttamdtAsistenciaidAsistencia" md-column md-order-by="idAsistencia">
            <span>ID</span></th>  
-           <th class="md-title ttamdtAsistenciadniUser" md-column md-order-by="dniUser">
-           <span>DNI</span></th>
-           <th class="md-title ttamdtAsistenciausuExt" md-column md-order-by="usuExt">
-           <span>USU. externo</span></th>
-           <th class="md-title ttamdtAsistenciacodEjecutora" md-column md-order-by="codEjecutora">
-           <span>COD. ejecutora</span></th>
-           <th class="md-title ttamdtAsistenciaidEntidadTxt" md-column md-order-by="idEntidadTxt">
-           <span>Entidad</span></th>
-           <th class="md-title ttamdtAsistenciaidSedeTxt" md-column md-order-by="idSedeTxt">
-           <span>Sede</span></th>
+           
+           <!-- 
+           <th class="md-title ttamdtAsistenciadniUser" md-column md-order-by="fechaServicio">
+           		<span>Fecha de Servicio</span>
+           	</th>
+           	 -->
+           	 
            <th class="md-title ttamdtAsistenciafechaAsistencia" md-column md-order-by="fechaAsistencia">
-           <span>Fecha de servicio</span></th>
+           		<span>Fecha de servicio</span>
+           </th>
+           
+           <th class="md-title ttamdtAsistenciacodEjecutora" md-column md-order-by="codEjecutora">
+           		<span>COD. ejecutora</span>
+           </th>
+           
+           <th class="md-title ttamdtAsistenciaidEntidadTxt" md-column md-order-by="idEntidadTxt">
+           		<span>Entidad</span>
+           </th>
+           
+           <th class="md-title ttamdtAsistenciaidSedeTxt" md-column md-order-by="idSedeTxt">
+           		<span>Sede</span>
+           </th>
+           
            <th class="md-title ttamdtAsistenciaidUsuinternoTxt" md-column md-order-by="idUsuinternoTxt">
-           <span>USU. interno</span></th>
+           		<span>USU. interno</span>
+           </th>
+           
            <th class="md-title ttamdtAsistenciaidSistAdmTxt" md-column md-order-by="idSistAdmTxt">
-           <span>SIS. administrativo</span></th>
+           		<span>SIS. administrativo</span>
+           </th>
+           
            <th class="md-title ttamdtAsistenciaidOrigenTxt" md-column md-order-by="idOrigenTxt">
-           <span>Origen</span></th>
+           		<span>Origen</span>
+           </th>
+           
+           <th class="md-title ttamdtAsistenciaidOrigenTxt" md-column md-order-by="idProgramacionTxt">
+           		<span>Programacion</span>
+           </th>
+           
            <th class="md-title ttamdtAsistenciaestadoTxt" md-column md-order-by="estadoTxt">
-           <span>Estado</span></th>
-<!--            <th class="md-title ttamdtAsistenciafechaFinalizacion" md-column md-order-by="fechaFinalizacion"> -->
-<!--            <span>Fecha De Finalización</span></th> -->
-<!--            <th class="md-title ttamdtAsistenciafechaSoli" md-column md-order-by="fechaSoli"> -->
-<!--            <span>Fecha De Solicitud Del Servicio</span></th> -->
+           		<span>Estado</span>
+           </th>
            
            <th class="md-title ttamblanco" md-column><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
          </tr>
 
          <tr md-row class="md-table-head-order">
-         <th md-column>&nbsp;</th>   
-         <th md-column>&nbsp;</th> 
-         <th md-column>&nbsp;</th> 
-         <th md-column>&nbsp;</th>   
-         <th md-column> 
-            <input type="text" name="idAsistencia" ng-model="filtro.idAsistencia" placeholder="ID" 
-                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
-         </th>
-         <th md-column> 
-            <input type="text" name="dniUserTxt" ng-model="filtro.dniUserTxt" placeholder="DNI" 
-                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
-         </th>
-         <th md-column> 
-            <input type="text" name="usuExtTxt" ng-model="filtro.usuExtTxt" placeholder="USU. externo" 
-                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
-         </th>
-         <th md-column> 
-            <input type="text" name="codEjecutora" ng-model="filtro.codEjecutora" placeholder="COD. ejecutora" 
-                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
-         </th>
-         <th md-column> 
-            <input type="text" name="idEntidadTxt" ng-model="filtro.idEntidadTxt" placeholder="Entidad" 
-                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
-         </th>
-         <th md-column> 
-            <input type="text" name="idSedeTxt" ng-model="filtro.idSedeTxt" placeholder="Sede" 
-                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
-         </th>
-         <th md-column>&nbsp;</th>  
-         <th md-column> 
-            <input type="text" name="idUsuinternoTxt" ng-model="filtro.idUsuinternoTxt" placeholder="USU. interno" 
-                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
-         </th>
-         <th md-column> 
-            <input type="text" name="idSistAdmTxt" ng-model="filtro.idSistAdmTxt" placeholder="SIS. administrativo" 
-                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
-         </th>
-         <th md-column> 
-            <input type="text" name="idOrigenTxt" ng-model="filtro.idOrigenTxt" placeholder="Origen" 
-                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
-         </th>
-         <th md-column> 
-            <input type="text" name="estadoTxt" ng-model="filtro.estadoTxt" placeholder="Estado" 
-                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
-         </th>
+	         <th md-column>&nbsp;</th>   
+	         <th md-column>&nbsp;</th> 
+	         <th md-column>&nbsp;</th> 
+	         <th md-column>&nbsp;</th>   
+	         <th md-column> 
+	            <input type="text" name="idAsistencia" ng-model="filtro.idAsistencia" placeholder="ID" 
+	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+	         </th>
+	         <th md-column> 
+	            <input type="text" name="usuExtTxt" ng-model="filtro.usuExtTxt" placeholder="USU. externo" 
+	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+	         </th>
+	         <th md-column> 
+	            <input type="text" name="codEjecutora" ng-model="filtro.codEjecutora" placeholder="COD. ejecutora" 
+	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+	         </th>
+	         <th md-column> 
+	            <input type="text" name="idEntidadTxt" ng-model="filtro.idEntidadTxt" placeholder="Entidad" 
+	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+	         </th>
+	         <th md-column> 
+	            <input type="text" name="idSedeTxt" ng-model="filtro.idSedeTxt" placeholder="Sede" 
+	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+	         </th>
+	         
+	         <th md-column> 
+	            <input type="text" name="idUsuinternoTxt" ng-model="filtro.idUsuinternoTxt" placeholder="USU. interno" 
+	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+	         </th>
+	         
+	         <th md-column> 
+	            <input type="text" name="idUsuinternoTxt" ng-model="filtro.idUsuinternoTxt" placeholder="Sist Admin" 
+	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+	         </th>
+	         <th md-column> 
+	            <input type="text" name="idSistAdmTxt" ng-model="filtro.idSistAdmTxt" placeholder="SIS. administrativo" 
+	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+	         </th>
+	         <th md-column> 
+	            <input type="text" name="idSistAdmTxt" ng-model="filtro.idSistAdmTxt" placeholder="Programacion" 
+	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+	         </th>
+	         <th md-column> 
+	            <input type="text" name="idOrigenTxt" ng-model="filtro.idOrigenTxt" placeholder="Origen" 
+	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+	         </th>
+	         
 
          </tr>
+         
       </thead>
       <tbody md-body>
-      <tr ng-if="datos.length === 0">
+      	 <tr ng-if="datos.length === 0">
                <td colspan="15" style="text-align: center;">No se encontraron registros para mostrar</td>
-             </tr>
+         </tr>
+         
          <tr class="primary triddtAsistencia md-table-cuerpo" md-row md-select="dato" md-on-select="logItem" md-auto-select="options.autoSelect"   
              ng-disabled="dato.idAsistencia > 0" ng-repeat-start="dato in datos">
+          
           <td md-cell>{{$index + 1}}</td>
+          
           <td style="padding-right: 0;"><input type="checkbox" ng-model="dato.checked" ng-change="selection(dato)"></td>
+          
           <td class="tdaa8 md-table-cuerpo" data-title="Acciones" md-cell style="padding-right: 0;">
              <div layout="row" layout-xs="column" layout-align="center center">
                 <md-button class="md-icon-button"
@@ -189,53 +214,56 @@
                         ng-if="dato.dtAsistenciaACL.esEditable"> <md-icon style="font-size: 20px;"
                         md-font-set="material-icons">edit</md-icon> </md-button>                
              </div>
-            </td>
-            <td class="tdaa8 md-table-cuerpo" data-title="React" md-cell style="padding-right: 0;">
+          </td>
+            
+          <td class="tdaa8 md-table-cuerpo" data-title="React" md-cell style="padding-right: 0;">
              <div layout="row" layout-xs="column" layout-align="center center"> 
                 <md-button class="md-icon-button" ng-click="showConfirmReactivarAsistencia($event, dato)" 
                 			ng-if="dato.dtAsistenciaACL.reactivar"> <md-icon
                         md-font-set="material-icons" style="font-size: 20px;">replay</md-icon> </md-button>                 
              </div>
-            </td>
+          </td>
+            
           <td class="tdaa1 md-table-cuerpo" data-title="ID" md-cell>
-          {{dato.idAsistencia}}</td>
-          <td class="tdaa1 md-table-cuerpo" data-title="Fecha De Asistencia Técnica" md-cell>
-          {{dato.dniUserTxt}}</td>
-          <td class="tdaa1 md-table-cuerpo" data-title="Detalle" md-cell>
-          {{dato.usuExtTxt}}</td>
+          	{{dato.idAsistencia}}
+          </td>
+
+         <td class="tdaa1 md-table-cuerpo" data-title="Sede" md-cell>
+          	{{formatDMY(dato.fechaAsistencia)}}
+          </td>
+          
           <td class="tdaa1 md-table-cuerpo" data-title="Usuario Interno" md-cell>
-          {{dato.codEjecutora}}</td>
-<!--           <td class="tdaa1 md-table-cuerpo" data-title="Entidad" md-cell> -->
-<!--           {{dato.idEntidad}}</td> -->
-<!--           <td class="tdaa1 md-table-cuerpo" data-title="Origen" md-cell> -->
-<!--           {{dato.idOrigen}}</td> -->
+          	{{dato.codEjecutora}}
+          </td>
+          
           <td class="tdaa1 md-table-cuerpo" data-title="Programación" md-cell>
-          {{dato.idEntidadTxt}}</td>
+          	{{dato.idEntidadTxt}}
+          </td>
+          
           <td class="tdaa1 md-table-cuerpo" data-title="Modalidad" md-cell>
-          {{dato.idSedeTxt}}</td>
-          <td class="tdaa1 md-table-cuerpo" data-title="Sede" md-cell>
-          {{formatDMY(dato.fechaAsistencia)}}</td>
+          	{{dato.idSedeTxt}}
+          </td>
+          
           <td class="tdaa1 md-table-cuerpo" data-title="Sistema Administrativo" md-cell>
-          {{dato.idUsuinternoTxt}}</td>
+          	{{dato.idUsuinternoTxt}}
+          </td>
+          
           <td class="tdaa1 md-table-cuerpo" data-title="Tipo De Financiamiento" md-cell>
-          {{dato.idSistAdmTxt}}</td>
+          	{{dato.idSistAdmTxt}}
+          </td>
+          
           <td class="tdaa1 md-table-cuerpo" data-title="Fecha De Finalización" md-cell>
-          {{dato.idOrigenTxt}}</td>
+          	{{dato.idOrigenTxt}}
+          </td>
+          
+          <td class="tdaa1 md-table-cuerpo" data-title="Programaci&oacute;n" md-cell>
+          	{{dato.idProgramacionTxt}}
+          </td>
+          
           <td class="tdaa1 md-table-cuerpo" data-title="Fecha De Solicitud Del Servicio" md-cell>
-          {{dato.estadoTxt}}</td>
+          	{{dato.estadoTxt}}
+          </td>
            
-<!--            <td class="tdaa8 md-table-cuerpo" data-title="Acciones" md-cell> -->
-<!--              <div layout="row" layout-xs="column" layout-align="center center"> -->
-<!--                  <md-button class="{{dato.cclase}}" -->
-<!--                         ng-click="showConfirm($event, dato)" -->
-<!--                         ng-if="dato.dtAsistenciaACL.eliminar"> -->
-<!--                         <label>{{dato.cestado}}</label> -->
-<!--                         </md-button> -->
-<!--                 <md-button class="md-icon-button md-primary" -->
-<!--                         ng-click="editarDtAsistencia($event, dato)" -->
-<!--                         ng-if="dato.dtAsistenciaACL.esEditable"> <md-icon -->
-<!--                         md-font-set="material-icons">search</md-icon> </md-button>                  -->
-<!--              </div> -->
             </td>
            </tr>
            <tr class="secondary childiddtAsistencia" ng-repeat-end></tr>
