@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -29,7 +30,6 @@ import org.springframework.beans.NotWritablePropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang.StringUtils;
 
 import pe.gob.mef.registramef.bs.cache.clases.CacheMsUsuariosBk;
 import pe.gob.mef.registramef.bs.ctlracceso.DtAmpliacionFechaACL;
@@ -2386,6 +2386,35 @@ public class ServicioImp implements Servicio, Serializable {
 		
 		return dtAsistenciaBk;
 	}
+	
+	public void deleteDtAsistenciaTema(DtAsistenciaTemas dtAsistenciaTemas) throws Validador {
+		try {
+			DtAsistenciaTemas msObject = null;
+			if (dtAsistenciaTemas.getIdAsistencia() != null
+					&& dtAsistenciaTemas.getIdAsistencia().longValue() > 0) {
+
+				msObject = dtAsistenciaTemasDao.getDtAsistenciaTemas(dtAsistenciaTemas.getIdAsistTema());
+
+				Timestamp hoy = new Timestamp(System.currentTimeMillis());
+				Long estadoEliminado = PropertiesMg.getSistemLong(
+						PropertiesMg.KEY_ESTADOS_REGISTROS_ELIMINADO,
+						PropertiesMg.DEFOULT_ESTADOS_REGISTROS_ELIMINADO);
+
+				msObject.setFechaModif(hoy);
+				msObject.setEstado(estadoEliminado);
+				Long estadoanterior = msObject.getEstado();
+
+				dtAsistenciaTemasDao.updateDtAsistenciaTemas(msObject);
+
+				log.log(Level.INFO,
+						"CAMBIO :: " + msObject.getIdusserModif() + " :: " + " :: " + msObject.getRtmaddress() + " :: "
+								+ "ELIMINADO DtEntidadSede" + " :: " + msObject.getIdAsistTema().toString() + " :: "
+								+ estadoanterior + " :: " + "0");
+			}
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		}
+	}
 
 	@Override
 	public DtAsistenciaBk saveorupdateDtAsistenciaBk(
@@ -2516,15 +2545,7 @@ public class ServicioImp implements Servicio, Serializable {
 					throw new Validador(MessageFormat.format("DEBE SELECCIONAR EL TEMA, SUBTEMA Y DETALLE",
 							Messages.getStringToKey("dtAsistencias.titulotabla"))); 
 				}
-				//MPINARES 24012023 - FIN
 				
-		//VALIDAR USUARIO
-		/*if(dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss()==null && dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss().isEmpty()) {
-			throw new Validador(MessageFormat.format("DEBE SELECCIONAR UN USUARIO",
-					Messages.getStringToKey("dtAsistencias.titulotabla"))); 
-		}*/
-				
-
 		DtAsistencia dtAsistencia = null;
 		Timestamp hoy = new Timestamp(System.currentTimeMillis());
 
@@ -2566,53 +2587,50 @@ public class ServicioImp implements Servicio, Serializable {
 			throw new Validador(e.getMessage());
 		}
 		
-		//MPINARES 24012023 - INICIO
 				DtAsistenciaTemas dtAsistenciaTemas = null;
-				if (dtAsistenciaBk.getDtAsistenciaTemasBkJSss() != null
-						&& dtAsistenciaBk.getDtAsistenciaTemasBkJSss().size() > 0) {
-					for (DtAsistenciaTemasBk dtAsistenciaTemasBk : dtAsistenciaBk.getDtAsistenciaTemasBkJSss()) {
-						if (dtAsistenciaTemasBk.getIdAsistTema() != null
-								&& dtAsistenciaTemasBk.getIdAsistTema().longValue() > 0) {
-							// ACTUALIZAR
-							DtAsistenciaTemas asistenciaTema = dtAsistenciaTemasDao.getDtAsistenciaTemas(dtAsistenciaTemasBk.getIdAsistTema().longValue());
-							asistenciaTema.setDetalle(dtAsistenciaTemasBk.getDetalle());
-							asistenciaTema.setIdTema(dtAsistenciaTemasBk.getIdTema());
-							asistenciaTema.setIdSubtema(dtAsistenciaTemasBk.getIdSubtema());
-							dtAsistenciaTemasDao.updateDtAsistenciaTemas(asistenciaTema);
-
-						} else {
-							// NUEVO
-							dtAsistenciaTemasBk.setIdAsistTema(null);
-							dtAsistenciaTemasBk.setIdAsistencia(dtAsistencia.getIdAsistencia());
-							dtAsistenciaTemasBk.setIdUsuinterno(kyUsuarioMod);
-							dtAsistenciaTemasBk.setEstado(Estado.ACTIVO.getValor());
-							dtAsistenciaTemasBk.setFechaCrea(hoy);
-							dtAsistenciaTemasBk.setFechaModif(hoy);
-							dtAsistenciaTemasBk.setIdusserCrea(kyUsuarioMod);
-							dtAsistenciaTemasBk.setIdusserModif(kyUsuarioMod);
-							dtAsistenciaTemasBk.setRtmaddress(rmtaddress);
-							dtAsistenciaTemasBk.setRtmaddressrst(rmtaddress);
-
-							dtAsistenciaTemas = new DtAsistenciaTemas();
-
-							FuncionesStaticas.copyPropertiesObject(dtAsistenciaTemas, dtAsistenciaTemasBk);
-							dtAsistenciaTemasDao.saveDtAsistenciaTemas(dtAsistenciaTemas);
-
-							log.log(Level.INFO,
-									"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
-											+ "CREADO dtAsistenciaTemas" + " :: "
-											+ dtAsistenciaTemas.getIdAsistTema().toString() + " :: " + "0"
-											+ " :: " + ""+Estado.ACTIVO.getValor());
+				if (dtAsistenciaBk.getDtAsistenciaTemasBkJSss() != null &&
+						 dtAsistenciaBk.getDtAsistenciaTemasBkJSss().size() > 0) {
+					
+					List<DtAsistenciaTemas> lstAsistenciaTemaBD = dtAsistenciaTemasDao.getXFiltro(null, dtAsistencia.getIdAsistencia(), null, null);
+					if(lstAsistenciaTemaBD!=null && !lstAsistenciaTemaBD.isEmpty()) {
+						for (DtAsistenciaTemas dtAsistenciaTemasBD : lstAsistenciaTemaBD) {
+							this.deleteDtAsistenciaTema(dtAsistenciaTemasBD);
 						}
 					}
+					
+					for (DtAsistenciaTemasBk dtAsistenciaTemasBk : dtAsistenciaBk.getDtAsistenciaTemasBkJSss()) {
+						// NUEVO
+						dtAsistenciaTemasBk.setIdAsistTema(null);
+						dtAsistenciaTemasBk.setIdAsistencia(dtAsistencia.getIdAsistencia());
+						dtAsistenciaTemasBk.setIdUsuinterno(kyUsuarioMod);
+						dtAsistenciaTemasBk.setEstado(Estado.ACTIVO.getValor());
+						dtAsistenciaTemasBk.setFechaCrea(hoy);
+						dtAsistenciaTemasBk.setFechaModif(hoy);
+						dtAsistenciaTemasBk.setIdusserCrea(kyUsuarioMod);
+						dtAsistenciaTemasBk.setIdusserModif(kyUsuarioMod);
+						dtAsistenciaTemasBk.setRtmaddress(rmtaddress);
+						dtAsistenciaTemasBk.setRtmaddressrst(rmtaddress);
+
+						dtAsistenciaTemas = new DtAsistenciaTemas();
+
+						FuncionesStaticas.copyPropertiesObject(dtAsistenciaTemas, dtAsistenciaTemasBk);
+						dtAsistenciaTemasDao.saveDtAsistenciaTemas(dtAsistenciaTemas);
+
+						log.log(Level.INFO,
+								"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+										+ "CREADO dtAsistenciaTemas" + " :: "
+										+ dtAsistenciaTemas.getIdAsistTema().toString() + " :: " + "0"
+										+ " :: " + ""+Estado.ACTIVO.getValor());
+					}
+					
 				}
 				//MPINARES 24012023 - FIN
 		this.saveOrUpdateAsistenciaUsuarioExt(dtAsistenciaBk, dtAsistencia, hoy, kyUsuarioMod, rmtaddress, user);	
-		//this.adjuntarDocumentoAsistencia(dtAsistencia.getIdAsistencia(), tdAnexosBkss, user, kyUsuarioMod, kyAreaMod, rmtaddress);
 		
 		Long idTiposervicio = PropertiesMg.getSistemLong(
 				PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
 				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
+		
 		this.cargarAnexos(tdAnexosBkss, dtAsistencia.getIdAsistencia(), user, kyUsuarioMod, kyAreaMod, rmtaddress, idTiposervicio);
 
 		dtAsistenciaBk = getDtAsistenciaBkXid(dtAsistencia.getIdAsistencia(),kyUsuarioMod);	
@@ -2632,7 +2650,7 @@ public class ServicioImp implements Servicio, Serializable {
 		if (tdAnexosBkss != null && !tdAnexosBkss.isEmpty()) {
 			for (DtAnexoBk tdAnexosBkAct : TdAnexosBksssActuales) {
 				if (!tdAnexosBkss.contains(tdAnexosBkAct)) {
-					//deleteTdAnexos(tdAnexosBkAct, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+					deleteTdAnexos(tdAnexosBkAct, user, kyUsuarioMod, kyAreaMod, rmtaddress);
 				}
 			}
 			for (DtAnexoBk tdAnexosBk : tdAnexosBkss) {
@@ -2668,7 +2686,7 @@ public class ServicioImp implements Servicio, Serializable {
 			}
 		} else {
 			for (DtAnexoBk tdAnexosBkAct : TdAnexosBksssActuales) {
-				//deleteTdAnexos(tdAnexosBkAct, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+				deleteTdAnexos(tdAnexosBkAct, user, kyUsuarioMod, kyAreaMod, rmtaddress);
 			}
 		}
 	}
@@ -2677,7 +2695,7 @@ public class ServicioImp implements Servicio, Serializable {
 			throws Validador {
 		try {
 			DtAnexo tdAnexos = null;
-			if (tdAnexosBk.getIdAnexo() != null && tdAnexosBk.getIdAnexo().longValue() > 0) {
+			if (tdAnexosBk.getIdAnexo() != null && tdAnexosBk.getIdAnexo().longValue() != 0L) {
 
 				tdAnexos = dtAnexoDao.getDtAnexo(tdAnexosBk.getIdAnexo());
 
@@ -2687,7 +2705,7 @@ public class ServicioImp implements Servicio, Serializable {
 				tdAnexos.setIdusserModif(kyUsuarioMod);
 				tdAnexos.setFechaModif(hoy);
 				Long estadoanterior = tdAnexos.getEstado();
-				tdAnexos.setEstado(0L);
+				tdAnexos.setEstado(dtAnexoDao.getEstadoEliminado());
 
 				dtAnexoDao.updateDtAnexo(tdAnexos);
 
@@ -2869,7 +2887,7 @@ public class ServicioImp implements Servicio, Serializable {
 					PropertiesMg.DEFOULT_ESTADOS_REGISTROS_FINALIZADO);
 			
 			dtAsistenciaBk.setIdusserModif(kyUsuarioMod);
-			dtAsistenciaBk.setFechaModif(hoy);
+			dtAsistenciaBk.setFechaFinalizacion(hoy);
 			dtAsistenciaBk.setEstado(estadoFinalizado);
 			
 			 this.saveorupdateDtAsistenciaBk(dtAsistenciaBk, user, kyUsuarioMod, kyAreaMod, rmtaddress, null);
@@ -2877,15 +2895,17 @@ public class ServicioImp implements Servicio, Serializable {
 			if(dtAsistenciaBk != null) {
 				Long idTipoServicioAsistencia = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN, 
 																		   PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
-
-				this.enviarEncuestaPorCorreo(user, 
-											dtEntidadesIdEntidadIdEntidadListaCache, 
-											idTipoServicioAsistencia, 
-											idTipoServicioAsistencia, 
-											hoy, 
-											rmtaddress, 
-											hoy);	
 				
+				System.out.println("idTipoServicioAsistencia: "+idTipoServicioAsistencia);
+
+				
+				 this.enviarEncuestaPorCorreo(
+								(dtAsistenciaBk.getDetalle() != null ? dtAsistenciaBk.getDetalle() : ""),
+								dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss(), 
+								idTipoServicioAsistencia,
+								dtAsistenciaBk.getIdAsistencia(),
+								dtAsistenciaBk.getFechaAsistencia(),
+								"HTTP://URL", hoy);
 				
 				this.encuesta(dtAsistenciaBk, kyUsuarioMod, idTipoServicioAsistencia);
 				
@@ -2934,10 +2954,13 @@ public class ServicioImp implements Servicio, Serializable {
 		}
 		
 
-		@Override
-		public void enviarEncuestaPorCorreo(final String descpServicio, final Collection<?> participantes,
-				final Long tipoServicio, final Long idServicio, final Date fechaServicio, final String url,
-				final Timestamp fechaFinalizacion) throws Validador { // VBALDEONH
+		public void enviarEncuestaPorCorreo(String descpServicio,  
+											Collection<?> participantes,
+											Long tipoServicio, 
+											Long idServicio, 
+											Date fechaServicio, 
+											String url,
+											Timestamp fechaFinalizacion) throws Validador { // VBALDEONH
 
 			// SPRINT5 INICIO
 			log.log(Level.INFO, "INICIO DE  enviarEncuestaPorCorreo");// SPRINT53
@@ -3098,6 +3121,7 @@ public class ServicioImp implements Servicio, Serializable {
 			myThread.start();
 
 		}
+		
 
 		private Long getParametro(String key, Long defaultValue) throws Validador {
 			try {
@@ -3382,27 +3406,59 @@ public class ServicioImp implements Servicio, Serializable {
 			return dtAsistenciaUsuexternosBk;
 		}
 		
-		private void saveOrUpdateAsistenciaUsuarioExt(DtAsistenciaBk dtAsistenciaBk, DtAsistencia dtAsistencia,
-				Timestamp hoy, Long kyUsuarioMod, String rmtaddress, String user) {
+		public void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user,
+				Long kyUsuarioMod, Long kyAreaMod, Long kySedeMod, String rmtaddress) throws Validador {
+			try {
+				DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
+				if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
+						&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
+
+					dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
+							.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
+
+					// Date hoy = new Date(System.currentTimeMillis());
+					Timestamp hoy = new Timestamp(System.currentTimeMillis());
+
+					dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
+					dtAsistenciaUsuexternos.setFechaModif(hoy);
+					Long estadoanterior = dtAsistenciaUsuexternos.getEstado();
+					dtAsistenciaUsuexternos.setEstado(dtAsistenciaUsuexternosDao.getEstadoEliminado());
+
+					dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
+
+					log.log(Level.INFO,
+							"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+									+ "ELIMINADO dtAsistenciaUsuexternos" + " :: "
+									+ dtAsistenciaUsuexternos.getIdAsistUsuext().toString() + " :: " + estadoanterior
+									+ " :: " + "0");
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new Validador(e.getMessage());
+			}
+		}
+		
+		private void saveOrUpdateAsistenciaUsuarioExt(DtAsistenciaBk dtAsistenciaBk, 
+													  DtAsistencia dtAsistencia,
+													  Timestamp hoy, Long kyUsuarioMod, String rmtaddress, String user) {
 			
 			DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
 			try {
 				if (dtAsistenciaBk != null && 
 						dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss() != null &&
 						 !dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss().isEmpty()) {
+					
+					List<DtAsistenciaUsuexternos> listaAsistenciaUsuexternosBD = dtAsistenciaUsuexternosDao.getXFiltro(dtAsistencia.getIdAsistencia(), null, null);
+					if(listaAsistenciaUsuexternosBD!=null && !listaAsistenciaUsuexternosBD.isEmpty()) {
+						for (DtAsistenciaUsuexternos dtAsistenciaUsuexternosBD : listaAsistenciaUsuexternosBD) {
+							this.deleteDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBD, user, kyUsuarioMod, rmtaddress);
+						}
+					}
+					
+					
 					for (DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk : dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss()) {
-						if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
-								&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
-							
-							dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
-									.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
-							
-							dtAsistenciaUsuexternos.setRtmaddressrst(rmtaddress);
-							dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
-							dtAsistenciaUsuexternos.setFechaModif(hoy);
-							dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
-							
-						} else {
+							dtAsistenciaUsuexternosBk.setIdAsistUsuext(null);
 							dtAsistenciaUsuexternosBk.setIdAsistencia(dtAsistencia.getIdAsistencia());
 							dtAsistenciaUsuexternosBk.setRtmaddress(rmtaddress);
 							dtAsistenciaUsuexternosBk.setRtmaddressrst(rmtaddress);
@@ -3416,7 +3472,6 @@ public class ServicioImp implements Servicio, Serializable {
 
 							FuncionesStaticas.copyPropertiesObject(dtAsistenciaUsuexternos, dtAsistenciaUsuexternosBk);
 							dtAsistenciaUsuexternosDao.saveDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
-						}
 					}
 				}
 				
@@ -9031,25 +9086,25 @@ public class ServicioImp implements Servicio, Serializable {
 
 	}
 	
-	public void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user,
-			Long kyUsuarioMod, Long kyAreaMod, Long kySedeMod, String rmtaddress) throws Validador {
+	private void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternos dtAsistenciaUsuexternos, String user,
+			Long kyUsuarioMod, String rmtaddress) throws Validador {
 		try {
-			DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
-			if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
-					&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
+			DtAsistenciaUsuexternos dtAsistenciaUsuexternosBD = null;
+			if (dtAsistenciaUsuexternos.getIdAsistUsuext() != null
+					&& dtAsistenciaUsuexternos.getIdAsistUsuext().longValue() > 0) {
 
-				dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
-						.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
+				dtAsistenciaUsuexternosBD = dtAsistenciaUsuexternosDao
+						.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternos.getIdAsistUsuext());
 
 				// Date hoy = new Date(System.currentTimeMillis());
 				Timestamp hoy = new Timestamp(System.currentTimeMillis());
 
-				dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
-				dtAsistenciaUsuexternos.setFechaModif(hoy);
+				dtAsistenciaUsuexternosBD.setIdusserModif(kyUsuarioMod);
+				dtAsistenciaUsuexternosBD.setFechaModif(hoy);
 				Long estadoanterior = dtAsistenciaUsuexternos.getEstado();
-				dtAsistenciaUsuexternos.setEstado(dtAsistenciaUsuexternosDao.getEstadoEliminado());
+				dtAsistenciaUsuexternosBD.setEstado(dtAsistenciaUsuexternosDao.getEstadoEliminado());
 
-				dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
+				dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBD);
 
 				log.log(Level.INFO,
 						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
@@ -17557,6 +17612,97 @@ public class ServicioImp implements Servicio, Serializable {
 				FuncionesStaticas.copyPropertiesObject(dtAsistenciaBk, dtAsistencia);
 //				completarDtAsistencia(dtAsistenciaBk);
 				completarDtAsistencia(dtAsistenciaBk, kyUsuarioMod);//CUSCATA - 18062024
+				setACLDtAsistenciaBk(dtAsistenciaBk, kyUsuarioMod);
+				dtAsistenciaBkss.add(dtAsistenciaBk);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dtAsistenciaBkss;
+	}
+	
+	@Override
+	public List<DtAsistenciaBk> getDtAsistenciaXFiltro(Date fechaInicio, Date fechaFin, Long idProgramacion,
+														Long kyUsuarioMod,long sede,int rol,long sistemaadmi) throws Validador {
+
+
+		if (fechaInicio != null && fechaFin != null) {
+			if (fechaInicio.after(fechaFin)) {
+				Date fechatmp = fechaInicio;
+				fechaInicio = fechaFin;
+				fechaFin = fechatmp;
+			}
+		} else if (fechaInicio != null) {
+			fechaFin = fechaInicio;
+		} else if (fechaFin != null) {
+			fechaInicio = fechaFin;
+			fechaFin = fechaInicio;
+		}
+
+		if (fechaFin != null) {
+			Timestamp fechFin = new Timestamp(fechaFin.getTime());
+			fechaFin = FuncionesStaticas.getDiaMasUno(fechFin);
+		}
+
+		List<DtAsistenciaBk> dtAsistenciaBkss = new ArrayList<DtAsistenciaBk>();
+		try {
+			List<DtAsistencia> dtAsistenciasss = null;
+			int rolAdminAndOGC = 0;
+			int rolGC = 1;
+			int rolImplantador = 2;
+			
+			if (rol == rolAdminAndOGC) {
+				 dtAsistenciasss = dtAsistenciaDao.getXFiltroV(fechaInicio, fechaFin, null);
+			} else if(rol == rolGC) {
+				dtAsistenciasss = dtAsistenciaDao.getXFiltro(fechaInicio, fechaFin, null, sede, null, null);
+			} else if(rol == rolImplantador) {
+				dtAsistenciasss = dtAsistenciaDao.getXFiltro(fechaInicio, fechaFin, idProgramacion, sede, sistemaadmi, kyUsuarioMod);
+			}
+			
+			
+			
+			//List<DtAsistencia> dtAsistenciasss = dtAsistenciaDao.getXFiltroV(fechaInicio, fechaFin, idProgramacion);
+			/*
+			 if (rol == 0) {
+				if (programada == 1)
+
+				{
+					dtVisitass = dtVisitasDao.getXFiltro(null, null, 121L, null, null, null, null, null, null, null,
+							null, fechaInicio, fechaFin, null);
+				} else {
+					dtVisitass = dtVisitasDao.getXFiltro(null, null, null, null, null, null, null, null, null, null,
+							null, fechaInicio, fechaFin, null);
+				}
+			} else if (rol == 1) {
+				if (programada == 1)
+
+				{
+					dtVisitass = dtVisitasDao.getXFiltro(null, null, 121L, null, null, null, null, sede, null, null,
+							null, fechaInicio, fechaFin, null);
+				} else {
+					dtVisitass = dtVisitasDao.getXFiltro(null, null, null, null, null, null, null, sede, null, null,
+							null, fechaInicio, fechaFin, null);
+				}
+
+			} else if (rol == 2) {
+
+				if (programada == 1)
+
+				{
+					dtVisitass = dtVisitasDao.getXFiltro(null, null, 121L, null, null, null, null, sede, sistemaadmi,
+							null, null, fechaInicio, fechaFin, kyUsuarioMod);
+				} else {
+					dtVisitass = dtVisitasDao.getXFiltro(null, null, null, null, null, null, null, sede, sistemaadmi,
+							null, null, fechaInicio, fechaFin, kyUsuarioMod);
+				}
+
+			 * */
+			
+			
+			for (DtAsistencia dtAsistencia : dtAsistenciasss) {
+				DtAsistenciaBk dtAsistenciaBk = new DtAsistenciaBk();
+				FuncionesStaticas.copyPropertiesObject(dtAsistenciaBk, dtAsistencia);
+				completarDtAsistencia(dtAsistenciaBk, kyUsuarioMod);
 				setACLDtAsistenciaBk(dtAsistenciaBk, kyUsuarioMod);
 				dtAsistenciaBkss.add(dtAsistenciaBk);
 			}

@@ -79,7 +79,7 @@ public class DtAsistenciaData implements Serializable{
 		return dtAsistenciaBksss;		
 	}
 	
-	public List<DtAsistenciaBk> getDtAsistenciaNoProgActivos(Servicio servicio, Long kyUsuarioMod, String fechaInicio, String fechaFin,String idProgramacion){
+	public List<DtAsistenciaBk> getDtAsistenciaNoProgActivos(Servicio servicio, Long kyUsuarioMod, String fechaInicio, String fechaFin,String idProgramacion, long sede,int rol,long sistemaadmi){
 		List<DtAsistenciaBk> dtAsistenciaBksss = null;
 		String key = DtAsistenciaBk.class.getSimpleName();
 		if(dataCache.containsKey(key)){
@@ -94,7 +94,7 @@ public class DtAsistenciaData implements Serializable{
 		                	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
 		                	Date fechaIniciod=sdformat.parse(fechaInicio);
 		                	Date fechaFind=sdformat.parse(fechaFin);
-		                	List<DtAsistenciaBk> dtAsistenciaBkssss = servicio.getDtAsistenciaXFiltroV(fechaIniciod, fechaFind, null, kyUsuarioMod);
+		                	List<DtAsistenciaBk> dtAsistenciaBkssss = servicio.getDtAsistenciaXFiltro(fechaIniciod, fechaFind, null, kyUsuarioMod, sede, rol, sistemaadmi);
 		    				entrada.setLista(dtAsistenciaBkssss);
 		    				entrada.setUltimoacceso(System.currentTimeMillis());
 		                } catch (Exception ex) {
@@ -110,7 +110,7 @@ public class DtAsistenciaData implements Serializable{
 	        	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
 	        	Date fechaIniciod=sdformat.parse(fechaInicio);
 	        	Date fechaFind=sdformat.parse(fechaFin);
-				dtAsistenciaBksss = servicio.getDtAsistenciaXFiltroV(fechaIniciod, fechaFind, null, kyUsuarioMod);
+				dtAsistenciaBksss = servicio.getDtAsistenciaXFiltro(fechaIniciod, fechaFind, null, kyUsuarioMod, sede, rol, sistemaadmi);
 				
 				entrada.setLista(dtAsistenciaBksss);
 				entrada.setTiempomuerto(60000);

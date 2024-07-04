@@ -13,6 +13,7 @@ import pe.gob.mef.registramef.bs.dao.DtAnexoDao;
 import pe.gob.mef.registramef.bs.dao.base.AbstractJpaCRUDDao;
 import pe.gob.mef.registramef.bs.domain.DtAnexo;
 import pe.gob.mef.registramef.bs.utils.Estado;
+import pe.gob.mef.registramef.bs.utils.PropertiesMg;
 
 /**
  * DT_ANEXO REPOSITORIO: LISTA DE LOS DOCUMENTOS ANEXADOS EN EL SISTEMA
@@ -30,8 +31,13 @@ public class DtAnexoDaoImp extends
 		DtAnexoDao {
 
 	private static final Logger log = Logger.getLogger(DtAnexoDaoImp.class.getName());
+	private Long estadoNuevo = 1L;
+	private Long estadoEliminado = 0L;
 
 	public DtAnexoDaoImp() {
+		this.estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);
+		this.estadoEliminado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_ELIMINADO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_ELIMINADO);
+		log.log(Level.INFO,"INICIALIZANDO JPA TEMPLATE PARA DtAnexoDaoImp "+"Nuevo: "+estadoNuevo+" Eliminado:"+estadoEliminado);
 		log.log(Level.INFO,null,"INICIALIZANDO JPA TEMPLATE PARA DtAnexoDaoImp");
 	}
 	
@@ -232,4 +238,12 @@ public class DtAnexoDaoImp extends
 			return retorno;
 		}
 	}
+
+	@Override
+	public Long getEstadoEliminado() {
+		return estadoEliminado;
+	}
+	
+	
+	
 }

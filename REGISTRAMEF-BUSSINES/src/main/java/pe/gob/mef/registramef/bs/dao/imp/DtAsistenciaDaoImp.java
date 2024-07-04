@@ -321,20 +321,50 @@ public class DtAsistenciaDaoImp extends
 			return lista;
 		}
 
-//		public Long getEstadoNuevo() {
-//			return estadoNuevo;
-//		}
-//
-//		public void setEstadoNuevo(Long estadoNuevo) {
-//			this.estadoNuevo = estadoNuevo;
-//		}
-//
-//		public Long getEstadoEliminado() {
-//			return estadoEliminado;
-//		}
-//
-//		public void setEstadoEliminado(Long estadoEliminado) {
-//			this.estadoEliminado = estadoEliminado;
-//		}
-		//MPINARES 24012023 - FIN
+		@Override
+		public List<DtAsistencia> getXFiltro(Date fechaInicio, Date fechaFin, Long idProgramacion, Long idSede,
+											Long idSistAdm,Long idUsuario) {
+			StringBuffer sb = new StringBuffer(100);
+			List<Object> hs = new ArrayList<Object>();
+			sb.append("select t from " + getDomainClass().getName() + " t where t.estado >= "+Estado.ELIMINADO.getValor()+" ");
+			
+			if(idProgramacion!=null){
+				sb.append("and t.idProgramacion = ? ");
+				hs.add(idProgramacion);			
+			}
+			
+			if (fechaInicio != null) {
+				sb.append("and trunc(t.fechaAsistencia) >= ? ");
+				hs.add(fechaInicio);
+			}
+			
+			if (fechaFin != null) {
+				sb.append("and trunc(t.fechaAsistencia) < ? ");
+				hs.add(fechaFin);
+			}
+			
+			if (idSede != null) {
+				sb.append("and t.idSede = ? ");
+				hs.add(idSede);
+			}
+			
+			if (idSistAdm != null) {
+				sb.append("and t.idSistAdm = ? ");
+				hs.add(idSistAdm);
+			}
+			
+			if (idUsuario != null) {
+				sb.append("and t.idusserCrea = ? ");
+				hs.add(idUsuario);
+			}	
+			
+			 sb.append(" order by t.idAsistencia desc ");
+
+			Object param[] = new Object[hs.size()];
+			hs.toArray(param);
+			List<DtAsistencia> lista = super.find(sb.toString(), param);
+
+			return lista;
+		}
+
 }

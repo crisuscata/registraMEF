@@ -417,6 +417,21 @@ public class DtAsistenciaRsCtrl {
 			String estadoTxt = req.getParameter("estadoTxt");
 			
             String sestado = req.getParameter("estado");
+            
+            int rol=-1;
+			int rolAdminAndOGC = 0;
+			int rolGC = 1;
+			int rolImplantador = 2;
+			if (req.isUserInRole(Roles.ADMINISTRADOR) || msUsuariosBk.getPerfil().contains(Roles.PERFIL_USU_OGC)) {
+				rol = rolAdminAndOGC;
+			} else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_GC)) {
+				rol = rolGC;
+			} else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)) {
+				rol = rolImplantador;
+			}
+			
+			System.out.println("ROL DE USUARIO: " + rol);
+			System.out.println("idProgramacion: " + idProgramacion);
 			
 			Integer iestado = null;
 			if(sestado!=null){
@@ -425,8 +440,9 @@ public class DtAsistenciaRsCtrl {
 				}catch(Exception e){}
 			}		
 			
-			DtAsistenciaFiltro dtAsistenciaFiltro = new DtAsistenciaFiltro(fechaInicio, fechaFin, idSedeTxt, idEntidadTxt, idProgramacion, 
-					idAsistencia, dniUserTxt, usuExtTxt, codEjecutora, idUsuinternoTxt, idSistAdmTxt, idOrigenTxt, estadoTxt, iestado);	
+			DtAsistenciaFiltro dtAsistenciaFiltro = new DtAsistenciaFiltro(fechaInicio, 
+																			fechaFin, idSedeTxt, idEntidadTxt, idProgramacion, 
+																			idAsistencia, dniUserTxt, usuExtTxt, codEjecutora, idUsuinternoTxt, idSistAdmTxt, idOrigenTxt, estadoTxt, iestado);	
 			
 			DtAsistenciaData dtAsistenciaData = (DtAsistenciaData) req.getSession().getAttribute("DtAsistenciaData");
 			if(dtAsistenciaData==null){
@@ -436,7 +452,14 @@ public class DtAsistenciaRsCtrl {
 			
 			DtAsistenciaLC dtAsistenciaLC = new DtAsistenciaLC();
 			long inicio = System.currentTimeMillis();
-			List<DtAsistenciaBk> dtAsistenciasss = dtAsistenciaData.getDtAsistenciaNoProgActivos(servicio,msUsuariosBk.getIdusuario(), fechaInicio, fechaFin, idProgramacion); 
+			
+			List<DtAsistenciaBk> dtAsistenciasss = dtAsistenciaData.getDtAsistenciaNoProgActivos(servicio,
+																								msUsuariosBk.getIdusuario(), 
+																								fechaInicio, 
+																								fechaFin,
+																								idProgramacion,
+																								msUsuariosBk.getIdSede(),rol,msUsuariosBk.getIdSistAdmi());
+			
 			long lfinal =System.currentTimeMillis()-inicio;
 			dtAsistenciaLC.setTiempoenBD(lfinal);
 			

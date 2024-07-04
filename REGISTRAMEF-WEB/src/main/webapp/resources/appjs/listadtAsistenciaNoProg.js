@@ -2,7 +2,7 @@
 var contexto = window.location.pathname.substring(0,window.location.pathname.indexOf('/',2));
 var pglogoff = window.location.origin+contexto+'/logoff.htm';
 var principalUrl = window.location.origin+contexto+'/index.htm';
-var listadtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/listadtAsistenciaNoProg";
+var listadtAsistenciaNoProgUrl = contexto+"/rs/ctrldtAsistencia/listadtAsistenciaNoProg";
 var insertdtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/salvardtAsistenciaNoProg";
 var validarCambiosAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/validarCambiosAsistencia";
 var finalizardtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/finalizardtAsistencia";
@@ -272,7 +272,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	 
 	 $scope.logOrder = function (order) {
 	  console.log('order: ', order);
-	  $scope.loaddtAsistencias();
+	  $scope.loaddtAsistenciasNoProg();
 	 };
 	 
 	 $scope.logItem = function (item) {
@@ -282,7 +282,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	 $scope.logPagination = function (page, limit) {
 	  console.log('page: ', page);
 	  console.log('limit: ', limit);
-	  $scope.loaddtAsistencias();
+	  $scope.loaddtAsistenciasNoProg();
          };
      $scope.creadtAsistencia = false;
     // ///////////////////////////////////////////
@@ -296,7 +296,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		console.log("JSON.stringify( $scope.archivos ) : " + JSON.stringify( $scope.archivos ));
 	}
 
-	$scope.loaddtAsistencias = function () {
+	$scope.loaddtAsistenciasNoProg = function () {
 	    //$scope.promise = $timeout(function () {
 	    	var surl = $scope.getURL();	    
 	    	$scope.promise = $http.get(surl).then(function(res){
@@ -391,7 +391,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	  }
 
           $scope.getURL=function(){		    	 
-		  return listadtAsistenciaUrl+$scope.getURLParametros();
+		  return listadtAsistenciaNoProgUrl+$scope.getURLParametros();
 	  }
 	  
 	  $scope.editdtAsistencia = function () {
@@ -478,7 +478,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 			}else{
 				$scope.filtro.estado = eestado;
 			}
-			$scope.loaddtAsistencias();
+			$scope.loaddtAsistenciasNoProg();
 		};
 		
 		
@@ -488,14 +488,14 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
           }else{
 			 var keyCode = ev.which || ev.keyCode;
 			    if (keyCode === 13) {
-			    	$scope.loaddtAsistencias();
+			    	$scope.loaddtAsistenciasNoProg();
 			    }else if (keyCode === 1) {
-			    	$scope.loaddtAsistencias();
+			    	$scope.loaddtAsistenciasNoProg();
 			    }
           }
 //        	 var keyCode = ev.which || ev.keyCode;
 //     		if (keyCode === 13) {
-//     			$scope.loaddtAsistencias();
+//     			$scope.loaddtAsistenciasNoProg();
 //     		}
 		};
 
@@ -580,7 +580,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 //				        $scope.datos = instrumentos;
 //				        $scope.total = $scope.datos.length;
 //			        }	
-			        $scope.loaddtAsistencias();
+			        $scope.loaddtAsistenciasNoProg();
 				},
 				function error(errResponse) {
 		            console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
@@ -636,7 +636,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 //					        $scope.datos = instrumentos;
 //					        $scope.total = $scope.datos.length;
 //				        }	
-						$scope.loaddtAsistencias();
+						$scope.loaddtAsistenciasNoProg();
 					},
 					function error(errResponse) {
 			            console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
@@ -2118,13 +2118,15 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		      .cancel('No');
 
 		    $mdDialog.show(confirm).then(function () {
-		      $scope.status = 'SI';
-		     // var datainsertFinalizar = angular.toJson($scope.dtAsistenciaModelo);
 		      
+		      $scope.status = 'SI';
 		      $scope.finalizardtAsistencia(ev, $scope.dtAsistenciaModelo);
+		      
 		    }, function () {
 		      $scope.status = 'NO';
 		    });
+		    
+		    
 		  };
 		  
 		  $scope.finalizardtAsistencia = function(ev,dtAsistenciaBk){		

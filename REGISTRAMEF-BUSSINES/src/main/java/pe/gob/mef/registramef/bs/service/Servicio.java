@@ -1592,6 +1592,7 @@ public interface Servicio {
 	//MPINARES 24012023 - INICIO
 		List<DtEntidadesDto> getMsInstitucionesXCodigoEjecutora(String codEjec, Long idSistAdmi) throws Validador ;
 		List<DtAsistenciaBk> getDtAsistenciaXFiltroV(Date fechaInicio, Date fechaFin, Long idProgramacion,Long kyUsuarioMod) throws Validador;
+		List<DtAsistenciaBk> getDtAsistenciaXFiltro(Date fechaInicio, Date fechaFin, Long idProgramacion,Long kyUsuarioMod,long sede,int rol,long sistemaadmi) throws Validador;
 		List<DtAsistenciaTemasBk> getDtAsistenciaTemasXIdAsistencia(Long idAsistencia);
 		List<IDValorDto> getPrtParametrosIdparametroIdTipoEntidad();
 		List<IDValorDto> getListaMsPaisesActivos() ;

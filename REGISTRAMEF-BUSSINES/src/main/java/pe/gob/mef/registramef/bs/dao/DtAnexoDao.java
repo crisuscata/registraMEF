@@ -26,6 +26,7 @@ public interface DtAnexoDao {
 	List<DtAnexo> getActivasDtAnexoCero();
 	List<DtAnexo> getDesactivasDtAnexo();
 	Long getMaxIdVal();
+	Long getEstadoEliminado();
 	
 	List<DtAnexo> getXFiltro(String filename,String filenameoriginal,Long idTiposervicio,Long tipoAnexo,Long idmaestro, int iniciar, int max);
 	List<DtAnexo> getXFiltro(String filename,String filenameoriginal,Long idTiposervicio,Long tipoAnexo,Long idmaestro);

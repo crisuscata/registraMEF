@@ -35,6 +35,7 @@ public interface DtAsistenciaDao {
 	long getTotalXFiltro(Long idEntidad,Long idSede,Timestamp fechaAsistencia,Long idUsuinterno,Long idSistAdm,Long idOrigen,Long idProgramacion,Long estado);
 	//MPINARES 24012023 - INICIO
 	List<DtAsistencia> getXFiltroV(Date fechaInicio, Date fechaFin,Long idProgramacion) ;
+	List<DtAsistencia> getXFiltro(Date fechaInicio, Date fechaFin,Long idProgramacion, Long idSede, Long idSistAdm, Long idUsuario) ;
 //		Long getEstadoNuevo();
 //		Long getEstadoEliminado();
 	//MPINARES 24012023 - FIN

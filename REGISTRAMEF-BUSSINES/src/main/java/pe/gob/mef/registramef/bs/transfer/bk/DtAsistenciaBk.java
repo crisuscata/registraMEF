@@ -470,9 +470,12 @@ public class DtAsistenciaBk implements java.io.Serializable {
       		public boolean isFinalizado() {
 //      			Long estadoFinalizado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_FINALIZADO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_FINALIZADO);
       			Long estadoFinalizado =Estado.FINALIZADO.getValor();
-      			if (estado.longValue()==estadoFinalizado.longValue()){
-      				finalizado=true;
+      			if(estado!=null) {
+      				if (estado.longValue()==estadoFinalizado.longValue()){
+          				finalizado=true;
+          			}
       			}
+      			
       			return finalizado;
       		}
 

@@ -6,7 +6,7 @@
  <div layout="row" layout-aling="center start" 
 				style="font-size: 14px;">      
         
-       		 <div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2"  >
+       		 <div class="letraenvoltura"  >
 					<md-input-container class="input-container-margen letraTexto">
 						<label>Tema</label>
 						<md-select ng-model="asistenciaTemasmodelo.idTema" ng-change="changeIdTema(asistenciaTemasmodelo.idTema)"
@@ -22,7 +22,7 @@
  
  <div layout="row" layout-aling="center start" style="font-size: 14px;"> 
 				<div class="letraenvoltura"  
-									ng-if="dtAsistenciaModelo.editopcion < 2">
+									>
 				<md-input-container class="input-container-margen letraTexto">
 									<label>Subtema</label>
 									<md-select ng-model="asistenciaTemasmodelo.idSubtema" required
@@ -38,7 +38,7 @@
 
  <div layout="row" layout-aling="center start" style="font-size: 14px;"> 
  
- 				<div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2"  >
+ 				<div class="letraenvoltura"   >
 					<md-input-container class="input-container-margen letraTexto">
 						<label>Detalle tema</label>
 						<input id="concepto" 
