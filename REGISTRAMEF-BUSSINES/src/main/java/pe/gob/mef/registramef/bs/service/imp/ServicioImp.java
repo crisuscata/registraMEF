@@ -2890,7 +2890,7 @@ public class ServicioImp implements Servicio, Serializable {
 			dtAsistenciaBk.setFechaFinalizacion(hoy);
 			dtAsistenciaBk.setEstado(estadoFinalizado);
 			
-			 this.saveorupdateDtAsistenciaBk(dtAsistenciaBk, user, kyUsuarioMod, kyAreaMod, rmtaddress, null);
+  		    this.saveorupdateDtAsistenciaBk(dtAsistenciaBk, user, kyUsuarioMod, kyAreaMod, rmtaddress, null);
 			
 			if(dtAsistenciaBk != null) {
 				Long idTipoServicioAsistencia = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN, 

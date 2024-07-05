@@ -3028,6 +3028,8 @@ public class DtAsistenciaRsCtrl {
     					dtAsistenciaC.setIdSistAdm(msUsuariosBk.getIdSistAdmi());
     					dtAsistenciaC.setIdUsuinterno(msUsuariosBk.getIdusuario());
     					// MPINARES 24012023 - FIN
+    					dtAsistenciaC.setFechaSoli( new Timestamp(dtAsistenciaJS.getFechaSoliJUD().getTime()) );
+    					dtAsistenciaC.setFechaAsistencia( new Timestamp(dtAsistenciaJS.getFechaServicioJUD().getTime()) );
 
     					try {
     						dtAsistenciaC = servicio.finalizarDtAsistenciaBk(dtAsistenciaC, msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto);
