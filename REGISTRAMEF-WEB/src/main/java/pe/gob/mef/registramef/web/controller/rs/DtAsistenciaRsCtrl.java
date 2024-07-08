@@ -432,6 +432,10 @@ public class DtAsistenciaRsCtrl {
 			
 			System.out.println("ROL DE USUARIO: " + rol);
 			System.out.println("idProgramacion: " + idProgramacion);
+			System.out.println("fechaInicio: " + fechaInicio);
+			System.out.println("fechaFin: " + fechaFin);
+			System.out.println("idSedeTxt: " + idSedeTxt);
+			System.out.println("idEntidadTxt: " + idEntidadTxt);
 			
 			Integer iestado = null;
 			if(sestado!=null){
@@ -442,9 +446,12 @@ public class DtAsistenciaRsCtrl {
 			
 			DtAsistenciaFiltro dtAsistenciaFiltro = new DtAsistenciaFiltro(fechaInicio, 
 																			fechaFin, idSedeTxt, idEntidadTxt, idProgramacion, 
-																			idAsistencia, dniUserTxt, usuExtTxt, codEjecutora, idUsuinternoTxt, idSistAdmTxt, idOrigenTxt, estadoTxt, iestado);	
+																			idAsistencia, dniUserTxt, usuExtTxt, codEjecutora, 
+																			idUsuinternoTxt, idSistAdmTxt, idOrigenTxt, 
+																			estadoTxt, iestado);	
 			
 			DtAsistenciaData dtAsistenciaData = (DtAsistenciaData) req.getSession().getAttribute("DtAsistenciaData");
+			
 			if(dtAsistenciaData==null){
 				dtAsistenciaData = new DtAsistenciaData();
 				req.getSession().setAttribute("DtAsistenciaData",dtAsistenciaData);
@@ -459,6 +466,8 @@ public class DtAsistenciaRsCtrl {
 																								fechaFin,
 																								idProgramacion,
 																								msUsuariosBk.getIdSede(),rol,msUsuariosBk.getIdSistAdmi());
+			
+			System.out.println("dtAsistenciasss.size(): " + dtAsistenciasss.size());
 			
 			long lfinal =System.currentTimeMillis()-inicio;
 			dtAsistenciaLC.setTiempoenBD(lfinal);

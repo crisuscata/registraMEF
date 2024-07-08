@@ -1,4 +1,4 @@
-<div layout="column" layout-align="start stretch" data-ng-init="loaddtAsistenciasNoProg()">
+<div layout="column" layout-align="start stretch" data-ng-init="loaddtAsistenciasNoProg()" style="overflow-x: auto;"> 
 <!-- //MPINARES 14022024 - INICIO - NUEVA HTML -->
 <md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
 	<div class="md-toolbar-tools md-toolbar-tools-size">
@@ -16,20 +16,16 @@
 </md-toolbar>    
     
 <!-- Filtro -->
+
 <md-toolbar class="md-toolbar-filtro-size">
 	<div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="space-between center">
-<!--             <div class="tamaDivFiltro"> -->
-<!--             <label>N° de Asistencia Técnica:</label> -->
-<!--             <md-input-container class="container_margen-top">  -->
-<!--                <input type="text" name="idAsistencia" ng-model="filtro.idAsistencia" />  -->
-<!--             </md-input-container> -->
-<!--             </div> -->
 			<div class="tamaDivFiltro"> 
-            <md-button class="md-button-borde-naranja md-sm" ng-click="nuevoDtAsistencia()" aria-label="Crear asistencia"> 
-            	<md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: inherit;">playlist_add</md-icon>
-                <span>Crear asistencia</span>
-            </md-button>
+	            <md-button class="md-button-borde-naranja md-sm" ng-click="nuevoDtAsistencia()" aria-label="Crear asistencia"> 
+	            	<md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: inherit;">playlist_add</md-icon>
+	                <span>Crear asistencia</span>
+	            </md-button>
             </div>
+            
 			<div class="tamaDivFiltro">
             <md-input-container class="container_margen-top" style="margin-top: 42px;"> 
             	<label style="font-size: 15px;">Fecha de inicio</label>
@@ -40,6 +36,7 @@
 	            </md-datepicker>
             </md-input-container>
             </div>
+            
             <div class="tamaDivFiltro">
             <md-input-container class="container_margen-top" style="margin-top: 42px;"> 
             	<label style="font-size: 15px;">Fecha fin</label>
@@ -50,40 +47,50 @@
 	            </md-datepicker>
             </md-input-container>
             </div>
+            
             <div class="tamaDivFiltro" style="font-size: 14px;margin-top: 22px;">
             <md-input-container class="container_margen-top"> 
                <input type="text" name="Entidad" ng-model="filtro.idEntidadTxt" placeholder="Entidad" /> 
             </md-input-container>
             </div>
+            
             <div class="tamaDivFiltro" style="font-size: 14px;">
-			<md-input-container style="margin-right: 15px;"> 
-				<label>Sede</label>
-				<md-select
-				ng-model="filtro.idSedeTxt" placeholder="Sede"> 
-				<md-option ng-value="">Todas las sedes</md-option>
-				<md-option
-				ng-repeat="item in listaMsSedes" ng-value="item.valor">
-			{{item.valor}} </md-option> </md-select> </md-input-container>
+            
+				<md-input-container style="margin-right: 15px;"> 
+					<label>Sede</label>
+					<md-select
+						ng-model="filtro.idSedeTxt" placeholder="Sede"> 
+						<md-option ng-value="">Todas las sedes</md-option>
+						<md-option
+						ng-repeat="item in listaMsSedes" ng-value="item.valor">
+						{{item.valor}} 
+						</md-option> 
+					</md-select>
+				 </md-input-container>
+			
 			</div>
+			
             <div class="tamaDivFiltro"> 
-            <md-button class="md-button-borde-naranja md-sm" ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
-            	<md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: inherit;">search</md-icon>
-                <span>BUSCAR</span>
-            </md-button>
+	            <md-button class="md-button-borde-naranja md-sm" ng-click="refrescarvista($event)" aria-label="BUSCAR"> 
+	            	<md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: inherit;">search</md-icon>
+	                <span>BUSCAR</span>
+	            </md-button>
             </div>
-<!--             <div class="tamaDivFiltro"> -->
-<!--             <md-button class="md-button-borde-naranja md-sm" ng-href="{{descargarvista($event)}}" target="_blank" aria-label="DESCARGAR"> -->
-<!--             <span>DESCARGAR</span> </md-button> -->
-<!--             </div> -->
-            <div class="tamaDivFiltro">
-            <md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
-                  md-total="{{total}}" md-page-select="options.pageSelect" 
-                  md-boundary-links="options.boundaryLinks"
-                  md-on-paginate="logPagination"> 
-            </md-table-pagination>
-            </div>
+            
+            
 	</div>
 </md-toolbar>
+
+
+	<div class="tamaDivFiltro">
+	            <md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+	                  md-total="{{total}}" md-page-select="options.pageSelect" 
+	                  md-boundary-links="options.boundaryLinks"
+	                  md-on-paginate="logPagination"> 
+	            </md-table-pagination>
+     </div>
+
+
 <!-- FIN Filtro -->
 <md-divider style="margin-top: 20px;"></md-divider>
   <md-table-container>
@@ -95,17 +102,17 @@
            <th class="md-title ttacheckbox" md-column style="padding-right: 0;"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
            <th class="md-title ttaeditreg" md-column style="padding-right: 0;"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
            <th class="md-title ttaedireact" md-column style="padding-right: 0;"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></th>
+
            <th class="md-title ttamdtAsistenciaidAsistencia" md-column md-order-by="idAsistencia">
-           <span>ID</span></th>  
+           	<span>ID</span>
+           </th>  
            
-           <!-- 
-           <th class="md-title ttamdtAsistenciadniUser" md-column md-order-by="fechaServicio">
-           		<span>Fecha de Servicio</span>
-           	</th>
-           	 -->
-           	 
-           <th class="md-title ttamdtAsistenciafechaAsistencia" md-column md-order-by="fechaAsistencia">
-           		<span>Fecha de servicio</span>
+           <th class="md-title ttamdtAsistenciadniUser" md-column md-order-by="dniUser">
+           		<span>DNI</span>
+           </th>
+           
+           <th class="md-title ttamdtAsistenciausuExt" md-column md-order-by="usuExt">
+           		<span>USU. externo</span>
            </th>
            
            <th class="md-title ttamdtAsistenciacodEjecutora" md-column md-order-by="codEjecutora">
@@ -118,6 +125,10 @@
            
            <th class="md-title ttamdtAsistenciaidSedeTxt" md-column md-order-by="idSedeTxt">
            		<span>Sede</span>
+           </th>
+           
+           <th class="md-title ttamdtAsistenciafechaAsistencia" md-column md-order-by="fechaServicio">
+           		<span>Fecha de servicio</span>
            </th>
            
            <th class="md-title ttamdtAsistenciaidUsuinternoTxt" md-column md-order-by="idUsuinternoTxt">
@@ -152,20 +163,34 @@
 	            <input type="text" name="idAsistencia" ng-model="filtro.idAsistencia" placeholder="ID" 
 	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
 	         </th>
+	         
 	         <th md-column> 
-	            <input type="text" name="usuExtTxt" ng-model="filtro.usuExtTxt" placeholder="USU. externo" 
-	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
-	         </th>
+           		 <input type="text" name="dniUserTxt" ng-model="filtro.dniUserTxt" placeholder="DNI" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+         	</th>
+         	
+         	 <th md-column> 
+            	<input type="text" name="usuExtTxt" ng-model="filtro.usuExtTxt" placeholder="USU. externo" 
+                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+         	 </th>
+	         
 	         <th md-column> 
 	            <input type="text" name="codEjecutora" ng-model="filtro.codEjecutora" placeholder="COD. ejecutora" 
 	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
 	         </th>
+	         
 	         <th md-column> 
 	            <input type="text" name="idEntidadTxt" ng-model="filtro.idEntidadTxt" placeholder="Entidad" 
 	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
 	         </th>
+	         
 	         <th md-column> 
 	            <input type="text" name="idSedeTxt" ng-model="filtro.idSedeTxt" placeholder="Sede" 
+	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
+	         </th>
+	         
+	         <th md-column> 
+	            <input type="text" name="fechaServicio" ng-model="filtro.usuExtTxt" placeholder="Fecha de Servicio" 
 	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
 	         </th>
 	         
@@ -178,14 +203,17 @@
 	            <input type="text" name="idUsuinternoTxt" ng-model="filtro.idUsuinternoTxt" placeholder="Sist Admin" 
 	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
 	         </th>
+	         
 	         <th md-column> 
 	            <input type="text" name="idSistAdmTxt" ng-model="filtro.idSistAdmTxt" placeholder="SIS. administrativo" 
 	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
 	         </th>
+	         
 	         <th md-column> 
 	            <input type="text" name="idSistAdmTxt" ng-model="filtro.idSistAdmTxt" placeholder="Programacion" 
 	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
 	         </th>
+	         
 	         <th md-column> 
 	            <input type="text" name="idOrigenTxt" ng-model="filtro.idOrigenTxt" placeholder="Origen" 
 	                   ng-keypress="refrescarvista($event)" class="md-table-orden-imput "/>
@@ -227,11 +255,15 @@
           <td class="tdaa1 md-table-cuerpo" data-title="ID" md-cell>
           	{{dato.idAsistencia}}
           </td>
-
-         <td class="tdaa1 md-table-cuerpo" data-title="Sede" md-cell>
-          	{{formatDMY(dato.fechaAsistencia)}}
+          
+          <td class="tdaa1 md-table-cuerpo" data-title="dni" md-cell>
+          	{{dato.dniUserTxt}}
           </td>
           
+          <td class="tdaa1 md-table-cuerpo" data-title="usuario" md-cell>
+          	{{dato.usuExtTxt}}
+          </td>
+
           <td class="tdaa1 md-table-cuerpo" data-title="Usuario Interno" md-cell>
           	{{dato.codEjecutora}}
           </td>
@@ -242,6 +274,10 @@
           
           <td class="tdaa1 md-table-cuerpo" data-title="Modalidad" md-cell>
           	{{dato.idSedeTxt}}
+          </td>
+          
+          <td class="tdaa1 md-table-cuerpo" data-title="Fecha Servicio" md-cell>
+          	{{formatDMY(dato.fechaAsistencia)}}
           </td>
           
           <td class="tdaa1 md-table-cuerpo" data-title="Sistema Administrativo" md-cell>
