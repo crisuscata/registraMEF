@@ -83,6 +83,7 @@ public class DtAsistenciaData implements Serializable{
 		List<DtAsistenciaBk> dtAsistenciaBksss = null;
 		String key = DtAsistenciaBk.class.getSimpleName();
 		if(dataCache.containsKey(key)){
+			System.out.println("EXISTE DATA EN CACHE");
 			Entrada entrada = dataCache.get(key);
 			dtAsistenciaBksss = (List<DtAsistenciaBk>) entrada.getLista();
 			long ultimoacceso = entrada.getUltimoacceso();
@@ -106,6 +107,7 @@ public class DtAsistenciaData implements Serializable{
 			}
 		}else{
 			try {
+				System.out.println("NO - EXISTE DATA EN CACHE");
 				Entrada entrada = new Entrada();
 	        	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
 	        	Date fechaIniciod=sdformat.parse(fechaInicio);

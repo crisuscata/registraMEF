@@ -74,14 +74,6 @@ body, html {
 	font-size: 11px !important;
 }
 
-.titulo-registramef {
-	font-family: 'Leelawadee Negrita', 'Leelawadee Normal', 'Leelawadee';
-	font-size: 32px !important;
-	color: #1E82AD;
-	text-align: left;
-	font-weight: bold;
-}
-
 .md-icon-tabla-accion {
 	font-size: 12px !important;
 }
@@ -566,6 +558,14 @@ button, select, html, textarea, input {
     padding: 0px 0px 0px !important; 
 }
 
+.tdaa2{
+    font-family: 'Calibri';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px !important;
+    color: #363640; 
+}
+
 
 .ttamprtParametrosdescripcion{
 	width: 150px !important;
@@ -725,6 +725,7 @@ button, select, html, textarea, input {
 /* PURIBE 04012024 - INICIO */
 /* PURIBE 20012024 - INICIO */
 /* PURIBE 01022024 - INICIO */
+/*
 .tamaDivFiltro{
 	height: 50px !important;
 	max-height: 50px !important;
@@ -733,6 +734,7 @@ button, select, html, textarea, input {
 	padding: 0px 10px 0px 0px !important;
 	display: flex;
 }
+*/
 /* PURIBE 01022024 - FIN*/
 /* PURIBE 20012024 - FIN */
 /* PURIBE 04012024 - FIN */
@@ -1425,17 +1427,6 @@ legend {
     line-height: 20px;
 }
 
-.legend_190 {
-	width: 190px !important;
-}
-
-fieldset{
-margin-top: 20px !important;
-border-radius: 5px;  
-border-width:1px;
-padding: 6px 6px;
-}
-
 .md-table-cuerpo {
     font-size: 13px !important; /* //MPINARES 24012023 - INICIO */
 }
@@ -1460,7 +1451,7 @@ padding: 6px 6px;
     font-size: 11px !important;
 }
 
-/*
+
 .md-button-borde-naranja {
 	box-sizing: border-box;
     border-width: 1px;
@@ -1479,7 +1470,7 @@ padding: 6px 6px;
 	line-height: 26px;
 	min-height: 26px;
 }
-*/
+
 
 /* PURIBE 04012024 - INICIO */
 .md-button-borde-naranja:hover, .md-button-borde-naranja:focus {
@@ -1490,6 +1481,7 @@ padding: 6px 6px;
 	font-weight: bold;
 }
 
+/*
 .md-button-borde-naranja {
 	border: #fc9e00 1px solid !important;
 	box-sizing: border-box;
@@ -1506,6 +1498,7 @@ padding: 6px 6px;
     color: rgba(54, 54, 64, 0.6) !important; 
 	font-size: 14px;
 }
+*/
 
 /* PURIBE 04012024 - FIN */
 
@@ -1523,10 +1516,6 @@ padding: 6px 6px;
 
 md-autocomplete-wrap {
     box-shadow: none !important;
-}
-
-.md-dialog-container {
-    width: 900px !important;
 }
 
 .ttacheckbox{

@@ -24,6 +24,7 @@ public class DtAsistenciaFiltro implements Serializable {
 		private String idSistAdmTxt = null;
 		private String idOrigenTxt = null;
 		private String estadoTxt = null;
+		
 		//MPINARES 13022024 - FIN
 
 	private Integer estado = null;
@@ -227,6 +228,9 @@ public class DtAsistenciaFiltro implements Serializable {
 		public void setEstadoTxt(String estadoTxt) {
 			this.estadoTxt = estadoTxt;
 		}
+
+		
+		
 		
 		//MPINARES 13022024 - FIN
 }

@@ -437,6 +437,17 @@ public class DtAsistenciaRsCtrl {
 			System.out.println("idSedeTxt: " + idSedeTxt);
 			System.out.println("idEntidadTxt: " + idEntidadTxt);
 			
+			System.out.println("idAsistencia: " + idAsistencia);
+			System.out.println("dniUserTxt: " + dniUserTxt);
+			System.out.println("usuExtTxt: " + usuExtTxt);
+			System.out.println("codEjecutora: " + codEjecutora);
+			System.out.println("idUsuinternoTxt: " + idUsuinternoTxt);
+			System.out.println("idSistAdmTxt: " + idSistAdmTxt);
+			
+			System.out.println("idOrigenTxt: " + idOrigenTxt);
+			System.out.println("estadoTxt: " + estadoTxt);
+			
+			
 			Integer iestado = null;
 			if(sestado!=null){
 				try{
@@ -445,10 +456,19 @@ public class DtAsistenciaRsCtrl {
 			}		
 			
 			DtAsistenciaFiltro dtAsistenciaFiltro = new DtAsistenciaFiltro(fechaInicio, 
-																			fechaFin, idSedeTxt, idEntidadTxt, idProgramacion, 
-																			idAsistencia, dniUserTxt, usuExtTxt, codEjecutora, 
-																			idUsuinternoTxt, idSistAdmTxt, idOrigenTxt, 
-																			estadoTxt, iestado);	
+																			fechaFin, 
+																			idSedeTxt, 
+																			idEntidadTxt, 
+																			idProgramacion, 
+																			idAsistencia, 
+																			dniUserTxt, 
+																			usuExtTxt, 
+																			codEjecutora, 
+																			idUsuinternoTxt, 
+																			idSistAdmTxt, 
+																			idOrigenTxt, 
+																			estadoTxt, 
+																			iestado);	
 			
 			DtAsistenciaData dtAsistenciaData = (DtAsistenciaData) req.getSession().getAttribute("DtAsistenciaData");
 			
@@ -469,6 +489,11 @@ public class DtAsistenciaRsCtrl {
 			
 			System.out.println("dtAsistenciasss.size(): " + dtAsistenciasss.size());
 			
+			List<DtAsistenciaBk> listAsistenciaFilter  = dtAsistenciasss.stream()
+					 .filter(c-> dniUserTxt == null || dniUserTxt.isEmpty() || this.contienCoincidenciaDni(c.getDniUserTxt(), dniUserTxt))
+					 .collect(Collectors.toList());
+			
+			
 			long lfinal =System.currentTimeMillis()-inicio;
 			dtAsistenciaLC.setTiempoenBD(lfinal);
 			
@@ -478,11 +503,13 @@ public class DtAsistenciaRsCtrl {
 			
 			/////
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+			
 			List<DtAsistenciaBk> dtAsistenciasssData = new ArrayList<DtAsistenciaBk> ();
+			
 			if(dtAsistenciaFiltro.isActivo()){
 			//filter
 //				int contador = 0;
-	        for(DtAsistenciaBk dtAsistenciaAct : dtAsistenciasss){
+	        for(DtAsistenciaBk dtAsistenciaAct : listAsistenciaFilter){
 	            boolean match = true;	            
 	            Field camposdea[] = dtAsistenciaFiltro.getClass().getDeclaredFields();
 				for (int i = 0; i < camposdea.length; i++) {
@@ -499,6 +526,7 @@ public class DtAsistenciaRsCtrl {
 						else if(filtroValue.toString().length()<1) continue;
 						Method claseMethod = dtAsistenciaAct.getClass().getMethod(claseGetMetod, types);
 						Object claseValue = claseMethod.invoke(dtAsistenciaAct, new Object[0]);
+						
 						if(claseValue!=null){
 							if(claseValue.getClass().getName().indexOf("Timestamp") > -1){
 								String claseValueTxt = sdf.format(claseValue);
@@ -515,7 +543,7 @@ public class DtAsistenciaRsCtrl {
     								match = false;
     								break;
     							}
-							}else if (claseValue instanceof java.lang.Number) {
+							} else if (claseValue instanceof java.lang.Number) {
 									String claseValueTxt = String.valueOf(claseValue).toLowerCase();
 									String filterValueString = filtroValue.toString().toLowerCase();
 									if(filterValueString.startsWith("*")){
@@ -526,17 +554,16 @@ public class DtAsistenciaRsCtrl {
 											match = false;
 		    								break;
 										}
-									}else
-									if (claseValueTxt.equals(filterValueString)) {
+									}else if (claseValueTxt.equals(filterValueString)) {
 										match = true;
 									} else {
 										match = false;
 										break;
 									}
-								}
-                                                        else{
+								} else {
 								String claseValueTxt = String.valueOf(claseValue).toLowerCase();
 								String filterValueString = filtroValue.toString().toLowerCase();
+								
 								if(filterValueString.startsWith("*")){
 									filterValueString = filterValueString.substring(1);
 									if(claseValueTxt.contains(filterValueString)){
@@ -545,14 +572,14 @@ public class DtAsistenciaRsCtrl {
 										match = false;
 	    								break;
 									}
-								}else{
+								}else {
 									if(claseValueTxt.startsWith(filterValueString)){
 										match = true;
 									}else{
 										match = false;
 	    								break;
 									}
-								}								
+								}
 							}
 						}else{
 							match = false;
@@ -570,8 +597,14 @@ public class DtAsistenciaRsCtrl {
 					dtAsistenciasssData.add(dtAsistenciaAct);
 	            }	            
 	        }}else{
-	        	dtAsistenciasssData = dtAsistenciasss;
+	        	dtAsistenciasssData = listAsistenciaFilter;
 	        }	 
+			
+			if(dtAsistenciaFiltro.getFechaInicio()!=null && 
+					!dtAsistenciaFiltro.getFechaInicio().isEmpty()){
+				dtAsistenciasssData = this.getAsistenciaPorFiltroFechas(dtAsistenciaFiltro, listAsistenciaFilter);
+			}
+			
 	        //sort
 	        if(sorder != null && sorder.trim().length()>1) {
 	            Collections.sort(dtAsistenciasssData, new Comparator<DtAsistenciaBk>() {
@@ -649,6 +682,50 @@ public class DtAsistenciaRsCtrl {
 					}).build();
 		}
 	}
+	
+	private List<DtAsistenciaBk> getAsistenciaPorFiltroFechas(
+			DtAsistenciaFiltro dtAsistenciaFiltro,
+			List<DtAsistenciaBk> tdCajachicaRendicionsss) {
+		List<DtAsistenciaBk> tdCajachicaRendicionsssData = new ArrayList<DtAsistenciaBk>();
+		List<DtAsistenciaBk> tdCajachicaRendicionsssDataResult = new ArrayList<DtAsistenciaBk>();
+		SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
+		//SimpleDateFormat sdformat = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			if (tdCajachicaRendicionsss != null && !tdCajachicaRendicionsss.isEmpty()) {
+				for (DtAsistenciaBk asistenciaBK : tdCajachicaRendicionsss) {
+
+					Date fechaRendicion = new Date(asistenciaBK.getFechaAsistencia().getTime());
+					Date fechaInicio = sdformat.parse(dtAsistenciaFiltro.getFechaInicio());
+					Date fechaFin = sdformat.parse(dtAsistenciaFiltro.getFechaFin());
+
+					if (fechaRendicion.compareTo(fechaInicio) >= 0 && fechaRendicion.compareTo(fechaFin) <= 0) {
+						tdCajachicaRendicionsssData.add(asistenciaBK);
+					}
+
+				}
+
+				/*for (DtAsistenciaBk tdCajachicaRendicionBk : tdCajachicaRendicionsssData) {
+					if (tdCajachicaRendicionFiltro.getIdsede() != null
+							&& !tdCajachicaRendicionFiltro.getIdsede().isEmpty() && tdCajachicaRendicionFiltro
+									.getIdsede().equals(tdCajachicaRendicionBk.getIdsede().toString())) {
+						tdCajachicaRendicionsssDataResult.add(tdCajachicaRendicionBk);
+					}
+				}*/
+
+			//	if (tdCajachicaRendicionsssDataResult.isEmpty()) {
+					tdCajachicaRendicionsssDataResult.addAll(tdCajachicaRendicionsssData);
+			//	}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return tdCajachicaRendicionsssDataResult;
+	}
+
+
+
 	
 	@POST
 	@Path("/salvardtAsistencia")
@@ -1392,6 +1469,34 @@ public class DtAsistenciaRsCtrl {
 					}).build();
 		}
 	}
+        
+        /*
+         static boolean contieneCoincidencia(String cadena, String entidad) {
+		// Dividir la cadena en un array utilizando ","
+		String[] entidades = cadena.split(",");
+
+		// Verificar cada elemento del array
+		for (String item : entidades) {
+			// Verificar si el elemento contiene la entidad buscada
+			if (item.trim().toLowerCase().contains(entidad.toLowerCase())) {
+				return true; // Coincidencia encontrada
+			}
+		}
+		return false; // No se encontró ninguna coincidencia
+	}
+         * */
+        
+    private boolean contienCoincidenciaDni(String cadena, String dniUserTxt) {
+    	String[] entidades = cadena.split(",");
+
+		// Verificar cada elemento del array
+		for (String item : entidades) {
+			if (item.trim().toLowerCase().contains(dniUserTxt.toLowerCase())) {
+				return true; // Coincidencia encontrada
+			}
+		}
+		return false; // No se encontró ninguna coincidencia
+	}
 
         @GET
 	@Path("/descargarvista")
@@ -1474,7 +1579,22 @@ public class DtAsistenciaRsCtrl {
 			
 			if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.DTASISTENCIA_CREA)){
 				dtAsistenciaLC.setCreamodifica(true);
-			}			
+			}
+			
+			List<DtAsistenciaBk> listAsistenciaFilter  = dtAsistenciasss.stream()
+													 .filter(c-> dniUserTxt == null || dniUserTxt.isEmpty() || this.contienCoincidenciaDni(c.getDniUserTxt(), dniUserTxt))
+													 .collect(Collectors.toList());
+			
+			/*
+			List<DtVisitasBk> dtVisitassss  = dtVisitasSinfiltro.stream()
+								.filter(registro -> Departamento == null || Departamento.isEmpty()
+										|| registro.getIdSedeTxt().toLowerCase().contains(Departamento.toLowerCase()))
+								.filter(registro -> Entidad == null || Entidad.isEmpty()
+										|| registro.getIdEntidadTxt().toLowerCase().contains(Entidad.toLowerCase()))
+								.filter(registro -> Participante == null || Participante.isEmpty()
+										|| contieneCoincidencia(registro.getIdParticipanteTxt(), Participante))
+								.collect(Collectors.toList());
+			*/
 			
 			/////
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
@@ -1482,7 +1602,7 @@ public class DtAsistenciaRsCtrl {
 			if(dtAsistenciaFiltro.isActivo()){
 			//filter
 //				int contador = 0;
-	        for(DtAsistenciaBk dtAsistenciaAct : dtAsistenciasss){
+	        for(DtAsistenciaBk dtAsistenciaAct : listAsistenciaFilter){
 	            boolean match = true;	            
 	            Field camposdea[] = dtAsistenciaFiltro.getClass().getDeclaredFields();
 //	            if(dtAsistenciaAct.getIdAsistencia.longValue()==56L){
