@@ -510,33 +510,32 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	    
 	    $scope.dtAsistenciaAnular = {
 				idAsistencia : null,
+				estado: null,
 				detalle: null
 			};
 	    
-	    $scope.setDtAsistenciaAnular = function(dtAsistenciaBk) {
-			  $scope.dtAsistenciaAnular.idAsistencia = dtAsistenciaBk.idAsistencia;
-			  $scope.dtAsistenciaAnular.detalle = dtAsistenciaBk.detalle;
-				
-			};
-	    $scope.cleardtAsistenciaAnular = function(){
-		    $scope.dtAsistenciaAnular.idAsistencia = null;
-		    $scope.dtAsistenciaAnular.detalle = null;
-		    
-	    };
-	    
 	    $scope.selectedAsist = [];
-		  $scope.selection = function(item){
-			  	$scope.cleardtAsistenciaAnular();
-		    	$scope.setDtAsistenciaAnular(item);
-			    if(item.checked){
-			    	$scope.selectedAsist.push($scope.dtAsistenciaAnular);
+		  $scope.selection = function(asistencia){
+			  
+			    if(asistencia.checked){
+			    	$scope.selectedAsist.push({
+			    		idAsistencia: asistencia.idAsistencia,
+			    		estado: asistencia.estado
+			    	 })
+			    	
+			    	console.log('$scope.selectedAsist checked: '+ JSON.stringify($scope.selectedAsist) );
+			    	
 			    }else{
-			    	$scope.selectedAsist = $scope.selectedAsist.filter(val => val.idAsistencia !== $scope.dtAsistenciaAnular.idAsistencia);
+			    	$scope.selectedAsist = $scope.selectedAsist.filter(val => val.idAsistencia !== asistencia.idAsistencia);
+			    	
+			    	console.log('$scope.selectedAsist no checked: '+ JSON.stringify($scope.selectedAsist) );
 			    }
-			    console.log('lista: '+ $scope.selectedAsist); 
-			  };
+		};
 		  
 		  $scope.showConfirmAnularAsistencia = function(ev) {
+			  
+			  console.log("$scope.selectedAsist:" + JSON.stringify($scope.selectedAsist));
+			  
 			  if($scope.selectedAsist.length<1){
 					$mdDialog.show(
 							$mdDialog.alert()
@@ -569,17 +568,9 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
             $scope.anulardtAsistenciaList = function(ev, selectedAsist){		
 			    ev.target.disabled = true;
 			    var datainsert = angular.toJson(selectedAsist);
-				console.log("datainsert = "+datainsert);	
+				console.log("datainsert to anular = "+datainsert);	
 			$http.post(anulardtAsistenciaUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
 					var dato1 = res.data;
-//					var instrumentos = $scope.datos;
-//			        var index = $scope.datos.findIndex(obj => obj.idAsistTema === dato.idAsistTema);
-//					console.log("INDEX " + index);
-//			        if(instrumentos.length>index){
-//			        	instrumentos.splice(index, 1);
-//				        $scope.datos = instrumentos;
-//				        $scope.total = $scope.datos.length;
-//			        }	
 			        $scope.loaddtAsistenciasNoProg();
 				},
 				function error(errResponse) {

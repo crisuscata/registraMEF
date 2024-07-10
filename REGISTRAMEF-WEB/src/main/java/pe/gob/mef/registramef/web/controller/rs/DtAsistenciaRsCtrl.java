@@ -373,6 +373,28 @@ public class DtAsistenciaRsCtrl {
 	}
 
 	
+	private boolean contienCoincidenciaDni(String cadena, String dniUserTxt) {
+    	String[] dnis = cadena.split(",");
+
+		for (String item : dnis) {
+			if (item.trim().toLowerCase().contains(dniUserTxt.toLowerCase())) {
+				return true; 
+			}
+		}
+		return false; 
+	}
+	
+	private boolean contienCoincidenciaUsuexterno(String cadena, String usuExtTxt) {
+    	String[] usuarios = cadena.split(",");
+
+		for (String item : usuarios) {
+			if (item.trim().toLowerCase().contains(usuExtTxt.toLowerCase())) {
+				return true; 
+			}
+		}
+		return false; 
+	}
+	
 	@GET
 	@Path("/listadtAsistenciaNoProg")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -490,7 +512,11 @@ public class DtAsistenciaRsCtrl {
 			System.out.println("dtAsistenciasss.size(): " + dtAsistenciasss.size());
 			
 			List<DtAsistenciaBk> listAsistenciaFilter  = dtAsistenciasss.stream()
+					 .filter(c-> usuExtTxt == null || usuExtTxt.isEmpty() || this.contienCoincidenciaUsuexterno(c.getUsuExtTxt(), usuExtTxt))
 					 .filter(c-> dniUserTxt == null || dniUserTxt.isEmpty() || this.contienCoincidenciaDni(c.getDniUserTxt(), dniUserTxt))
+					 .filter(c-> idAsistencia == null || idAsistencia.isEmpty() || String.valueOf(c.getIdAsistencia()).equals(idAsistencia)  )
+					 .filter(c->  idEntidadTxt == null || idEntidadTxt.isEmpty() || c.getIdEntidadTxt().trim().toLowerCase().contains(idEntidadTxt.toLowerCase()) )
+					 .filter(c->  idSedeTxt == null || idSedeTxt.isEmpty() || c.getIdSedeTxt().trim().toLowerCase().contains(idSedeTxt.toLowerCase()) )
 					 .collect(Collectors.toList());
 			
 			
@@ -847,7 +873,9 @@ public class DtAsistenciaRsCtrl {
 		//dtAsistenciaModelo.fechaProgramadaJUD
 		dtAsistenciaC.setFechaSoli( new Timestamp(dtAsistenciaJS.getFechaSoliJUD().getTime()) );
 		dtAsistenciaC.setFechaAsistencia( new Timestamp(dtAsistenciaJS.getFechaServicioJUD().getTime()) );
-		
+		if(dtAsistenciaJS.getFechaReprogramacionJUD()!=null) {
+			dtAsistenciaC.setFechaProgramada(new Timestamp(dtAsistenciaJS.getFechaReprogramacionJUD().getTime()) );
+		}
 
 		try {
 			
@@ -1486,18 +1514,6 @@ public class DtAsistenciaRsCtrl {
 	}
          * */
         
-    private boolean contienCoincidenciaDni(String cadena, String dniUserTxt) {
-    	String[] entidades = cadena.split(",");
-
-		// Verificar cada elemento del array
-		for (String item : entidades) {
-			if (item.trim().toLowerCase().contains(dniUserTxt.toLowerCase())) {
-				return true; // Coincidencia encontrada
-			}
-		}
-		return false; // No se encontró ninguna coincidencia
-	}
-
         @GET
 	@Path("/descargarvista")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -1557,12 +1573,8 @@ public class DtAsistenciaRsCtrl {
 				}catch(Exception e){}
 			}		
 			
-//			DtAsistenciaFiltro dtAsistenciaFiltro = new DtAsistenciaFiltro(idEntidad,idSede,fechaAsistencia,idUsuinterno,idSistAdm,idOrigen,idProgramacion,estado,iestado);
-//			DtAsistenciaFiltro dtAsistenciaFiltro = new DtAsistenciaFiltro(fechaInicio, fechaFin, idsedeTxt, idEntidadtxt, idProgramacion, iestado)	;//MPINARES 24012023 - INICIO/
-			//MPINARES 13022024 - INICIO
 			DtAsistenciaFiltro dtAsistenciaFiltro = new DtAsistenciaFiltro(fechaInicio, fechaFin, idSedeTxt, idEntidadTxt, idProgramacion, 
 					idAsistencia, dniUserTxt, usuExtTxt, codEjecutora, idUsuinternoTxt, idSistAdmTxt, idOrigenTxt, estadoTxt, iestado);	
-			//MPINARES 13022024 - FIN
 			
 			DtAsistenciaData dtAsistenciaData = (DtAsistenciaData) req.getSession().getAttribute("DtAsistenciaData");
 			if(dtAsistenciaData==null){
@@ -1585,18 +1597,7 @@ public class DtAsistenciaRsCtrl {
 													 .filter(c-> dniUserTxt == null || dniUserTxt.isEmpty() || this.contienCoincidenciaDni(c.getDniUserTxt(), dniUserTxt))
 													 .collect(Collectors.toList());
 			
-			/*
-			List<DtVisitasBk> dtVisitassss  = dtVisitasSinfiltro.stream()
-								.filter(registro -> Departamento == null || Departamento.isEmpty()
-										|| registro.getIdSedeTxt().toLowerCase().contains(Departamento.toLowerCase()))
-								.filter(registro -> Entidad == null || Entidad.isEmpty()
-										|| registro.getIdEntidadTxt().toLowerCase().contains(Entidad.toLowerCase()))
-								.filter(registro -> Participante == null || Participante.isEmpty()
-										|| contieneCoincidencia(registro.getIdParticipanteTxt(), Participante))
-								.collect(Collectors.toList());
-			*/
 			
-			/////
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
 			List<DtAsistenciaBk> dtAsistenciasssData = new ArrayList<DtAsistenciaBk> ();
 			if(dtAsistenciaFiltro.isActivo()){
@@ -1882,7 +1883,7 @@ public class DtAsistenciaRsCtrl {
 			CellStyle cellStyleDATO = cell7A.getCellStyle();
 
 //			List<String> caposvista = Arrays.asList("idEntidad","idSede","fechaAsistencia","idUsuinterno","idSistAdm","idOrigen","idProgramacion","estado");
-			List<String> caposvista = Arrays.asList("idAsistencia","dniUserTxt","usuExtTxt","codEjecutora","idEntidadTxt","idSedeTxt","fechaAsistencia","idUsuinternoTxt","idSistAdmTxt","idOrigenTxt","estadoTxt");//MPINARES 24012023 - INICIO
+			List<String> caposvista = Arrays.asList("idAsistencia","dniUserTxt","usuExtTxt","codEjecutora","idEntidadTxt","idSedeTxt","fechaAsistencia","idUsuinternoTxt","idSistAdmTxt","idOrigenTxt","idProgramacion","estadoTxt");//MPINARES 24012023 - INICIO
                         int tituloscontador = 1;
 			int titulofilacontador = 6;
 			Row rowX = hoja.getRow(titulofilacontador);
@@ -1899,7 +1900,7 @@ public class DtAsistenciaRsCtrl {
 				tituloscontador++;
 			} 
 
-                        int contador = 7;
+            int contador = 7;
 			int contadorfor = 1;		
 			for (DtAsistenciaBk dtAsistenciaBk : dtAsistenciasssData) {
 				rowX = hoja.getRow(contador);
@@ -1929,17 +1930,12 @@ public class DtAsistenciaRsCtrl {
 				        	if(cellxX==null){
 								cellxX = rowX.createCell(columna);
 							}
-                                                columna++;
+                            columna++;
 				        	cellxX.setCellStyle(cellStyleDATO);
 				        	if (claseValue.getClass().getName().indexOf("Timestamp") > -1) {
-//				        		Timestamp valor = (Timestamp) claseValue;				        		
-//								cellxX.setCellValue(valor);
-				        		//MPINARES 24012023 - INICIO
 				        		Timestamp valor = (Timestamp) claseValue;				        		
-//								cellxX.setCellValue(valor);
 								String fechaformat=FuncionesStaticas.getFechaCorta(valor);
 								cellxX.setCellValue(fechaformat);
-								//MPINARES 24012023 - FIN
 				        	}else if (claseValue.getClass().getName().indexOf("Date") > -1) {
 				        		Date valor = (Date) claseValue;
 				        		cellxX.setCellValue(valor);

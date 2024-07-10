@@ -40,6 +40,7 @@ public class DtAsistenciaJS implements java.io.Serializable {
 	private Timestamp fechaProgramada = null;
 	private Timestamp fechaSoli = null;
 	private Timestamp fechaServicioJUD = null;//CUSCATA - 18062024
+	private Timestamp fechaReprogramacionJUD = null;//CUSCATA - 18062024
 	
 	
 	// ADICIONALES
@@ -387,6 +388,14 @@ public class DtAsistenciaJS implements java.io.Serializable {
 
 		public void setTdAnexosJSss(List<DtAnexosJS> tdAnexosJSss) {
 			this.tdAnexosJSss = tdAnexosJSss;
+		}
+
+		public Timestamp getFechaReprogramacionJUD() {
+			return fechaReprogramacionJUD;
+		}
+
+		public void setFechaReprogramacionJUD(Timestamp fechaReprogramacionJUD) {
+			this.fechaReprogramacionJUD = fechaReprogramacionJUD;
 		}
 
 		
