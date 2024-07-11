@@ -1,4 +1,5 @@
 //MPINARES 14022024 - INICIO - NUEVA JS
+//CUSCATA - 10072024
 var contexto = window.location.pathname.substring(0,window.location.pathname.indexOf('/',2));
 var pglogoff = window.location.origin+contexto+'/logoff.htm';
 var principalUrl = window.location.origin+contexto+'/index.htm';
@@ -2751,3 +2752,4 @@ $scope.loadListaPrtParametrosIdCaracteristica=function(){
 	    }
 };
 
+//FIN CUSCATA - 10072024

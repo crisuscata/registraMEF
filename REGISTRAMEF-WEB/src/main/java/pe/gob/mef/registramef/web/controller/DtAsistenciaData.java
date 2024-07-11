@@ -78,7 +78,7 @@ public class DtAsistenciaData implements Serializable{
 		}
 		return dtAsistenciaBksss;		
 	}
-	
+	//INICIO CUSCATA - 10072024
 	public List<DtAsistenciaBk> getDtAsistenciaNoProgActivos(Servicio servicio, Long kyUsuarioMod, String fechaInicio, String fechaFin,String idProgramacion, long sede,int rol,long sistemaadmi){
 		List<DtAsistenciaBk> dtAsistenciaBksss = null;
 		String key = DtAsistenciaBk.class.getSimpleName();
@@ -124,7 +124,7 @@ public class DtAsistenciaData implements Serializable{
 		}
 		return dtAsistenciaBksss;		
 	}
-	
+	//FIN CUSCATA - 10072024
 	@SuppressWarnings("unchecked")
 	public void add(Servicio servicio, Long kyUsuarioMod, DtAsistenciaBk dtAsistenciaC){		
 		List<DtAsistenciaBk> dtAsistenciaBksss = null;

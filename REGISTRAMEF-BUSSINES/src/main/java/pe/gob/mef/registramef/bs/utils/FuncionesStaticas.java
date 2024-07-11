@@ -1559,7 +1559,7 @@ public class FuncionesStaticas implements Serializable {
 					}
 				 
 				// JPUYEN 14052024 - FIN
-				 
+				 //INICIO CUSCATA - 10072024
 				 public static String convertirFrasePrimerCaracMayuscula(String str) {
 						if (str == null || str.length() == 0) {
 							return str;
@@ -1574,5 +1574,6 @@ public class FuncionesStaticas implements Serializable {
 						 
 						return str.trim();
 					}
+                 //FIN CUSCATA - 10072024
 
 }

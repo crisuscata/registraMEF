@@ -13,7 +13,7 @@ import pe.gob.mef.registramef.bs.dao.DtAsistenciaUsuexternosDao;
 import pe.gob.mef.registramef.bs.dao.base.AbstractJpaCRUDDao;
 import pe.gob.mef.registramef.bs.domain.DtAsistenciaUsuexternos;
 import pe.gob.mef.registramef.bs.utils.Estado;
-import pe.gob.mef.registramef.bs.utils.PropertiesMg;
+import pe.gob.mef.registramef.bs.utils.PropertiesMg;//CUSCATA - 10072024
 
 /**
  * DT_ASISTENCIA_USUEXTERNOS REPOSITORIO: LISTA DE LOS USUARIOS QUE BRINDAN LA ATENCION EN LA ASISTENCIA TECNICA
@@ -31,14 +31,14 @@ public class DtAsistenciaUsuexternosDaoImp extends
 		DtAsistenciaUsuexternosDao {
 
 	private static final Logger log = Logger.getLogger(DtAsistenciaUsuexternosDaoImp.class.getName());
-	private Long estadoNuevo = 1L;
-	private Long estadoEliminado = 0L;
+	private Long estadoNuevo = 1L;//CUSCATA - 10072024
+	private Long estadoEliminado = 0L;//CUSCATA - 10072024
 
 	public DtAsistenciaUsuexternosDaoImp() {
 		log.log(Level.INFO,null,"INICIALIZANDO JPA TEMPLATE PARA DtAsistenciaUsuexternosDaoImp");
-		this.estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);
-		this.estadoEliminado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_ELIMINADO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_ELIMINADO);
-		log.log(Level.INFO,"INICIALIZANDO JPA TEMPLATE PARA DtAsistenciaUsuexternosDaoImp "+"Nuevo: "+estadoNuevo+" Eliminado:"+estadoEliminado);
+		this.estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);//CUSCATA - 10072024
+		this.estadoEliminado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_ELIMINADO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_ELIMINADO);//CUSCATA - 10072024
+		log.log(Level.INFO,"INICIALIZANDO JPA TEMPLATE PARA DtAsistenciaUsuexternosDaoImp "+"Nuevo: "+estadoNuevo+" Eliminado:"+estadoEliminado);//CUSCATA - 10072024
 		
 	}
 	
@@ -56,7 +56,7 @@ public class DtAsistenciaUsuexternosDaoImp extends
 	public void updateDtAsistenciaUsuexternos(DtAsistenciaUsuexternos param) {
 		super.update(param);
 	}
-	
+	//INICIO CUSCATA - 10072024
 	@Transactional
 	public void updateDtAsistenciaUsuexCorreo(Long id) {
 		
@@ -65,7 +65,7 @@ public class DtAsistenciaUsuexternosDaoImp extends
 		
 		super.update(dtAsistenciaUsuexternos);
 	}
-
+    //FIN CUSCATA - 10072024
 
 	@Transactional
 	public void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternos param) {
@@ -237,8 +237,9 @@ public class DtAsistenciaUsuexternosDaoImp extends
 			return lista;
 		}
 		//MPINARES 24012023 - FIN
-		
+		//INICIO CUSCATA - 10072024
 		public Long getEstadoEliminado() {
 			return estadoEliminado;
 		}
+        //FIN CUSCATA - 10072024
 }

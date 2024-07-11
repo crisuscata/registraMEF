@@ -18,7 +18,7 @@ import pe.gob.mef.registramef.bs.domain.DtEncuesta;
 import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.utils.Estado;
 import pe.gob.mef.registramef.bs.utils.FuncionesStaticas;
-import pe.gob.mef.registramef.bs.utils.PropertiesMg;
+import pe.gob.mef.registramef.bs.utils.PropertiesMg;//CUSCATA - 10072024
 
 /**
  * DT_ENCUESTA REPOSITORIO: LISTA DE ENCUESTAS
@@ -37,7 +37,7 @@ public class DtEncuestaDaoImp extends
 
 	private static final Logger log = Logger.getLogger(DtEncuestaDaoImp.class.getName());
 	
-	protected Long estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);
+	protected Long estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);//CUSCATA - 10072024
 
 	public DtEncuestaDaoImp() {
 		log.log(Level.INFO,null,"INICIALIZANDO JPA TEMPLATE PARA DtEncuestaDaoImp");
@@ -249,7 +249,7 @@ public class DtEncuestaDaoImp extends
 			return retorno;
 		}
 	}
-
+//INICIO CUSCATA - 10072024
 	@Override
 	public List<DtEncuesta> findListPeriodo(Long idTipoServicio, Date fechaServicio) throws Validador {
 		System.out.println("DtEncuestaDaoImp.findPeriodo("+idTipoServicio+", "+FuncionesStaticas.toString(fechaServicio)+")");
@@ -265,4 +265,5 @@ public class DtEncuestaDaoImp extends
 		params[2] = FuncionesStaticas.toString(fechaServicio);
 		return super.findList(query.toString(), params);
 	}
+//FIN CUSCATA - 10072024
 }

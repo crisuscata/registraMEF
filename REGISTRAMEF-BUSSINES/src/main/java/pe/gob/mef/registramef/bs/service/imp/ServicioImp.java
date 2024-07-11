@@ -2,11 +2,11 @@ package pe.gob.mef.registramef.bs.service.imp;
 
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.File;
+import java.io.File;//CUSCATA - 10072024
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
+import java.text.SimpleDateFormat;//CUSCATA - 10072024
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.StringUtils;//CUSCATA - 10072024
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -2194,7 +2194,7 @@ public class ServicioImp implements Servicio, Serializable {
 		return dtAsistenciaBkss;
 	}
 
-	//INICIO CUSCATA - 18062024
+	//INICIO CUSCATA - 10072024
 	private void completarDtAsistencia(DtAsistenciaBk dtAsistenciaBk, Long kyUsuarioMod){
 		//MPINARES 24012023 - INICIO
 				try {
@@ -2913,15 +2913,17 @@ public class ServicioImp implements Servicio, Serializable {
 			
 			return dtAsistenciaBk;
 		}
-		
+		//FIN CUSCATA - 10072024
 		private void encuesta(DtAsistenciaBk dtAsistenciaBk, Long kyUsuarioMod, Long idTipoServicioAsistencia) throws Validador {
 			DtEncuestaBk encuesta = new DtEncuestaBk();
 			encuesta = this.getIdEncuesta(idTipoServicioAsistencia,
 												dtAsistenciaBk.getFechaAsistencia().getTime(),
 												dtAsistenciaBk.getIdAsistencia());// SPRINT_6
-			if(encuesta != null) {
+			//INICIO CUSCATA - 10072024
+            if(encuesta != null) {
 				encuesta.setIdusserModif(kyUsuarioMod);
 			}
+            //FIN CUSCATA - 10072024
 			
 			if (encuesta == null || encuesta.getIdEncuesta() == null
 					|| encuesta.getIdEncuesta().longValue() < 1) {
@@ -2953,7 +2955,7 @@ public class ServicioImp implements Servicio, Serializable {
 
 		}
 		
-
+//INICIO CUSCATA - 10072024
 		public void enviarEncuestaPorCorreo(String descpServicio,  
 											Collection<?> participantes,
 											Long tipoServicio, 
@@ -2962,7 +2964,8 @@ public class ServicioImp implements Servicio, Serializable {
 											String url,
 											Timestamp fechaFinalizacion) throws Validador { // VBALDEONH
 
-			// SPRINT5 INICIO
+			//FIN CUSCATA - 10072024
+            // SPRINT5 INICIO
 			log.log(Level.INFO, "INICIO DE  enviarEncuestaPorCorreo");// SPRINT53
 			String formatoJson = null;
 			DtEncuestaBk encuesta = new DtEncuestaBk();// SPRINT17
@@ -3132,7 +3135,7 @@ public class ServicioImp implements Servicio, Serializable {
 								+ e.getMessage());
 			}
 		}
-
+//INICIO CUSCATA - 10072024
 		public DtEncuestaBk getIdEncuesta(Long idTipoServicio, Long fechaServicio, Long idServicio) throws Validador {
 			DtEncuesta encuestaResultante = null; 
 			Long idOrigen = 0L;
@@ -3233,7 +3236,7 @@ public class ServicioImp implements Servicio, Serializable {
 			return encuestaBk;
 			
 		}
-		
+		//FIN CUSCATA - 10072024
 		public PrtParametrosBk getParametro(Long idParametro) throws Validador {
 			PrtParametrosBk prtParametrosBk = new PrtParametrosBk();
 			PrtParametros prtParametro = prtParametrosDao.getPrtParametros(idParametro);
@@ -3346,7 +3349,7 @@ public class ServicioImp implements Servicio, Serializable {
 			// IVILLAFANA 23052019 FIN
 
 		}
-		
+		//INICIO CUSCATA - 10072024
 		@Override
 		public DtAsistenciaUsuexternosBk saveorupdateDtAsistenciaUsuexternosBk(
 				DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user, Long kyUsuarioMod, Long kyAreaMod,
@@ -3482,6 +3485,7 @@ public class ServicioImp implements Servicio, Serializable {
 			}
 
 		}
+        //FIN CUSCATA - 10072024
 	//FIN CUSCATA - 18062024
 
 	@Override
@@ -9085,7 +9089,7 @@ public class ServicioImp implements Servicio, Serializable {
 		}
 
 	}
-	
+	//INICIO CUSCATA - 10072024
 	private void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternos dtAsistenciaUsuexternos, String user,
 			Long kyUsuarioMod, String rmtaddress) throws Validador {
 		try {
@@ -9118,7 +9122,7 @@ public class ServicioImp implements Servicio, Serializable {
 			throw new Validador(e.getMessage());
 		}
 	}
-
+//FIN CUSCATA - 10072024
 	
 
 	@Override
@@ -17620,7 +17624,7 @@ public class ServicioImp implements Servicio, Serializable {
 		}
 		return dtAsistenciaBkss;
 	}
-	
+	//INICIO CUSCATA - 10072024
 	@Override
 	public List<DtAsistenciaBk> getDtAsistenciaXFiltro(Date fechaInicio, Date fechaFin, Long idProgramacion,
 														Long kyUsuarioMod,long sede,int rol,long sistemaadmi) throws Validador {
@@ -17824,7 +17828,7 @@ public class ServicioImp implements Servicio, Serializable {
 
 	}
 	
-
+//FIN CUSCATA - 10072024
 	@Override
 	public List<DtAsistenciaTemasBk> getDtAsistenciaTemasXIdAsistencia(Long idAsistencia) {
 		List<DtAsistenciaTemasBk> dtAsistenciaTemasBkss = new ArrayList<DtAsistenciaTemasBk>();
@@ -20426,7 +20430,7 @@ public class ServicioImp implements Servicio, Serializable {
 			return msUsuariosListaCache;
 		}
 		//JPUYEN 14052024 - FIN
-
+//INICIO CUSCATA - 10072024
 		@Override
 		public void updateDtAsistenciaUsuexCorreo(Long id) throws Validador {
 			dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexCorreo(id);
@@ -20467,6 +20471,6 @@ public class ServicioImp implements Servicio, Serializable {
 				
 			
 		}
-
+//FIN CUSCATA - 10072024
 		
 }

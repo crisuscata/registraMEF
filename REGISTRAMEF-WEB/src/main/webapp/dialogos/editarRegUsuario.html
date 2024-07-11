@@ -37,7 +37,7 @@
 								<input type="text" md-maxlength="8" maxlength="8" md-minlength=8 minlength=8 required name="dni"
 								ng-model="usuarioModelo.numDocu" >
 								
-									<div ng-messages="dtVisitasUsuariosForm.dni.$error" >
+									<div ng-messages="dtVisitasUsuariosForm.dni.$error" ><!-- CUSCATA - 10072024-->
 										<div ng-message="required">Se requiere el DNI.</div>
 										<div ng-message="md-minlength">El DNI tiene 8 caracteres.</div>
 										<div ng-message="md-maxlength">El DNI tiene 8 caracteres.</div>

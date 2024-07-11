@@ -189,7 +189,7 @@ public interface Servicio {
 	List<DtAsistenciaBk> getAllDtAsistenciaActivos(Long kyUsuarioMod);
 
 	List<DtAsistenciaBk> getAllDtAsistenciaActivosCero(Long kyUsuarioMod);
-
+//INICIO CUSCATA - 10072024
 	DtAsistenciaBk saveorupdateDtAsistenciaBk(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador;
 	
@@ -204,7 +204,7 @@ public interface Servicio {
 	void enviarEncuestaPorCorreo(final String descpServicio, final Collection<?> participantes, final Long tipoServicio,
 			final Long idServicio, final Date fechaServicio, final String url, final Timestamp fechaFinalizacion)
 			throws Validador; 		
-
+//FIN CUSCATA - 10072024
 	void deleteDtAsistencia(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador;
 
@@ -485,10 +485,10 @@ public interface Servicio {
 
 	void deleteDtAsistenciaTemas(DtAsistenciaTemasBk dtAsistenciaTemasBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
-	
+	//INICIO CUSCATA - 10072024
 	void deleteDtAsistenciaUsuario(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
-
+//FIN CUSCATA - 10072024
 	List<DtAsistenciaTemasBk> getDtAsistenciaTemasXFiltro(String detalle, Long idAsistencia, Long idTema,
 			Long idSubtema, int inicial, int MAX, Long kyUsuarioMod);
 
@@ -518,9 +518,10 @@ public interface Servicio {
 
 	void deleteDtUsuarioExterno(DtUsuarioExternoBk dtUsuarioExternoBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador;
-	
+	//INICIO CUSCATA - 10072024
 	void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user,
 			Long kyUsuarioMod, Long kyAreaMod, Long kySedeMod, String rmtaddress) throws Validador;
+//FIN CUSCATA - 10072024
 /// ADICIONALES
 
 	List<IDValorDto> getPrtParametrosIdparametroIdTipodocumento();
@@ -600,9 +601,9 @@ public interface Servicio {
 
 	DtAsistenciaUsuexternosBk saveorupdateDtAsistenciaUsuexternosBk(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk,
 			String user, Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador;
-	
+	//INICIO CUSCATA - 10072024
 	void updateDtAsistenciaUsuexCorreo(Long id) throws Validador;
-
+//FIN CUSCATA - 10072024
 	void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user,
 			Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador;
 
@@ -1592,7 +1593,7 @@ public interface Servicio {
 	//MPINARES 24012023 - INICIO
 		List<DtEntidadesDto> getMsInstitucionesXCodigoEjecutora(String codEjec, Long idSistAdmi) throws Validador ;
 		List<DtAsistenciaBk> getDtAsistenciaXFiltroV(Date fechaInicio, Date fechaFin, Long idProgramacion,Long kyUsuarioMod) throws Validador;
-		List<DtAsistenciaBk> getDtAsistenciaXFiltro(Date fechaInicio, Date fechaFin, Long idProgramacion,Long kyUsuarioMod,long sede,int rol,long sistemaadmi) throws Validador;
+		List<DtAsistenciaBk> getDtAsistenciaXFiltro(Date fechaInicio, Date fechaFin, Long idProgramacion,Long kyUsuarioMod,long sede,int rol,long sistemaadmi) throws Validador;//CUSCATA - 10072024
 		List<DtAsistenciaTemasBk> getDtAsistenciaTemasXIdAsistencia(Long idAsistencia);
 		List<IDValorDto> getPrtParametrosIdparametroIdTipoEntidad();
 		List<IDValorDto> getListaMsPaisesActivos() ;

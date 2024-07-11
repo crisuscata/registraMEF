@@ -320,7 +320,7 @@ public class DtAsistenciaDaoImp extends
 
 			return lista;
 		}
-
+//INICIO CUSCATA - 10072024
 		@Override
 		public List<DtAsistencia> getXFiltro(Date fechaInicio, Date fechaFin, Long idProgramacion, Long idSede,
 											Long idSistAdm,Long idUsuario) {
@@ -366,5 +366,5 @@ public class DtAsistenciaDaoImp extends
 
 			return lista;
 		}
-
+//FIN CUSCATA - 10072024
 }

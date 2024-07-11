@@ -98,7 +98,7 @@
 		<servlet-name>ImageCaptcha</servlet-name>
 		<url-pattern>/captcha_rd.png</url-pattern>
 	</servlet-mapping>
-	
+	<!-- INICIO CUSCATA - 10072024-->
 	<!-- EXTERNAL WEB -->
 	<servlet>
         <servlet-name>ConfirmationPageServlet</servlet-name>
@@ -109,7 +109,7 @@
         <servlet-name>ConfirmationPageServlet</servlet-name>
         <url-pattern>/confirmacion-page</url-pattern>
     </servlet-mapping>
-	
+	<!-- FIN CUSCATA - 10072024-->
 	
 	<session-config>
 		<session-timeout>60</session-timeout>

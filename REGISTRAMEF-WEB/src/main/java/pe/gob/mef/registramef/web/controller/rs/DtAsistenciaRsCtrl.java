@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
+import java.util.Base64;//CUSCATA - 10072024
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
+import javax.ws.rs.Consumes;//CUSCATA - 10072024
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -69,22 +69,22 @@ import pe.gob.mef.registramef.bs.transfer.DtEntidadesDto;
 import pe.gob.mef.registramef.bs.transfer.DtUsuarioExternoDto;
 import pe.gob.mef.registramef.bs.transfer.IDValorDto;
 import pe.gob.mef.registramef.bs.transfer.IIDValorDto;
-import pe.gob.mef.registramef.bs.transfer.bk.DtAnexoBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtAnexoBk;//CUSCATA - 10072024
 import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaTemasBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaUsuexternosBk;
-import pe.gob.mef.registramef.bs.transfer.bk.DtCargosUsuexterBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtCargosUsuexterBk;//CUSCATA - 10072024
 import pe.gob.mef.registramef.bs.transfer.bk.DtEntidadesBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtUsuarioExternoBk;
 import pe.gob.mef.registramef.bs.transfer.bk.MsUsuariosBk;
 import pe.gob.mef.registramef.bs.utils.FuncionesStaticas;
 import pe.gob.mef.registramef.bs.utils.PropertiesMg;
 import pe.gob.mef.registramef.web.controller.DtAsistenciaData;
-import pe.gob.mef.registramef.web.controller.rs.data.DtAnexosJS;
+import pe.gob.mef.registramef.web.controller.rs.data.DtAnexosJS;//CUSCATA - 10072024
 import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaLC;
 import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaTemasJS;
-import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaUsuexternosJS;
+import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaUsuexternosJS;//CUSCATA - 10072024
 import pe.gob.mef.registramef.web.controller.rs.data.DtEntidadesJS;
 import pe.gob.mef.registramef.web.controller.rs.data.RespuestaError;
 import pe.gob.mef.registramef.web.controller.rs.data.UbigeoXDefectoJS;
@@ -372,7 +372,7 @@ public class DtAsistenciaRsCtrl {
 		}
 	}
 
-	
+	//INICIO CUSCATA - 10072024
 	private boolean contienCoincidenciaDni(String cadena, String dniUserTxt) {
     	String[] dnis = cadena.split(",");
 
@@ -1143,7 +1143,7 @@ public class DtAsistenciaRsCtrl {
 	    dto.setOtroCelular(bk.getOtroCelular());
 	    return dto;
 	}
-
+//FIN CUSCATA - 10072024
 	@POST
 	@Path("/eliminardtAsistencia")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -1572,10 +1572,10 @@ public class DtAsistenciaRsCtrl {
 					iestado = Integer.parseInt(sestado);
 				}catch(Exception e){}
 			}		
-			
+			//INICIO CUSCATA - 10072024
 			DtAsistenciaFiltro dtAsistenciaFiltro = new DtAsistenciaFiltro(fechaInicio, fechaFin, idSedeTxt, idEntidadTxt, idProgramacion, 
 					idAsistencia, dniUserTxt, usuExtTxt, codEjecutora, idUsuinternoTxt, idSistAdmTxt, idOrigenTxt, estadoTxt, iestado);	
-			
+			//FIN CUSCATA - 10072024
 			DtAsistenciaData dtAsistenciaData = (DtAsistenciaData) req.getSession().getAttribute("DtAsistenciaData");
 			if(dtAsistenciaData==null){
 				dtAsistenciaData = new DtAsistenciaData();
@@ -1588,7 +1588,7 @@ public class DtAsistenciaRsCtrl {
 			List<DtAsistenciaBk> dtAsistenciasss = dtAsistenciaData.getDtAsistenciaActivos(servicio,msUsuariosBk.getIdusuario(), fechaInicio, fechaFin, idProgramacion);//MPINARES 24012023 - INICIO
 			long lfinal =System.currentTimeMillis()-inicio;
 			dtAsistenciaLC.setTiempoenBD(lfinal);
-			
+			//INICIO CUSCATA - 10072024
 			if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.DTASISTENCIA_CREA)){
 				dtAsistenciaLC.setCreamodifica(true);
 			}
@@ -1597,13 +1597,13 @@ public class DtAsistenciaRsCtrl {
 													 .filter(c-> dniUserTxt == null || dniUserTxt.isEmpty() || this.contienCoincidenciaDni(c.getDniUserTxt(), dniUserTxt))
 													 .collect(Collectors.toList());
 			
-			
+			//FIN CUSCATA - 10072024
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
 			List<DtAsistenciaBk> dtAsistenciasssData = new ArrayList<DtAsistenciaBk> ();
 			if(dtAsistenciaFiltro.isActivo()){
 			//filter
 //				int contador = 0;
-	        for(DtAsistenciaBk dtAsistenciaAct : listAsistenciaFilter){
+	        for(DtAsistenciaBk dtAsistenciaAct : listAsistenciaFilter){//CUSCATA - 10072024
 	            boolean match = true;	            
 	            Field camposdea[] = dtAsistenciaFiltro.getClass().getDeclaredFields();
 //	            if(dtAsistenciaAct.getIdAsistencia.longValue()==56L){
@@ -1624,10 +1624,10 @@ public class DtAsistenciaRsCtrl {
 						Object filtroValue = filtroMethod.invoke(dtAsistenciaFiltro, new Object[0]);
 						if(filtroValue==null) continue;
 						else if(filtroValue.toString().length()<1) continue;
-                                                
+                                                //INICIO CUSCATA - 10072024
                                                 if(primerregistro)
                                                 filtrosaplicados.append(Messages.getStringToKey("dtAsistencia."+camponame)).append("=").append(filtroValue).append(", ");
-
+//FIN CUSCATA - 10072024
 						Method claseMethod = dtAsistenciaAct.getClass().getMethod(claseGetMetod, types);
 						Object claseValue = claseMethod.invoke(dtAsistenciaAct, new Object[0]);
 						if(claseValue!=null){
@@ -1883,7 +1883,7 @@ public class DtAsistenciaRsCtrl {
 			CellStyle cellStyleDATO = cell7A.getCellStyle();
 
 //			List<String> caposvista = Arrays.asList("idEntidad","idSede","fechaAsistencia","idUsuinterno","idSistAdm","idOrigen","idProgramacion","estado");
-			List<String> caposvista = Arrays.asList("idAsistencia","dniUserTxt","usuExtTxt","codEjecutora","idEntidadTxt","idSedeTxt","fechaAsistencia","idUsuinternoTxt","idSistAdmTxt","idOrigenTxt","idProgramacion","estadoTxt");//MPINARES 24012023 - INICIO
+			List<String> caposvista = Arrays.asList("idAsistencia","dniUserTxt","usuExtTxt","codEjecutora","idEntidadTxt","idSedeTxt","fechaAsistencia","idUsuinternoTxt","idSistAdmTxt","idOrigenTxt","idProgramacion","estadoTxt");//INICIO CUSCATA - 10072024
                         int tituloscontador = 1;
 			int titulofilacontador = 6;
 			Row rowX = hoja.getRow(titulofilacontador);
@@ -2084,7 +2084,7 @@ public class DtAsistenciaRsCtrl {
     					}).build();
     		}
     	}
-        
+        //INICIO CUSCATA - 10072024
         @POST
     	@Path("/validarCambiosAsistencia")
     	@Produces(MediaType.APPLICATION_JSON)
@@ -2127,7 +2127,7 @@ public class DtAsistenciaRsCtrl {
     					}).build();
     		}
         }
-        
+        //FIN CUSCATA - 10072024
         @GET
     	@Path("/descargarFormato/{idAsistencia}")
     	@Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -2366,7 +2366,7 @@ public class DtAsistenciaRsCtrl {
     					//fileAux=null;				
     					doc.write(fos);
     					fos.close(); 	
-    					doc.close();
+    					doc.close();//CUSCATA - 10072024
     				} catch (Exception e) {
     					e.printStackTrace();
     				}
@@ -2506,7 +2506,7 @@ public class DtAsistenciaRsCtrl {
     					}).build();
     		}
     	}
-        
+        //INICIO CUSCATA - 10072024
         @POST
     	@Path("/eliminardtAsistenciaUsuario")
     	@Produces(MediaType.APPLICATION_JSON)
@@ -2549,7 +2549,7 @@ public class DtAsistenciaRsCtrl {
     					}).build();
     		}
     	}
-        
+        //FIN CUSCATA - 10072024
         @GET
     	@Path("/listaMsInstitucionesIdprovee/{idprovee}")
     	@Produces(MediaType.APPLICATION_JSON)
@@ -3153,8 +3153,8 @@ public class DtAsistenciaRsCtrl {
     					dtAsistenciaC.setIdSistAdm(msUsuariosBk.getIdSistAdmi());
     					dtAsistenciaC.setIdUsuinterno(msUsuariosBk.getIdusuario());
     					// MPINARES 24012023 - FIN
-    					dtAsistenciaC.setFechaSoli( new Timestamp(dtAsistenciaJS.getFechaSoliJUD().getTime()) );
-    					dtAsistenciaC.setFechaAsistencia( new Timestamp(dtAsistenciaJS.getFechaServicioJUD().getTime()) );
+    					dtAsistenciaC.setFechaSoli( new Timestamp(dtAsistenciaJS.getFechaSoliJUD().getTime()) );//CUSCATA - 10072024
+    					dtAsistenciaC.setFechaAsistencia( new Timestamp(dtAsistenciaJS.getFechaServicioJUD().getTime()) );//CUSCATA - 10072024
 
     					try {
     						dtAsistenciaC = servicio.finalizarDtAsistenciaBk(dtAsistenciaC, msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto);

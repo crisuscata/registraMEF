@@ -1,3 +1,4 @@
+//CUSCATA - 10072024 CLASE NUEVA
 package pe.gob.mef.registramef.web.controller.rs.data;
 
 import java.sql.Timestamp;

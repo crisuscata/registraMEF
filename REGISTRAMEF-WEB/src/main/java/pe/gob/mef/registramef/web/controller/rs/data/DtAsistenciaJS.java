@@ -40,7 +40,7 @@ public class DtAsistenciaJS implements java.io.Serializable {
 	private Timestamp fechaProgramada = null;
 	private Timestamp fechaSoli = null;
 	private Timestamp fechaServicioJUD = null;//CUSCATA - 18062024
-	private Timestamp fechaReprogramacionJUD = null;//CUSCATA - 18062024
+	private Timestamp fechaReprogramacionJUD = null;//CUSCATA - 10072024
 	
 	
 	// ADICIONALES
@@ -55,7 +55,7 @@ public class DtAsistenciaJS implements java.io.Serializable {
 	private String idFinanciaTxt = null;
 	
 	//MPINARES 24012023 - INICIO
-		private List<DtAsistenciaTemasBk> dtAsistenciaTemasBkJSss = null;
+		private List<DtAsistenciaTemasBk> dtAsistenciaTemasBkJSss = null;//CUSCATA - 10072024
 		private List<DtAsistenciaUsuexternosBk> dtAsistenciaUsuariosBkJSss=null;
 		private String codEjecutora = null;
 		private List<String> dniUser = null;
@@ -66,10 +66,10 @@ public class DtAsistenciaJS implements java.io.Serializable {
 		private boolean checked = false;
 		//MPINARES 24012023 - FIN
 		
-	private DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk=null;
+	private DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk=null;//CUSCATA - 10072024
 	
-	//private List<DtAnexoBk> dtAnexosBKJSss = null;
-	private List<DtAnexosJS> tdAnexosJSss = null;
+	//private List<DtAnexoBk> dtAnexosBKJSss = null;//CUSCATA - 10072024
+	private List<DtAnexosJS> tdAnexosJSss = null;//CUSCATA - 10072024
 	
 	private Integer editopcion = 1;
 
@@ -357,7 +357,7 @@ public class DtAsistenciaJS implements java.io.Serializable {
 		public void setEstado(Long estado) {
 			this.estado = estado;
 		}
-
+//INICIO CUSCATA - 10072024
 		public Timestamp getFechaServicioJUD() {
 			return fechaServicioJUD;
 		}
@@ -397,7 +397,7 @@ public class DtAsistenciaJS implements java.io.Serializable {
 		public void setFechaReprogramacionJUD(Timestamp fechaReprogramacionJUD) {
 			this.fechaReprogramacionJUD = fechaReprogramacionJUD;
 		}
-
+//FIN CUSCATA - 10072024
 		
 		//MPINARES 24012023 - FIN
 }

@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import pe.gob.mef.registramef.bs.ctlracceso.DtAnexoACL;
+import pe.gob.mef.registramef.bs.ctlracceso.DtAnexoACL;//CUSCATA - 10072024
 
 /**
  * MSUSUARIOS BAKING: ANEXOS
@@ -54,7 +54,7 @@ public class DtAnexosJS implements java.io.Serializable {
 	private Long tamanio = null;
 	private String tipo = null;
 	
-
+//INICIO CUSCATA - 10072024
 	// PROPIEDADES
 	private Long iddocumento = null;
 	private Long lastmodified = null;
@@ -119,7 +119,7 @@ public class DtAnexosJS implements java.io.Serializable {
 	public void setIduserModifTxt(String iduserModifTxt) {
 		this.iduserModifTxt = iduserModifTxt;
 	}
-
+//FIN CUSCATA - 10072024
 
 		public DtAnexosJS() {
 		}
@@ -363,7 +363,7 @@ public class DtAnexosJS implements java.io.Serializable {
 		public void setDatabyte(byte[] databyte) {
 			this.databyte = databyte;
 		}
-
+//INICIO CUSCATA - 10072024
 
 		public DtAnexoACL getDtAnexoACL() {
 			return dtAnexoACL;
@@ -404,7 +404,7 @@ public class DtAnexosJS implements java.io.Serializable {
 			this.tipoAnexoTxt = tipoAnexoTxt;
 		}
 
-
+//FIN CUSCATA - 10072024
 	
 		
 }
