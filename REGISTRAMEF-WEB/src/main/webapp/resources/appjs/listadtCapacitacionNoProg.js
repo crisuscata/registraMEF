@@ -57,16 +57,16 @@ myapp = angular.module('MyApp');
 myapp.config(function($routeProvider) {
 	  $routeProvider
 	  .when("/editar/:idCapacitacion", {
-		  templateUrl : "capacitacion/editardtCapacitacion.html",
-		  controller : "ctrlListadtCapacitacion"
+		  templateUrl : "capacitacion/editardtCapacitacionNoProg.html",
+		  controller : "ctrlListadtCapacitacionNoProg"
 	  })
 	  .when("/nuevo", {
-		  templateUrl : "capacitacion/editardtCapacitacion.html",
-		  controller : "ctrlListadtCapacitacion"
+		  templateUrl : "capacitacion/editardtCapacitacionNoProg.html",
+		  controller : "ctrlListadtCapacitacionNoProg"
 	  })
 	  .otherwise({
-		  templateUrl : "capacitacion/verdtCapacitacion.html",
-		  controller : "ctrlListadtCapacitacion"  
+		  templateUrl : "capacitacion/verdtCapacitacionNoProg.html",
+		  controller : "ctrlListadtCapacitacionNoProg"  
 	  });
 	});
 
@@ -99,7 +99,7 @@ myapp.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
 	};
 }]);
 
-myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeout', '$http', '$mdDialog','$location','$routeParams', '$mdPanel',  function ($mdEditDialog, $scope, $timeout, $http, $mdDialog, $location, $routeParams, $mdPanel) {
+myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$timeout', '$http', '$mdDialog','$location','$routeParams', '$mdPanel',  function ($mdEditDialog, $scope, $timeout, $http, $mdDialog, $location, $routeParams, $mdPanel) {
 	'use strict';
 	 
 	 $scope.limitOptions = [100, 500, 1000, 5000];
@@ -316,6 +316,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 	                $scope.loadListaPrtParametrosIdModalidad();//SELECT
 	                $scope.loadListaPrtParametrosIdPublico();//SELECT
 	                $scope.loadListaProcedeEjecucion();//SELECT
+	                $scope.loadListaPrtParametrosIdOrigen();//SELECT
 			    $scope.loadListaMsTemaIdTema();
 			    $scope.rangeYearIni();
 			  //MPINARES 14022024 - FIN
@@ -1653,6 +1654,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 			stdModalidadIng: null,
 			flagEjec: null,
 			motivoEjec: null,
+			idOrigen: 140,
 			
                         // ADICIONALES
 	        idLocalTxt: null,
@@ -2648,7 +2650,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 		});
 	};
         $scope.changeIdModo=function(idModo){
-          ///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
+        	console.log("idModo: " + idModo)
         	if(idModo!=null && idModo==93){
         		$scope.dtCapacitacionModelo.idModalidad = null;
         		$scope.dtCapacitacionModelo.idLocal = null;
@@ -2659,16 +2661,18 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
         		$scope.dtCapacitacionModelo.idTipo = null;
         	}
         }
+        
         $scope.$watch('dtCapacitacionModelo.idModo', function (newValue, oldValue) {
 		console.log('dtCapacitacionModelo.idModo ' + newValue+' -- '+oldValue);
-		//CARGAR DATOS DEL SIGUIENTE SELECT
-//	if($scope.isArray($scope.listaPrtParametrosIdModo)){
-//		var obj = $scope.listaPrtParametrosIdModo.find(o => o.id === newValue);
-//		if($scope.isObject(obj)){
-//			$scope.prtParametrosModelo.idparametroTxt = obj.valor;
-//		}
-//	}
-	});
+			//CARGAR DATOS DEL SIGUIENTE SELECT
+			//	if($scope.isArray($scope.listaPrtParametrosIdModo)){
+			//		var obj = $scope.listaPrtParametrosIdModo.find(o => o.id === newValue);
+			//		if($scope.isObject(obj)){
+			//			$scope.prtParametrosModelo.idparametroTxt = obj.valor;
+			//		}
+			//	}
+        });
+        
 //SELECT FIN                
 //SELECT INI
         $scope.listaPrtParametrosIdNivel=[];

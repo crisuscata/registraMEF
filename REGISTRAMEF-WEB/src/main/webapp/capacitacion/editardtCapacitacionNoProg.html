@@ -253,7 +253,7 @@ data-ng-init="editdtCapacitacion()">
 				style="font-size: 14px;">
 				
 				<div class="letraenvoltura"
-					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="20">
+					ng-if="dtCapacitacionModelo.editopcion < 2 " flex="20">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
@@ -296,10 +296,28 @@ data-ng-init="editdtCapacitacion()">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
+						<label>Origen</label>
+						<md-select
+						ng-model="dtCapacitacionModelo.idOrigen" required placeholder="Origen"
+						name="idOrigen"> <md-option
+						ng-repeat="item in listaPrtParametrosIdOrigen"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+					<div ng-messages="dtCapacitacionForm.idModo.$error">
+						<div ng-message="required">Seleccione Origen.</div>
+					</div>
+					</md-input-container>
+				</div>
+				
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
 						<label>Modo</label>
 						<md-select
 						ng-model="dtCapacitacionModelo.idModo" required placeholder="Modo"
-						ng-change="changeIdModo(dtCapacitacionModelo.idModo)"
+						
 						name="idModo"> <md-option
 						ng-repeat="item in listaPrtParametrosIdModo"
 						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
@@ -310,7 +328,7 @@ data-ng-init="editdtCapacitacion()">
 				</div>
 				
 				<div class="letraenvoltura"
-					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="20">
+					ng-if="dtCapacitacionModelo.editopcion < 2 " flex="20">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
@@ -336,7 +354,7 @@ data-ng-init="editdtCapacitacion()">
 				style="font-size: 14px;margin-left: 26px;margin-bottom: 20px;">
 				
 				<div class="letraenvoltura"
-					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93 && dtCapacitacionModelo.idModalidad!=137" flex="50">
+					ng-if="dtCapacitacionModelo.editopcion < 2 " flex="50">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
@@ -353,7 +371,7 @@ data-ng-init="editdtCapacitacion()">
 				</div>
 				
 				<div class="letraenvoltura"
-					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93 && dtCapacitacionModelo.idModalidad==137"" flex="50">
+					ng-if="dtCapacitacionModelo.editopcion < 2  && dtCapacitacionModelo.idModalidad==137"" flex="50">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
@@ -363,7 +381,7 @@ data-ng-init="editdtCapacitacion()">
 				</div>
 				
 				<div class="letraenvoltura"
-					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="50">
+					ng-if="dtCapacitacionModelo.editopcion < 2 " flex="50">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
@@ -378,7 +396,7 @@ data-ng-init="editdtCapacitacion()">
 				style="font-size: 14px;margin-left: 26px;margin-bottom: 20px;">
 				
 				<div class="letraenvoltura"
-					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="20">
+					ng-if="dtCapacitacionModelo.editopcion < 2 " flex="20">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
@@ -407,7 +425,7 @@ data-ng-init="editdtCapacitacion()">
 				</div>
 				
 				<div class="letraenvoltura"
-					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="20">
+					ng-if="dtCapacitacionModelo.editopcion < 2 " flex="20">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
@@ -424,7 +442,7 @@ data-ng-init="editdtCapacitacion()">
 				</div>
 				
 				<div class="letraenvoltura"
-					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="20">
+					ng-if="dtCapacitacionModelo.editopcion < 2 " flex="20">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
@@ -441,7 +459,7 @@ data-ng-init="editdtCapacitacion()">
 				</div>
 				
 				<div class="letraenvoltura"
-					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="20">
+					ng-if="dtCapacitacionModelo.editopcion < 2 " flex="20">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
@@ -460,7 +478,7 @@ data-ng-init="editdtCapacitacion()">
 				
 	</div>
 	
-	<div layout="row" layout-aling="center start" flex="50" ng-if="dtCapacitacionModelo.idModo!=93" 
+	<div layout="row" layout-aling="center start" flex="50" 
 				style="font-size: 14px;">
 				
 				<table md-progress="promise" md-row-select="options.rowSelection"
