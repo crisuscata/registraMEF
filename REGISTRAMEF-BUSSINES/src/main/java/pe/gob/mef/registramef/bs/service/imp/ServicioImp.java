@@ -4330,6 +4330,292 @@ public class ServicioImp implements Servicio, Serializable {
 		dtCapacitacionBk = getDtCapacitacionBkXid(dtCapacitacion.getIdCapacitacion(), kyUsuarioMod);
 		return dtCapacitacionBk;
 	}
+	
+
+	@Override
+	public DtCapacitacionBk saveorupdateDtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, String user,
+			Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador {
+
+		Long idSisAdmTodos = PropertiesMg.getSistemLong(PropertiesMg.KEY_IDSISTEMA_ADMINISTRATIVO_TODOS,
+				PropertiesMg.DEFOULT_IDSISTEMA_ADMINISTRATIVO_TODOS);
+		Long idSedeTodas = PropertiesMg.getSistemLong(PropertiesMg.KEY_IDSEDES_TODAS,
+				PropertiesMg.DEFOULT_IDSEDES_TODAS);
+
+		Long idTipoFechaCorteProgramada = PropertiesMg.getSistemLong(
+				PropertiesMg.KEY_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_PROG,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_PROG);
+		DtAmpliacionFecha autorizacionProgramacion = dtAmpliacionFechaDao.find(idTipoFechaCorteProgramada,
+				dtCapacitacionBk.getIdSede(), dtCapacitacionBk.getIdSistAdm(), FuncionesStaticas.getMonth());
+		// ***************************************************************************************************************************
+		DtAmpliacionFecha autorizacionProgramacion2 = dtAmpliacionFechaDao.find(idTipoFechaCorteProgramada, idSedeTodas,
+				dtCapacitacionBk.getIdSistAdm(), FuncionesStaticas.getMonth());
+		if (autorizacionProgramacion2 != null) {
+			if (autorizacionProgramacion != null) {
+				if (autorizacionProgramacion2.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
+					autorizacionProgramacion = autorizacionProgramacion2;
+				}
+			} else {
+				autorizacionProgramacion = autorizacionProgramacion2;
+			}
+		}
+
+		DtAmpliacionFecha autorizacionProgramacion3 = dtAmpliacionFechaDao.find(idTipoFechaCorteProgramada,
+				dtCapacitacionBk.getIdSede(), idSisAdmTodos, FuncionesStaticas.getMonth());
+		if (autorizacionProgramacion3 != null) {
+			if (autorizacionProgramacion != null) {
+				if (autorizacionProgramacion3.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
+					autorizacionProgramacion = autorizacionProgramacion3;
+				}
+			} else {
+				autorizacionProgramacion = autorizacionProgramacion3;
+			}
+		}
+
+		DtAmpliacionFecha autorizacionProgramacion4 = dtAmpliacionFechaDao.find(idTipoFechaCorteProgramada, idSedeTodas,
+				idSisAdmTodos, FuncionesStaticas.getMonth());
+		if (autorizacionProgramacion4 != null) {
+			if (autorizacionProgramacion != null) {
+				if (autorizacionProgramacion4.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
+					autorizacionProgramacion = autorizacionProgramacion4;
+				}
+			} else {
+				autorizacionProgramacion = autorizacionProgramacion4;
+			}
+		}
+		// ***************************************************************************************************************************
+
+		Long idTipoFechaCorteEjecucion = PropertiesMg.getSistemLong(
+				PropertiesMg.KEY_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_EJEC,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_EJEC);
+
+		ValidacionDtCapacitacionMng.validarFechaInic(dtCapacitacionBk.getFechaInic());
+
+		Integer mesServicio = dtCapacitacionBk.getFechaInic().getMonth() + 1;
+		if (mesServicio.intValue() == 12) {
+			mesServicio = 0;
+		}
+
+		DtAmpliacionFecha autorizacionEjecucion = dtAmpliacionFechaDao.find(idTipoFechaCorteEjecucion,
+				dtCapacitacionBk.getIdSede(), dtCapacitacionBk.getIdSistAdm(), mesServicio + 1);// Ahora,
+																								// Mes
+																								// Actual,
+																								// por
+																								// confirmar
+
+		if (autorizacionEjecucion == null) {
+			autorizacionEjecucion = dtAmpliacionFechaDao.find(idTipoFechaCorteEjecucion, idSedeTodas,
+					dtCapacitacionBk.getIdSistAdm(), mesServicio + 1);// Ahora,
+																		// Mes
+																		// Actual,
+																		// por
+																		// confirmar
+			if (autorizacionEjecucion == null) {
+				autorizacionEjecucion = dtAmpliacionFechaDao.find(idTipoFechaCorteEjecucion,
+						dtCapacitacionBk.getIdSede(), idSisAdmTodos, mesServicio + 1);// Ahora,
+																						// Mes
+																						// Actual,
+																						// por
+																						// confirmar
+				if (autorizacionEjecucion == null) {
+					autorizacionEjecucion = dtAmpliacionFechaDao.find(idTipoFechaCorteEjecucion, idSedeTodas,
+							idSisAdmTodos, mesServicio + 1);// Ahora, Mes
+															// Actual, por
+															// confirmar
+				}
+			}
+		}
+
+		DtCapacitacion dtCapacitacionOrig = null;
+		if (dtCapacitacionBk.getIdCapacitacion() != null && dtCapacitacionBk.getIdCapacitacion().longValue() > 0) {
+			dtCapacitacionOrig = dtCapacitacionDao.getDtCapacitacion(dtCapacitacionBk.getIdCapacitacion());
+		}
+
+		ValidacionDtCapacitacionMng.validarDtCapacitacionBk(dtCapacitacionBk, autorizacionProgramacion,
+				autorizacionEjecucion, msRolesDao.isRolAdministradorOGC(kyUsuarioMod), dtCapacitacionOrig);
+
+		List<DtCapaPublicoBk> capaPublicos = new ArrayList<DtCapaPublicoBk>();
+		Long idModoUnSistema = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDMODO_UNSISTEMA,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDMODO_UNSISTEMA);
+		if (dtCapacitacionBk.getDtCapaPublicoBkJSss() != null && dtCapacitacionBk.getDtCapaPublicoBkJSss().size() > 0) {
+
+			for (DtCapaPublicoBk dtCapaPublicoBka : dtCapacitacionBk.getDtCapaPublicoBkJSss()) {
+				if (dtCapaPublicoBka.getIdCargo() != null && dtCapaPublicoBka.getIdCargo().longValue() > 0) {
+					capaPublicos.add(dtCapaPublicoBka);
+				}
+			}
+
+			if (capaPublicos != null && capaPublicos.size() > 0) {
+				dtCapacitacionBk.setDtCapaPublicoBkJSss(capaPublicos);
+			} else {
+				if (dtCapacitacionBk.getIdModo().longValue() == idModoUnSistema) {
+					throw new Validador(MessageFormat.format("DEBE SELECCIONAR EL PUBLICO OBJETIVO DE LA CAPACITACIÓN",
+							Messages.getStringToKey("dtCapacitacion.titulotabla")));
+				}
+			}
+		} else {
+
+			if (dtCapacitacionBk.getIdModo().longValue() == idModoUnSistema) {
+				throw new Validador(MessageFormat.format("DEBE SELECCIONAR EL PUBLICO OBJETIVO DE LA CAPACITACIÓN",
+						Messages.getStringToKey("dtCapacitacion.titulotabla")));
+			}
+		}
+
+		if (dtCapacitacionBk.getDtCapaTemasBkJSss() == null || dtCapacitacionBk.getDtCapaTemasBkJSss().size() < 1) {
+			throw new Validador(MessageFormat.format("DEBE SELECCIONAR EL TEMA Y SUBTEMA DE LA CAPACITACIÓN",
+					Messages.getStringToKey("dtCapacitacion.titulotabla")));
+		}
+
+		if (dtCapacitacionBk.getDtCapaEntidadesBkJSss() == null
+				|| dtCapacitacionBk.getDtCapaEntidadesBkJSss().size() < 1) {
+			throw new Validador(MessageFormat.format("DEBE SELECCIONAR LA ENTIDAD VINCULADA LA CAPACITACIÓN",
+					Messages.getStringToKey("dtCapacitacion.titulotabla")));
+		}
+
+		// MPINARES 14022024 - FIN
+
+		DtCapacitacion dtCapacitacion = null;
+		Timestamp hoy = new Timestamp(System.currentTimeMillis());
+
+		int nivel = 1;
+
+		try {
+			if (dtCapacitacionBk.getIdCapacitacion() != null && dtCapacitacionBk.getIdCapacitacion().longValue() > 0) {
+
+				dtCapacitacion = dtCapacitacionDao.getDtCapacitacion(dtCapacitacionBk.getIdCapacitacion());
+
+				boolean cambios = AuditoriaDtCapacitacionMng.auditarCambiosDtCapacitacion(dtCapacitacionBk,
+						dtCapacitacion, kyUsuarioMod, user, rmtaddress, nivel);
+
+				if (cambios) {
+					dtCapacitacion.setRtmaddressrst(rmtaddress);
+					dtCapacitacion.setIdusserModif(kyUsuarioMod);
+					dtCapacitacion.setFechaModif(hoy);
+					dtCapacitacionDao.updateDtCapacitacion(dtCapacitacion);
+				}
+			} else {
+				dtCapacitacionBk.setRtmaddress(rmtaddress);
+				dtCapacitacionBk.setRtmaddressrst(rmtaddress);
+
+				dtCapacitacionBk.setFechaCrea(hoy);
+				dtCapacitacionBk.setIdusserCrea(kyUsuarioMod);
+				dtCapacitacionBk.setIdusserModif(kyUsuarioMod);
+				dtCapacitacionBk.setFechaModif(hoy);
+				dtCapacitacionBk.setEstado(Estado.ACTIVO.getValor());
+
+				dtCapacitacion = new DtCapacitacion();
+
+				FuncionesStaticas.copyPropertiesObject(dtCapacitacion, dtCapacitacionBk);
+				dtCapacitacionDao.saveDtCapacitacion(dtCapacitacion);
+
+				log.log(Level.INFO,
+						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+								+ "CREADO dtCapacitacion" + " :: " + dtCapacitacion.getIdCapacitacion().toString()
+								+ " :: " + "0" + " :: " + "1");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Validador(e.getMessage());
+		}
+
+		// MPINARES 14022024 - INICIO
+		DtCapaPublico dtCapaPublico = null;
+		if (dtCapacitacionBk.getDtCapaPublicoBkJSss() != null && dtCapacitacionBk.getDtCapaPublicoBkJSss().size() > 0) {
+			for (DtCapaPublicoBk dtCapaPublicoBka : dtCapacitacionBk.getDtCapaPublicoBkJSss()) {
+				if (dtCapaPublicoBka.getIdCapaPublico() != null
+						&& dtCapaPublicoBka.getIdCapaPublico().longValue() > 0) {
+					// ACTUALIZAR
+				} else {
+					// NUEVO
+					dtCapaPublicoBka.setIdCapacitacion(dtCapacitacion.getIdCapacitacion());
+					dtCapaPublicoBka.setEstado(Estado.ACTIVO.getValor());
+					dtCapaPublicoBka.setFechaCrea(hoy);
+					dtCapaPublicoBka.setFechaModif(hoy);
+					dtCapaPublicoBka.setIduserCrea(kyUsuarioMod);
+					dtCapaPublicoBka.setIduserModif(kyUsuarioMod);
+					dtCapaPublicoBka.setRtmaddress(rmtaddress);
+					dtCapaPublicoBka.setRtmaddressrst(rmtaddress);
+
+					dtCapaPublico = new DtCapaPublico();
+
+					FuncionesStaticas.copyPropertiesObject(dtCapaPublico, dtCapaPublicoBka);
+					dtCapaPublicoDao.saveDtCapaPublico(dtCapaPublico);
+
+					log.log(Level.INFO,
+							"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+									+ "CREADO dtCapaPublico" + " :: " + dtCapaPublico.getIdCapaPublico().toString()
+									+ " :: " + "0" + " :: " + "" + Estado.ACTIVO.getValor());
+				}
+			}
+		}
+
+		DtCapaTemas dtCapaTemas = null;
+		if (dtCapacitacionBk.getDtCapaTemasBkJSss() != null && dtCapacitacionBk.getDtCapaTemasBkJSss().size() > 0) {
+			for (DtCapaTemasBk dtCapaTemasBka : dtCapacitacionBk.getDtCapaTemasBkJSss()) {
+				if (dtCapaTemasBka.getIdCapaTemAgen() != null && dtCapaTemasBka.getIdCapaTemAgen().longValue() > 0) {
+					// ACTUALIZAR
+				} else {
+					// NUEVO
+					dtCapaTemasBka.setIdCapaTemAgen(null);
+					dtCapaTemasBka.setIdSistAdmi(kyAreaMod);
+					dtCapaTemasBka.setIdUsuinterno(kyUsuarioMod);
+					dtCapaTemasBka.setIdCapacitacion(dtCapacitacion.getIdCapacitacion());
+					dtCapaTemasBka.setEstado(Estado.ACTIVO.getValor());
+					dtCapaTemasBka.setFechaCrea(hoy);
+					dtCapaTemasBka.setFechaModif(hoy);
+					dtCapaTemasBka.setIdusserCrea(kyUsuarioMod);
+					dtCapaTemasBka.setIdusserModif(kyUsuarioMod);
+					dtCapaTemasBka.setRtmaddress(rmtaddress);
+					dtCapaTemasBka.setRtmaddressrst(rmtaddress);
+
+					dtCapaTemas = new DtCapaTemas();
+
+					FuncionesStaticas.copyPropertiesObject(dtCapaTemas, dtCapaTemasBka);
+					dtCapaTemasDao.saveDtCapaTemas(dtCapaTemas);
+
+					log.log(Level.INFO,
+							"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+									+ "CREADO dtCapaTemas" + " :: " + dtCapaTemas.getIdCapaTemAgen().toString() + " :: "
+									+ "0" + " :: " + "" + Estado.ACTIVO.getValor());
+				}
+			}
+		}
+
+		DtCapaEntidades dtCapaEntidades = null;
+		if (dtCapacitacionBk.getDtCapaEntidadesBkJSss() != null
+				&& dtCapacitacionBk.getDtCapaEntidadesBkJSss().size() > 0) {
+			for (DtCapaEntidadesBk dtCapaEntidadesBka : dtCapacitacionBk.getDtCapaEntidadesBkJSss()) {
+				if (dtCapaEntidadesBka.getIdCapaEnti() != null && dtCapaEntidadesBka.getIdCapaEnti().longValue() > 0) {
+					// ACTUALIZAR
+				} else {
+					// NUEVO
+					dtCapaEntidadesBka.setIdCapaEnti(null);
+					dtCapaEntidadesBka.setIdCapacitacion(dtCapacitacion.getIdCapacitacion());
+					dtCapaEntidadesBka.setEstado(Estado.ACTIVO.getValor());
+					dtCapaEntidadesBka.setFechaCrea(hoy);
+					dtCapaEntidadesBka.setFechaModif(hoy);
+					dtCapaEntidadesBka.setIdusserCrea(kyUsuarioMod);
+					dtCapaEntidadesBka.setIdusserModif(kyUsuarioMod);
+					dtCapaEntidadesBka.setRtmaddress(rmtaddress);
+					dtCapaEntidadesBka.setRtmaddressrst(rmtaddress);
+
+					dtCapaEntidades = new DtCapaEntidades();
+
+					FuncionesStaticas.copyPropertiesObject(dtCapaEntidades, dtCapaEntidadesBka);
+					dtCapaEntidadesDao.saveDtCapaEntidades(dtCapaEntidades);
+
+					log.log(Level.INFO,
+							"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+									+ "CREADO dtCapaEntidades" + " :: " + dtCapaEntidades.getIdCapaEnti().toString()
+									+ " :: " + "0" + " :: " + "" + Estado.ACTIVO.getValor());
+				}
+			}
+		}
+		// MPINARES 14022024 - FIN
+
+		dtCapacitacionBk = getDtCapacitacionBkXid(dtCapacitacion.getIdCapacitacion(), kyUsuarioMod);
+		return dtCapacitacionBk;
+	}
 
 	@Override
 	public void deleteDtCapacitacion(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod, Long kyAreaMod,

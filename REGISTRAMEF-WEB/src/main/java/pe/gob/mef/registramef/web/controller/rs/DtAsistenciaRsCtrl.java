@@ -395,6 +395,17 @@ public class DtAsistenciaRsCtrl {
 		return false; 
 	}
 	
+	private boolean contienCoincidenciaFechaServicio(Timestamp fechaAsistencia, String fechaServicio) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		String fechaAsistenciaStr = dateFormat.format(fechaAsistencia);
+		
+		if(fechaAsistenciaStr.equals(fechaServicio)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	@GET
 	@Path("/listadtAsistenciaNoProg")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -437,6 +448,7 @@ public class DtAsistenciaRsCtrl {
 			String idSistAdmTxt = req.getParameter("idSistAdmTxt");
 			String idOrigenTxt = req.getParameter("idOrigenTxt");
 			String estadoTxt = req.getParameter("estadoTxt");
+			String fechaServicio = req.getParameter("fechaServicio");
 			
             String sestado = req.getParameter("estado");
             
@@ -468,6 +480,7 @@ public class DtAsistenciaRsCtrl {
 			
 			System.out.println("idOrigenTxt: " + idOrigenTxt);
 			System.out.println("estadoTxt: " + estadoTxt);
+			System.out.println("fechaServicio: " + fechaServicio);
 			
 			
 			Integer iestado = null;
@@ -517,6 +530,10 @@ public class DtAsistenciaRsCtrl {
 					 .filter(c-> idAsistencia == null || idAsistencia.isEmpty() || String.valueOf(c.getIdAsistencia()).equals(idAsistencia)  )
 					 .filter(c->  idEntidadTxt == null || idEntidadTxt.isEmpty() || c.getIdEntidadTxt().trim().toLowerCase().contains(idEntidadTxt.toLowerCase()) )
 					 .filter(c->  idSedeTxt == null || idSedeTxt.isEmpty() || c.getIdSedeTxt().trim().toLowerCase().contains(idSedeTxt.toLowerCase()) )
+					 .filter(c->  idOrigenTxt == null || idOrigenTxt.isEmpty() || c.getIdOrigenTxt().trim().toLowerCase().contains(idOrigenTxt.toLowerCase()) )
+					 .filter(c->  idUsuinternoTxt == null || idUsuinternoTxt.isEmpty() || c.getIdUsuinternoTxt().trim().toLowerCase().contains(idUsuinternoTxt.toLowerCase()) )
+					 .filter(c->  fechaServicio == null || fechaServicio.isEmpty() || this.contienCoincidenciaFechaServicio(c.getFechaAsistencia(), fechaServicio) )
+					 .filter(c->  idProgramacion == null || idProgramacion.isEmpty() || c.getIdProgramacionTxt().trim().toLowerCase().contains(idProgramacion.toLowerCase()) )
 					 .collect(Collectors.toList());
 			
 			

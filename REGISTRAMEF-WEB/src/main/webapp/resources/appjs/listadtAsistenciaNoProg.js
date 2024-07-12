@@ -446,7 +446,8 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 			  idSistAdmTxt: null,
 			  idOrigenTxt: null,
 			  estadoTxt: null,
-			  idProgramacion: null
+			  idProgramacion: null,
+			  fechaServicio: null
 		}; 
 	
 	  

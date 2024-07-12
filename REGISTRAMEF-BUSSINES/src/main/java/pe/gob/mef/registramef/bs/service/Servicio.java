@@ -229,6 +229,9 @@ public interface Servicio {
 
 	DtCapacitacionBk saveorupdateDtCapacitacionBk(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
+	
+	DtCapacitacionBk saveorupdateDtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
+			Long kyAreaMod, String rmtaddress) throws Validador;
 
 	void deleteDtCapacitacion(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador;

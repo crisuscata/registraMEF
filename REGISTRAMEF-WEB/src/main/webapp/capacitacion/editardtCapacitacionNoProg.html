@@ -1,0 +1,689 @@
+<style type="text/css">
+table.md-table td.md-cell {
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 14px !important;
+    border-top: 1px rgba(0, 0, 0, 0.12) solid;
+}
+</style>
+
+<div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
+data-ng-init="editdtCapacitacion()">
+<!-- //MPINARES 14022024 - INICIO - SE CAMBIA TODO -->
+    
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	  <div class="md-toolbar-tools md-toolbar-tools-size" >
+      <md-button class="md-icon-button" ng-click="cancelarDtCapacitacion()"
+			style="margin-left: -19px;margin-bottom: 11px;"> <md-icon
+			md-font-set="material-icons" aria-label="Close dialog"
+			style="font-size: 29px;color: rgb(189,189,189);">chevron_left</md-icon>
+		</md-button>
+		<div flex="auto" ng-if="nuevo">
+			<h2 md-truncate md-colors="{color: 'background-A100'}"
+				style="font-size: 17px;">Nueva capacitaci&oacute;n programada</h2>
+		</div>
+		<div flex="10" ng-if="!nuevo">
+			<h2 md-truncate md-colors="{color: 'background-A100'}"
+				style="font-size: 17px;">CAP - {{dtCapacitacionModelo.idCapacitacion}}</h2>
+		</div>
+		<div flex="auto" ng-if="!nuevo">
+			<h2 md-truncate md-colors="{color: 'background-A100'}"
+				style="font-size: 17px;width: max-content;background-color: rgba(121, 121, 121, 1);">
+				<div style="font-size: 14px;">{{dtCapacitacionModelo.estadoTxt}}</div></h2>
+		</div>
+      <md-button class="md-button-borde md-sm"
+			ng-click="salvarDtCapacitacion($event)" style="margin-bottom: 8px;"
+			ng-if="dtCapacitacionModelo.editopcion==1" aria-label="Guardar">
+		<!--          <md-icon md-font-set="material-icons">save</md-icon>  -->
+		<span>Guardar</span> </md-button>
+<!--       <div flex="auto" ng-if="nuevo">         -->
+<!--         <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Capacitaciones</h2> -->
+<!--       </div> -->
+<!--       <div flex="auto" ng-if="!nuevo">         -->
+<!--         <h2 md-truncate md-colors="{color: 'background-A100'}">{{dtCapacitacionModelo.XXX}}</h2> -->
+<!--       </div>         -->
+<!--        <md-button class="md-button-borde md-sm" ng-click="cancelarDtCapacitacion()" aria-label="Salir"> -->
+<!--          <span ng-if="nuevo">Salir</span> -->
+<!--          <span ng-if="!nuevo">Salir</span>    -->
+<!--        </md-button> -->
+<!--        <md-button class="md-button-borde md-sm" ng-click="salvarDtCapacitacion($event)"  -->
+<!--        ng-if="dtCapacitacionModelo.editopcion==1" aria-label="Grabar"> -->
+<!--          <span >Grabar</span>        -->
+<!--        </md-button> -->
+      </div>
+</md-toolbar>    
+
+<div layout="column">
+
+<fieldset style="margin-left: 15px;">
+	<legend>Datos de la solicitud</legend>
+	<md-content md-whiteframe="1" class="overflowEsconder noshadow"
+				md-colors="{background: 'background-A100'}">
+				
+				<div layout="row" layout-aling="center start" flex="100"
+				style="font-size: 14px;">
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="10">
+					
+					<md-input-container
+										class="input-container-margen letraTexto nomarginbotottom"
+										md-no-float="true"> 
+										<label>Hoja de Ruta</label>
+										<input  md-maxlength="6"
+										ng-keypress="validateFormat($event)"
+										id="stdNumeroSid" style="width: 50%;"
+										ng-model="dtCapacitacionModelo.stdNumeroSid"> 										
+						</md-input-container>
+				</div>
+				
+				
+				<div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="10" >
+					
+						<md-input-container
+										class="input-container-margen letraTexto nomarginbotottom"
+										md-no-float="true"> 
+										<label>A&ntilde;o</label>
+										<md-select ng-model="dtCapacitacionModelo.stdNumeroAnio" aria-label="numeroanio"  style="top: 5px !important;">
+							              <md-option ng-repeat="anio in rangeYear" value="{{anio}}" >
+							                {{anio}}
+							              </md-option>
+							     		</md-select> 
+										
+<!-- 										<input  md-maxlength="4" -->
+<!-- 										type="number" -->
+<!-- 										ng-keypress="validateFormat($event)" -->
+<!-- 										id="stdNumeroAnio" style="width: 50%;" -->
+<!-- 										ng-model="dtCapacitacionModelo.stdNumeroAnio">  -->
+																	
+						</md-input-container>
+						
+				</div>
+				
+				<div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex="10" >
+				<md-button				style="margin-top: 14px;"
+										aria-label="Buscar HR"
+										class="md-icon-button md-mini iconoEnLinea"
+										id="idbuscarHR"
+										ng-click="situaciondemitramite($event)"> <md-icon
+										md-font-set="material-icons">search</md-icon> </md-button> 
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="10">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<div class="letraTexto" style="margin-top: 6px;" name="stdAsunto">Asunto: </div>
+							 
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex>
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<div class="letraTexto" style="margin-top: 6px;" name="stdAsunto">{{dtCapacitacionModelo.stdAsunto}}</div>
+							 
+					</md-input-container>
+				</div>
+					
+				</div>
+				
+				<div layout="row" layout-aling="center start" flex
+				style="font-size: 14px;">
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="10">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<div class="letraTexto" style="margin-top: 6px;" name="stdAsunto">Procede a ejecuci&oacute;n: </div>
+							 
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<md-radio-group ng-model="dtCapacitacionModelo.flagEjec" aria-labelledby="favoriteFruit" layout="row">
+							<md-radio-button ng-repeat="datox in listaProcedeEjecucion"
+			                       ng-value="datox.id"
+			                       aria-label="{{it.title}}">{{datox.valor}}
+					      </md-radio-button>	
+				         </md-radio-group> 
+
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="10">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<div class="letraTexto" style="margin-top: 6px;" name="stdAsunto">Tipo y n&uacute;mero de documento: </div>
+							 
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex>
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<div class="letraTexto" style="margin-top: 6px;" name="stdAsunto">{{dtCapacitacionModelo.stdTipoDoc}} {{dtCapacitacionModelo.stdNumeroDoc}} </div>
+							 
+					</md-input-container>
+				</div>
+	
+				</div>
+				
+				<div layout="row" layout-aling="center start" flex  ng-if="dtCapacitacionModelo.flagEjec==2"
+				style="font-size: 14px;">
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="50">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label>Motivo</label>
+						<input id="motivoEjec" ng-model="dtCapacitacionModelo.motivoEjec">
+					</md-input-container>
+				</div>
+				
+				
+				</div>
+				
+				<div layout="row" layout-aling="center start" flex
+				style="font-size: 14px;">
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="10">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<div class="letraTexto" style="margin-top: 6px;" name="stdAsunto">Modalidad ingreso: </div>
+							 
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<div class="letraTexto" style="margin-top: 6px;" name="stdAsunto">{{dtCapacitacionModelo.stdModalidadIng}}</div>
+							 
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="10">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<div class="letraTexto" style="margin-top: 6px;" name="stdAsunto">Fecha de recepci&oacute;n: </div>
+							 
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex>
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<div class="letraTexto" style="margin-top: 6px;" name="stdAsunto">{{dtCapacitacionModelo.stdFechaRecepcion}}</div>
+							 
+					</md-input-container>
+				</div>
+	
+				</div>
+				
+	</md-content>
+</fieldset>
+
+<fieldset style="margin-left: 15px;">
+	<legend>Datos de capacitaci&oacute;n</legend>
+	<md-content md-whiteframe="1" class="overflowEsconder noshadow"
+				md-colors="{background: 'background-A100'}">
+				
+	<div layout="row" layout-aling="center start" flex
+				style="font-size: 14px;">
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label style="font-size: 15px;">Fecha de solicitud</label>
+						<md-datepicker required
+						ng-model="dtCapacitacionModelo.fechaSoliJUD"
+						md-placeholder="Fecha de solicitud"
+						input-aria-describedby="datepicker-description"
+						input-aria-labelledby="datepicker-header "> </md-datepicker> </md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label style="font-size: 15px;">Fecha y hora de inicio</label>
+						<md-datepicker required
+						ng-model="dtCapacitacionModelo.fechaInicJUD"
+						md-placeholder="Fecha y hora de inicio"
+						input-aria-describedby="datepicker-description"
+						input-aria-labelledby="datepicker-header "> </md-datepicker> </md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label style="font-size: 15px;">Fecha y hora fin</label>
+						<md-datepicker required
+						ng-model="dtCapacitacionModelo.fechaFinJUD"
+						md-placeholder="Fecha y hora fin"
+						input-aria-describedby="datepicker-description"
+						input-aria-labelledby="datepicker-header "> </md-datepicker> </md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label>Modo</label>
+						<md-select
+						ng-model="dtCapacitacionModelo.idModo" required placeholder="Modo"
+						ng-change="changeIdModo(dtCapacitacionModelo.idModo)"
+						name="idModo"> <md-option
+						ng-repeat="item in listaPrtParametrosIdModo"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+					<div ng-messages="dtCapacitacionForm.idModo.$error">
+						<div ng-message="required">Seleccione el Modo.</div>
+					</div>
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label style="margin-bottom: 27px;font-size: 12px;">Modalidad</label>
+						<md-radio-group ng-model="dtCapacitacionModelo.idModalidad" aria-labelledby="favoriteFruit" 
+						ng-change="changeRadioIdModalidad(dtCapacitacionModelo.idModalidad)" layout="row">
+							<md-radio-button ng-repeat="datox in listaPrtParametrosIdModalidad"
+			                       ng-value="datox.id"
+			                       aria-label="{{it.title}}">{{datox.valor}}
+					      </md-radio-button>		
+<!-- 				            <md-radio-button value="M" class="md-primary">PRESENCIAL</md-radio-button> -->
+<!-- 				            <md-radio-button value="F">VIRTUAL</md-radio-button> -->
+				         </md-radio-group> 
+
+					</md-input-container>
+				</div>
+				
+
+		
+	</div>
+	
+	<div layout="row" layout-aling="center start" flex
+				style="font-size: 14px;margin-left: 26px;margin-bottom: 20px;">
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93 && dtCapacitacionModelo.idModalidad!=137" flex="50">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label>Lugar de capacitaci&oacute;n</label>
+						<md-select
+						ng-model="dtCapacitacionModelo.idLocal" required placeholder="Lugar de capacitaci&oacute;n"
+						name="idModo"> <md-option
+						ng-repeat="item in listaMsLocalIdLocal"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+					<div ng-messages="dtCapacitacionForm.idModo.$error">
+						<div ng-message="required">Seleccione el Lugar.</div>
+					</div>
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93 && dtCapacitacionModelo.idModalidad==137"" flex="50">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label>Enlace de conexion virtual</label>
+						<input id="nomEvento" ng-model="dtCapacitacionModelo.detalleCapaVirtual">
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="50">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label>Nombre del evento</label>
+						<input id="nomEvento" ng-model="dtCapacitacionModelo.nomEvento">
+					</md-input-container>
+				</div>
+				
+	</div>		
+	
+	<div layout="row" layout-aling="center start" flex
+				style="font-size: 14px;margin-left: 26px;margin-bottom: 20px;">
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label>CANT. participantes</label>
+						<input id="cantPartic" ng-model="dtCapacitacionModelo.cantPartic"
+						type="number" min="0"
+							style="margin-bottom: -24px;font-size: 13px;" >
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label>Tipo de financiamiento</label>
+						<md-select
+						ng-model="dtCapacitacionModelo.idFinancia" required placeholder="Tipo de financiamiento"
+						name="idFinancia"> <md-option
+						ng-repeat="item in listaPrtParametrosIdFinancia"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+					<div ng-messages="dtCapacitacionForm.idModo.$error">
+						<div ng-message="required">Seleccione el Financiamiento.</div>
+					</div>
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label>Nivel</label>
+						<md-select
+						ng-model="dtCapacitacionModelo.idNivel" required placeholder="Nivel"
+						name="idModo"> <md-option
+						ng-repeat="item in listaPrtParametrosIdNivel"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+					<div ng-messages="dtCapacitacionForm.idModo.$error">
+						<div ng-message="required">Seleccione el Nivel.</div>
+					</div>
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label>Prestaci&oacute;n</label>
+						<md-select
+						ng-model="dtCapacitacionModelo.idPrestacion" required placeholder="Prestaci&oacute;n"
+						name="idModo"> <md-option
+						ng-repeat="item in listaPrtParametrosIdPrestacion"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+					<div ng-messages="dtCapacitacionForm.idModo.$error">
+						<div ng-message="required">Seleccione la Prestaci&oacute;n.</div>
+					</div>
+					</md-input-container>
+				</div>
+				
+				<div class="letraenvoltura"
+					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93" flex="20">
+					<md-input-container md-no-float="true"
+						class="input-container-margen letraTexto nomarginbotottom"
+						flex="100"> 
+						<label>Tipo</label>
+						<md-select
+						ng-model="dtCapacitacionModelo.idTipo" required placeholder="Tipo"
+						name="idModo"> <md-option
+						ng-repeat="item in listaPrtParametrosIdTipo"
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+					<div ng-messages="dtCapacitacionForm.idModo.$error">
+						<div ng-message="required">Seleccione el Tipo.</div>
+					</div>
+					</md-input-container>
+				</div>
+				
+				
+	</div>
+	
+	<div layout="row" layout-aling="center start" flex="50" ng-if="dtCapacitacionModelo.idModo!=93" 
+				style="font-size: 14px;">
+				
+				<table md-progress="promise" md-row-select="options.rowSelection"
+				md-table multiple="{{options.multiSelect}}" ng-model="selected"
+				resize>
+				<thead id="tablewidth" md-head md-on-reorder="logOrder"
+					md-order="query.order" ng-if="!options.decapitate">
+
+					<tr class="md-table-head-label" md-row>
+						<th class="md-title ttamnumero" md-column flex="13"><span>&nbsp;</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>P&uacute;blico objetivo</span></th>
+						<th class="md-title ttamopciones" md-column flex="20"><span>Opciones</span></th>
+					</tr>
+				<tbody md-body style="font-size: 14px;">
+					<tr class="primary tridtdPersonalPersonal md-table-cuerpo"
+						md-auto-select="options.autoSelect" md-on-select="logItem" md-row
+						md-select="dato" ng-disabled="dato.id > 0"
+						ng-repeat-start="dato in datoCapaPublico">
+
+						<td md-cell flex="20">{{$index + 1}}</td>
+						<td class="tdaa1 md-table-cuerpo" data-title="Tema" md-cell>
+							<div layout="row" flex>
+								<div class="letraenvoltura" flex="90"
+									ng-if="dtCapacitacionModelo.editopcion < 2">
+
+									<md-input-container class="input-container-margen letraTexto">
+
+									<md-select ng-model="dato.idCargo"  ng-change="changeIdCargo($event,dato)"
+										required placeholder="Seleccionar P&uacute;blico" name="idCargo">
+									<md-option ng-repeat="item in listaPrtParametrosIdPublico"
+										ng-value="item.id"> {{item.valor}} </md-option> </md-select> </md-input-container>
+								</div>
+							</div>
+						</td>
+
+
+						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
+							<md-button class="md-icon-button md-primary"
+								ng-click="removeCapaPublico($event,dato)" ng-if="!dato.add">
+							<md-icon md-font-set="material-icons">remove</md-icon> </md-button> <md-button
+								class="md-icon-button md-primary"
+								ng-click="nuevoCapaPublico($event,dato)" ng-if="dato.add">
+							<md-icon md-font-set="material-icons">add_circle</md-icon> </md-button>
+						</td>
+
+					</tr>
+					<tr class="secondary childidtdPersonalPersonal" ng-repeat-end></tr>
+				</tbody>
+
+			</table>
+				
+	</div>
+				
+	</md-content>
+</fieldset>
+
+<fieldset style="margin-left: 15px;">
+	<legend>Datos de la entidad</legend>
+	<md-content md-whiteframe="1" class="overflowEsconder noshadow"
+				md-colors="{background: 'background-A100'}">
+				
+				
+				<div layout="row" layout-align="center center" flex="100">
+				  <div>
+				  <md-button class="md-raised"
+				  aria-label="Agregar Entidad"
+					ng-click="addCapaEntidad($event)">
+				  <md-icon md-font-set="material-icons" style="color: grey;">work_outline</md-icon>
+				  <span>Agregar Entidad</span>
+				  </md-button>
+					</div>
+				</div>
+				
+				<div layout="row" layout-aling="center start" flex="100"
+				style="font-size: 14px;">
+				
+				<table md-progress="promise" md-row-select="options.rowSelection"
+				md-table multiple="{{options.multiSelect}}" ng-model="selected"
+				resize>
+				<thead id="tablewidth" md-head md-on-reorder="logOrder"
+					md-order="query.order" ng-if="!options.decapitate">
+
+					<tr class="md-table-head-label" md-row>
+						<th class="md-title ttamnumero" md-column flex="13"><span>&nbsp;</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>C&oacute;digo ejecutora</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Entidad</span></th>
+						<th class="md-title ttamopciones" md-column flex="20"><span>Opciones</span></th>
+					</tr>
+				<tbody md-body style="font-size: 14px;">
+					<tr class="primary tridtdPersonalPersonal md-table-cuerpo"
+						md-auto-select="options.autoSelect" md-on-select="logItem" md-row
+						md-select="dato" ng-disabled="dato.id > 0"
+						ng-repeat-start="dato in datoCapaEntidades">
+
+						<td md-cell flex="20">{{$index + 1}}</td>
+						<td class="tdaa1 md-table-cuerpo" data-title="codEjecutora" md-cell>
+								<div class="letraTexto">{{dato.codEjecutora}}</div>								
+							</td>
+						<td class="tdaa1 md-table-cuerpo" data-title="idEntidadTxt" md-cell>
+								<div class="letraTexto">{{dato.idEntidadTxt}}</div>								
+							</td>
+
+						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
+							<md-button class="md-icon-button md-primary"
+								ng-click="removeCapaEntidades($event,dato)" ng-if="!dato.add">
+							<md-icon md-font-set="material-icons">remove</md-icon> </md-button> 
+<!-- 							<md-button -->
+<!-- 								class="md-icon-button md-primary" -->
+<!-- 								ng-click="nuevoCapaEntidades()" ng-if="dato.add"> -->
+<!-- 							<md-icon md-font-set="material-icons">add_circle</md-icon> </md-button> -->
+						</td>
+
+					</tr>
+					<tr class="secondary childidtdPersonalPersonal" ng-repeat-end></tr>
+				</tbody>
+
+			</table>
+				
+				</div>
+				
+				
+		
+	</md-content>
+</fieldset>
+
+<fieldset style="margin-left: 15px;">
+	<legend>Temas programados</legend>
+	
+			<div layout="row" layout-align="center center" flex="100">
+				  <div>
+				  <md-button class="md-raised"
+				  aria-label="Agregar Temas"
+					ng-click="addCapaTemas($event)">
+				  <md-icon md-font-set="material-icons" style="color: grey;">work_outline</md-icon>
+				  <span>Agregar Temas</span>
+				  </md-button>
+					</div>
+				</div>
+				
+				<div layout="row" layout-aling="center start" flex="100"
+				style="font-size: 14px;">
+				
+				<md-content md-whiteframe="1" class="overflowEsconder noshadow"
+				md-colors="{background: 'background-A100'}">
+				
+		<table md-progress="promise" md-row-select="options.rowSelection"
+				md-table multiple="{{options.multiSelect}}" ng-model="selected"
+				resize>
+				<thead id="tablewidth" md-head md-on-reorder="logOrder"
+					md-order="query.order" ng-if="!options.decapitate">
+
+					<tr class="md-table-head-label" md-row>
+						<th class="md-title ttamnumero" md-column flex="13"><span>&nbsp;</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Tema</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Subtema</span></th>
+						<th class="md-title ttamopciones" md-column flex="20"><span>Opciones</span></th>
+					</tr>
+				<tbody md-body style="font-size: 14px;">
+					<tr class="primary tridtdPersonalPersonal md-table-cuerpo"
+						md-auto-select="options.autoSelect" md-on-select="logItem" md-row
+						md-select="dato" ng-disabled="dato.id > 0"
+						ng-repeat-start="dato in datoCapasTema">
+
+						<td md-cell flex="20">{{$index + 1}}</td>
+						<td class="tdaa1 md-table-cuerpo" data-title="idTemaTxt" md-cell>
+								<div class="letraTexto">{{dato.idTemaTxt}}</div>								
+							</td>
+						<td class="tdaa1 md-table-cuerpo" data-title="idSubtemaTxt" md-cell>
+								<div class="letraTexto">{{dato.idSubtemaTxt}}</div>								
+							</td>
+
+
+						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
+							<md-button class="md-icon-button md-primary"
+								ng-click="removeCapasTema($event,dato)" ng-if="!dato.add">
+							<md-icon md-font-set="material-icons">remove</md-icon> </md-button> 
+<!-- 							<md-button -->
+<!-- 								class="md-icon-button md-primary" -->
+<!-- 								ng-click="nuevoCapasTemas()" ng-if="dato.add"> -->
+<!-- 							<md-icon md-font-set="material-icons">add_circle</md-icon> </md-button> -->
+						</td>
+
+					</tr>
+					<tr class="secondary childidtdPersonalPersonal" ng-repeat-end></tr>
+				</tbody>
+
+			</table>
+				
+	</md-content>
+				
+				</div>
+	
+</fieldset>
+
+	<div layout="column" layout-aling="center start" flex ng-if="dtCapacitacionModelo.addEntidad"> 
+			<md-fab-speed-dial md-open="isOpenxx" md-direction="up"
+					class="md-scale md-fab-bottom-right" ng-mouseenter="isOpenxx=true"
+					ng-mouseleave="isOpenxx=false"> 
+						<md-fab-trigger>
+							<md-button aria-label="menu" class="md-fab md-warn" style="background-color: #009688;"> <md-icon
+							md-font-set="material-icons" style="color: rgb(255,255,255)">add</md-icon> </md-button> 
+							</md-fab-trigger> 
+							<md-fab-actions>
+							<md-button aria-label="Nueva entidad" class="md-fab md-raised md-mini"
+							ng-click="showdlgInstitucionDialog()" > 
+							<md-tooltip md-direction="left" md-visible="tooltipVisible">Nueva entidad</md-tooltip>
+							<md-icon md-font-set="material-icons" >add</md-icon> 
+							</md-button> 
+						</md-fab-actions> 
+				</md-fab-speed-dial>
+		</div>
+
+</div>
+<div>&nbsp;</div>
+
+</div> <!-- FIN -->
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<!-- DIALOGOS --> 
+
+<!-- FIN DIALOGOS -->
+<!-- Footer -->
+<!-- <div ng-include="'paginas/pie.html'"></div> -->
+<div id="pie" ng-include="'paginas/pie.html'"></div> <!-- PURIBE 29032024 - INICIO-->
+<!-- Fin Footer -->
