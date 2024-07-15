@@ -1579,6 +1579,7 @@ public class DtAsistenciaRsCtrl {
 			String idSistAdmTxt = req.getParameter("idSistAdmTxt");
 			String idOrigenTxt = req.getParameter("idOrigenTxt");
 			String estadoTxt = req.getParameter("estadoTxt");
+			String fechaServicio = req.getParameter("fechaServicio");
 			//MPINARES 13022024 - FIN
 			
             String sestado = req.getParameter("estado");
@@ -1611,8 +1612,16 @@ public class DtAsistenciaRsCtrl {
 			}
 			
 			List<DtAsistenciaBk> listAsistenciaFilter  = dtAsistenciasss.stream()
-													 .filter(c-> dniUserTxt == null || dniUserTxt.isEmpty() || this.contienCoincidenciaDni(c.getDniUserTxt(), dniUserTxt))
-													 .collect(Collectors.toList());
+					 .filter(c-> usuExtTxt == null || usuExtTxt.isEmpty() || this.contienCoincidenciaUsuexterno(c.getUsuExtTxt(), usuExtTxt))
+					 .filter(c-> dniUserTxt == null || dniUserTxt.isEmpty() || this.contienCoincidenciaDni(c.getDniUserTxt(), dniUserTxt))
+					 .filter(c-> idAsistencia == null || idAsistencia.isEmpty() || String.valueOf(c.getIdAsistencia()).equals(idAsistencia)  )
+					 .filter(c->  idEntidadTxt == null || idEntidadTxt.isEmpty() || c.getIdEntidadTxt().trim().toLowerCase().contains(idEntidadTxt.toLowerCase()) )
+					 .filter(c->  idSedeTxt == null || idSedeTxt.isEmpty() || c.getIdSedeTxt().trim().toLowerCase().contains(idSedeTxt.toLowerCase()) )
+					 .filter(c->  idOrigenTxt == null || idOrigenTxt.isEmpty() || c.getIdOrigenTxt().trim().toLowerCase().contains(idOrigenTxt.toLowerCase()) )
+					 .filter(c->  idUsuinternoTxt == null || idUsuinternoTxt.isEmpty() || c.getIdUsuinternoTxt().trim().toLowerCase().contains(idUsuinternoTxt.toLowerCase()) )
+					 .filter(c->  fechaServicio == null || fechaServicio.isEmpty() || this.contienCoincidenciaFechaServicio(c.getFechaAsistencia(), fechaServicio) )
+					 .filter(c->  idProgramacion == null || idProgramacion.isEmpty() || c.getIdProgramacionTxt().trim().toLowerCase().contains(idProgramacion.toLowerCase()) )
+					 .collect(Collectors.toList());
 			
 			//FIN CUSCATA - 10072024
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
@@ -1900,7 +1909,7 @@ public class DtAsistenciaRsCtrl {
 			CellStyle cellStyleDATO = cell7A.getCellStyle();
 
 //			List<String> caposvista = Arrays.asList("idEntidad","idSede","fechaAsistencia","idUsuinterno","idSistAdm","idOrigen","idProgramacion","estado");
-			List<String> caposvista = Arrays.asList("idAsistencia","dniUserTxt","usuExtTxt","codEjecutora","idEntidadTxt","idSedeTxt","fechaAsistencia","idUsuinternoTxt","idSistAdmTxt","idOrigenTxt","idProgramacion","estadoTxt");//INICIO CUSCATA - 10072024
+			List<String> caposvista = Arrays.asList("idAsistencia","dniUserTxt","usuExtTxt","codEjecutora","idEntidadTxt","idSedeTxt","fechaAsistencia","idUsuinternoTxt","idSistAdmTxt","idOrigenTxt","idProgramacionTxt","estadoTxt");//INICIO CUSCATA - 10072024
                         int tituloscontador = 1;
 			int titulofilacontador = 6;
 			Row rowX = hoja.getRow(titulofilacontador);
