@@ -328,6 +328,52 @@ public class DtCapacitacionDaoImp extends
 
 			return lista;
 		}
+		
+		@Override
+		public List<DtCapacitacion> getXFiltroV2(Date fechaInicio, Date fechaFin,Long idProgramacion, Long idSede,Long idSistAdm, Long idUsuario) {
+
+			StringBuffer sb = new StringBuffer(100);
+			List<Object> hs = new ArrayList<Object>();
+			sb.append("select t from " + getDomainClass().getName() 
+//					+ " t where t.estado >= 0 ");
+					+ " t where (t.estado="+Estado.ACTIVO.getValor()+ " or t.estado="+Estado.ELIMINADO.getValor()+" or t.estado="+Estado.FINALIZADO.getValor()+") ");
+			
+			if(idProgramacion!=null){
+				sb.append("and t.idProgramacion = ? ");
+				hs.add(idProgramacion);			
+			}
+			
+			if (fechaInicio != null) {
+				sb.append("and trunc(t.fechaInic) >= ? ");
+				hs.add(fechaInicio);
+			}
+			if (fechaFin != null) {
+				sb.append("and trunc(t.fechaInic) < ? ");
+				hs.add(fechaFin);
+			}
+			
+			if (idSede != null) {
+				sb.append("and t.idSede = ? ");
+				hs.add(idSede);
+			}
+			if (idSistAdm != null) {
+				sb.append("and t.idSistAdm = ? ");
+				hs.add(idSistAdm);
+			}
+			
+			if (idUsuario != null) {
+				sb.append("and t.idusserCrea = ? ");
+				hs.add(idUsuario);
+			}	
+				
+			 sb.append("order by t.idCapacitacion desc ");
+
+			Object param[] = new Object[hs.size()];
+			hs.toArray(param);
+			List<DtCapacitacion> lista = super.find(sb.toString(), param);
+
+			return lista;
+		}
 
 //		public Long getEstadoNuevo() {
 //			return estadoNuevo;

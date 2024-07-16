@@ -45,6 +45,7 @@ var descargarUrl = contexto+"/rs/ctrldtVisitas/descargar/";
 ///FIN URLs CARGA DE ARCHIVOS
 
 var descargarvistaUrl = contexto+"/rs/ctrldtVisitas/descargarvista";
+var currentserverdateUrl = contexto+"/rs/ctrltitulo/currentserverdate";
 
 /**
  * 
@@ -109,7 +110,7 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 	 
 	 $scope.limitOptions = [100, 500, 1000, 5000];
 	 $scope.query = {
-			    order: 'idVisita',
+			    order: '',
 			    limit: 100,
 			    page: 1
 			  };
@@ -197,6 +198,37 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 	$scope.total = 0;
 	$scope.filtroEntidad="";
 	$scope.filtroDepartamento="";
+	$scope.currentserverdate = null;
+	
+	$scope.getCurrentserverdate = function(){           
+        var surl = currentserverdateUrl;
+        $http.get(surl).then(function(res){
+              var dato = res.data;
+              $scope.currentserverdate = new Date(dato);
+              var limitesDelMesActual = obtenerLimitesDelMes(new Date(dato));
+              $scope.filtro.fechaInicio=limitesDelMesActual.primerDia;
+              $scope.filtro.fechaFin= limitesDelMesActual.ultimoDia;
+              $scope.loaddtVisitass();
+//            $scope.firstDate($scope.getCurrentserverdate())
+//            return $scope.currentserverdate;
+        },
+        function error(errResponse) {
+              console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+              var dato = errResponse.data;
+              if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+                    $mdDialog.show(
+                                $mdDialog.alert()
+                                .parent(angular.element(document.body))
+                                .clickOutsideToClose(true)
+                                .title('Obtener fecha servidor')
+                                .textContent(dato.message)
+                                .ariaLabel('ERROR')
+                                .ok('OK')
+                                .targetEvent(ev)
+                    );
+              }                            
+        });                                                   
+  };
 
 	$scope.loaddtVisitass = function () {
 	    //$scope.promise = $timeout(function () {
@@ -707,7 +739,7 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 						console.log(JSON.stringify(institucion));
 						$scope.dtVisitasModelo.codEjecutora = institucion.codEjec; 
 			//				                dato.ruc = institucion.ruc;
-			$scope.dtVisitasModelo.idEntidadTxt = institucion.razSocial;
+			$scope.dtVisitasModelo.idEntidadTxt = institucion.razSocialUbigeo;
 			$scope.dtVisitasModelo.idEntidad = institucion.idEntidad;
 						console.log('modelo', dato);
 
@@ -784,7 +816,7 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 						if($scope.isObject(item)){
 							console.log('Item changed to ' + JSON.stringify(item));
 							$scope.dtVisitasModelo.idEntidad = item.idEntidad;
-							$scope.dtVisitasModelo.idEntidadTxt = item.razSocial;
+							$scope.dtVisitasModelo.idEntidadTxt = item.razSocialUbigeo;
 							$scope.dtVisitasModelo.codEjecutora  = item.codEjec;
 						}
 					}
@@ -916,11 +948,11 @@ myapp.controller('ctrlListadtVisitas', ['$mdEditDialog', '$scope', '$timeout', '
 							  {
 
 								$mdDialog.show(
-									$mdDialog.alert()
+									$mdDialog.alert().multiple(true)
 									.parent(angular.element(document.body))
 									.clickOutsideToClose(true)
 									.title('AGREGAR PARTICIPANTE')
-									.textContent("ERROR, ya existe el tema seleccionado con el participante") //PURIBE 04042024  INICIO-->
+									.textContent("El tema asignado al especialista ya existe") //PURIBE 04042024  INICIO-->
 									.ariaLabel('WARNING')
 									.ok('ACEPTAR') 
 								);

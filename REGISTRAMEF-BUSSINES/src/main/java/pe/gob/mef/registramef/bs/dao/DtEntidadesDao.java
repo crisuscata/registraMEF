@@ -39,4 +39,5 @@ public interface DtEntidadesDao {
 //	Long getEstadoNuevo();
 //	Long getEstadoEliminado();
 	//MPINARES 24012023 - FIN
+	List<DtEntidades> getListaRasonsocialXSisAdminSede(String razonsocial, Long idSistAdmi, Long idSede);
 }

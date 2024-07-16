@@ -250,4 +250,31 @@ public abstract class AbstractJpaCRUDDao<T, PK extends Serializable> implements 
 		}
 	}
 	// MPINARES 24012023 - FIN
+	
+	//JPUYEN 17062024 - INICIO
+		@SuppressWarnings("hiding")
+		public <T> T findOne(String select, Object[] params) throws Validador {
+			return findOne(select, params, null);
+		}
+		
+		@SuppressWarnings({ "hiding", "rawtypes" })
+		public <T> T findOne(String select, Object[] params, Class clazz) throws Validador {
+			try {
+				List<T> list = null;
+				
+				if(clazz!=null) list = findList(select, params, clazz);
+				else list = findList(select, params);
+			
+				if (CollectionUtils.isNotEmpty(list)){
+					if(list.size()>1) System.out.println("WARNING findOne: HAY MÁS DE UN REGISTRO");
+					return list.get(0);
+				}else{
+					return null;
+				}
+				
+			} catch (Exception e) {
+				throw new Validador(e.getMessage());
+			}
+		}
+		//JPUYEN 17062024 - FIN
 }

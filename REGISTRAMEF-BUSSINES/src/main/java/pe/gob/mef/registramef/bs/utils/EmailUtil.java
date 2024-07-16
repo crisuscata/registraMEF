@@ -1,3 +1,4 @@
+
 package pe.gob.mef.registramef.bs.utils;
 
 import java.io.File;
@@ -31,6 +32,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.scheduling.annotation.Async;
 
 import com.sun.mail.smtp.SMTPTransport;
+//JPUYEN 17062024 - NUEVA CLASE EN EL PROYECTO
+
 
 public class EmailUtil implements TransportListener, ConnectionListener {
 	
@@ -118,14 +121,13 @@ public class EmailUtil implements TransportListener, ConnectionListener {
 			try {
 				if (t != null)
 					t.close();
-			} catch (MessagingException mex) { /* ignore */
+			} catch (MessagingException mex) {
 			}
 		}
 	}
 
-	
 
-	// YO
+	
 	public static boolean validateEmail(String email) {
 		try {
 			new InternetAddress(email).validate();
@@ -137,27 +139,7 @@ public class EmailUtil implements TransportListener, ConnectionListener {
 		return true;
 	}
 
-	// public static String getDireccionWeb(String sufijo, Long idanexo) {
-	// Properties sistema = PropertiesManager.getSistemaProperties();
-	// String shost = sistema.getProperty("HOST_EXTERNO_VER_DIGITALES");
-	// String spuerto = sistema.getProperty("PUERTO_EXTERNO_VER_DIGITALES");
-	// String scontexto = sistema.getProperty("CONTEXTO_EXTERNO_VER_DIGITALES");
-	//
-	// if (shost != null) {
-	// host = shost;
-	// }
-	// if (spuerto != null) {
-	// puerto = spuerto;
-	// }
-	// if (scontexto != null) {
-	// contexto = scontexto;
-	// }
-	// String uuid = UUID.randomUUID().toString();
-	// DecimalFormat sdf = new DecimalFormat("000000");
-	// String stamped = host + ":" + puerto + contexto + sufijo + "=" + uuid +"-"+sdf.format(idanexo.longValue());
-	// return stamped;
-	// }
-
+	
 	public void addToZipFile(String fileName, String ruta, ZipOutputStream zos) throws FileNotFoundException, IOException {
 
 		System.out.println("Writing '" + fileName + "' to zip file");
@@ -234,23 +216,7 @@ public class EmailUtil implements TransportListener, ConnectionListener {
 		}
 	}
 
-	// public String miniEncriptado(String mensaje){
-	// char array[]=mensaje.toCharArray();
-	// for(int i=0;i<array.length;i++){
-	// array[i]=(char)(array[i]+(char)5);
-	// }
-	// String encriptado =String.valueOf(array);
-	// return encriptado;
-	// }
-	//
-	// public String miniDesencriptado(String encriptado){
-	// char arrayD[]=encriptado.toCharArray();
-	// for(int i=0;i<arrayD.length;i++){
-	// arrayD[i]=(char)(arrayD[i]-(char)5);
-	// }
-	// String desencriptado =String.valueOf(arrayD);
-	// return desencriptado;
-	// }
+	
 
 	private String getApellidoDeCorreo(String correo) {
 		String apellido = null;
@@ -392,9 +358,7 @@ public class EmailUtil implements TransportListener, ConnectionListener {
 
 	}
 
-	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// RECTIFICADOS
-	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	@Async
 	public void sendEmail(List<String> recipients, List<String> recipientsCC, List<String> recipientsCCO, String sub, String msg) {
 
@@ -529,3 +493,4 @@ public class EmailUtil implements TransportListener, ConnectionListener {
 	}
 
 }
+//JPUYEN 17062024 - FIN CLASE

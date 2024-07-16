@@ -288,7 +288,7 @@ public class MsSedesDaoImp extends
 		StringBuffer sb = new StringBuffer(100);
 		sb.append("SELECT tablaa FROM MsSedes tablaa ");
 		sb.append("WHERE tablaa.estado >= "+Estado.ACTIVO.getValor()+" ");
-		sb.append("ORDER BY tablaa.idSede asc ");
+		sb.append("ORDER BY tablaa.sede asc ");
 		return super.find(sb.toString());
 	}
 	

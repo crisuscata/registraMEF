@@ -257,12 +257,15 @@ data-ng-init="editdtCapacitacion()">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
-						<label style="font-size: 15px;">Fecha de solicitud</label>
-						<md-datepicker required
+						<label style="font-size: 15px;width: auto;">Fecha de solicitud</label>
+						<!-- md-datepicker required
 						ng-model="dtCapacitacionModelo.fechaSoliJUD"
 						md-placeholder="Fecha de solicitud"
 						input-aria-describedby="datepicker-description"
-						input-aria-labelledby="datepicker-header "> </md-datepicker> </md-input-container>
+						input-aria-labelledby="datepicker-header "> </md-datepicker --> 
+						<input type="date"  name="fechaSoliJUD" ng-model="dtCapacitacionModelo.fechaSoliJUD"
+			      		style="width: 120px;" placeholder="yyyy-MM-dd" required />
+						</md-input-container>
 				</div>
 				
 				<div class="letraenvoltura"
@@ -270,12 +273,15 @@ data-ng-init="editdtCapacitacion()">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
-						<label style="font-size: 15px;">Fecha y hora de inicio</label>
-						<md-datepicker required
+						<label style="font-size: 15px;width: auto;">Fecha y hora de inicio</label>
+						<!-- md-datepicker required
 						ng-model="dtCapacitacionModelo.fechaInicJUD"
 						md-placeholder="Fecha y hora de inicio"
 						input-aria-describedby="datepicker-description"
-						input-aria-labelledby="datepicker-header "> </md-datepicker> </md-input-container>
+						input-aria-labelledby="datepicker-header "> </md-datepicker --> 
+						<input type="datetime-local" name="fechaInicJUD" ng-model="dtCapacitacionModelo.fechaInicJUD"
+			      		placeholder="yyyy-MM-ddTHH:mm:ss" required />
+						</md-input-container>
 				</div>
 				
 				<div class="letraenvoltura"
@@ -283,12 +289,15 @@ data-ng-init="editdtCapacitacion()">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
-						<label style="font-size: 15px;">Fecha y hora fin</label>
-						<md-datepicker required
+						<label style="font-size: 15px;width: auto;">Fecha y hora fin</label>
+						<!-- md-datepicker required
 						ng-model="dtCapacitacionModelo.fechaFinJUD"
 						md-placeholder="Fecha y hora fin"
 						input-aria-describedby="datepicker-description"
-						input-aria-labelledby="datepicker-header "> </md-datepicker> </md-input-container>
+						input-aria-labelledby="datepicker-header "> </md-datepicker --> 
+						<input type="datetime-local" name="fechaFinJUD" ng-model="dtCapacitacionModelo.fechaFinJUD"
+			      		placeholder="yyyy-MM-ddTHH:mm:ss" required />
+						</md-input-container>
 				</div>
 				
 				<div class="letraenvoltura"
@@ -339,13 +348,32 @@ data-ng-init="editdtCapacitacion()">
 					ng-if="dtCapacitacionModelo.editopcion < 2 && dtCapacitacionModelo.idModo!=93 && dtCapacitacionModelo.idModalidad!=137" flex="50">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
-						flex="100"> 
+						style="width: -webkit-fill-available;"				> 
 						<label>Lugar de capacitaci&oacute;n</label>
-						<md-select
+						<!-- md-select
 						ng-model="dtCapacitacionModelo.idLocal" required placeholder="Lugar de capacitaci&oacute;n"
 						name="idModo"> <md-option
 						ng-repeat="item in listaMsLocalIdLocal"
-						ng-value="item.id"> {{item.valor}} </md-option> </md-select>
+						ng-value="item.id"> {{item.valor}} </md-option> </md-select -->
+								<md-autocomplete
+							          ng-disabled="ctrlMsLocal.isDisabled"
+							          md-no-cache="ctrlMsLocal.noCache"
+							          md-selected-item="ctrlMsLocal.selectedItem"
+							          md-search-text-change="searchTextChangeMsLocal(dtCapacitacionModelo.idLocalTxt)"
+							          md-search-text="dtCapacitacionModelo.idLocalTxt"
+							          md-selected-item-change="selectedItemChangeMsLocal(item)"
+							          md-items="item in querySearchMsLocal(dtCapacitacionModelo.idLocalTxt)"
+							          md-item-text="item.valor"
+							          md-min-length="0"
+							          placeholder="Lugar de capacitaci&oacute;n"
+							          input-aria-labelledby="Lugar de capacitaci&oacute;n">
+							        <md-item-template>
+							          <span md-highlight-text="dtCapacitacionModelo.idLocalTxt" md-highlight-flags="^i">{{item.valor}}</span>
+							        </md-item-template>
+							        <md-not-found>
+							          No se encontraron coincidencias.
+							        </md-not-found>
+						      </md-autocomplete>
 					<div ng-messages="dtCapacitacionForm.idModo.$error">
 						<div ng-message="required">Seleccione el Lugar.</div>
 					</div>
@@ -394,8 +422,8 @@ data-ng-init="editdtCapacitacion()">
 					<md-input-container md-no-float="true"
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100"> 
-						<label>Tipo de financiamiento</label>
-						<md-select
+						<label style="font-size: 15px;width: auto;">Tipo de financiamiento</label>
+						<md-select style="width: 150px;"
 						ng-model="dtCapacitacionModelo.idFinancia" required placeholder="Tipo de financiamiento"
 						name="idFinancia"> <md-option
 						ng-repeat="item in listaPrtParametrosIdFinancia"
@@ -471,7 +499,7 @@ data-ng-init="editdtCapacitacion()">
 
 					<tr class="md-table-head-label" md-row>
 						<th class="md-title ttamnumero" md-column flex="13"><span>&nbsp;</span></th>
-						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>P&uacute;blico objetivo</span></th>
+						<th class="md-title " md-column  flex="90"><span>P&uacute;blico objetivo</span></th>
 						<th class="md-title ttamopciones" md-column flex="20"><span>Opciones</span></th>
 					</tr>
 				<tbody md-body style="font-size: 14px;">
@@ -481,34 +509,59 @@ data-ng-init="editdtCapacitacion()">
 						ng-repeat-start="dato in datoCapaPublico">
 
 						<td md-cell flex="20">{{$index + 1}}</td>
-						<td class="tdaa1 md-table-cuerpo" data-title="Tema" md-cell>
-							<div layout="row" flex>
-								<div class="letraenvoltura" flex="90"
-									ng-if="dtCapacitacionModelo.editopcion < 2">
-
-									<md-input-container class="input-container-margen letraTexto">
-
-									<md-select ng-model="dato.idCargo"  ng-change="changeIdCargo($event,dato)"
-										required placeholder="Seleccionar P&uacute;blico" name="idCargo">
-									<md-option ng-repeat="item in listaPrtParametrosIdPublico"
-										ng-value="item.id"> {{item.valor}} </md-option> </md-select> </md-input-container>
-								</div>
-							</div>
-						</td>
-
-
-						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
-							<md-button class="md-icon-button md-primary"
-								ng-click="removeCapaPublico($event,dato)" ng-if="!dato.add">
-							<md-icon md-font-set="material-icons">remove</md-icon> </md-button> <md-button
-								class="md-icon-button md-primary"
-								ng-click="nuevoCapaPublico($event,dato)" ng-if="dato.add">
-							<md-icon md-font-set="material-icons">add_circle</md-icon> </md-button>
-						</td>
+						<td class="tdaa2 md-table-cuerpo" data-title="idCargoTxt" md-cell>
+			                <div class="letraTexto">{{dato.idCargoTxt}}</div>               
+			              </td>
+			              
+			              <td class="tdaa2 md-table-cuerpo" data-title="Opciones" md-cell>
+				              <md-button class="md-icon-button"
+								ng-click="removeCapaPublico($event,dato)">
+							<md-icon md-font-set="material-icons">delete</md-icon> </md-button>
+				            </td>
 
 					</tr>
 					<tr class="secondary childidtdPersonalPersonal" ng-repeat-end></tr>
 				</tbody>
+				
+				<tr>
+						<td>&nbsp;</td>
+						<td>
+							<div layout="row" flex>
+								<div class="letraenvoltura" flex="90"
+									ng-if="dtCapacitacionModelo.editopcion < 2">
+										<md-input-container class="input-container-margen letraTexto">
+											<md-autocomplete
+										          ng-disabled="ctrlDtcapaPublico.isDisabled"
+										          md-no-cache="ctrlDtcapaPublico.noCache"
+										          md-selected-item="ctrlDtcapaPublico.selectedItem"
+										          md-search-text-change="searchTextChangeDtcapaPublico(capaPublicomodelo.idCargoTxt)"
+										          md-search-text="capaPublicomodelo.idCargoTxt"
+										          md-selected-item-change="selectedItemChangeDtcapaPublico(item)"
+										          md-items="item in querySearchDtcapaPublico(capaPublicomodelo.idCargoTxt)"
+										          md-item-text="item.valor"
+										          md-min-length="0"
+										          placeholder="P&uacute;blico"
+										          input-aria-labelledby="Publico">
+										        <md-item-template>
+										          <span md-highlight-text="capaPublicomodelo.idCargoTxt" md-highlight-flags="^i">{{item.valor}}</span>
+										        </md-item-template>
+										        <md-not-found>
+										          No se encontraron coincidencias.
+										        </md-not-found>
+										      </md-autocomplete>
+										</md-input-container>
+								</div>
+							</div>
+						</td>
+						<td>
+							<md-button
+								class="md-icon-button"
+								ng-click="nuevoCapaPublico($event,capaPublicomodelo)" >
+								<md-icon md-font-set="material-icons">add_circle</md-icon> 
+							</md-button>
+						</td>
+
+						</tr>
 
 			</table>
 				
@@ -545,8 +598,8 @@ data-ng-init="editdtCapacitacion()">
 
 					<tr class="md-table-head-label" md-row>
 						<th class="md-title ttamnumero" md-column flex="13"><span>&nbsp;</span></th>
-						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>C&oacute;digo ejecutora</span></th>
-						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Entidad</span></th>
+						<th class="md-title " md-column  flex="90"><span>C&oacute;digo ejecutora</span></th>
+						<th class="md-title " md-column  flex="90"><span>Entidad</span></th>
 						<th class="md-title ttamopciones" md-column flex="20"><span>Opciones</span></th>
 					</tr>
 				<tbody md-body style="font-size: 14px;">
@@ -556,17 +609,17 @@ data-ng-init="editdtCapacitacion()">
 						ng-repeat-start="dato in datoCapaEntidades">
 
 						<td md-cell flex="20">{{$index + 1}}</td>
-						<td class="tdaa1 md-table-cuerpo" data-title="codEjecutora" md-cell>
+						<td class="tdaa2 md-table-cuerpo" data-title="codEjecutora" md-cell>
 								<div class="letraTexto">{{dato.codEjecutora}}</div>								
 							</td>
-						<td class="tdaa1 md-table-cuerpo" data-title="idEntidadTxt" md-cell>
+						<td class="tdaa2 md-table-cuerpo" data-title="idEntidadTxt" md-cell>
 								<div class="letraTexto">{{dato.idEntidadTxt}}</div>								
 							</td>
 
-						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
-							<md-button class="md-icon-button md-primary"
+						<td class="tdaa2 md-table-cuerpo" data-title="Opciones" md-cell>
+							<md-button class="md-icon-button"
 								ng-click="removeCapaEntidades($event,dato)" ng-if="!dato.add">
-							<md-icon md-font-set="material-icons">remove</md-icon> </md-button> 
+							<md-icon md-font-set="material-icons">delete</md-icon> </md-button> 
 <!-- 							<md-button -->
 <!-- 								class="md-icon-button md-primary" -->
 <!-- 								ng-click="nuevoCapaEntidades()" ng-if="dato.add"> -->
@@ -614,8 +667,8 @@ data-ng-init="editdtCapacitacion()">
 
 					<tr class="md-table-head-label" md-row>
 						<th class="md-title ttamnumero" md-column flex="13"><span>&nbsp;</span></th>
-						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Tema</span></th>
-						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Subtema</span></th>
+						<th class="md-title " md-column  flex="90"><span>Tema</span></th>
+						<th class="md-title " md-column  flex="90"><span>Subtema</span></th>
 						<th class="md-title ttamopciones" md-column flex="20"><span>Opciones</span></th>
 					</tr>
 				<tbody md-body style="font-size: 14px;">
@@ -625,18 +678,18 @@ data-ng-init="editdtCapacitacion()">
 						ng-repeat-start="dato in datoCapasTema">
 
 						<td md-cell flex="20">{{$index + 1}}</td>
-						<td class="tdaa1 md-table-cuerpo" data-title="idTemaTxt" md-cell>
+						<td class="tdaa2 md-table-cuerpo" data-title="idTemaTxt" md-cell>
 								<div class="letraTexto">{{dato.idTemaTxt}}</div>								
 							</td>
-						<td class="tdaa1 md-table-cuerpo" data-title="idSubtemaTxt" md-cell>
+						<td class="tdaa2 md-table-cuerpo" data-title="idSubtemaTxt" md-cell>
 								<div class="letraTexto">{{dato.idSubtemaTxt}}</div>								
 							</td>
 
 
-						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
-							<md-button class="md-icon-button md-primary"
+						<td class="tdaa2 md-table-cuerpo" data-title="Opciones" md-cell>
+							<md-button class="md-icon-button"
 								ng-click="removeCapasTema($event,dato)" ng-if="!dato.add">
-							<md-icon md-font-set="material-icons">remove</md-icon> </md-button> 
+							<md-icon md-font-set="material-icons">delete</md-icon> </md-button> 
 <!-- 							<md-button -->
 <!-- 								class="md-icon-button md-primary" -->
 <!-- 								ng-click="nuevoCapasTemas()" ng-if="dato.add"> -->

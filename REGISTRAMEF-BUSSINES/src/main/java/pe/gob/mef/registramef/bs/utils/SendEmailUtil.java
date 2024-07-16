@@ -39,11 +39,9 @@ import javax.mail.search.FlagTerm;
 
 import com.sun.mail.smtp.SMTPTransport;
 
+//JPUYEN 17062024 - NUEVA CLASE EN EL PROYECTO
 public class SendEmailUtil implements Serializable,TransportListener, ConnectionListener{
 
-	/**
-	 * //MPINARES 08032019 - INICIO
-	 */
 	private static final long serialVersionUID = 382707667317107783L;
 
 	private static final Logger log = Logger.getLogger(SendEmailUtil.class.getName());
@@ -52,22 +50,17 @@ public class SendEmailUtil implements Serializable,TransportListener, Connection
     
     private Integer serverPort = 993;
 	
-    //IVILLAFANA 25022019 INICIO
-    //private boolean useSsl = true;
-    //private boolean useTls = true;
     private boolean useSsl = false;
     private boolean useTls = false;
-    //IVILLAFANA 25022019 FIN
-    
-    //IVILLAFANA 25022019 INICIO
+   
     private int contador=1;
-    //IVILLAFANA 25022019 FIN
+   
     
     private String userName = null;
     
     private String password = null;
 	
-    //props.put("mail.smtp.debug", "true");
+
     private boolean debug = false;
     
     private String fromEmail = null;
@@ -123,16 +116,14 @@ public class SendEmailUtil implements Serializable,TransportListener, Connection
 			props.put("mail.smtp.debug", Boolean.toString(debug));
 
 			Authenticator auth = new Authenticator() {
-				// override the getPasswordAuthentication method
 				protected PasswordAuthentication getPasswordAuthentication() {
 					return new PasswordAuthentication(userName, password);
 				}
 			};
 
-//			session = Session.getDefaultInstance(props, auth);
-			//MPINARES 08032019 - INICIO
+
 			session = Session.getInstance(props, auth);
-			//MPINARES 08032019 - FIN
+
 			
 		}else if(useTls){
 			if(debug)
@@ -257,7 +248,7 @@ public class SendEmailUtil implements Serializable,TransportListener, Connection
 		
 		} catch (AuthenticationFailedException afe) {
 			System.out.println("ADVERTENCIA: No se pudo enviar el correo! "+afe.getMessage());
-			//IVILLAFANA 25022019 INICIO
+
 			contador++;
 			if(contador<10){
 				System.out.println("Enviando de nuevo ("+contador+")...");
@@ -265,7 +256,7 @@ public class SendEmailUtil implements Serializable,TransportListener, Connection
 			}else{
 				System.out.println("ERROR: intento número "+contador+": No se pudo enviar correo.");
 			}
-			//IVILLAFANA 25022019 FIN
+		
 		} catch (MessagingException e1) {
 			e1.printStackTrace();
 		} catch (UnsupportedEncodingException e1) {
@@ -325,7 +316,6 @@ public class SendEmailUtil implements Serializable,TransportListener, Connection
 			msg.addHeader("format", "flowed");
 			msg.addHeader("Content-Transfer-Encoding", "8bit");
 
-//			msg.setFrom(new InternetAddress("no_reply@mef.gob.pe", "NoReply-JD"));
 			msg.setFrom(new InternetAddress("no_reply@mef.gob.pe", "CONECTAMEF"));
 
 			msg.setReplyTo(InternetAddress.parse("no_reply@mef.gob.pe", false));
@@ -644,3 +634,4 @@ public class SendEmailUtil implements Serializable,TransportListener, Connection
 	
 	
 }
+////JPUYEN 17062024 - FIN CLASE

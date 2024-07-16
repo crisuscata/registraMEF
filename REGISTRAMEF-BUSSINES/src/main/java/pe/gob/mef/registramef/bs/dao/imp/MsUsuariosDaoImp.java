@@ -77,12 +77,13 @@ public class MsUsuariosDaoImp extends
 
 	public List<MsUsuarios> getActivasMsUsuarios() {
 		return super.find("from " + getDomainClass().getName()
-				+ " t where t.estado >= "+Estado.ACTIVO.getValor());
+				+ " t where t.estado >= "+Estado.ACTIVO.getValor() + " order by t.apellidoPaterno, t.apellidoMaterno, t.nombres ");
 	}
 	
 	public List<MsUsuarios> getActivasMsUsuariosCero() {
 		return super.find("from " + getDomainClass().getName()
-				+ " t where t.idusuario=1 and t.estado >= "+Estado.ELIMINADO.getValor());//QUITAR t.idusuario=1 and
+//				+ " t where t.idusuario=1 and t.estado >= "+Estado.ELIMINADO.getValor());//QUITAR t.idusuario=1 and
+				+ " t where t.estado >= "+Estado.ELIMINADO.getValor());//QUITAR t.idusuario=1 and
 	}
 
 	public List<MsUsuarios> getDesactivasMsUsuarios() {
@@ -419,6 +420,8 @@ public class MsUsuariosDaoImp extends
 			sb.append("and r.rol='"+ Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT+"'");
 			
 			sb.append("and r.estado >=" +Estado.ACTIVO.getValor()+" ");
+			
+			sb.append(" order by t.apellidoPaterno, t.apellidoMaterno, t.nombres ");
 		
 			
 			Object param[] = new Object[hs.size()];

@@ -179,11 +179,14 @@ public class ValidacionDtAsistenciaMng implements Serializable{
 	public static void validarIdEntidad(Long idEntidad)
 			 throws Validador
 				{				
-								if(idEntidad==null)
-									throw new Validador(MessageFormat.format(Messages.getStringToKey("dtAsistencia.invalidoingresea"),
-						Messages.getStringToKey("dtAsistencia.idEntidad"),
-						Messages.getStringToKey("dtAsistencia.titulotabla"),
-						Messages.getStringToKey("dtAsistencia.articuloIdEntidad")));
+								if(idEntidad==null){
+									throw new Validador(MessageFormat.format(Messages.getStringToKey("dtAsistencia.invalidoingreseb"),
+											Messages.getStringToKey("dtAsistencias.titulotabla"))); 
+								}
+//									throw new Validador(MessageFormat.format(Messages.getStringToKey("dtAsistencia.invalidoingresea"),
+//						Messages.getStringToKey("dtAsistencia.idEntidad"),
+//						Messages.getStringToKey("dtAsistencia.titulotabla"),
+//						Messages.getStringToKey("dtAsistencia.articuloIdEntidad")));
 					}
 	
 	public static void validarIdOrigen(Long idOrigen)
@@ -256,11 +259,14 @@ public class ValidacionDtAsistenciaMng implements Serializable{
 	public static void validarIdFinancia(Long idFinancia)
 			 throws Validador
 				{				
-								if(idFinancia==null)
-									throw new Validador(MessageFormat.format(Messages.getStringToKey("dtAsistencia.invalidoingrese"),
-						Messages.getStringToKey("dtAsistencia.idFinancia"),
-						Messages.getStringToKey("dtAsistencia.titulotabla"),
-						Messages.getStringToKey("dtAsistencia.articuloIdFinancia")));
+								if(idFinancia==null){
+									throw new Validador(MessageFormat.format(Messages.getStringToKey("dtAsistencia.invalidoFinanciam"),
+											Messages.getStringToKey("dtAsistencias.titulotabla"))); 
+								}
+//									throw new Validador(MessageFormat.format(Messages.getStringToKey("dtAsistencia.invalidoingrese"),
+//						Messages.getStringToKey("dtAsistencia.idFinancia"),
+//						Messages.getStringToKey("dtAsistencia.titulotabla"),
+//						Messages.getStringToKey("dtAsistencia.articuloIdFinancia")));
 					}
 	
 	

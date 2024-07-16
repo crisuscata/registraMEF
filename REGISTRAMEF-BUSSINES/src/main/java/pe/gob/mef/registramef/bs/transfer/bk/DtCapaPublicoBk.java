@@ -41,6 +41,7 @@ public class DtCapaPublicoBk implements java.io.Serializable {
 	//MPINARES 14022024 - INICIO
 		private boolean add = false;
 		private Long contador = null;
+		private String searchText = null;
 		//MPINARES 14022024 - FIN
 		
 	public DtCapaPublicoBk() {
@@ -206,4 +207,14 @@ public class DtCapaPublicoBk implements java.io.Serializable {
 				this.contador = contador;
 			}
 			//MPINARES 14022024 - FIN
+
+			public String getSearchText() {
+				return searchText;
+			}
+
+			public void setSearchText(String searchText) {
+				this.searchText = searchText;
+			}
+			
+			
 }

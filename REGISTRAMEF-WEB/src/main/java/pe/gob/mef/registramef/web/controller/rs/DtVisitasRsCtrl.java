@@ -110,14 +110,14 @@ public class DtVisitasRsCtrl {
 							}).build();
 				
 				if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-						&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
-						&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
-						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+						&& !req.isUserInRole(Roles.DTVISITAS_VE) && !req.isUserInRole(Roles.PERFIL_USU_OGC)//JPUYEN 17062024
+						&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)//JPUYEN 17062024
+						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))//JPUYEN 17062024
 					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
 							.entity(new GenericEntity<RespuestaError>(
-									new RespuestaError("Error no tiene autorización para realizar esta operación",
+									new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
 											HttpURLConnection.HTTP_UNAUTHORIZED)) {
-							}).build();	
+							}).build();
 				//PURIBE 04042024 -FIN-->
 
 		try {
@@ -157,21 +157,20 @@ public class DtVisitasRsCtrl {
 
 			String sestado = req.getParameter("estado");
 			
-			// PURIBE 04042024 - INICIO-->
-						int rol=-1;
-						if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
-						{
-							rol =0;
-						}else if (req.isUserInRole(Roles.PERFIL_GC))
-							{
-							rol =1;
-								}
-						else if (req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
-						{
-						rol =2;
-						}
-						
-						// PURIBE 04042024 - FIN-->
+			//JPUYEN 17062024 - INICIO
+			int rol=-1;
+			if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
+			{
+				rol =0;
+			}else if (req.isUserInRole(Roles.PERFIL_GC))
+				{
+				rol =1;
+					}
+			else if (req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+			{
+			rol =2;
+			}
+			//JPUYEN 17062024 - FIN
 			
 			int reload = Integer.parseInt(req.getParameter("reload"));
 			int programada = Integer.parseInt(req.getParameter("programada"));
@@ -199,7 +198,7 @@ public class DtVisitasRsCtrl {
 			
 			//puribe
 			List<DtVisitasBk> dtVisitasSinfiltro = dtVisitasData.getDtVisitasActivos(servicio,
-					msUsuariosBk.getIdusuario(),fechaInicio,fechaFin,reload,programada,msUsuariosBk.getIdSede(),rol,msUsuariosBk.getIdSistAdmi());//PURIBE 04042024 - INICIO-->
+					msUsuariosBk.getIdusuario(),fechaInicio,fechaFin,reload,programada,msUsuariosBk.getIdSede(),rol,msUsuariosBk.getIdSistAdmi());//JPUYEN 17062024 - SE AGREGARON PARAMETROSsede, rol, isSistAdmi
 			//puribe
 			//puribe
 			// PURIBE 29032024 - INICIO-->
@@ -912,15 +911,11 @@ public class DtVisitasRsCtrl {
 					}).build();
 		//PURIBE 29032024  FIN->
 
-		//PURIBE 04042024 -INICIO-->
-		//PURIBE 15042024 -INICIO-->
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-			 &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
-				&& !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
-				&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
-			//PURIBE 04042024 -FIN-->
-			//PURIBE 15042024 -FIN-->
-					//PURIBE 04042024 -FIN-->
+		if (!req.isUserInRole(Roles.ADMINISTRADOR)  && !req.isUserInRole(Roles.DTVISITAS_CREA)
+				&& !req.isUserInRole(Roles.PERFIL_USU_OGC)
+				&& !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)//JPUYEN 17062024
+				&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR)) //JPUYEN 17062024
+			//PURIBE 29032024  INICIO-->
 			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
 					.entity(new GenericEntity<RespuestaError>(
 							new RespuestaError("Error no tiene autorización para realizar esta operación.", 
@@ -931,21 +926,20 @@ public class DtVisitasRsCtrl {
 		String adressRemoto = getRemoteAdress(req);
 		List<DtVisitasBk> dtVisitasCL = new ArrayList<>();
 		
-		// PURIBE 04042024 - INICIO-->
-		int rol=-1;
-		if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
-		{
-			rol =0;
-		}else if (req.isUserInRole(Roles.PERFIL_GC))
-			{
-			rol =1;
+		//JPUYEN 17062024 - INICIO
+				int rol=-1;
+				if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
+				{
+					rol =0;
+				}else if (req.isUserInRole(Roles.PERFIL_GC))
+					{
+					rol =1;
+						}
+				else if (req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+				{
+				rol =2;
 				}
-		else if (req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
-		{
-		rol =2;
-		}
-		
-		// PURIBE 04042024 - FIN-->
+				//JPUYEN 17062024 - FIN
 
 		// FuncionesStaticas.copyPropertiesObject(dtVisitasC, dtVisitasE);
 
@@ -1033,21 +1027,20 @@ public class DtVisitasRsCtrl {
 					}).build();
 		}
 		
-		// PURIBE 04042024 - INICIO-->
-		int rol=-1;
-		if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
-		{
-			rol =0;
-		}else if (req.isUserInRole(Roles.PERFIL_GC))
-			{
-			rol =1;
+		//JPUYEN 17062024 - INICIO
+				int rol=-1;
+				if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
+				{
+					rol =0;
+				}else if (req.isUserInRole(Roles.PERFIL_GC))
+					{
+					rol =1;
+						}
+				else if (req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+				{
+				rol =2;
 				}
-		else if (req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
-		{
-		rol =2;
-		}
-		
-		// PURIBE 04042024 - FIN-->
+				//JPUYEN 17062024 - FIN
 
 		String adressRemoto = getRemoteAdress(req);
 
@@ -1410,17 +1403,15 @@ public class DtVisitasRsCtrl {
 											HttpURLConnection.HTTP_UNAUTHORIZED)) {
 							}).build();
 			//PURIBE 04042024 -FIN-->
-				//PURIBE 04042024 -INICIO-->
 				if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-						&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)
-						&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
-						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))
+						&& !req.isUserInRole(Roles.DTVISITAS_VE) &&!req.isUserInRole(Roles.PERFIL_USU_OGC)//JPUYEN 17062024
+						&& !req.isUserInRole(Roles.PERFIL_GC) && !req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)//JPUYEN 17062024
+						&& !req.isUserInRole(Roles.PERFIL_ADMINISTRADOR))//JPUYEN 17062024
 					return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
 							.entity(new GenericEntity<RespuestaError>(
-								new RespuestaError("Error no tiene autorización para realizar esta operación.",
+									new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
 											HttpURLConnection.HTTP_UNAUTHORIZED)) {
 							}).build();
-				//PURIBE 04042024 -FIN-->
 
 		// DESPUES DE VALIDAR valor del filtro if(filtroValue==null) continue;
 		// else if(filtroValue.toString().length()<1) continue;
@@ -1469,7 +1460,7 @@ public class DtVisitasRsCtrl {
 
 			String sestado = req.getParameter("estado");
 			
-			// PURIBE 04042024 - INICIO-->
+			//JPUYEN 17062024 - INICIO
 			int rol=-1;
 			if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
 			{
@@ -1482,8 +1473,8 @@ public class DtVisitasRsCtrl {
 			{
 			rol =2;
 			}
-			
-			// PURIBE 04042024 - FIN-->
+
+			//JPUYEN 17062024 - FIN
 
 			Integer iestado = null;
 			if (sestado != null) {
@@ -1727,139 +1718,85 @@ public class DtVisitasRsCtrl {
 			Sheet hoja = wb.getSheetAt(sheetIndxResumen);
 			wb.setSheetName(sheetIndxResumen, "RT_" + sdf.format(hoy));
 			StyleUtils styleUtils = new StyleUtils(wb);
-			String titulo = "LISTA DE REUNIONES DE TRABAJO"; //+ dataSize;  //crea el titulo // PURIBE 16042024 - INICIO-->
+			String titulo = "LISTA DE REUNIONES DE TRABAJO" + "\nTotal: " + dataSize +" Registros";// JPUYEN 17062024
 
-			// PURIBE 16042024 - INICIO-->
-						Row row0 = hoja.getRow(0);
-						if (row0 == null) {
-							row0 = hoja.createRow(0);
-						}
-						
-						Row row4 = hoja.getRow(4);
-						if (row4== null) {
-							row4 = hoja.createRow(4);
-						}
-						
-						//total 
-						Row row7 = hoja.getRow(7);
-						if (row7 == null) {
-							row7 = hoja.createRow(7);
-						}
-						Cell cellF8 = row7.getCell(5);
-						if (cellF8 == null) {
-							cellF8 = row7.createCell(5);
-						}
-						cellF8.setCellValue(dataSize);
-						//total 
-						
-					
-					//titulo 
-						Row row3 = hoja.getRow(3);
-						if (row3 == null) {
-							row3 = hoja.createRow(3);
-						}
-						//puribe
-						// titulo 
-						Cell cellA4 = row3.getCell(0);
-						if (cellA4 == null) {
-							cellA4 = row3.createCell(0);
-						}
-						cellA4.setCellValue(titulo);
-						
-						//titulo 
-						
-						
-						//usuario
-						Row row6 = hoja.getRow(6);
-						if (row6 == null) {
-							row6 = hoja.createRow(6);
-						}
-					
-						// usuario 
-						Cell cellC7 = row6.getCell(2);
-						if (cellC7 == null) {
-							cellC7 = row6.createCell(2);
-						}
-						cellC7.setCellValue(msUsuariosBk.getNombreCompleto());
-						
-						//usuario
-						
-						
+			Row row0 = hoja.getRow(0);
+			if (row0 == null) {
+				row0 = hoja.createRow(0);
+			}
+			Cell cellE4 = row0.getCell(4);
+			if (cellE4 == null) {
+				cellE4 = row0.createCell(4);
+			}
+			cellE4.setCellValue(titulo);
 
-						// fecha y hora
-						Row row5 = hoja.getRow(5);
-						if (row5 == null) {
-							row5 = hoja.createRow(5);
-						}
+			Row row3 = hoja.getRow(3);
+			if (row3 == null) {
+				row3 = hoja.createRow(3);
+			}
 
-						Cell cell6C = row5.getCell(2);
-						if (cell6C == null) {
-							cell6C = row5.createCell(2);
-						}
-						cell6C.setCellValue(hoy);
-						// fecha y hora 
+			Cell cell3D = row3.getCell(3);
+			if (cell3D == null) {
+				cell3D = row3.createCell(3);
+			}
+			cell3D.setCellValue(hoy);
 
-						Row row1 = hoja.getRow(1);
-						if (row1 == null) {
-							row1 = hoja.createRow(1);
-						}
+			Row row1 = hoja.getRow(1);
+			if (row1 == null) {
+				row1 = hoja.createRow(1);
+			}
 
-						Row row2 = hoja.getRow(2);
-						if (row2 == null) {
-							row2 = hoja.createRow(2);
-						}
+			Row row2 = hoja.getRow(2);
+			if (row2 == null) {
+				row2 = hoja.createRow(2);
+			}
 
-					
-						//estilo CABECERA 
-						Row row8 = hoja.getRow(8);
-						if (row8 == null) {
-							row8 = hoja.createRow(8);
-						}
-						Cell cell9A= row8.getCell(0);
-						if (cell9A == null) {
-							cell9A = row8.createCell(0);
-						}
-						CellStyle cellStyleTITULO = cell9A.getCellStyle();
-						//estilo CABECERA 
-						
-						//estilo datos
-						Row row9 = hoja.getRow(9);
-						if (row9 == null) {
-							row9 = hoja.createRow(9);
-						}
-						Cell cell10A = row9.getCell(0);
-						if (cell10A == null) {
-							cell10A = row9.createCell(0);
-						}
-					
-						CellStyle cellStyleDATO = cell10A.getCellStyle();
-						
-						   for (int i = 0; i < hoja.getNumMergedRegions(); i++) {
-				                CellRangeAddress mergedRegion = hoja.getMergedRegion(i);
-				                int firstRow = mergedRegion.getFirstRow();
-				                int lastRow = mergedRegion.getLastRow();
-				                int firstColumn = mergedRegion.getFirstColumn();
-				                int lastColumn = mergedRegion.getLastColumn();
+			Row row4 = hoja.getRow(4);
+			if (row4 == null) {
+				row4 = hoja.createRow(4);
+			}
+			Cell cell4D = row4.getCell(3);
+			if (cell4D == null) {
+				cell4D = row4.createCell(3);
+			}
+			cell4D.setCellValue(filtrosaplicados.toString());
 
-				                // Verificar si la celda combinada contiene texto y aplicar las variables correspondientes dentro de paréntesis
-				                for (int rowIndex = firstRow; rowIndex <= lastRow; rowIndex++) {
-				                    Row row = hoja.getRow(rowIndex);
-				                    if (row != null) {
-				                        for (int columnIndex = firstColumn; columnIndex <= lastColumn; columnIndex++) {
-				                            Cell cell = row.getCell(columnIndex);
-				                            if (cell != null && cell.getCellType() == Cell.CELL_TYPE_STRING) {
-				                                String cellValue = cell.getStringCellValue();
-				                                String updatedValue = FuncionesStaticas.replaceVariables(cellValue, fechaInicio, fechaFin,Departamento,Entidad,Participante);
-				                                cell.setCellValue(updatedValue);
-				                            }
-				                        }
-				                    }
-				                }
-				            }
-						
-					
+			Cell cell0Q = row0.getCell(16);
+			if (cell0Q == null) {
+				cell0Q = row0.createCell(16);
+			}
+			Cell cell1Q = row1.getCell(16);
+			if (cell1Q == null) {
+				cell1Q = row1.createCell(16);
+			}
+			Cell cell2Q = row2.getCell(16);
+			if (cell2Q == null) {
+				cell2Q = row2.createCell(16);
+			}
 
-			         // PURIBE 16042024 - FIN-->
+			CellStyle cellStyleV = cell0Q.getCellStyle();
+			CellStyle cellStyleA = cell1Q.getCellStyle();
+			CellStyle cellStyleR = cell2Q.getCellStyle();
+
+			/////
+			Row row6 = hoja.getRow(6);
+			if (row6 == null) {
+				row6 = hoja.createRow(6);
+			}
+			Cell cell6A = row6.getCell(0);
+			if (cell6A == null) {
+				cell6A = row6.createCell(0);
+			}
+			CellStyle cellStyleTITULO = cell6A.getCellStyle();
+			Row row7 = hoja.getRow(7);
+			if (row7 == null) {
+				row7 = hoja.createRow(7);
+			}
+			Cell cell7A = row7.getCell(0);
+			if (cell7A == null) {
+				cell7A = row7.createCell(0);
+			}
+			CellStyle cellStyleDATO = cell7A.getCellStyle();
 
 			// PURIBE 29032024 - INICIO
 						List<String> caposvista = Arrays.asList("idVisita", "fechaProgramada", "idSistAdmTxt", "idParticipanteTxt",
@@ -1869,7 +1806,7 @@ public class DtVisitasRsCtrl {
 																					// INICIO-->
 						// PURIBE 29032024 - FIN
 			int tituloscontador = 1;
-			int titulofilacontador = 8; 	// PURIBE 16042024 - INICIO-->
+			int titulofilacontador = 6;
 			Row rowX = hoja.getRow(titulofilacontador);
 			if (rowX == null) {
 				rowX = hoja.createRow(titulofilacontador);
@@ -1884,8 +1821,7 @@ public class DtVisitasRsCtrl {
 				tituloscontador++;
 			}
 
-			//llena la data, la fila y columna empiezan A contar en 0
-			int contador = 9; // PURIBE 16042024 - INICIO-->
+			int contador = 7;
 			int contadorfor = 1;
 			for (DtVisitasBk dtVisitasBk : dtVisitassssData) {
 				rowX = hoja.getRow(contador);
@@ -1894,15 +1830,15 @@ public class DtVisitasRsCtrl {
 				Cell cellAAX = rowX.getCell(0);
 				cellAAX.setCellValue(contadorfor);
 
-//				if (dtVisitasBk.getCclase() != null) {
-//					if (dtVisitasBk.getCclase().equals("cverde")) {
-//						cellAAX.setCellStyle(cellStyleV);
-//					} else if (dtVisitasBk.getCclase().equals("camarillo")) {
-//						cellAAX.setCellStyle(cellStyleA);
-//					} else if (dtVisitasBk.getCclase().equals("crojo")) {
-//						cellAAX.setCellStyle(cellStyleR);
-//					}
-//				}
+				if (dtVisitasBk.getCclase() != null) {
+					if (dtVisitasBk.getCclase().equals("cverde")) {
+						cellAAX.setCellStyle(cellStyleV);
+					} else if (dtVisitasBk.getCclase().equals("camarillo")) {
+						cellAAX.setCellStyle(cellStyleA);
+					} else if (dtVisitasBk.getCclase().equals("crojo")) {
+						cellAAX.setCellStyle(cellStyleR);
+					}
+				}
 
 				int columna = 1;
 				for (String camponame : caposvista) {
@@ -2210,12 +2146,17 @@ public class DtVisitasRsCtrl {
 			   	}
 			   
 			// JPUYEN 14052024 - INICIO
-				@POST
+			   @POST
 				@Path("/finalizardtVisitas")
 				@Produces(MediaType.APPLICATION_JSON)
 				public Response finalizarDtVisitas(@Context HttpServletRequest req, @Context HttpServletResponse res,
 						@HeaderParam("authorization") String authString,DtVisitasJS dtVisitasJS) throws ParseException {
-
+					//DtVisitasJS dtVisitasJS DatosContenedor DatosContenedor
+					// DtVisitasJS dtVisitasJS = (DtVisitasJS) data.get("dtVisitasModelo");
+					// List<DtVisitasUsuinternosBk> listaUsuarioVisita = (List<DtVisitasUsuinternosBk>) data.get("UsuarioVisita");
+					//	DtVisitasBk  dtVisitasC = DatosContenedor.getDtVisitasModelo();
+					  //  List<DtVisitasUsuinternosBk> visitaUsuarios = DatosContenedor.getVisitaUsuarios();
+					  
 					SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 					Principal usuario = req.getUserPrincipal();
 					MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
@@ -2228,19 +2169,26 @@ public class DtVisitasRsCtrl {
 								}).build();
 					
 					if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-							&& !req.isUserInRole(Roles.DTVISITAS_VE) && !req.isUserInRole(Roles.PERFIL_USU_OGC))
+							 && !req.isUserInRole(Roles.PERFIL_USU_OGC))
 						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
 										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
 								}).build();
 
 					String adressRemoto = getRemoteAdress(req);
 
+				//	DtVisitasBk dtVisitasC = new DtVisitasBk();
+				//	FuncionesStaticas.copyPropertiesObject(dtVisitasC, dtVisitasJS);
+
 					try {
-						
-						Long idProgram = PropertiesMg.getSistemLong(
+						// JPUYEN 17062024 - INICIO
+						/*Long idProgram = PropertiesMg.getSistemLong(
 								PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
-								PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
-					
+								PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);*/
+						
+						Long idNoProgram = PropertiesMg.getSistemLong(
+								PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_NOPROGRAMADA,
+								PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_NOPROGRAMADA);
+						// JPUYEN 17062024 - FIN
 
 						SimpleDateFormat sdff = new SimpleDateFormat("yyyy-MM-dd");
 						Date fechaDateIni = sdff.parse(req.getParameter("fechaInicio"));
@@ -2250,80 +2198,110 @@ public class DtVisitasRsCtrl {
 						Timestamp fechaFin = new Timestamp(fechaDateFin.getTime());
 						int programada = Integer.parseInt(req.getParameter("programada"));
 						
-
+						//if (dtVisitasBk.getIdProgramacion()!=null && 
+							//	dtVisitasBk.getIdProgramacion().compareTo(idProgram)==0 &&
+							//	pagOrigen!=null && pagOrigen.compareTo(pagOriProg)==0 ){
+							//dtVisitasBk.setFechaVisita(dtVisitasBk.getFechaReprogramable());
+						//}
+						
+						
+					/*	if (!(dtVisitasJS.getVisitaUsuarios().size()>0)) {
+							throw new Validador("Para finalizar el servicio se debe registrar al usuario atendido");
+							
+						}*/
+						// JPUYEN 17062024 - INICIO
+						List<DtAnexosJS> dtAnexosJSsss = dtVisitasJS.getDtAnexosJSss();
+						List<DtAnexoBk> dtAnexosBkss = null;
+						if (dtAnexosJSsss != null && !dtAnexosJSsss.isEmpty()) {
+							dtAnexosBkss = new ArrayList<DtAnexoBk>();
+							for (DtAnexosJS tdAnexosJS : dtAnexosJSsss) {
+								DtAnexoBk tdAnexosBk = new DtAnexoBk();
+								FuncionesStaticas.copyPropertiesObject(tdAnexosBk, tdAnexosJS);
+								dtAnexosBkss.add(tdAnexosBk);
+							}
+						}
+						// JPUYEN 17062024 - FIN
 						
 						DtVisitasBk dtVisitasC = new DtVisitasBk();
 						 FuncionesStaticas.copyPropertiesObject(dtVisitasC,dtVisitasJS);
 						 dtVisitasC.setIdSede(msUsuariosBk.getIdSede());
 						 dtVisitasC.setIdSistAdm(msUsuariosBk.getIdSistAdmi());
 						 
-						 dtVisitasC.setIdProgramacion(idProgram);
+						 dtVisitasC.setIdProgramacion(idNoProgram);// JPUYEN 17062024
 						 
-					
+						// if (dtVisitasC.getIdProgramacion()!=null ){
 						 dtVisitasC.setFechaProgramada(dtVisitasC.getFechaVisita());
 						 
 						 Timestamp hoy = new Timestamp(System.currentTimeMillis());
 						 dtVisitasC.setFechaFinalizacion(hoy);
 						 dtVisitasC.setEstado(Estado.FINALIZADO.getValor());
-				
-//						dtVisitasC = servicio.finalizarDtVisita(dtVisitasC, msUsuariosBk.getUsername(),
-//								msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede(), adressRemoto);
 						 
-						 dtVisitasC = servicio.finalizarDtVisita(dtVisitasC, msUsuariosBk.getIdSistAdmi(), msUsuariosBk.getIdusuario());
 
+							//}
+						// dtVisitasJS.setEditopcion(dtVisitasC.getdtVisitasACL().getEditopcion());
+						
+						dtVisitasC = servicio.finalizarDtVisitasBk(dtVisitasC, dtAnexosBkss, msUsuariosBk.getUsername(),// JPUYEN 17062024 - se agrego el nuevo parametro
+								msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede(), adressRemoto);
+						// dtVisitasJS = new DtVisitasJS();
+						// FuncionesStaticas.copyPropertiesObject(dtVisitasJS, dtVisitasC);
+						// dtVisitasJS.setEditopcion(dtVisitasC.getdtVisitasACL().getEditopcion());
 						List<DtVisitasUsuinternosBk> ouserVisitJS = new ArrayList<>();
 						
 					
+						
+						//List<DtVisitasUsuinternosBk> ouserVisitJS = new ArrayList<>();// JPUYEN 17062024 - INICIO SE COMENTA PARA QUITARSE
+						
+						// JPUYEN 17062024 - INCIO
+						List<DtVisitasUsuexternosBk> ouserVisitExterJS = new ArrayList<>();
 					
 						
 						
-						if (dtVisitasJS.getDtAnexosJSss() != null) {
-							List<DtAnexoBk> ouserVisitExterJS = new ArrayList<>();
-						
-							for (DtAnexosJS oUserVisitExterno : dtVisitasJS.getDtAnexosJSss()) {
-								
-								Random rand = new Random();
-								int max = 9;
-								int min = 1;
-								int randomNum = rand.nextInt((max - min) + 1) + min;
-
-								byte[] bytes = null;
-								
-					
-								
-								FileOutputStream fos = null;
-							
-					
-							
+						if (dtVisitasC !=null) {
+							// Save Participantes
+							for (DtVisitasUsuinternosBk oUserVisit : dtVisitasJS.getVisitaUsuarios()) {
+								oUserVisit.setIdVisita(dtVisitasC.getIdVisita());
+								DtVisitasUsuinternosBk ouserVisitBK = new DtVisitasUsuinternosBk();
 								
 								
-								Long idTiposervicio = PropertiesMg
-										.getSistemLong(
-												PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA,
-												PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA);
-								DtAnexoBk dtAnexoBka = new DtAnexoBk();
-								dtAnexoBka.setFilenameoriginal(oUserVisitExterno.getFilenameoriginal());
-								dtAnexoBka.setIdmaestro(dtVisitasJS.getIdVisita());
-								dtAnexoBka.setIdTiposervicio(idTiposervicio);
-								
-								
-								DtAnexoBk ouserVisitBK = new DtAnexoBk();
-								
-								ouserVisitBK = servicio.saveorupdateDtAnexoBk(dtAnexoBka,
+								ouserVisitBK =servicio.saveorupdateDtVisitasUsuinternosBk(oUserVisit, 
 										msUsuariosBk.getUsername(),
-										msUsuariosBk.getIduserModif(), dtVisitasJS.getIdSede(), 
-										dtVisitasJS.getRtmaddress());
+										msUsuariosBk.getIdusuario(),
+										msUsuariosBk.getIdSede(),
+										adressRemoto
+										);
 								
+								ouserVisitJS.add(ouserVisitBK);
+							}		
 							
-								
-								ouserVisitExterJS.add(ouserVisitBK);
-							}	
+							// JPUYEN 14052024 - INICIO
+							
+							
+							
+							if (dtVisitasJS.getVisitaUsuariosExterno() != null) {
+							
+								for (DtVisitasUsuexternosBk oUserVisitExterno : dtVisitasJS.getVisitaUsuariosExterno()) {
+									oUserVisitExterno.setIdVisita(dtVisitasC.getIdVisita());
+									DtVisitasUsuexternosBk ouserVisitBK = new DtVisitasUsuexternosBk();
+									
+									
+								/*	ouserVisitBK =servicio.saveorupdateDtEntidadesUsuexternosBk(oUserVisitExterno, 
+											msUsuariosBk.getUsername(),
+											msUsuariosBk.getIdusuario(),
+											msUsuariosBk.getIdSede(),
+											adressRemoto
+											);*/
+									
+									ouserVisitExterJS.add(ouserVisitBK);
+								}	
+							}
+							
 						}
+							// JPUYEN 17062024 - INCIO
 						
-					
+						Long idTipoServicioVisita = servicio.getParametro(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA, PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA);
 						
-					
-						
+						//servicio.enviarEncuestaPorCorreo("",ouserVisitExterJS, idTipoServicioVisita, dtVisitasC.getIdVisita(), dtVisitasC.getFechaVisita(), Util.getBaseURL(), hoy); 
+						servicio.enviarEncuestaPorCorreo("",dtVisitasJS.getVisitaUsuariosExterno(), idTipoServicioVisita, dtVisitasC.getIdVisita(), dtVisitasC.getFechaVisita(), "url_prueba", hoy); 
 						
 						
 						DtVisitasData dtVisitasData = (DtVisitasData) req.getSession().getAttribute("DtVisitasData");
@@ -2331,9 +2309,9 @@ public class DtVisitasRsCtrl {
 							dtVisitasData = new DtVisitasData();
 							req.getSession().setAttribute("DtVisitasData", dtVisitasData);
 						}
-//						dtVisitasData.add(servicio, msUsuariosBk.getIdusuario(), dtVisitasC,fechaInicio,fechaFin,programada);
-//						dtVisitasData.add(servicio, msUsuariosBk.getIdusuario(), dtVisitasC, fechaInicio, fechaFin, programada, sede, rol, sistemaadmi);
+					//	dtVisitasData.add(servicio, msUsuariosBk.getIdusuario(), dtVisitasC,fechaInicio,fechaFin,programada);//JPUYEN 17062024
 						dtVisitasC.setVisitaUsuarios(ouserVisitJS);
+						dtVisitasC.setVisitaUsuariosExterno(ouserVisitExterJS);
 
 						GenericEntity<DtVisitasBk> registrors = new GenericEntity<DtVisitasBk>(dtVisitasC) {
 						};
@@ -2370,14 +2348,14 @@ public class DtVisitasRsCtrl {
 					
 					// PURIBE 04042024 - INICIO-->
 					int rol=-1;
-					if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.PERFIL_USU_OGC))
+					if (req.isUserInRole(Roles.ADMINISTRADOR) || msUsuariosBk.getPerfil().contains(Roles.PERFIL_USU_OGC))
 					{
 						rol =0;
-					}else if (req.isUserInRole(Roles.PERFIL_GC))
+					}else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_GC))
 						{
 						rol =1;
 							}
-					else if (req.isUserInRole(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+					else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
 					{
 					rol =2;
 					}
@@ -2661,7 +2639,7 @@ public class DtVisitasRsCtrl {
 
 			// JPUYEN 14052024 - FIN
 				// JPUYEN 14052024 - INICIO
-				 @POST
+				@POST
 				@Path("/insertarchivo/{idVisita}")
 				@Produces(MediaType.APPLICATION_JSON)
 				@Consumes(MediaType.APPLICATION_JSON)
@@ -2680,12 +2658,13 @@ public class DtVisitasRsCtrl {
 								}).build();
 					
 					if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
-							&& !req.isUserInRole(Roles.DTVISITAS_VE) && !req.isUserInRole(Roles.PERFIL_USU_OGC))
+							 && !req.isUserInRole(Roles.PERFIL_USU_OGC))
 						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
 										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",HttpURLConnection.HTTP_UNAUTHORIZED)) {
 								}).build();
 					
-					SimpleDateFormat sdff = new SimpleDateFormat("yyyy-MM-dd");
+					/* // JPUYEN 17062024 - INICIO DE COMENTARIO
+					 SimpleDateFormat sdff = new SimpleDateFormat("yyyy-MM-dd");
 					Date fechaDateIni = new Date();
 					Date fechaDateFin = new Date();
 					try {
@@ -2712,8 +2691,7 @@ public class DtVisitasRsCtrl {
 
 					DtVisitasLC dtVisitasLC = new DtVisitasLC();
 					long inicio = System.currentTimeMillis();
-//					List<DtVisitasBk> dtVisitassss = dtVisitasData.getDtVisitasActivos(servicio, msUsuariosBk.getIdusuario(),fechaInicio,fechaFin,reload,programada);
-					List<DtVisitasBk> dtVisitassss = dtVisitasData.getDtVisitasActivos(servicio, msUsuariosBk.getIdusuario(), fechaInicio, fechaFin, reload, programada, msUsuariosBk.getIdSede(), 1, msUsuariosBk.getIdSistAdmi());
+					List<DtVisitasBk> dtVisitassss = dtVisitasData.getDtVisitasActivos(servicio, msUsuariosBk.getIdusuario(),fechaInicio,fechaFin,reload,programada);
 					long lfinal = System.currentTimeMillis() - inicio;
 					dtVisitasLC.setTiempoenBD(lfinal);
 
@@ -2724,8 +2702,9 @@ public class DtVisitasRsCtrl {
 
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
 					List<DtVisitasBk> dtVisitassssData = new ArrayList<DtVisitasBk>();
-					
+					// JPUYEN 17062024 - FIN DE COMENTARIO */
 
+					// String adressRemoto = getRemoteAdress(req);
 					String sdata = dtAnexosJS.getData().substring(dtAnexosJS.getData().indexOf(";base64,") + 8);
 					byte[] data = Base64.getDecoder().decode(sdata);
 					
@@ -2733,27 +2712,11 @@ public class DtVisitasRsCtrl {
 					String rutaFilename = null;
 					if (dtAnexosJS.getFilename() == null) {
 						if (dtAnexosJS.getIdAnexo() != null && dtAnexosJS.getIdAnexo().longValue() > 0
-								&& idVisita != null && idVisita.longValue() > 0) {
-							filename = FuncionesStaticas.getFileNameSistema(idVisita, dtAnexosJS.getIdAnexo(),
-									msUsuariosBk.getIdusuario(), msUsuariosBk.getIdCargo());
-						/*	Random rand = new Random();
-							int max = 9;
-							int min = 1;
-							int randomNum = rand.nextInt((max - min) + 1) + min;
-							
-							String nombreenelsistema = FuncionesStaticas
-									.getFileNameSistemaR(
-											idVisita,
-											msUsuariosBk.getIduserModif(),
-											randomNum, filename);
-							nombreenelsistema = "V" + nombreenelsistema;
-							
-							rutaFilename = FuncionesStaticas
-									.getRutaFileNameSistema(nombreenelsistema);
-							File ffilename = new File(rutaFilename);*/
+								&& dtAnexosJS.getIdTiposervicio() != null && dtAnexosJS.getIdTiposervicio().longValue() > 0) {// JPUYEN 17062024
+							filename = FuncionesStaticas.getFileNameSistemaVisita(idVisita, msUsuariosBk.getIdusuario(), dtAnexosJS.getFilenameoriginal()); // JPUYEN 17062024
+						
 						} else {
-							filename = FuncionesStaticas.getFileNameTempSistema(msUsuariosBk.getIdusuario(),
-									msUsuariosBk.getIdCargo());
+							filename = FuncionesStaticas.getFileNameTempSistemaVisita(idVisita, msUsuariosBk.getIdusuario(),dtAnexosJS.getFilenameoriginal());// JPUYEN 17062024
 						}
 						rutaFilename = FuncionesStaticas.getFileNameRutaSistema(filename);
 					} else {
@@ -2766,7 +2729,7 @@ public class DtVisitasRsCtrl {
 						fos.write(data);
 						fos.close();
 
-						dtAnexosJS.setDatabyte(data);
+						dtAnexosJS.setData(null);// JPUYEN 17062024
 						dtAnexosJS.setFilename(filename);
 
 						GenericEntity<DtAnexosJS> registrors = new GenericEntity<DtAnexosJS>(dtAnexosJS) {

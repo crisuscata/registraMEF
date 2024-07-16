@@ -220,4 +220,25 @@ public class DtVisitasUsuinternosDaoImp extends
 			return lista;
 		}
 		//PURIBE 14032024 - FIN-->
+		
+		//JPUYEN 17062024 - INICIO
+				@Override
+				public List<DtVisitasUsuinternos> getXFiltroConcatenacionLista(Long idVisita) {
+
+					StringBuffer sb = new StringBuffer(100);
+					List<Object> hs = new ArrayList<Object>();
+					sb.append("select t from " + getDomainClass().getName() + " t where t.estado >= 1"); 
+
+					
+					if (idVisita != null) {
+						sb.append("and t.idVisita = ? ");
+						hs.add(idVisita);
+					}	
+
+					Object param[] = new Object[hs.size()];
+					hs.toArray(param);
+					List<DtVisitasUsuinternos> lista = super.find(sb.toString(), param);
+
+					return lista;
+				}
 }

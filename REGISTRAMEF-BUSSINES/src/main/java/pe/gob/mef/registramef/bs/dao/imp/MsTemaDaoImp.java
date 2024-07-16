@@ -240,7 +240,7 @@ public class MsTemaDaoImp extends
 			StringBuffer sb = new StringBuffer(100);
 			sb.append("SELECT tablaa FROM MsTema tablaa ");
 			sb.append("WHERE tablaa.estado >= "+Estado.ACTIVO.getValor()+" ");
-			sb.append("ORDER BY tablaa.idTema asc ");
+			sb.append("ORDER BY tablaa.descripcion asc ");
 			return super.find(sb.toString());
 		}
 	 
@@ -291,7 +291,7 @@ public class MsTemaDaoImp extends
 
 			StringBuffer sb = new StringBuffer(100);
 			List<Object> hs = new ArrayList<Object>();
-			sb.append("select t from " + getDomainClass().getName() + " t where t.estado >= 1 ");
+			sb.append("select t from " + getDomainClass().getName() + " t where t.estado >=  "+ Estado.ACTIVO.getValor()+" ");
 
 			if (descripcion != null && descripcion.trim().length() > 0) {
 				sb.append("and t.descripcion = ? ");
@@ -305,7 +305,7 @@ public class MsTemaDaoImp extends
 				sb.append("and t.tipoServicio = ? ");
 				hs.add(tipoServicio);
 			}
-			// sb.append("order by t.idTema desc ");
+			 sb.append("order by t.descripcion asc ");
 
 			Object param[] = new Object[hs.size()];
 			hs.toArray(param);

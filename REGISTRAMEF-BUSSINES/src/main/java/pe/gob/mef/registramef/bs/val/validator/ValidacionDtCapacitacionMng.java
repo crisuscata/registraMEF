@@ -57,12 +57,16 @@ public class ValidacionDtCapacitacionMng implements Serializable{
 						PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_VIRTUAL,
 						PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_VIRTUAL);
 				
+				
+				
+				validarFechaSoli(dtCapacitacionBk.getFechaSoli()); 
+				validarDtCapacitacionFechaSoliAntesFechaServicio(dtCapacitacionBk.getFechaSoli(),dtCapacitacionBk.getFechaInic());//SPRINT03
+				validarDtCapacitacionFechaInicioAntesFechaFin(dtCapacitacionBk.getFechaInic(),dtCapacitacionBk.getFechaFin());
 				if (dtCapacitacionBk.getIdProgramacion() != null) {
 //					if (!esAdminOGC) {
 						validarFechaServicioMensual(dtCapacitacionBk, autorizacionEjecucion, autorizacionProgramacion, dtCapacitacionOrig);
 //					}
 				}
-				
 				validarIdModo(dtCapacitacionBk.getIdModo());
 				if (dtCapacitacionBk.getIdModo().longValue() == idModoUnSistema) {
 					validarIdModalidad(dtCapacitacionBk.getIdModalidad());
@@ -80,11 +84,10 @@ public class ValidacionDtCapacitacionMng implements Serializable{
 					validarIdFinancia(dtCapacitacionBk.getIdFinancia());
 					validarIdNivel(dtCapacitacionBk.getIdNivel());
 					validarIdPrestacion(dtCapacitacionBk.getIdPrestacion());
-					validarIdTipo(dtCapacitacionBk.getIdTipo());
-					validarFechaSoli(dtCapacitacionBk.getFechaSoli()); 
-					validarDtCapacitacionFechaSoliAntesFechaServicio(dtCapacitacionBk.getFechaSoli(),dtCapacitacionBk.getFechaInic());//SPRINT03
-					
+					validarIdTipo(dtCapacitacionBk.getIdTipo());	
 				}
+				
+				
 				
 				validarIdFinancia(dtCapacitacionBk.getIdFinancia());
 				//MPINARES 14022024 - FIN

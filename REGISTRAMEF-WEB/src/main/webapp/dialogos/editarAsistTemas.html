@@ -3,6 +3,12 @@
 <md-dialog-content md-whiteframe="1" class="overflowEsconder" md-colors="{background: 'background-A100'}">
  <form name="dtAsistenciaForm2">
  
+ <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Agregar temas</h2>
+    </div>
+  </md-toolbar>
+ 
  <div layout="row" layout-aling="center start" 
 				style="font-size: 14px;">      
         
@@ -36,9 +42,12 @@
  
  				<div class="letraenvoltura" ng-if="dtAsistenciaModelo.editopcion < 2"  >
 					<md-input-container class="input-container-margen letraTexto">
-					<label>Detalle</label>
-						<input id="concepto" ng-model="asistenciaTemasmodelo.detalle" required
-							style="margin-bottom: -24px;" >
+					<label>Ingresar detalle</label>
+						<!-- input id="concepto" ng-model="asistenciaTemasmodelo.detalle" required
+							style="margin-bottom: -24px;" -->
+						<textarea ng-model="asistenciaTemasmodelo.detalle" required md-maxlength="200" rows="1" md-select-on-focus
+							style="width: 250px;"
+                      ></textarea>
 					</md-input-container>
 				</div>
 				

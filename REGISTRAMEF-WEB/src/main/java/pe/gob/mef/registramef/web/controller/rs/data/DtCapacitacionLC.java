@@ -15,6 +15,8 @@ public class DtCapacitacionLC implements Serializable  {
 	private long tiempoenproceso = 0;
 	private boolean creamodifica = false;
 	protected List<DtCapacitacionBk> data = null;
+	private boolean prepublicar = false;
+	private boolean acumular = false;
 	
 	public DtCapacitacionLC() {
 	}
@@ -58,4 +60,22 @@ public class DtCapacitacionLC implements Serializable  {
 	public void setCreamodifica(boolean creamodifica) {
 		this.creamodifica = creamodifica;
 	}
+
+	public boolean isPrepublicar() {
+		return prepublicar;
+	}
+
+	public void setPrepublicar(boolean prepublicar) {
+		this.prepublicar = prepublicar;
+	}
+
+	public boolean isAcumular() {
+		return acumular;
+	}
+
+	public void setAcumular(boolean acumular) {
+		this.acumular = acumular;
+	}
+	
+	
 }

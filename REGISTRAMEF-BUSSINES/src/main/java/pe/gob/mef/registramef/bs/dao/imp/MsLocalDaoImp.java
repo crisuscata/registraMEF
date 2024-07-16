@@ -76,7 +76,7 @@ public class MsLocalDaoImp extends
 
 	public List<MsLocal> getActivasMsLocal() {
 		return super.find("from " + getDomainClass().getName()
-				+ " t where t.estado > "+Estado.ELIMINADO.getValor());
+				+ " t where t.estado > "+Estado.ELIMINADO.getValor()+" order by t.descripcion asc ");
 	}
 	
 	public List<MsLocal> getActivasMsLocalCero() {

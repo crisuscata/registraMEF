@@ -38,6 +38,7 @@ var insertdtEntidadesUrl = contexto+"/rs/ctrldtAsistencia/salvardtEntidades";
 var listamsSisAdminUrl = contexto+"/rs/ctrldtAsistencia/listamsSisAdmin";
 var anulardtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/anulardtAsistenciaList";
 var reactivardtAsistenciaUrl = contexto+"/rs/ctrldtAsistencia/reactivardtAsistencia";
+var currentserverdateUrl = contexto+"/rs/ctrltitulo/currentserverdate";
 // MPINARES 24012023 - FIN
 
 /**
@@ -120,6 +121,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 	  console.log('order: ', order);
 	  $scope.loaddtAsistencias();
 	 };
+	 $scope.refrescar= 0;//puribe
 	 
 	 $scope.logItem = function (item) {
 	  console.log(item.name, 'was selected');
@@ -134,6 +136,38 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
     // ///////////////////////////////////////////
 	$scope.datos = [];
 	$scope.total = 0;
+	$scope.currentserverdate = null;
+	
+	$scope.getCurrentserverdate = function(){           
+        var surl = currentserverdateUrl;
+        $http.get(surl).then(function(res){
+              var dato = res.data;
+              $scope.currentserverdate = new Date(dato);
+              $scope.filtro.fechaInicio=$scope.firstDate(new Date(dato));
+              $scope.filtro.fechaFin= $scope.getLastDayOfMonth(new Date(dato));
+              $scope.loaddtAsistencias();
+//            $scope.firstDate($scope.getCurrentserverdate())
+//            return $scope.currentserverdate;
+        },
+        function error(errResponse) {
+              console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+              var dato = errResponse.data;
+              if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+                    $mdDialog.show(
+                                $mdDialog.alert()
+                                .parent(angular.element(document.body))
+                                .clickOutsideToClose(true)
+                                .title('Obtener fecha servidor')
+                                .textContent(dato.message)
+                                .ariaLabel('ERROR')
+                                .ok('OK')
+                                .targetEvent(ev)
+                    );
+              }                            
+        });                                                   
+  };
+  
+//  $scope.getCurrentserverdate();
 
 	$scope.loaddtAsistencias = function () {
 		if($scope.isDate($scope.filtro.fechaInicio) && $scope.isDate($scope.filtro.fechaFin)){
@@ -164,6 +198,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 //	    	    		 $scope.creadtAsistencia = res.data.creamodifica;
 	    	    		 console.log("data " +$scope.datos.length+" DE "+ $scope.total);
 	    	    		 console.log("Tiempo respuesta BD dtAsistencia " +tiempoenBD+" Tiempo en Paginar "+tiempoenproceso);
+	    	    		 $scope.refrescar=0; //puribe
 	    		 }else{
 //	 				$mdDialog.show(
 //							$mdDialog.alert()
@@ -186,7 +221,9 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 			if(errResponse.message){ 
 				console.log("Message " + errResponse.message);
 				dato = errResponse.message;
+				$scope.refrescar=0; //puribe
 			}			
+			$scope.refrescar=0; //puribe
 			if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
 		            	$mdDialog.show(
 						         $mdDialog.alert()
@@ -261,6 +298,22 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 					}
 				}
 				//MPINARES 14022024 - FIN
+				
+				if($scope.refrescar == 1){
+					if(elprimero){
+						elprimero=false;
+						filtroparametro += "?reload=1";
+					}else{
+						filtroparametro += "&reload=1";
+					}	
+				}else if($scope.refrescar == 0){
+					if(elprimero){
+					elprimero=false;
+					filtroparametro += "?reload=0";
+				}else{
+					filtroparametro += "&reload=0";
+					}	
+				}
 			});
                   console.log('Parametros del URL: '+order+limit+page+filtroparametro);	 
 		  return order+limit+page+filtroparametro;
@@ -431,8 +484,10 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
          }else{
 			 var keyCode = ev.which || ev.keyCode;
 			    if (keyCode === 13) {
+			    	$scope.refrescar=1;
 			    	$scope.loaddtAsistencias();
 			    }else if (keyCode === 1) {
+			    	$scope.refrescar=1;
 			    	$scope.loaddtAsistencias();
 			    }
          }
@@ -599,7 +654,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 							$mdDialog.alert()
 							.parent(angular.element(document.body))
 							.clickOutsideToClose(true)
-							.title('Anular asistencia')
+							.title('Anular registros')
 							.textContent("No se han seleccionado registros.")
 							.ariaLabel('Lucky day')
 							.ok('ACEPTAR')
@@ -607,7 +662,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 					);
 				}else{
 					var confirm = $mdDialog.confirm()
-	                .title('Anular asistencia')
+	                .title('Anular registros')
 	                .textContent('¿Está seguro que desea anular los registros seleccionados?')
 	                .ariaLabel('Lucky day')
 	                .targetEvent(ev)
@@ -662,8 +717,8 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 		 
 		 $scope.showConfirmReactivarAsistencia = function(ev, dtAsistenciaBk) {
 			    var confirm = $mdDialog.confirm()
-			      .title('Reactivar asistencia técnica')
-			      .textContent('¿Está usted seguro de reactivar el registro?')
+			      .title('Reactivar servicio')
+			      .textContent('¿Estás seguro que desea reactivar el servicio?')
 			      .ariaLabel('Lucky day')
 			      .targetEvent(ev)
 			      .ok('Si')
@@ -705,7 +760,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 					         $mdDialog.alert()
 					        .parent(angular.element(document.body))
 					        .clickOutsideToClose(true)
-					        .title('Reactivar asistencia técnica')
+					        .title('Reactivar servicio')
 					        .textContent(dato.message)
 					        .ariaLabel('ERROR')
 					        .ok('ACEPTAR')
@@ -908,7 +963,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 							        .parent(angular.element(document.body))
 							        .clickOutsideToClose(true)
 							        .title('Guardar asistencia técnica')
-							        .textContent("Asistencia técnica se guardó correctamente.")
+							        .textContent("Los datos se guardaron correctamente")
 							        .ariaLabel('ERROR')
 							        .ok('ACEPTAR')
 							        .targetEvent(ev)
@@ -1191,6 +1246,21 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 				  
 				// MPINARES 24012023 - INICIO
 				  $scope.buscarxcodEjec = function(dato){
+					  	
+					  if($scope.isNull(dato.codEjecutora)){
+			                $mdDialog.show(
+				                    $mdDialog.alert()
+				                    .parent(angular.element(document.body))
+				                    .clickOutsideToClose(true)
+				                    .title('Entidad')
+				                    .textContent('No se ha encontrado la entidad con código ejecutora 0')
+				                    .ariaLabel('Lucky day')
+				                    .ok('ACEPTAR')
+				                );
+			                return;
+					  }
+					  
+					  
 				        console.log('codigoEjecutora: '+ dato.codEjecutora);
 				        $scope.dlgInstmsInstitucionesDtoss=[];
 				        $scope.selectedItem = null;
@@ -1204,7 +1274,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 				                console.log(JSON.stringify(institucion));
 				                dato.codEjecutora = institucion.codEjec; 
 // dato.ruc = institucion.ruc;
-				                dato.idEntidadTxt = institucion.razSocial;
+				                dato.idEntidadTxt = institucion.razSocialUbigeo;
 				                dato.idEntidad = institucion.idEntidad;
 				                console.log('modelo', dato);
 
@@ -1224,7 +1294,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 				                    $mdDialog.alert()
 				                    .parent(angular.element(document.body))
 				                    .clickOutsideToClose(true)
-				                    .title('Buscar por ejecutora - Registramef')
+				                    .title('Entidad')
 				                    .textContent(errData.message)
 				                    .ariaLabel('ERROR')
 				                    .ok('ACEPTAR')
@@ -1301,28 +1371,34 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 				    }
 					
 					$scope.removeAsistenciaTema = function (ev,dato) {
-				    	if(dato.idAsistTema!=null && dato.idAsistTema>0){
-				    		$scope.showConfirmDeleteAsistenciaTema(ev, dato);
-				    	}else{
-				    		$scope.datoAsistenciaTema = $scope.datoAsistenciaTema.filter(val => val.idAsistTema !== dato.idAsistTema);
-				    	} 
+						$scope.showConfirmDeleteAsistenciaTema(ev, dato);		
+//				    	if(dato.idAsistTema!=null && dato.idAsistTema>0){
+//				    		$scope.showConfirmDeleteAsistenciaTema(ev, dato);
+//				    	}else{
+//				    		$scope.datoAsistenciaTema = $scope.datoAsistenciaTema.filter(val => val.idAsistTema !== dato.idAsistTema);
+//				    	} 
 				    }
 					
 					$scope.showConfirmDeleteAsistenciaTema = function(ev, dtAsistenciaTemasBk) {
 					    var confirm = $mdDialog.confirm()
-					      .title('Eliminar registro')
-					      .textContent('¿Está usted seguro de eliminar el registro?')
+					      .title('Temas agendados')
+					      .textContent('¿Estás seguro que deseas eliminar el registro?')
 					      .ariaLabel('Lucky day')
 					      .targetEvent(ev)
 					      .ok('Si')
 					      .cancel('No');
 
 					    $mdDialog.show(confirm).then(function () {
-					      $scope.status = 'SI';
-					      $scope.cleardtAsistenciaTemas();
-					      $scope.setDtAsistenciaTemasModelo(dtAsistenciaTemasBk);
-					      $scope.eliminardtAsistenciaTemas(ev, $scope.dtAsistenciaTemasModelo);
-					      $scope.datoAsistenciaTema = [];
+					    	if(dtAsistenciaTemasBk.idAsistTema!=null && dtAsistenciaTemasBk.idAsistTema>0){
+					    		$scope.status = 'SI';
+							      $scope.cleardtAsistenciaTemas();
+							      $scope.setDtAsistenciaTemasModelo(dtAsistenciaTemasBk);
+							      $scope.eliminardtAsistenciaTemas(ev, $scope.dtAsistenciaTemasModelo);
+//							      $scope.datoAsistenciaTema = [];
+					    	}else{
+					    		$scope.datoAsistenciaTema = $scope.datoAsistenciaTema.filter(val => val.idAsistTema !== dtAsistenciaTemasBk.idAsistTema);
+					    	}
+					      
 					    }, function () {
 					      $scope.status = 'NO';
 					    });
@@ -1505,7 +1581,7 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 				    		if($scope.isObject(item)){
 				    			console.log('Item changed to ' + JSON.stringify(item));
 				    			$scope.dtAsistenciaModelo.idEntidad = item.idEntidad;
-				    			$scope.dtAsistenciaModelo.idEntidadTxt = item.razSocial;
+				    			$scope.dtAsistenciaModelo.idEntidadTxt = item.razSocialUbigeo;
 				    			$scope.dtAsistenciaModelo.codEjecutora  = item.codEjec;
 				    		}
 				    	}
@@ -1662,30 +1738,60 @@ $scope.dtAsistenciaModelo.idFinanciaTxt = dtAsistenciaBk.idFinanciaTxt;
 						$scope.nuevoAsistenciaTemasmodelo = function (ev) {
 							ev.target.disabled = true;
 							
-							if (!$scope.dtAsistenciaForm2.$valid) {
+							if ($scope.isNull($scope.asistenciaTemasmodelo.idTema)) {
 								// PURIBE 15042024 - INICIO -->
 								$mdDialog.show(
-									$mdDialog.alert()
+									$mdDialog.alert().multiple(true)
 									.parent(angular.element(document.body))
 									.clickOutsideToClose(true)
-									.title('Guardar asistencia técnica')
-									.textContent("El diálogo no cumple con los campos obligatorios...")
+									.title('Temas agendados')
+									.textContent("No se ha seleccionado el tema")
 									.ariaLabel('Lucky day')
 									.ok('ACEPTAR')
 							);
 								ev.target.disabled = false;
 								return;
 							}
-							// PURIBE 15042024 - FIN -->
+							
+							if ($scope.isNull($scope.asistenciaTemasmodelo.idSubtema)) {
+								// PURIBE 15042024 - INICIO -->
+								$mdDialog.show(
+									$mdDialog.alert().multiple(true)
+									.parent(angular.element(document.body))
+									.clickOutsideToClose(true)
+									.title('Temas agendados')
+									.textContent("No se ha seleccionado el subtema")
+									.ariaLabel('Lucky day')
+									.ok('ACEPTAR')
+							);
+								ev.target.disabled = false;
+								return;
+							}
+							
+							if ($scope.isNull($scope.asistenciaTemasmodelo.detalle)) {
+								// PURIBE 15042024 - INICIO -->
+								$mdDialog.show(
+									$mdDialog.alert().multiple(true)
+									.parent(angular.element(document.body))
+									.clickOutsideToClose(true)
+									.title('Temas agendados')
+									.textContent("No se ha ingresado el detalle del tema")
+									.ariaLabel('Lucky day')
+									.ok('ACEPTAR')
+							);
+								ev.target.disabled = false;
+								return;
+							}
+							
 							
 							if ($scope.datoAsistenciaTema.filter(e => e.idSubtema === $scope.asistenciaTemasmodelo.idSubtema).length > 0) {
 								  /* vendors contains the element we're looking for */
 								$mdDialog.show(
-										$mdDialog.alert()
+										$mdDialog.alert().multiple(true)
 										.parent(angular.element(document.body))
 										.clickOutsideToClose(true)
-										.title('Guardar asistencia técnica')
-										.textContent("El subtema seleccionado ya existe")
+										.title('Temas agendados')
+										.textContent("El subtema asignado ya existe")
 										.ariaLabel('Lucky day')
 										.ok('ACEPTAR')
 								);

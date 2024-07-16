@@ -466,7 +466,7 @@ public class DtAsistenciaBk implements java.io.Serializable {
       		public void setUsuExtTxt(List<String> usuExtTxt) {
       			this.usuExtTxt = usuExtTxt;
       		}
-//INICIO CUSCATA - 10072024
+
       		public boolean isFinalizado() {
 //      			Long estadoFinalizado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_FINALIZADO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_FINALIZADO);
       			Long estadoFinalizado =Estado.FINALIZADO.getValor();
@@ -475,10 +475,9 @@ public class DtAsistenciaBk implements java.io.Serializable {
           				finalizado=true;
           			}
       			}
-      			
       			return finalizado;
       		}
-//FIN CUSCATA - 10072024
+
       		public void setFinalizado(boolean finalizado) {
       			this.finalizado = finalizado;
       		}
@@ -542,13 +541,14 @@ public class DtAsistenciaBk implements java.io.Serializable {
 			this.dtAsistenciaUsuexternosBk = dtAsistenciaUsuexternosBk;
 		}
 		//FIN CUSCATA - 18062024
+		
 		//INICIO CUSCATA - 10072024
-		public List<DtAnexoBk> getDtAnexosBKJSss() {
-			return dtAnexosBKJSss;
-		}
+				public List<DtAnexoBk> getDtAnexosBKJSss() {
+					return dtAnexosBKJSss;
+				}
 
-		public void setDtAnexosBKJSss(List<DtAnexoBk> dtAnexosBKJSss) {
-			this.dtAnexosBKJSss = dtAnexosBKJSss;
-		}
-        //FIN CUSCATA - 10072024
+				public void setDtAnexosBKJSss(List<DtAnexoBk> dtAnexosBKJSss) {
+					this.dtAnexosBKJSss = dtAnexosBKJSss;
+				}
+		        //FIN CUSCATA - 10072024
 }

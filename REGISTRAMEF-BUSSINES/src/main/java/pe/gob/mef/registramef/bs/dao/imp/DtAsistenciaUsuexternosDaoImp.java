@@ -31,15 +31,9 @@ public class DtAsistenciaUsuexternosDaoImp extends
 		DtAsistenciaUsuexternosDao {
 
 	private static final Logger log = Logger.getLogger(DtAsistenciaUsuexternosDaoImp.class.getName());
-	private Long estadoNuevo = 1L;//CUSCATA - 10072024
-	private Long estadoEliminado = 0L;//CUSCATA - 10072024
 
 	public DtAsistenciaUsuexternosDaoImp() {
 		log.log(Level.INFO,null,"INICIALIZANDO JPA TEMPLATE PARA DtAsistenciaUsuexternosDaoImp");
-		this.estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);//CUSCATA - 10072024
-		this.estadoEliminado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_ELIMINADO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_ELIMINADO);//CUSCATA - 10072024
-		log.log(Level.INFO,"INICIALIZANDO JPA TEMPLATE PARA DtAsistenciaUsuexternosDaoImp "+"Nuevo: "+estadoNuevo+" Eliminado:"+estadoEliminado);//CUSCATA - 10072024
-		
 	}
 	
 	public DtAsistenciaUsuexternosDaoImp(EntityManager entityManager) {
@@ -237,9 +231,4 @@ public class DtAsistenciaUsuexternosDaoImp extends
 			return lista;
 		}
 		//MPINARES 24012023 - FIN
-		//INICIO CUSCATA - 10072024
-		public Long getEstadoEliminado() {
-			return estadoEliminado;
-		}
-        //FIN CUSCATA - 10072024
 }

@@ -3,6 +3,12 @@
 <md-dialog-content md-whiteframe="1" class="overflowEsconder" md-colors="{background: 'background-A100'}">
  <form name="dtCapacitacionForm2">
  
+ <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Agregar entidad</h2>
+    </div>
+  </md-toolbar>
+ 
  <div layout="row" layout-aling="center start" flex
 				style="font-size: 14px;">      
         
@@ -43,18 +49,17 @@
 										ng-disabled="ctrlMsInstitucionesIdprovee.isDisabled"
 										md-no-cache="ctrlMsInstitucionesIdprovee.noCache"
 										md-selected-item="ctrlMsInstitucionesIdprovee.selectedItem"
-										md-search-text-change="searchTextChangeMsInstitucionesIdprovee(dtAsistenciaModelo.idEntidadTxt)"
+										md-search-text-change="searchTextChangeMsInstitucionesIdprovee(capaEntidadmodelo.idEntidadTxt)"
 										md-search-text="capaEntidadmodelo.idEntidadTxt"
 										md-selected-item-change="selectedItemChangeMsInstitucionesIdprovee(item)"
 										md-items="item in querySearchMsInstitucionesIdprovee(capaEntidadmodelo.idEntidadTxt)"
-										md-item-text="item.razSocial" md-min-length="4"
+										md-item-text="item.razSocialUbigeo" md-min-length="4"
 										input-aria-labelledby="raz&oacute;n social" md-delay="3000"
 										>
 									<md-item-template> <span
 										md-highlight-text="capaEntidadmodelo.idEntidadTxt"
-										md-highlight-flags="^i"> {{item.razSocial}} </span> </md-item-template> <md-not-found>
-									No hay concidencias para "{{capaEntidadmodelo.idEntidadTxt}}". <a
-										ng-click="newStateMsInstitucionesIdprovee(capaEntidadmodelo.idEntidadTxt)"> No existe o no está vinculado a su sistema administrativo</a> </md-not-found>
+										md-highlight-flags="^i"> {{item.razSocialUbigeo}} </span> </md-item-template> <md-not-found>
+									No se encontraron coincidencias con los datos ingresados. La entidad no existe o no se encuentra asociada a su sistema administrativo</md-not-found>
 									<div
 										ng-messages="dtCapacitacionForm2.nameMsInstitucionesIdprovee.$error"
 										ng-if="dtCapacitacionForm2.nameMsInstitucionesIdprovee.$touched">

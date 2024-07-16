@@ -51,6 +51,7 @@ public class DtEntidadesDto implements java.io.Serializable {
 	private String idpaisTxt = null;
 	private String idSistAdmiTxt = null;
 	private String geozonaTxt = null;
+	private String razSocialUbigeo = null;
 	
 	private DtEntidadesACL dtEntidadesACL = null;		
 		
@@ -304,5 +305,15 @@ public class DtEntidadesDto implements java.io.Serializable {
          
         public void setCestado(String cestado) {
 	}
+
+		public String getRazSocialUbigeo() {
+			return razSocialUbigeo;
+		}
+
+		public void setRazSocialUbigeo(String razSocialUbigeo) {
+			this.razSocialUbigeo = razSocialUbigeo;
+		}
+        
+        
 
 }

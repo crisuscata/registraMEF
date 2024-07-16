@@ -2,10 +2,9 @@
 <!-- //MPINARES 14022024 - INICIO - NUEVO HTML-->
 <md-dialog-content md-whiteframe="1" class="overflowEsconder" style="font-size: 14px;">
 
-<md-toolbar style="background: rgb(255,255,255);"
-		class="md-toolbar-size">
-	<div class="md-toolbar-tools md-toolbar-tools-size">
-		<md-button class="md-icon-button" ng-click="cancel()"
+<md-toolbar>
+	<div class="md-toolbar-tools">
+		<md-button class="md-icon-button"  ng-click="cancel()"
 			style="margin-left: -19px;margin-bottom: 11px;"> <md-icon
 			md-font-set="material-icons" aria-label="Close dialog"
 			style="font-size: 29px;color: rgb(189,189,189);">close</md-icon>
@@ -14,7 +13,7 @@
 			<h2 md-truncate 
 				style="font-size: 17px;color: rgba(0,0,0,0.87);">Acumular Capacitaciones</h2>
 		</div>
-		<md-button class="md-button-entidad md-sm" ng-click="salvarDtCapacitacionAcumula($event)" style="margin-bottom: 8px;color: black;border: rgb(189,189,189) 1px solid !important;" 
+		<md-button class="md-icon-button"  ng-click="salvarDtCapacitacionAcumula($event)"  
 			aria-label="Acumular">
 		<span>Acumular</span> </md-button>
 

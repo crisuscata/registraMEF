@@ -43,7 +43,7 @@ public class DtAnexoBk implements java.io.Serializable {
 	private DtAnexoACL dtAnexoACL = null;	
 	
 	private String data = null; // JPUYEN 14052024
-	private byte[] databyte = null; // JPUYEN 14052024
+//	private byte[] databyte = null; // JPUYEN 17062024 - SE COMENTA
 		
 	public DtAnexoBk() {
 	}
@@ -238,13 +238,17 @@ public class DtAnexoBk implements java.io.Serializable {
 			this.data = data;
 		}
 
+		// JPUYEN 17062024 - INICIO
+		/*
 		public byte[] getDatabyte() {
 			return databyte;
 		}
 
 		public void setDatabyte(byte[] databyte) {
 			this.databyte = databyte;
-		}
+		}*/
+		
+		// JPUYEN 17062024 - SE COMENTA
 		
 		// JPUYEN 14052024 - FIN
 }

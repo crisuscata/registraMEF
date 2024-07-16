@@ -9,10 +9,10 @@
          <md-button class="md-button-borde md-sm" ng-href="{{descargarvista()}}" target="_blank" aria-label="Exportar">
          <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">file_download</md-icon>
 		<span style="color: rgb(255,255,255);">Exportar</span> </md-button>
-		<md-button class="md-button-borde md-sm"  ng-click="showConfirmPrepublicarCapacitacion($event)" aria-label="Pre-publicar">
+		<md-button class="md-button-borde md-sm"  ng-click="showConfirmPrepublicarCapacitacion($event)" aria-label="Pre-publicar" ng-if="prepublicarCapa">
          <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">system_update_alt</md-icon>
 		<span style="color: rgb(255,255,255);">Pre-publicar</span> </md-button>
-		<md-button class="md-button-borde md-sm"  ng-click="showConfirmAcumularCapacitacion($event)" aria-label="Acumular">
+		<md-button class="md-button-borde md-sm"  ng-click="showConfirmAcumularCapacitacion($event)" aria-label="Acumular" ng-if="acumularCapa">
          <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">grid_on</md-icon>
 		<span style="color: rgb(255,255,255);">Acumular</span> </md-button>
 	
@@ -234,7 +234,7 @@
          <tr class="primary triddtCapacitacion md-table-cuerpo" md-row md-select="dato" md-on-select="logItem" md-auto-select="options.autoSelect"   
              ng-disabled="dato.idCapacitacion > 0" ng-repeat-start="dato in datos">
           <td md-cell>{{$index + 1}}</td>
-          <td style="padding-right: 0;"><input type="checkbox" ng-model="dato.checked" ng-change="selection(dato)"></td>
+          <td class="tdaa8 md-table-cuerpo" md-cell style="padding-right: 0;"><input type="checkbox" ng-model="dato.checked" ng-change="selection(dato)"></td>
           <td class="tdaa8 md-table-cuerpo" data-title="Acciones" md-cell style="padding-right: 0;">
              <div layout="row" layout-xs="column" layout-align="center center">
                 <md-button class="md-icon-button"

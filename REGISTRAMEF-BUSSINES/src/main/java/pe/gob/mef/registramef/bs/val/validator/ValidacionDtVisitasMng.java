@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;	//PURIBE 01022024 - INICIO-->
 import java.util.Calendar;	//PURIBE 01022024 - INICIO-->
 import java.util.Date;	//PURIBE 01022024 - INICIO-->
 import java.util.GregorianCalendar;	//PURIBE 01022024 - INICIO-->
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.resources.Messages;
 import pe.gob.mef.registramef.bs.service.Servicio;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAmpliacionFechaBk;	//PURIBE 01022024 - INICIO-->
+import pe.gob.mef.registramef.bs.transfer.bk.DtAnexoBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtVisitasBk;
 import pe.gob.mef.registramef.bs.utils.FuncionesStaticas;
 import pe.gob.mef.registramef.bs.utils.PropertiesMg; 	//PURIBE 01022024 - INICIO-->
@@ -202,7 +204,7 @@ public class ValidacionDtVisitasMng implements Serializable{
 			fechaParamEjec=VerfechaLimitFinDay(autorizacionEjecucion.getFechaFin(), 0);
 			if(fechaHOy.before(fechaParamEjec)){
 				fechaLimitFinMesActual=VerfechaLimitFinDay(autorizacionEjecucion.getFechaFin(), 0);
-				fechaLimitIniMesActual=VerfechaLimitIniMes(fechaHoy, -1);
+				fechaLimitIniMesActual=VerfechaLimitIniMes(fechaHoy, 0);//JPUYEN 17062024
 			}
 		}
 		
@@ -239,7 +241,7 @@ public class ValidacionDtVisitasMng implements Serializable{
 					fechaParamEjec=VerfechaLimitFinDay(autorizacionEjecucion.getFechaFin(), 0);
 					if(fechaHOy.before(fechaParamEjec)){
 						fechaLimitFinMesActual=VerfechaLimitFinDay(autorizacionEjecucion.getFechaFin(), 0);
-						fechaLimitIniMesActual=VerfechaLimitIniMes(fechaHoy, -1);
+						fechaLimitIniMesActual=VerfechaLimitIniMes(fechaHoy, 0);//JPUYEN 17062024
 					}
 				}
 				
@@ -343,7 +345,7 @@ public class ValidacionDtVisitasMng implements Serializable{
 					fechaParamEjec=VerfechaLimitFinDay(autorizacionEjecucion.getFechaFin(), 0);
 					if(fechaHOy.before(fechaParamEjec)){
 						fechaLimitFinMesActual=VerfechaLimitFinDay(autorizacionEjecucion.getFechaFin(), 0);
-						fechaLimitIniMesActual=VerfechaLimitIniMes(fechaHoy, -1);
+						fechaLimitIniMesActual=VerfechaLimitIniMes(fechaHoy, 0);//JPUYEN 17062024
 					}
 				}	
 				
@@ -835,4 +837,15 @@ public class ValidacionDtVisitasMng implements Serializable{
 			return fechaLimitFin;
 		} 
 		//PURIBE 22042024 - FIN-->
+		
+		// JPUYEN 17062024 - INICIO
+		public static void validarAnexos(List<DtAnexoBk> dtAnexosBkss) throws Validador {
+			if (dtAnexosBkss == null || dtAnexosBkss.isEmpty() || dtAnexosBkss.size() == 0) {
+				throw new Validador(MessageFormat.format(Messages.getStringToKey("dtVisitas.ingrese"),
+						Messages.getStringToKey("dtVisitas.archivo"),
+						Messages.getStringToKey("dtVisitas.titulotabla"),
+						Messages.getStringToKey("dtVisitas.articuloArchivo")));
+			}
+		}
+		// JPUYEN 17062024 - FIN
 }

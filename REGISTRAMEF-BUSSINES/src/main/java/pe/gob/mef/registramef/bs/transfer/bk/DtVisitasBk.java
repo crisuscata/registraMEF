@@ -68,7 +68,7 @@ public class DtVisitasBk implements java.io.Serializable {
 	private String codEjecutora = null;//puribe
 	private Long idusuario = null;//puribe
 	private List<DtVisitasUsuinternosBk> visitaUsuarios;//puribe
-	private List<DtVisitasUsuexternosBk> visitaExternos;//PURIBE 22042024 - INICIO-->
+	private List<DtVisitasUsuexternosBk> visitaUsuariosExterno; // JPUYEN 17062024
 	
 
 	private DtVisitasACL dtVisitasACL = null;		
@@ -483,13 +483,17 @@ public class DtVisitasBk implements java.io.Serializable {
 			return dtVisitasACL;
 		}
 		
-		public List<DtVisitasUsuexternosBk> getVisitaExternos() {
-			return visitaExternos;
+		
+		//PURIBE 22042024 - FIN->
+		// JPUYEN 17062024 - INICIO
+		public List<DtVisitasUsuexternosBk> getVisitaUsuariosExterno() {
+			return visitaUsuariosExterno;
 		}
 
-		public void setVisitaExternos(List<DtVisitasUsuexternosBk> visitaExternos) {
-			this.visitaExternos = visitaExternos;
+		public void setVisitaUsuariosExterno(List<DtVisitasUsuexternosBk> visitaUsuariosExterno) {
+			this.visitaUsuariosExterno = visitaUsuariosExterno;
 		}
-		//PURIBE 22042024 - FIN->
+		
+		// JPUYEN 17062024 - FIN
 	
 }

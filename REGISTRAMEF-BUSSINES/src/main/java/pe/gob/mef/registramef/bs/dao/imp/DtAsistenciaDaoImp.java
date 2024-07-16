@@ -320,10 +320,10 @@ public class DtAsistenciaDaoImp extends
 
 			return lista;
 		}
-//INICIO CUSCATA - 10072024
+		
 		@Override
-		public List<DtAsistencia> getXFiltro(Date fechaInicio, Date fechaFin, Long idProgramacion, Long idSede,
-											Long idSistAdm,Long idUsuario) {
+		public List<DtAsistencia> getXFiltro(Date fechaInicio, Date fechaFin,Long idProgramacion, Long idSede,Long idSistAdm, Long idUsuario) {
+
 			StringBuffer sb = new StringBuffer(100);
 			List<Object> hs = new ArrayList<Object>();
 			sb.append("select t from " + getDomainClass().getName() + " t where t.estado >= "+Estado.ELIMINADO.getValor()+" ");
@@ -337,7 +337,6 @@ public class DtAsistenciaDaoImp extends
 				sb.append("and trunc(t.fechaAsistencia) >= ? ");
 				hs.add(fechaInicio);
 			}
-			
 			if (fechaFin != null) {
 				sb.append("and trunc(t.fechaAsistencia) < ? ");
 				hs.add(fechaFin);
@@ -347,7 +346,6 @@ public class DtAsistenciaDaoImp extends
 				sb.append("and t.idSede = ? ");
 				hs.add(idSede);
 			}
-			
 			if (idSistAdm != null) {
 				sb.append("and t.idSistAdm = ? ");
 				hs.add(idSistAdm);
@@ -358,6 +356,8 @@ public class DtAsistenciaDaoImp extends
 				hs.add(idUsuario);
 			}	
 			
+//			sb.append(" and t.idAsistencia = ? ");
+//			hs.add(345687L);
 			 sb.append(" order by t.idAsistencia desc ");
 
 			Object param[] = new Object[hs.size()];
@@ -366,5 +366,21 @@ public class DtAsistenciaDaoImp extends
 
 			return lista;
 		}
-//FIN CUSCATA - 10072024
+
+//		public Long getEstadoNuevo() {
+//			return estadoNuevo;
+//		}
+//
+//		public void setEstadoNuevo(Long estadoNuevo) {
+//			this.estadoNuevo = estadoNuevo;
+//		}
+//
+//		public Long getEstadoEliminado() {
+//			return estadoEliminado;
+//		}
+//
+//		public void setEstadoEliminado(Long estadoEliminado) {
+//			this.estadoEliminado = estadoEliminado;
+//		}
+		//MPINARES 24012023 - FIN
 }

@@ -70,7 +70,7 @@ public class DtVisitasData implements Serializable{
 	//puribe
 	//puribe
 	@SuppressWarnings("unchecked") 
-	public void add(Servicio servicio, Long kyUsuarioMod, DtVisitasBk dtVisitasC,Timestamp fechaInicio,Timestamp fechaFin,int programada,long sede,int rol,long sistemaadmi){// PURIBE 04042024 - INICIO		
+	public void add(Servicio servicio, Long kyUsuarioMod, DtVisitasBk dtVisitasC,Timestamp fechaInicio,Timestamp fechaFin,int programada,long sede,int rol,long sistemaadmi){// PURIBE 04042024 - INICIO
 		List<DtVisitasBk> dtVisitasBksss = null;
 		String key = DtVisitasBk.class.getSimpleName();
 		

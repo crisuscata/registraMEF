@@ -2,11 +2,11 @@ package pe.gob.mef.registramef.bs.service.imp;
 
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.File;//CUSCATA - 10072024
+import java.io.File;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;//CUSCATA - 10072024
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang.StringUtils;//CUSCATA - 10072024
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -385,11 +385,11 @@ public class ServicioImp implements Servicio, Serializable {
 
 	@Autowired
 	private MsLocalDao msLocalDao = null;
-	
-	//INICIO CUSCATA - 18062024
-		@Autowired
-		private MsTemaDao msTemasDao = null;
-	    //FIN CUSCATA - 18062024
+
+	// INICIO CUSCATA - 18062024
+	@Autowired
+	private MsTemaDao msTemasDao = null;
+	// FIN CUSCATA - 18062024
 
 	@Autowired
 	private MsAlertaCargoUserDao msAlertaCargoUserDao = null;
@@ -758,7 +758,7 @@ public class ServicioImp implements Servicio, Serializable {
 				log.log(Level.INFO,
 						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
 								+ "ELIMINADO dtCapaEntidades" + " :: " + dtCapaEntidades.getIdCapaEnti().toString()
-								+ " :: " + estadoanterior + " :: " + "0");
+								+ " :: " + estadoanterior + " :: " + " " + Estado.ELIMINADO.getValor());
 
 			}
 		} catch (Exception e) {
@@ -789,7 +789,7 @@ public class ServicioImp implements Servicio, Serializable {
 				log.log(Level.INFO,
 						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
 								+ "ELIMINADO dtCapaEntidades" + " :: " + dtCapaEntidades.getIdCapaEnti().toString()
-								+ " :: " + estadoanterior + " :: " + "0");
+								+ " :: " + estadoanterior + " :: " + " " + Estado.ELIMINADO.getValor());
 
 			}
 		} catch (Exception e) {
@@ -1057,7 +1057,7 @@ public class ServicioImp implements Servicio, Serializable {
 				log.log(Level.INFO,
 						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
 								+ "ELIMINADO dtCapaPublico" + " :: " + dtCapaPublico.getIdCapaPublico().toString()
-								+ " :: " + estadoanterior + " :: " + "0");
+								+ " :: " + estadoanterior + " :: " + " " + Estado.ELIMINADO.getValor());
 
 			}
 		} catch (Exception e) {
@@ -2148,8 +2148,9 @@ public class ServicioImp implements Servicio, Serializable {
 		if (dtAsistencia != null) {
 			dtAsistenciaBk = new DtAsistenciaBk();
 			FuncionesStaticas.copyPropertiesObject(dtAsistenciaBk, dtAsistencia);
-//			completarDtAsistencia(dtAsistenciaBk);
-			completarDtAsistencia(dtAsistenciaBk,kyUsuarioMod);//CUSCATA - 18062024
+			// completarDtAsistencia(dtAsistenciaBk);
+			completarDtAsistencia(dtAsistenciaBk, kyUsuarioMod);// CUSCATA -
+																// 18062024
 			if (kyUsuarioMod != null)
 				setACLDtAsistenciaBk(dtAsistenciaBk, kyUsuarioMod);
 		}
@@ -2164,8 +2165,9 @@ public class ServicioImp implements Servicio, Serializable {
 			for (DtAsistencia dtAsistencia : dtAsistencias) {
 				DtAsistenciaBk dtAsistenciaBk = new DtAsistenciaBk();
 				FuncionesStaticas.copyPropertiesObject(dtAsistenciaBk, dtAsistencia);
-//				completarDtAsistencia(dtAsistenciaBk);
-				completarDtAsistencia(dtAsistenciaBk, kyUsuarioMod);//CUSCATA - 18062024
+				// completarDtAsistencia(dtAsistenciaBk);
+				completarDtAsistencia(dtAsistenciaBk, kyUsuarioMod);// CUSCATA -
+																	// 18062024
 				setACLDtAsistenciaBk(dtAsistenciaBk, kyUsuarioMod);
 				dtAsistenciaBkss.add(dtAsistenciaBk);
 			}
@@ -2183,8 +2185,9 @@ public class ServicioImp implements Servicio, Serializable {
 			for (DtAsistencia dtAsistencia : dtAsistencias) {
 				DtAsistenciaBk dtAsistenciaBk = new DtAsistenciaBk();
 				FuncionesStaticas.copyPropertiesObject(dtAsistenciaBk, dtAsistencia);
-//				completarDtAsistencia(dtAsistenciaBk);
-				completarDtAsistencia(dtAsistenciaBk,kyUsuarioMod);//CUSCATA - 18062024
+				// completarDtAsistencia(dtAsistenciaBk);
+				completarDtAsistencia(dtAsistenciaBk, kyUsuarioMod);// CUSCATA -
+																	// 18062024
 				setACLDtAsistenciaBk(dtAsistenciaBk, kyUsuarioMod);
 				dtAsistenciaBkss.add(dtAsistenciaBk);
 			}
@@ -2194,210 +2197,232 @@ public class ServicioImp implements Servicio, Serializable {
 		return dtAsistenciaBkss;
 	}
 
-	//INICIO CUSCATA - 10072024
-	private void completarDtAsistencia(DtAsistenciaBk dtAsistenciaBk, Long kyUsuarioMod){
-		//MPINARES 24012023 - INICIO
-				try {
-					//MPINARES 14022024 - INICIO - SE COMENTA
-//					if (dtAsistenciaBk.getEstado() != null && dtAsistenciaBk.getEstado().longValue() > 0) {
-//						PrtParametros prtParametros = prtParametrosDao.getPrtParametros(dtAsistenciaBk.getEstado());
-//						if (prtParametros != null)
-//							dtAsistenciaBk.setEstadoTxt(prtParametros.getDescripcion());
-//					}
-					//MPINARES 14022024 - FIN
-					
-					if (dtAsistenciaBk.getEstado() != null && dtAsistenciaBk.getEstado().longValue() > 0) {
-						Long estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO,
-								PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);
-						Long estadoEliminado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_ELIMINADO,
-								PropertiesMg.DEFOULT_ESTADOS_REGISTROS_ELIMINADO);
-						if (dtAsistenciaBk.getEstado().longValue() == estadoNuevo) {
-							dtAsistenciaBk.setEstadoTxt("EN PROCESO");
-						} else if (dtAsistenciaBk.getEstado().longValue() == estadoEliminado) {
-							dtAsistenciaBk.setEstadoTxt("ANULADO");
-						} else {
-							PrtParametros prtParametros = prtParametrosDao.getPrtParametros(dtAsistenciaBk.getEstado());
-							if (prtParametros != null)
-								dtAsistenciaBk.setEstadoTxt(prtParametros.getDescripcion());
-						}
-					}
-					
-				} catch (Exception e) {
-					e.printStackTrace();
+	// INICIO CUSCATA - 18062024
+	private void completarDtAsistencia(DtAsistenciaBk dtAsistenciaBk, Long kyUsuarioMod) {
+		// MPINARES 24012023 - INICIO
+		try {
+			// MPINARES 14022024 - INICIO - SE COMENTA
+			// if (dtAsistenciaBk.getEstado() != null &&
+			// dtAsistenciaBk.getEstado().longValue() > 0) {
+			// PrtParametros prtParametros =
+			// prtParametrosDao.getPrtParametros(dtAsistenciaBk.getEstado());
+			// if (prtParametros != null)
+			// dtAsistenciaBk.setEstadoTxt(prtParametros.getDescripcion());
+			// }
+			// MPINARES 14022024 - FIN
+
+			if (dtAsistenciaBk.getEstado() != null && dtAsistenciaBk.getEstado().longValue() > 0) {
+				Long estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO,
+						PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);
+				Long estadoEliminado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_ELIMINADO,
+						PropertiesMg.DEFOULT_ESTADOS_REGISTROS_ELIMINADO);
+				if (dtAsistenciaBk.getEstado().longValue() == estadoNuevo) {
+					dtAsistenciaBk.setEstadoTxt("EN PROCESO");
+				} else if (dtAsistenciaBk.getEstado().longValue() == estadoEliminado) {
+					dtAsistenciaBk.setEstadoTxt("ANULADO");
+				} else {
+					PrtParametros prtParametros = prtParametrosDao.getPrtParametros(dtAsistenciaBk.getEstado());
+					if (prtParametros != null)
+						dtAsistenciaBk.setEstadoTxt(prtParametros.getDescripcion());
 				}
-				//MPINARES 24012023 - FIN
-		try{
-			if(dtAsistenciaBk.getIdEntidad()!=null && dtAsistenciaBk.getIdEntidad().longValue()>0){
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// MPINARES 24012023 - FIN
+		try {
+			if (dtAsistenciaBk.getIdEntidad() != null && dtAsistenciaBk.getIdEntidad().longValue() > 0) {
 				DtEntidades dtEntidades = dtEntidadesDao.getDtEntidades(dtAsistenciaBk.getIdEntidad());
-				if(dtEntidades!=null)
-					dtAsistenciaBk.setIdEntidadTxt(dtEntidades.getRazSocial());
-					dtAsistenciaBk.setCodEjecutora(dtEntidades.getCodEjec());//MPINARES 24012023 - INICIO
+				DtEntidadesBk msInstitucionesBk = new DtEntidadesBk();
+				FuncionesStaticas.copyPropertiesObject(msInstitucionesBk, dtEntidades);
+				completarDtEntidadesUbi(msInstitucionesBk);
+				if (msInstitucionesBk != null)
+					dtAsistenciaBk.setIdEntidadTxt(msInstitucionesBk.getRazSocialUbigeo());
+				dtAsistenciaBk.setCodEjecutora(msInstitucionesBk.getCodEjec());// MPINARES
+																				// 24012023
+																				// -
+																				// INICIO
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		try{
-			if(dtAsistenciaBk.getIdSede()!=null && dtAsistenciaBk.getIdSede().longValue()>0){
+		try {
+			if (dtAsistenciaBk.getIdSede() != null && dtAsistenciaBk.getIdSede().longValue() > 0) {
 				MsSedes msSedes = msSedesDao.getMsSedes(dtAsistenciaBk.getIdSede());
-				if(msSedes!=null)
+				if (msSedes != null)
 					dtAsistenciaBk.setIdSedeTxt(msSedes.getSede());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}try{
-			if(dtAsistenciaBk.getIdUsuinterno()!=null && dtAsistenciaBk.getIdUsuinterno().longValue()>0){
+		}
+		try {
+			if (dtAsistenciaBk.getIdUsuinterno() != null && dtAsistenciaBk.getIdUsuinterno().longValue() > 0) {
 				MsUsuarios msUsuarios = msUsuariosDao.getMsUsuarios(dtAsistenciaBk.getIdUsuinterno());
-				if(msUsuarios!=null)
-//					dtAsistenciaBk.setIdUsuinternoTxt(msUsuarios.getNombres());
-					dtAsistenciaBk.setIdUsuinternoTxt(msUsuarios.getNombres()+" "+msUsuarios.getApellidoPaterno()+" "+msUsuarios.getApellidoMaterno());//MPINARES 14022024 - INICIO
+				if (msUsuarios != null)
+					// dtAsistenciaBk.setIdUsuinternoTxt(msUsuarios.getNombres());
+					dtAsistenciaBk.setIdUsuinternoTxt(msUsuarios.getNombres() + " " + msUsuarios.getApellidoPaterno()
+							+ " " + msUsuarios.getApellidoMaterno());// MPINARES
+																		// 14022024
+																		// -
+																		// INICIO
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}try{
-			if(dtAsistenciaBk.getIdSistAdm()!=null && dtAsistenciaBk.getIdSistAdm().longValue()>0){
-				MsSisAdmistrativo msSisAdmistrativo = msSisAdmistrativoDao.getMsSisAdmistrativo(dtAsistenciaBk.getIdSistAdm());
-				if(msSisAdmistrativo!=null)
+		}
+		try {
+			if (dtAsistenciaBk.getIdSistAdm() != null && dtAsistenciaBk.getIdSistAdm().longValue() > 0) {
+				MsSisAdmistrativo msSisAdmistrativo = msSisAdmistrativoDao
+						.getMsSisAdmistrativo(dtAsistenciaBk.getIdSistAdm());
+				if (msSisAdmistrativo != null)
 					dtAsistenciaBk.setIdSistAdmTxt(msSisAdmistrativo.getDescripcion());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}try{
-			if(dtAsistenciaBk.getIdOrigen()!=null && dtAsistenciaBk.getIdOrigen().longValue()>0){
+		}
+		try {
+			if (dtAsistenciaBk.getIdOrigen() != null && dtAsistenciaBk.getIdOrigen().longValue() > 0) {
 				PrtParametros prtParametros = prtParametrosDao.getPrtParametros(dtAsistenciaBk.getIdOrigen());
-				if(prtParametros!=null)
+				if (prtParametros != null)
 					dtAsistenciaBk.setIdOrigenTxt(prtParametros.getDescripcion());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		try{
-			if(dtAsistenciaBk.getIdProgramacion()!=null && dtAsistenciaBk.getIdProgramacion().longValue()>0){
+		try {
+			if (dtAsistenciaBk.getIdProgramacion() != null && dtAsistenciaBk.getIdProgramacion().longValue() > 0) {
 				PrtParametros prtParametros = prtParametrosDao.getPrtParametros(dtAsistenciaBk.getIdProgramacion());
-				if(prtParametros!=null)
+				if (prtParametros != null)
 					dtAsistenciaBk.setIdProgramacionTxt(prtParametros.getDescripcion());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-//		try{
-//			if(dtAsistenciaBk.getEstado()!=null && dtAsistenciaBk.getEstado().longValue()>0){
-//				PrtParametros prtParametros = prtParametrosDao.getPrtParametros(dtAsistenciaBk.getEstado());
-//				if(prtParametros!=null)
-//					dtAsistenciaBk.setEstadoTxt(prtParametros.getDescripcion());
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		
-		try{
-			if(dtAsistenciaBk.getIdModalidad()!=null && dtAsistenciaBk.getIdModalidad().longValue()>0){
+
+		// try{
+		// if(dtAsistenciaBk.getEstado()!=null &&
+		// dtAsistenciaBk.getEstado().longValue()>0){
+		// PrtParametros prtParametros =
+		// prtParametrosDao.getPrtParametros(dtAsistenciaBk.getEstado());
+		// if(prtParametros!=null)
+		// dtAsistenciaBk.setEstadoTxt(prtParametros.getDescripcion());
+		// }
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+
+		try {
+			if (dtAsistenciaBk.getIdModalidad() != null && dtAsistenciaBk.getIdModalidad().longValue() > 0) {
 				PrtParametros prtParametros = prtParametrosDao.getPrtParametros(dtAsistenciaBk.getIdModalidad());
-				if(prtParametros!=null)
+				if (prtParametros != null)
 					dtAsistenciaBk.setIdModalidadTxt(prtParametros.getDescripcion());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		try{
-			if(dtAsistenciaBk.getIdFinancia()!=null && dtAsistenciaBk.getIdFinancia().longValue()>0){
+		try {
+			if (dtAsistenciaBk.getIdFinancia() != null && dtAsistenciaBk.getIdFinancia().longValue() > 0) {
 				PrtParametros prtParametros = prtParametrosDao.getPrtParametros(dtAsistenciaBk.getIdFinancia());
-				if(prtParametros!=null)
+				if (prtParametros != null)
 					dtAsistenciaBk.setIdFinanciaTxt(prtParametros.getDescripcion());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		//MPINARES 24012023 - INICIO
-				// // PARA USUARIOS EXTERNOS
-						   // DtAsistenciaUsuexternosBk
-						List<DtAsistenciaUsuexternos> DtAsistenciaUsuexternosList = dtAsistenciaUsuexternosDao
-								.getByIdAsistDtAsisteUsuariosExt(dtAsistenciaBk.getIdAsistencia());
 
-						if (DtAsistenciaUsuexternosList != null && DtAsistenciaUsuexternosList.size() > 0) {
-							List<String> usueExt = new ArrayList<String>();
-							List<String> dniExt = new ArrayList<String>();
-							for (DtAsistenciaUsuexternos dtObjetc : DtAsistenciaUsuexternosList) {
-								if (dtObjetc.getIdUsuexterno() != null && dtObjetc.getIdUsuexterno().longValue() > 0) {
+		// MPINARES 24012023 - INICIO
+		// // PARA USUARIOS EXTERNOS
+		// DtAsistenciaUsuexternosBk
+		List<DtAsistenciaUsuexternos> DtAsistenciaUsuexternosList = dtAsistenciaUsuexternosDao
+				.getByIdAsistDtAsisteUsuariosExt(dtAsistenciaBk.getIdAsistencia());
 
-									DtUsuarioExterno dtUsuarioExterno = dtUsuarioExternoDao.getDtUsuarioExterno(dtObjetc.getIdUsuexterno());
+		if (DtAsistenciaUsuexternosList != null && DtAsistenciaUsuexternosList.size() > 0) {
+			List<String> usueExt = new ArrayList<String>();
+			List<String> dniExt = new ArrayList<String>();
+			for (DtAsistenciaUsuexternos dtObjetc : DtAsistenciaUsuexternosList) {
+				if (dtObjetc.getIdUsuexterno() != null && dtObjetc.getIdUsuexterno().longValue() > 0) {
 
-									if (dtUsuarioExterno != null) {
-										usueExt.add(dtUsuarioExterno.getApaterno() + " " + dtUsuarioExterno.getAmaterno() + " "
-												+ dtUsuarioExterno.getNombre());
-										if (dtUsuarioExterno.getNumDocum() != null)
-											dniExt.add(dtUsuarioExterno.getNumDocum() + "");
-									}
-								}
+					DtUsuarioExterno dtUsuarioExterno = dtUsuarioExternoDao
+							.getDtUsuarioExterno(dtObjetc.getIdUsuexterno());
 
-							}
-							dtAsistenciaBk.setUsuExt(usueExt);
-							dtAsistenciaBk.setDniUser(dniExt);
-						}
-						
-						if (dtAsistenciaBk.getIdAsistencia() != null && dtAsistenciaBk.getIdAsistencia().longValue() > 0) {
-							List<DtAsistenciaTemasBk> dtAsistenciaTemasList = getDtAsistenciaTemasXIdAsistencia(dtAsistenciaBk.getIdAsistencia());
-							dtAsistenciaBk.setDtAsistenciaTemasBkJSss(dtAsistenciaTemasList);	
-						}
-						
-						//MPINARES 24012023 - FIN
-						if (dtAsistenciaBk.getIdAsistencia() != null && dtAsistenciaBk.getIdAsistencia().longValue() > 0) {
-							List<DtAsistenciaUsuexternosBk> listaDtAsistenciaUsuexternosBk = this.getAllDtAsistenciaUsuexternosByIdAsistencia(dtAsistenciaBk.getIdAsistencia(), kyUsuarioMod);
-							dtAsistenciaBk.setDtAsistenciaUsuariosBkJSss(listaDtAsistenciaUsuexternosBk);
-						}
+					if (dtUsuarioExterno != null) {
+						usueExt.add(dtUsuarioExterno.getApaterno() + " " + dtUsuarioExterno.getAmaterno() + " "
+								+ dtUsuarioExterno.getNombre());
+						if (dtUsuarioExterno.getNumDocum() != null)
+							dniExt.add(dtUsuarioExterno.getNumDocum() + "");
+					}
+				}
 
-		
-						if (dtAsistenciaBk.getIdAsistencia() != null && dtAsistenciaBk.getIdAsistencia().longValue() > 0) {
-							Long idTipoServicio =  PropertiesMg.getSistemLong(
-									PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
-									PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
-							List<DtAnexoBk> lstAnexos =  this.getDtAnexoXFiltro(null, null, idTipoServicio, null, dtAsistenciaBk.getIdAsistencia(), null);
-							if(lstAnexos!=null && !lstAnexos.isEmpty()) {
-								dtAsistenciaBk.setDtAnexosBKJSss(lstAnexos);
-							}
-						}
-						
-						
+			}
+			dtAsistenciaBk.setUsuExt(usueExt);
+			dtAsistenciaBk.setDniUser(dniExt);
+		}
+
+		if (dtAsistenciaBk.getIdAsistencia() != null && dtAsistenciaBk.getIdAsistencia().longValue() > 0) {
+			List<DtAsistenciaTemasBk> dtAsistenciaTemasList = getDtAsistenciaTemasXIdAsistencia(
+					dtAsistenciaBk.getIdAsistencia());
+			dtAsistenciaBk.setDtAsistenciaTemasBkJSss(dtAsistenciaTemasList);
+		}
+
+		// MPINARES 24012023 - FIN
+		if (dtAsistenciaBk.getIdAsistencia() != null && dtAsistenciaBk.getIdAsistencia().longValue() > 0) {
+			List<DtAsistenciaUsuexternosBk> listaDtAsistenciaUsuexternosBk = this
+					.getAllDtAsistenciaUsuexternosByIdAsistencia(dtAsistenciaBk.getIdAsistencia(), kyUsuarioMod);
+			dtAsistenciaBk.setDtAsistenciaUsuariosBkJSss(listaDtAsistenciaUsuexternosBk);
+		}
+		// INICIO CUSCATA - 10072024
+		if (dtAsistenciaBk.getIdAsistencia() != null && dtAsistenciaBk.getIdAsistencia().longValue() > 0) {
+			Long idTipoServicio = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
+			List<DtAnexoBk> lstAnexos = this.getDtAnexoXFiltro(null, null, idTipoServicio, null,
+					dtAsistenciaBk.getIdAsistencia(), null);
+			if (lstAnexos != null && !lstAnexos.isEmpty()) {
+				dtAsistenciaBk.setDtAnexosBKJSss(lstAnexos);
+			}
+		}
+		// FIN CUSCATA - 10072024
+
 	}
-	
+
+	// INICIO CUSCATA - 10072024
 	@Override
 	public DtAsistenciaBk validarCambiosAsistencia(DtAsistenciaBk asistenciaJS, Long kyUsuarioMod) throws Validador {
-		
-		
+
 		DtAsistenciaBk dtAsistenciaBk = this.getDtAsistenciaBkXid(asistenciaJS.getIdAsistencia(), kyUsuarioMod);
-		
-		
-		if(asistenciaJS.getDtAsistenciaTemasBkJSss()!=null && asistenciaJS.getDtAsistenciaTemasBkJSss()!=null && asistenciaJS.getDtAsistenciaTemasBkJSss().size()!=dtAsistenciaBk.getDtAsistenciaTemasBkJSss().size()){			
+
+		if (asistenciaJS.getDtAsistenciaTemasBkJSss() != null && asistenciaJS.getDtAsistenciaTemasBkJSss() != null
+				&& asistenciaJS.getDtAsistenciaTemasBkJSss().size() != dtAsistenciaBk.getDtAsistenciaTemasBkJSss()
+						.size()) {
 			throw new Validador(MessageFormat.format("DEBE DE GUARDAR PRIMERO",
-					Messages.getStringToKey("dtAsistencias.titulotabla"))); 
+					Messages.getStringToKey("dtAsistencias.titulotabla")));
 		}
-		
-		if(asistenciaJS.getDtAsistenciaUsuariosBkJSss()!=null && dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss()!=null && asistenciaJS.getDtAsistenciaUsuariosBkJSss().size()!=dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss().size()){			
+
+		if (asistenciaJS.getDtAsistenciaUsuariosBkJSss() != null
+				&& dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss() != null
+				&& asistenciaJS.getDtAsistenciaUsuariosBkJSss().size() != dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss()
+						.size()) {
 			throw new Validador(MessageFormat.format("DEBE DE GUARDAR PRIMERO",
-					Messages.getStringToKey("dtAsistencias.titulotabla"))); 
+					Messages.getStringToKey("dtAsistencias.titulotabla")));
 		}
-		
-		if(asistenciaJS.getCodEjecutora()!= null && dtAsistenciaBk.getCodEjecutora()!= null && !asistenciaJS.getCodEjecutora().equals(dtAsistenciaBk.getCodEjecutora())) {
+
+		if (asistenciaJS.getCodEjecutora() != null && dtAsistenciaBk.getCodEjecutora() != null
+				&& !asistenciaJS.getCodEjecutora().equals(dtAsistenciaBk.getCodEjecutora())) {
 			throw new Validador(MessageFormat.format("DEBE DE GUARDAR PRIMERO",
-					Messages.getStringToKey("dtAsistencias.titulotabla"))); 
+					Messages.getStringToKey("dtAsistencias.titulotabla")));
 		}
-		
-		
+
 		return dtAsistenciaBk;
 	}
-	
+
 	public void deleteDtAsistenciaTema(DtAsistenciaTemas dtAsistenciaTemas) throws Validador {
 		try {
 			DtAsistenciaTemas msObject = null;
-			if (dtAsistenciaTemas.getIdAsistencia() != null
-					&& dtAsistenciaTemas.getIdAsistencia().longValue() > 0) {
+			if (dtAsistenciaTemas.getIdAsistencia() != null && dtAsistenciaTemas.getIdAsistencia().longValue() > 0) {
 
 				msObject = dtAsistenciaTemasDao.getDtAsistenciaTemas(dtAsistenciaTemas.getIdAsistTema());
 
 				Timestamp hoy = new Timestamp(System.currentTimeMillis());
-				Long estadoEliminado = PropertiesMg.getSistemLong(
-						PropertiesMg.KEY_ESTADOS_REGISTROS_ELIMINADO,
+				Long estadoEliminado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_ELIMINADO,
 						PropertiesMg.DEFOULT_ESTADOS_REGISTROS_ELIMINADO);
 
 				msObject.setFechaModif(hoy);
@@ -2416,236 +2441,13 @@ public class ServicioImp implements Servicio, Serializable {
 		}
 	}
 
-	@Override
-	public DtAsistenciaBk saveorupdateDtAsistenciaBk(
-													DtAsistenciaBk dtAsistenciaBk,			
-													String user,
-													Long kyUsuarioMod, 
-													Long kyAreaMod, 
-													String rmtaddress,		
-													List<DtAnexoBk> tdAnexosBkss) throws Validador{
-
-				Long idProgramacion = PropertiesMg.getSistemLong(
-						PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
-						PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);	
-	
-				if(String.valueOf(idProgramacion).equals(String.valueOf(dtAsistenciaBk.getIdProgramacion()))) {
-					dtAsistenciaBk.setFechaAsistencia(dtAsistenciaBk.getFechaProgramada());
-				}
-				
-				Long idSisAdmTodos = PropertiesMg.getSistemLong(PropertiesMg.KEY_IDSISTEMA_ADMINISTRATIVO_TODOS,
-						PropertiesMg.DEFOULT_IDSISTEMA_ADMINISTRATIVO_TODOS);
-				Long idSedeTodas = PropertiesMg.getSistemLong(PropertiesMg.KEY_IDSEDES_TODAS,
-						PropertiesMg.DEFOULT_IDSEDES_TODAS);
-
-				Long idTipoFechaCorteProgramada = PropertiesMg.getSistemLong(
-						PropertiesMg.KEY_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_PROG,
-						PropertiesMg.DEFOULT_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_PROG);
-				DtAmpliacionFecha autorizacionProgramacion = dtAmpliacionFechaDao.find(idTipoFechaCorteProgramada,
-						dtAsistenciaBk.getIdSede(), dtAsistenciaBk.getIdSistAdm(), FuncionesStaticas.getMonth());
-
-				// ***********************************************************************************************************
-				DtAmpliacionFecha autorizacionProgramacion2 = dtAmpliacionFechaDao.find(idTipoFechaCorteProgramada, idSedeTodas,
-						dtAsistenciaBk.getIdSistAdm(), FuncionesStaticas.getMonth());
-				if (autorizacionProgramacion2 != null) {
-					if (autorizacionProgramacion != null) {
-						if (autorizacionProgramacion2.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
-							autorizacionProgramacion = autorizacionProgramacion2;
-						}
-					} else {
-						autorizacionProgramacion = autorizacionProgramacion2;
-					}
-				}
-
-				DtAmpliacionFecha autorizacionProgramacion3 = dtAmpliacionFechaDao.find(idTipoFechaCorteProgramada,
-						dtAsistenciaBk.getIdSede(), idSisAdmTodos, FuncionesStaticas.getMonth());
-				if (autorizacionProgramacion3 != null) {
-					if (autorizacionProgramacion != null) {
-						if (autorizacionProgramacion3.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
-							autorizacionProgramacion = autorizacionProgramacion3;
-						}
-					} else {
-						autorizacionProgramacion = autorizacionProgramacion3;
-					}
-				}
-
-				DtAmpliacionFecha autorizacionProgramacion4 = dtAmpliacionFechaDao.find(idTipoFechaCorteProgramada, idSedeTodas,
-						idSisAdmTodos, FuncionesStaticas.getMonth());
-				if (autorizacionProgramacion4 != null) {
-					if (autorizacionProgramacion != null) {
-						if (autorizacionProgramacion4.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
-							autorizacionProgramacion = autorizacionProgramacion4;
-						}
-					} else {
-						autorizacionProgramacion = autorizacionProgramacion4;
-					}
-				}
-
-				Long idTipoFechaCorteEjecucion = PropertiesMg.getSistemLong(
-						PropertiesMg.KEY_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_EJEC,
-						PropertiesMg.DEFOULT_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_EJEC);
-				// Integer mesServicio=dtAsistenciaBk.getFechaAsistencia().getMonth()+1;
-				
-				Integer mesServicio = dtAsistenciaBk.getFechaAsistencia().getMonth() + 1;
-				
-				if (mesServicio.intValue() == 12) {
-					mesServicio = 0;
-				}
-				
-				DtAmpliacionFecha autorizacionEjecucion = dtAmpliacionFechaDao.find(idTipoFechaCorteEjecucion,
-						dtAsistenciaBk.getIdSede(), dtAsistenciaBk.getIdSistAdm(), mesServicio + 1);// Ahora, Mes Actual, por confirmar
-																									
-
-				if (autorizacionEjecucion == null) {
-					autorizacionEjecucion = dtAmpliacionFechaDao.find(idTipoFechaCorteEjecucion, idSedeTodas,
-							dtAsistenciaBk.getIdSistAdm(), mesServicio + 1);// Ahora, Mes Actual, por confirmar
-					
-					if (autorizacionEjecucion == null) {
-						autorizacionEjecucion = dtAmpliacionFechaDao.find(idTipoFechaCorteEjecucion, dtAsistenciaBk.getIdSede(),
-								idSisAdmTodos, mesServicio + 1);// Ahora Mes Actual, por confirmar
-																
-						if (autorizacionEjecucion == null) {
-							autorizacionEjecucion = dtAmpliacionFechaDao.find(idTipoFechaCorteEjecucion, idSedeTodas,
-									idSisAdmTodos, mesServicio + 1);// Ahora Mes Actual, por confirmar
-						}
-					}
-				}
-
-				DtAsistencia dtAsistenciaOrig = null;
-				if (dtAsistenciaBk.getIdAsistencia() != null && dtAsistenciaBk.getIdAsistencia().longValue() > 0) {
-					dtAsistenciaOrig = dtAsistenciaDao.getDtAsistencia(dtAsistenciaBk.getIdAsistencia());
-				}
-				
-				ValidacionDtAsistenciaMng.validarDtAsistenciaBk(dtAsistenciaBk, 
-																autorizacionProgramacion, 
-																autorizacionEjecucion,
-																msRolesDao.isRolAdministradorOGC(kyUsuarioMod), 
-																dtAsistenciaOrig);
-				//VALIDADOR DE TEMAS
-				List<DtAsistenciaTemasBk> asiatenciasTemas= new ArrayList<DtAsistenciaTemasBk>();
-				if(dtAsistenciaBk.getDtAsistenciaTemasBkJSss()!=null && dtAsistenciaBk.getDtAsistenciaTemasBkJSss().size()>0){
-					
-					for(DtAsistenciaTemasBk dtAsistenciaTemasBka:dtAsistenciaBk.getDtAsistenciaTemasBkJSss()){
-						if(dtAsistenciaTemasBka.getIdTema()!=null && dtAsistenciaTemasBka.getIdSubtema()!=null 
-								&& (dtAsistenciaTemasBka.getDetalle()!=null && dtAsistenciaTemasBka.getDetalle().length()>3)){
-							asiatenciasTemas.add(dtAsistenciaTemasBka);
-						}else{
-							throw new Validador(MessageFormat.format("DEBE SELECCIONAR EL TEMA, SUBTEMA Y DETALLE",
-									Messages.getStringToKey("dtAsistencias.titulotabla"))); 
-						}
-					}
-					
-					if(asiatenciasTemas!=null && asiatenciasTemas.size()>0){
-						dtAsistenciaBk.setDtAsistenciaTemasBkJSss(asiatenciasTemas);
-					}else{
-						throw new Validador(MessageFormat.format("DEBE SELECCIONAR EL TEMA, SUBTEMA Y DETALLE",
-								Messages.getStringToKey("dtAsistencias.titulotabla"))); 
-					}
-				}else{
-					throw new Validador(MessageFormat.format("DEBE SELECCIONAR EL TEMA, SUBTEMA Y DETALLE",
-							Messages.getStringToKey("dtAsistencias.titulotabla"))); 
-				}
-				
-		DtAsistencia dtAsistencia = null;
-		Timestamp hoy = new Timestamp(System.currentTimeMillis());
-
-		int nivel=1;
-
-		try {
-			if(dtAsistenciaBk.getIdAsistencia()!=null && dtAsistenciaBk.getIdAsistencia().longValue()>0){
-
-				dtAsistencia = dtAsistenciaDao.getDtAsistencia(dtAsistenciaBk.getIdAsistencia());
-
-				boolean cambios = AuditoriaDtAsistenciaMng.auditarCambiosDtAsistencia(dtAsistenciaBk,dtAsistencia, kyUsuarioMod, user, rmtaddress, nivel);
-
-				if(cambios){	
-					dtAsistencia.setRtmaddressrst(rmtaddress);
-					dtAsistencia.setIdusserModif(kyUsuarioMod);
-					dtAsistencia.setFechaModif(hoy);		
-					dtAsistenciaDao.updateDtAsistencia(dtAsistencia);				
-				}			
-			}else{
-				dtAsistenciaBk.setRtmaddress(rmtaddress);
-				dtAsistenciaBk.setRtmaddressrst(rmtaddress);
-
-				dtAsistenciaBk.setFechaCrea(hoy);				
-				dtAsistenciaBk.setIdusserCrea(kyUsuarioMod);				
-				dtAsistenciaBk.setIdusserModif(kyUsuarioMod);
-				dtAsistenciaBk.setFechaModif(hoy);
-				dtAsistenciaBk.setEstado(Estado.ACTIVO.getValor());		
-
-				dtAsistencia = new DtAsistencia();
-
-				FuncionesStaticas.copyPropertiesObject(dtAsistencia,dtAsistenciaBk);
-				dtAsistenciaDao.saveDtAsistencia(dtAsistencia);
-
-				log.log(Level.INFO,"CAMBIO :: "+kyUsuarioMod+" :: "+ user + " :: "+ rmtaddress+" :: "+"CREADO dtAsistencia"+" :: "+dtAsistencia.getIdAsistencia().toString()+" :: "+ "0" + " :: "+ Estado.ACTIVO.getValor());
-
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Validador(e.getMessage());
-		}
-		
-				DtAsistenciaTemas dtAsistenciaTemas = null;
-				if (dtAsistenciaBk.getDtAsistenciaTemasBkJSss() != null &&
-						 dtAsistenciaBk.getDtAsistenciaTemasBkJSss().size() > 0) {
-					
-					List<DtAsistenciaTemas> lstAsistenciaTemaBD = dtAsistenciaTemasDao.getXFiltro(null, dtAsistencia.getIdAsistencia(), null, null);
-					if(lstAsistenciaTemaBD!=null && !lstAsistenciaTemaBD.isEmpty()) {
-						for (DtAsistenciaTemas dtAsistenciaTemasBD : lstAsistenciaTemaBD) {
-							this.deleteDtAsistenciaTema(dtAsistenciaTemasBD);
-						}
-					}
-					
-					for (DtAsistenciaTemasBk dtAsistenciaTemasBk : dtAsistenciaBk.getDtAsistenciaTemasBkJSss()) {
-						// NUEVO
-						dtAsistenciaTemasBk.setIdAsistTema(null);
-						dtAsistenciaTemasBk.setIdAsistencia(dtAsistencia.getIdAsistencia());
-						dtAsistenciaTemasBk.setIdUsuinterno(kyUsuarioMod);
-						dtAsistenciaTemasBk.setEstado(Estado.ACTIVO.getValor());
-						dtAsistenciaTemasBk.setFechaCrea(hoy);
-						dtAsistenciaTemasBk.setFechaModif(hoy);
-						dtAsistenciaTemasBk.setIdusserCrea(kyUsuarioMod);
-						dtAsistenciaTemasBk.setIdusserModif(kyUsuarioMod);
-						dtAsistenciaTemasBk.setRtmaddress(rmtaddress);
-						dtAsistenciaTemasBk.setRtmaddressrst(rmtaddress);
-
-						dtAsistenciaTemas = new DtAsistenciaTemas();
-
-						FuncionesStaticas.copyPropertiesObject(dtAsistenciaTemas, dtAsistenciaTemasBk);
-						dtAsistenciaTemasDao.saveDtAsistenciaTemas(dtAsistenciaTemas);
-
-						log.log(Level.INFO,
-								"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
-										+ "CREADO dtAsistenciaTemas" + " :: "
-										+ dtAsistenciaTemas.getIdAsistTema().toString() + " :: " + "0"
-										+ " :: " + ""+Estado.ACTIVO.getValor());
-					}
-					
-				}
-				//MPINARES 24012023 - FIN
-		this.saveOrUpdateAsistenciaUsuarioExt(dtAsistenciaBk, dtAsistencia, hoy, kyUsuarioMod, rmtaddress, user);	
-		
-		Long idTiposervicio = PropertiesMg.getSistemLong(
-				PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
-				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
-		
-		this.cargarAnexos(tdAnexosBkss, dtAsistencia.getIdAsistencia(), user, kyUsuarioMod, kyAreaMod, rmtaddress, idTiposervicio);
-
-		dtAsistenciaBk = getDtAsistenciaBkXid(dtAsistencia.getIdAsistencia(),kyUsuarioMod);	
-		
-		
-		
-		return dtAsistenciaBk;		
-	}
-
-
 	private void cargarAnexos(List<DtAnexoBk> tdAnexosBkss, Long idmaestro, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress, Long idTiposervicio) throws Validador {
 
-		//List<DtAnexoBk> TdAnexosBksssActuales = getTdAnexosXFiltro(idmaestro, idTiposervicio, kyUsuarioMod);
-		List<DtAnexoBk> TdAnexosBksssActuales =  this.getDtAnexoXFiltro(null, null, idTiposervicio, null, idmaestro, null);
+		// List<DtAnexoBk> TdAnexosBksssActuales = getTdAnexosXFiltro(idmaestro,
+		// idTiposervicio, kyUsuarioMod);
+		List<DtAnexoBk> TdAnexosBksssActuales = this.getDtAnexoXFiltro(null, null, idTiposervicio, null, idmaestro,
+				null);
 
 		if (tdAnexosBkss != null && !tdAnexosBkss.isEmpty()) {
 			for (DtAnexoBk tdAnexosBkAct : TdAnexosBksssActuales) {
@@ -2690,7 +2492,7 @@ public class ServicioImp implements Servicio, Serializable {
 			}
 		}
 	}
-	
+
 	public void deleteTdAnexos(DtAnexoBk tdAnexosBk, String user, Long kyUsuarioMod, Long kyAreaMod, String rmtaddress)
 			throws Validador {
 		try {
@@ -2705,7 +2507,7 @@ public class ServicioImp implements Servicio, Serializable {
 				tdAnexos.setIdusserModif(kyUsuarioMod);
 				tdAnexos.setFechaModif(hoy);
 				Long estadoanterior = tdAnexos.getEstado();
-				tdAnexos.setEstado(dtAnexoDao.getEstadoEliminado());
+				tdAnexos.setEstado(Estado.ELIMINADO.getValor());
 
 				dtAnexoDao.updateDtAnexo(tdAnexos);
 
@@ -2720,62 +2522,625 @@ public class ServicioImp implements Servicio, Serializable {
 			throw new Validador(e.getMessage());
 		}
 	}
-		
-		
+	
 	@Override
-	public DtAsistenciaBk enviarConstanciaAtencion(DtAsistenciaBk dtAsistenciaBk, 
-												   String url,
-												   String user, 
-												   Long kyUsuarioMod,
-												   Long kyAreaMod, 
-												   String rmtaddress) throws Validador {
-		
-		
-		if(dtAsistenciaBk.getIdAsistencia()!=null && dtAsistenciaBk.getIdAsistencia()!=0L) {
+	public List<DtAsistenciaBk> getDtAsistenciaXFiltro(Date fechaInicio, Date fechaFin, Long idProgramacion,
+														Long kyUsuarioMod,long sede,int rol,long sistemaadmi) throws Validador {
+
+
+		if (fechaInicio != null && fechaFin != null) {
+			if (fechaInicio.after(fechaFin)) {
+				Date fechatmp = fechaInicio;
+				fechaInicio = fechaFin;
+				fechaFin = fechatmp;
+			}
+		} else if (fechaInicio != null) {
+			fechaFin = fechaInicio;
+		} else if (fechaFin != null) {
+			fechaInicio = fechaFin;
+			fechaFin = fechaInicio;
+		}
+
+		if (fechaFin != null) {
+			Timestamp fechFin = new Timestamp(fechaFin.getTime());
+			fechaFin = FuncionesStaticas.getDiaMasUno(fechFin);
+		}
+
+		List<DtAsistenciaBk> dtAsistenciaBkss = new ArrayList<DtAsistenciaBk>();
+		try {
+			List<DtAsistencia> dtAsistenciasss = null;
+			int rolAdminAndOGC = 0;
+			int rolGC = 1;
+			int rolImplantador = 2;
 			
+			System.out.println("fechaInicio: " + fechaInicio);
+			System.out.println("fechaFin: " + fechaFin);
+			System.out.println("idProgramacion: " + idProgramacion);
+			System.out.println("sede: " + sede);
+			System.out.println("sistemaadmi: " + sistemaadmi);
+			System.out.println("kyUsuarioMod: " + kyUsuarioMod);
+			System.out.println("rol: " + rol);
+			
+			if (rol == rolAdminAndOGC) {
+				 dtAsistenciasss = dtAsistenciaDao.getXFiltroV(fechaInicio, fechaFin, null);
+			} else if(rol == rolGC) {
+				dtAsistenciasss = dtAsistenciaDao.getXFiltro(fechaInicio, fechaFin, null, sede, null, null);
+			} else if(rol == rolImplantador) {
+				dtAsistenciasss = dtAsistenciaDao.getXFiltro(fechaInicio, fechaFin, idProgramacion, sede, sistemaadmi, kyUsuarioMod);
+			}
+			
+			System.out.println("dtAsistenciasss.size(): " + dtAsistenciasss.size());
+			//PrtParametros prtParametros = prtParametrosDao.getPrtParametros(dtAsistenciaBk.getIdOrigen());
+			List<PrtParametros> lstPrtParametros = prtParametrosDao.getAllPrtParametros();
+			//List<DtUsuarioExterno> lstDtUsuarioExterno = dtUsuarioExternoDao.getAllDtUsuarioExterno();
+			System.out.println("param loaded...");
+			
+			for (DtAsistencia dtAsistencia : dtAsistenciasss) {
+				DtAsistenciaBk dtAsistenciaBk = new DtAsistenciaBk();
+				FuncionesStaticas.copyPropertiesObject(dtAsistenciaBk, dtAsistencia);
+				completarDtAsistenciaBandeja(dtAsistenciaBk, kyUsuarioMod, lstPrtParametros);
+				setACLDtAsistenciaBk(dtAsistenciaBk, kyUsuarioMod);
+				dtAsistenciaBkss.add(dtAsistenciaBk);
+			}
+			
+			System.out.println("completed dtAsistenciaBkss.size(): " + dtAsistenciaBkss.size());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dtAsistenciaBkss;
+	}
+	
+	private PrtParametros getPrtParametros(List<PrtParametros> lstPrtParametros, Long idParam) {
+		return lstPrtParametros.stream().filter(c->String.valueOf(c.getIdparametro()).equals(String.valueOf(idParam))).findFirst().orElse(null);
+	}
+	
+	private void completarDtAsistenciaBandeja(DtAsistenciaBk dtAsistenciaBk, Long kyUsuarioMod, List<PrtParametros> lstPrtParametros) {
+
+		try {
+
+			if (dtAsistenciaBk.getEstado() != null && dtAsistenciaBk.getEstado().longValue() > 0) {
+				Long estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO,
+						PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);
+				Long estadoEliminado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_ELIMINADO,
+						PropertiesMg.DEFOULT_ESTADOS_REGISTROS_ELIMINADO);
+				if (dtAsistenciaBk.getEstado().longValue() == estadoNuevo) {
+					dtAsistenciaBk.setEstadoTxt("EN PROCESO");
+				} else if (dtAsistenciaBk.getEstado().longValue() == estadoEliminado) {
+					dtAsistenciaBk.setEstadoTxt("ANULADO");
+				} else {
+					PrtParametros prtParametros = this.getPrtParametros(lstPrtParametros, dtAsistenciaBk.getEstado());
+					if (prtParametros != null)
+						dtAsistenciaBk.setEstadoTxt(prtParametros.getDescripcion());
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if (dtAsistenciaBk.getIdEntidad() != null && dtAsistenciaBk.getIdEntidad().longValue() > 0) {
+				DtEntidades dtEntidades = dtEntidadesDao.getDtEntidades(dtAsistenciaBk.getIdEntidad());
+				if (dtEntidades != null)
+					dtAsistenciaBk.setIdEntidadTxt(dtEntidades.getRazSocial());
+				dtAsistenciaBk.setCodEjecutora(dtEntidades.getCodEjec());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if (dtAsistenciaBk.getIdSede() != null && dtAsistenciaBk.getIdSede().longValue() > 0) {
+				MsSedes msSedes = msSedesDao.getMsSedes(dtAsistenciaBk.getIdSede());
+				if (msSedes != null)
+					dtAsistenciaBk.setIdSedeTxt(msSedes.getSede());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if (dtAsistenciaBk.getIdUsuinterno() != null && dtAsistenciaBk.getIdUsuinterno().longValue() > 0) {
+				MsUsuarios msUsuarios = msUsuariosDao.getMsUsuarios(dtAsistenciaBk.getIdUsuinterno());
+				if (msUsuarios != null)
+					dtAsistenciaBk.setIdUsuinternoTxt(msUsuarios.getNombres() + " " + msUsuarios.getApellidoPaterno()
+							+ " " + msUsuarios.getApellidoMaterno());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if (dtAsistenciaBk.getIdSistAdm() != null && dtAsistenciaBk.getIdSistAdm().longValue() > 0) {
+				MsSisAdmistrativo msSisAdmistrativo = msSisAdmistrativoDao
+						.getMsSisAdmistrativo(dtAsistenciaBk.getIdSistAdm());
+				if (msSisAdmistrativo != null)
+					dtAsistenciaBk.setIdSistAdmTxt(msSisAdmistrativo.getDescripcion());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if (dtAsistenciaBk.getIdOrigen() != null && dtAsistenciaBk.getIdOrigen().longValue() > 0) {
+				PrtParametros prtParametros = this.getPrtParametros(lstPrtParametros, dtAsistenciaBk.getIdOrigen());
+				if (prtParametros != null)
+					dtAsistenciaBk.setIdOrigenTxt(prtParametros.getDescripcion());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if (dtAsistenciaBk.getIdProgramacion() != null && dtAsistenciaBk.getIdProgramacion().longValue() > 0) {
+				PrtParametros prtParametros = this.getPrtParametros(lstPrtParametros, dtAsistenciaBk.getIdProgramacion());
+				if (prtParametros != null)
+					dtAsistenciaBk.setIdProgramacionTxt(prtParametros.getDescripcion());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
+			if (dtAsistenciaBk.getIdModalidad() != null && dtAsistenciaBk.getIdModalidad().longValue() > 0) {
+				PrtParametros prtParametros = this.getPrtParametros(lstPrtParametros, dtAsistenciaBk.getIdModalidad());
+				if (prtParametros != null)
+					dtAsistenciaBk.setIdModalidadTxt(prtParametros.getDescripcion());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if (dtAsistenciaBk.getIdFinancia() != null && dtAsistenciaBk.getIdFinancia().longValue() > 0) {
+				PrtParametros prtParametros = this.getPrtParametros(lstPrtParametros, dtAsistenciaBk.getIdFinancia());
+				if (prtParametros != null)
+					dtAsistenciaBk.setIdFinanciaTxt(prtParametros.getDescripcion());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		List<DtAsistenciaUsuexternos> DtAsistenciaUsuexternosList = dtAsistenciaUsuexternosDao
+				.getByIdAsistDtAsisteUsuariosExt(dtAsistenciaBk.getIdAsistencia());
+
+		if (DtAsistenciaUsuexternosList != null && DtAsistenciaUsuexternosList.size() > 0) {
+			List<String> usueExt = new ArrayList<String>();
+			List<String> dniExt = new ArrayList<String>();
+			for (DtAsistenciaUsuexternos dtObjetc : DtAsistenciaUsuexternosList) {
+				if (dtObjetc.getIdUsuexterno() != null && dtObjetc.getIdUsuexterno().longValue() > 0) {
+
+					DtUsuarioExterno dtUsuarioExterno = dtUsuarioExternoDao
+							.getDtUsuarioExterno(dtObjetc.getIdUsuexterno());
+
+					if (dtUsuarioExterno != null) {
+						usueExt.add(dtUsuarioExterno.getApaterno() + " " + dtUsuarioExterno.getAmaterno() + " "
+								+ dtUsuarioExterno.getNombre());
+						if (dtUsuarioExterno.getNumDocum() != null)
+							dniExt.add(dtUsuarioExterno.getNumDocum() + "");
+					}
+				}
+
+			}
+			dtAsistenciaBk.setUsuExt(usueExt);
+			dtAsistenciaBk.setDniUser(dniExt);
+		}
+
+	}
+	
+	@Override
+	public void updateDtAsistenciaUsuexCorreo(Long id) throws Validador {
+		dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexCorreo(id);
+		
+	}
+	
+	@Override
+	public void deleteDtAsistenciaUsuario(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user, Long kyUsuarioMod,
+			Long kyAreaMod, String rmtaddress) throws Validador {
+		
+		DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
+		
+		try {
+			if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
+					&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
+				dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
+						.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
+				
+				Timestamp hoy = new Timestamp(System.currentTimeMillis());
+				
+				dtAsistenciaUsuexternos.setRtmaddressrst(rmtaddress);
+				dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
+				dtAsistenciaUsuexternos.setFechaModif(hoy);
+				Long estadoanterior = dtAsistenciaUsuexternos.getEstado();
+				dtAsistenciaUsuexternos.setEstado(Estado.ELIMINADO.getValor());
+
+				dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
+				
+				log.log(Level.INFO,
+						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+								+ "ELIMINADO DtAsistenciaUsuexternos" + " :: " + dtAsistenciaUsuexternos.getIdAsistUsuext().toString()
+								+ " :: " + estadoanterior + " :: " + "0");
+				
+			}
+		} catch (Exception e) {
+			throw new Validador(e.getMessage());
+		}
+			
+		
+	}
+	
+	@Override
+	public DtAsistenciaUsuexternosBk saveorupdateDtAsistenciaUsuexternosBk(
+			DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user, Long kyUsuarioMod, Long kyAreaMod,
+			String rmtaddress) throws Validador {
+
+		ValidacionDtAsistenciaUsuexternosMng.validarDtAsistenciaUsuexternosBk(dtAsistenciaUsuexternosBk);
+
+		DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
+		Timestamp hoy = new Timestamp(System.currentTimeMillis());
+
+		int nivel = 1;
+
+		try {
+			if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
+					&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
+
+				dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
+						.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
+
+				boolean cambios = AuditoriaDtAsistenciaUsuexternosMng.auditarCambiosDtAsistenciaUsuexternos(
+						dtAsistenciaUsuexternosBk, dtAsistenciaUsuexternos, kyUsuarioMod, user, rmtaddress, nivel);
+
+				if (cambios) {
+					dtAsistenciaUsuexternos.setRtmaddressrst(rmtaddress);
+					dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
+					dtAsistenciaUsuexternos.setFechaModif(hoy);
+					dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
+				}
+			} else {
+				dtAsistenciaUsuexternosBk.setRtmaddress(rmtaddress);
+				dtAsistenciaUsuexternosBk.setRtmaddressrst(rmtaddress);
+
+				dtAsistenciaUsuexternosBk.setFechaCrea(hoy);
+				dtAsistenciaUsuexternosBk.setIdusserCrea(kyUsuarioMod);
+				dtAsistenciaUsuexternosBk.setIdusserModif(kyUsuarioMod);
+				dtAsistenciaUsuexternosBk.setFechaModif(hoy);
+				dtAsistenciaUsuexternosBk.setEstado(Estado.ACTIVO.getValor());
+
+				dtAsistenciaUsuexternos = new DtAsistenciaUsuexternos();
+
+				FuncionesStaticas.copyPropertiesObject(dtAsistenciaUsuexternos, dtAsistenciaUsuexternosBk);
+				dtAsistenciaUsuexternosDao.saveDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
+
+				log.log(Level.INFO,
+						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+								+ "CREADO dtAsistenciaUsuexternos" + " :: "
+								+ dtAsistenciaUsuexternos.getIdAsistUsuext().toString() + " :: " + "0" + " :: " + "1");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Validador(e.getMessage());
+		}
+
+		dtAsistenciaUsuexternosBk = getDtAsistenciaUsuexternosBkXid(dtAsistenciaUsuexternos.getIdAsistUsuext(),
+				kyUsuarioMod);
+		return dtAsistenciaUsuexternosBk;
+	}
+
+	// FIN CUSCATA - 10072024
+
+	@Override
+	public DtAsistenciaBk saveorupdateDtAsistenciaBk(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod,
+			Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador {
+
+		// ValidacionDtAsistenciaMng.validarDtAsistenciaBk(dtAsistenciaBk);
+		// MPINARES 24012023 - INICIO
+
+		// dtAsistenciaBk.setVistaProgramado(false);
+		// if(dtAsistenciaBk.isVistaProgramado()){
+		// dtAsistenciaBk.setFechaAsistencia(dtAsistenciaBk.getFechaProgramada());
+		// }else{
+		// dtAsistenciaBk.setFechaAsistencia(dtAsistenciaBk.getFech);
+		// }
+		// INICIO CUSCATA - 10072024
+		Long idProgramacion = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
+
+		if (String.valueOf(idProgramacion).equals(String.valueOf(dtAsistenciaBk.getIdProgramacion()))) {
+			dtAsistenciaBk.setFechaAsistencia(dtAsistenciaBk.getFechaProgramada());
+		}
+		// FIN CUSCATA - 10072024
+
+		Long idSisAdmTodos = PropertiesMg.getSistemLong(PropertiesMg.KEY_IDSISTEMA_ADMINISTRATIVO_TODOS,
+				PropertiesMg.DEFOULT_IDSISTEMA_ADMINISTRATIVO_TODOS);
+		Long idSedeTodas = PropertiesMg.getSistemLong(PropertiesMg.KEY_IDSEDES_TODAS,
+				PropertiesMg.DEFOULT_IDSEDES_TODAS);
+
+		Long idTipoFechaCorteProgramada = PropertiesMg.getSistemLong(
+				PropertiesMg.KEY_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_PROG,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_PROG);
+		DtAmpliacionFecha autorizacionProgramacion = dtAmpliacionFechaDao.find(idTipoFechaCorteProgramada,
+				dtAsistenciaBk.getIdSede(), dtAsistenciaBk.getIdSistAdm(), FuncionesStaticas.getMonth());
+
+		Long idModalidadVirtual = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_VIRTUAL,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_VIRTUAL);
+		Long idProgram = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
+		Long idFinancimientoNoGasto = PropertiesMg.getSistemLong(
+				PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_FINANCIMIENTO_NO_GASTO,
+				PropertiesMg.DEFAULT_PRTPARAMETROS_IDTIPO_FINANCIMIENTO_NO_GASTO);
+		Long idModalidadTel = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_TELEFONO,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_TELEFONO);
+
+		// ***********************************************************************************************************
+		DtAmpliacionFecha autorizacionProgramacion2 = dtAmpliacionFechaDao.find(idTipoFechaCorteProgramada, idSedeTodas,
+				dtAsistenciaBk.getIdSistAdm(), FuncionesStaticas.getMonth());
+		if (autorizacionProgramacion2 != null) {
+			if (autorizacionProgramacion != null) {
+				if (autorizacionProgramacion2.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
+					autorizacionProgramacion = autorizacionProgramacion2;
+				}
+			} else {
+				autorizacionProgramacion = autorizacionProgramacion2;
+			}
+		}
+
+		DtAmpliacionFecha autorizacionProgramacion3 = dtAmpliacionFechaDao.find(idTipoFechaCorteProgramada,
+				dtAsistenciaBk.getIdSede(), idSisAdmTodos, FuncionesStaticas.getMonth());
+		if (autorizacionProgramacion3 != null) {
+			if (autorizacionProgramacion != null) {
+				if (autorizacionProgramacion3.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
+					autorizacionProgramacion = autorizacionProgramacion3;
+				}
+			} else {
+				autorizacionProgramacion = autorizacionProgramacion3;
+			}
+		}
+
+		DtAmpliacionFecha autorizacionProgramacion4 = dtAmpliacionFechaDao.find(idTipoFechaCorteProgramada, idSedeTodas,
+				idSisAdmTodos, FuncionesStaticas.getMonth());
+		if (autorizacionProgramacion4 != null) {
+			if (autorizacionProgramacion != null) {
+				if (autorizacionProgramacion4.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
+					autorizacionProgramacion = autorizacionProgramacion4;
+				}
+			} else {
+				autorizacionProgramacion = autorizacionProgramacion4;
+			}
+		}
+
+		Long idTipoFechaCorteEjecucion = PropertiesMg.getSistemLong(
+				PropertiesMg.KEY_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_EJEC,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_EJEC);
+		// Integer mesServicio=dtAsistenciaBk.getFechaAsistencia().getMonth()+1;
+
+		Integer mesServicio = dtAsistenciaBk.getFechaAsistencia().getMonth() + 1;
+
+		if (mesServicio.intValue() == 12) {
+			mesServicio = 0;
+		}
+
+		DtAmpliacionFecha autorizacionEjecucion = dtAmpliacionFechaDao.find(idTipoFechaCorteEjecucion,
+				dtAsistenciaBk.getIdSede(), dtAsistenciaBk.getIdSistAdm(), mesServicio + 1);// Ahora,
+																							// Mes
+																							// Actual,
+																							// por
+																							// confirmar
+
+		if (autorizacionEjecucion == null) {
+			autorizacionEjecucion = dtAmpliacionFechaDao.find(idTipoFechaCorteEjecucion, idSedeTodas,
+					dtAsistenciaBk.getIdSistAdm(), mesServicio + 1);// Ahora,
+																	// Mes
+																	// Actual,
+																	// por
+																	// confirmar
+
+			if (autorizacionEjecucion == null) {
+				autorizacionEjecucion = dtAmpliacionFechaDao.find(idTipoFechaCorteEjecucion, dtAsistenciaBk.getIdSede(),
+						idSisAdmTodos, mesServicio + 1);// Ahora Mes Actual, por
+														// confirmar
+
+				if (autorizacionEjecucion == null) {
+					autorizacionEjecucion = dtAmpliacionFechaDao.find(idTipoFechaCorteEjecucion, idSedeTodas,
+							idSisAdmTodos, mesServicio + 1);// Ahora Mes Actual,
+															// por confirmar
+				}
+			}
+		}
+
+		DtAsistencia dtAsistenciaOrig = null;
+		if (dtAsistenciaBk.getIdAsistencia() != null && dtAsistenciaBk.getIdAsistencia().longValue() > 0) {
+			dtAsistenciaOrig = dtAsistenciaDao.getDtAsistencia(dtAsistenciaBk.getIdAsistencia());
+		}
+
+		ValidacionDtAsistenciaMng.validarDtAsistenciaBk(dtAsistenciaBk, autorizacionProgramacion, autorizacionEjecucion,
+				msRolesDao.isRolAdministradorOGC(kyUsuarioMod), dtAsistenciaOrig);
+
+		if (dtAsistenciaBk.getIdProgramacion().compareTo(idProgram) == 0) {
+			if ((dtAsistenciaBk.getIdModalidad().compareTo(idModalidadVirtual) == 0
+					|| dtAsistenciaBk.getIdModalidad().compareTo(idModalidadTel) == 0)
+					&& dtAsistenciaBk.getIdFinancia().compareTo(idFinancimientoNoGasto) != 0) {
+				throw new Validador(
+						MessageFormat.format(Messages.getStringToKey("dtAsistencia.invalidoFinanciamCorrect"),
+								Messages.getStringToKey("dtAsistencias.titulotabla")));
+			}
+		}
+
+		// VALIDADOR DE TEMAS
+		List<DtAsistenciaTemasBk> asiatenciasTemas = new ArrayList<DtAsistenciaTemasBk>();
+		if (dtAsistenciaBk.getDtAsistenciaTemasBkJSss() != null
+				&& dtAsistenciaBk.getDtAsistenciaTemasBkJSss().size() > 0) {
+
+			for (DtAsistenciaTemasBk dtAsistenciaTemasBka : dtAsistenciaBk.getDtAsistenciaTemasBkJSss()) {
+				if (dtAsistenciaTemasBka.getIdTema() != null && dtAsistenciaTemasBka.getIdSubtema() != null
+						&& (dtAsistenciaTemasBka.getDetalle() != null
+								&& dtAsistenciaTemasBka.getDetalle().length() > 2)) {
+					asiatenciasTemas.add(dtAsistenciaTemasBka);
+				} else {
+					throw new Validador(MessageFormat.format("EL DETALLE DEL TEMA DEBE SER MAYOR A 3 CARACTERES",
+							Messages.getStringToKey("dtAsistencias.titulotabla")));
+				}
+			}
+
+			if (asiatenciasTemas != null && asiatenciasTemas.size() > 0) {
+				dtAsistenciaBk.setDtAsistenciaTemasBkJSss(asiatenciasTemas);
+			} else {
+				throw new Validador(MessageFormat.format("NO SE HAN AGENDADO LOS TEMAS",
+						Messages.getStringToKey("dtAsistencias.titulotabla")));
+			}
+		} else {
+			throw new Validador(MessageFormat.format("NO SE HAN AGENDADO LOS TEMAS",
+					Messages.getStringToKey("dtAsistencias.titulotabla")));
+		}
+		// MPINARES 24012023 - FIN
+
+		// VALIDAR USUARIO
+		/*
+		 * if(dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss()==null &&
+		 * dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss().isEmpty()) { throw new
+		 * Validador(MessageFormat.format("DEBE SELECCIONAR UN USUARIO",
+		 * Messages.getStringToKey("dtAsistencias.titulotabla"))); }
+		 */
+
+		DtAsistencia dtAsistencia = null;
+		Timestamp hoy = new Timestamp(System.currentTimeMillis());
+
+		int nivel = 1;
+
+		try {
+			if (dtAsistenciaBk.getIdAsistencia() != null && dtAsistenciaBk.getIdAsistencia().longValue() > 0) {
+
+				dtAsistencia = dtAsistenciaDao.getDtAsistencia(dtAsistenciaBk.getIdAsistencia());
+
+				boolean cambios = AuditoriaDtAsistenciaMng.auditarCambiosDtAsistencia(dtAsistenciaBk, dtAsistencia,
+						kyUsuarioMod, user, rmtaddress, nivel);
+
+				if (cambios) {
+					dtAsistencia.setRtmaddressrst(rmtaddress);
+					dtAsistencia.setIdusserModif(kyUsuarioMod);
+					dtAsistencia.setFechaModif(hoy);
+					dtAsistenciaDao.updateDtAsistencia(dtAsistencia);
+				}
+			} else {
+				dtAsistenciaBk.setRtmaddress(rmtaddress);
+				dtAsistenciaBk.setRtmaddressrst(rmtaddress);
+
+				dtAsistenciaBk.setFechaCrea(hoy);
+				dtAsistenciaBk.setIdusserCrea(kyUsuarioMod);
+				dtAsistenciaBk.setIdusserModif(kyUsuarioMod);
+				dtAsistenciaBk.setFechaModif(hoy);
+				dtAsistenciaBk.setEstado(Estado.ACTIVO.getValor());
+
+				dtAsistencia = new DtAsistencia();
+
+				FuncionesStaticas.copyPropertiesObject(dtAsistencia, dtAsistenciaBk);
+				dtAsistenciaDao.saveDtAsistencia(dtAsistencia);
+
+				log.log(Level.INFO,
+						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+								+ "CREADO dtAsistencia" + " :: " + dtAsistencia.getIdAsistencia().toString() + " :: "
+								+ "0" + " :: " + Estado.ACTIVO.getValor());
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Validador(e.getMessage());
+		}
+
+		// MPINARES 24012023 - INICIO
+		DtAsistenciaTemas dtAsistenciaTemas = null;
+		if (dtAsistenciaBk.getDtAsistenciaTemasBkJSss() != null
+				&& dtAsistenciaBk.getDtAsistenciaTemasBkJSss().size() > 0) {
+			for (DtAsistenciaTemasBk dtAsistenciaTemasBk : dtAsistenciaBk.getDtAsistenciaTemasBkJSss()) {
+				if (dtAsistenciaTemasBk.getIdAsistTema() != null
+						&& dtAsistenciaTemasBk.getIdAsistTema().longValue() > 0) {
+					// ACTUALIZAR
+					DtAsistenciaTemas asistenciaTema = dtAsistenciaTemasDao
+							.getDtAsistenciaTemas(dtAsistenciaTemasBk.getIdAsistTema().longValue());
+					asistenciaTema.setDetalle(dtAsistenciaTemasBk.getDetalle());
+					asistenciaTema.setIdTema(dtAsistenciaTemasBk.getIdTema());
+					asistenciaTema.setIdSubtema(dtAsistenciaTemasBk.getIdSubtema());
+					dtAsistenciaTemasDao.updateDtAsistenciaTemas(asistenciaTema);
+
+				} else {
+					// NUEVO
+					dtAsistenciaTemasBk.setIdAsistTema(null);
+					dtAsistenciaTemasBk.setIdAsistencia(dtAsistencia.getIdAsistencia());
+					dtAsistenciaTemasBk.setIdUsuinterno(kyUsuarioMod);
+					dtAsistenciaTemasBk.setEstado(Estado.ACTIVO.getValor());
+					dtAsistenciaTemasBk.setFechaCrea(hoy);
+					dtAsistenciaTemasBk.setFechaModif(hoy);
+					dtAsistenciaTemasBk.setIdusserCrea(kyUsuarioMod);
+					dtAsistenciaTemasBk.setIdusserModif(kyUsuarioMod);
+					dtAsistenciaTemasBk.setRtmaddress(rmtaddress);
+					dtAsistenciaTemasBk.setRtmaddressrst(rmtaddress);
+
+					dtAsistenciaTemas = new DtAsistenciaTemas();
+
+					FuncionesStaticas.copyPropertiesObject(dtAsistenciaTemas, dtAsistenciaTemasBk);
+					dtAsistenciaTemasDao.saveDtAsistenciaTemas(dtAsistenciaTemas);
+
+					log.log(Level.INFO, "CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+							+ "CREADO dtAsistenciaTemas" + " :: " + dtAsistenciaTemas.getIdAsistTema().toString()
+							+ " :: " + "0" + " :: " + "" + Estado.ACTIVO.getValor());
+				}
+			}
+		}
+		// MPINARES 24012023 - FIN
+		this.saveOrUpdateAsistenciaUsuarioExt(dtAsistenciaBk, dtAsistencia, hoy, kyUsuarioMod, rmtaddress, user);
+		// INICIO CUSCATA - 10072024
+		Long idTiposervicio = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
+
+		this.cargarAnexos(tdAnexosBkss, dtAsistencia.getIdAsistencia(), user, kyUsuarioMod, kyAreaMod, rmtaddress,
+				idTiposervicio);
+		// FIN CUSCATA - 10072024
+		dtAsistenciaBk = getDtAsistenciaBkXid(dtAsistencia.getIdAsistencia(), kyUsuarioMod);
+		return dtAsistenciaBk;
+	}
+
+	@Override
+	public DtAsistenciaBk enviarConstanciaAtencion(DtAsistenciaBk dtAsistenciaBk, String url, String user,
+			Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador {
+
+		if (dtAsistenciaBk.getIdAsistencia() != null && dtAsistenciaBk.getIdAsistencia() != 0L) {
+
 			Long idVirtual = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_VIRTUAL,
 					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_VIRTUAL);
-			
+
 			if (dtAsistenciaBk.getIdModalidad() != null && idVirtual != null
 					&& dtAsistenciaBk.getIdModalidad() != idVirtual.intValue()) {
-				throw new Validador(MessageFormat.format(Messages.getStringToKey("dtasistencia.enviar.const.atencion.validacion.virtual"),
-						Messages.getStringToKey("dtEntidades.titulotabla") ) ); 
+				throw new Validador(MessageFormat.format(
+						Messages.getStringToKey("dtasistencia.enviar.const.atencion.validacion.virtual"),
+						Messages.getStringToKey("dtEntidades.titulotabla")));
 			}
-			
-			
-			List<DtAsistenciaTemasBk> lstAsistTema =  this.getDtAsistenciaTemasXIdAsistencia(dtAsistenciaBk.getIdAsistencia());
-			
-			if ( lstAsistTema==null ) {
+
+			List<DtAsistenciaTemasBk> lstAsistTema = this
+					.getDtAsistenciaTemasXIdAsistencia(dtAsistenciaBk.getIdAsistencia());
+
+			if (lstAsistTema == null && lstAsistTema.isEmpty()) {
 				throw new Validador(MessageFormat.format(Messages.getStringToKey("dtAsistenciaTema.listaTemasVaciaa"),
-									Messages.getStringToKey("dtEntidades.titulotabla") ) ); 
+						Messages.getStringToKey("dtEntidades.titulotabla")));
 			}
-			
-			
+
 			Timestamp hoy = new Timestamp(System.currentTimeMillis());
 			dtAsistenciaBk.getDtAsistenciaUsuexternosBk().setCtrlConfirmacion(1L);
 			dtAsistenciaBk.setDtAsistenciaUsuariosBkJSss(new ArrayList<>());
 			dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss().add(dtAsistenciaBk.getDtAsistenciaUsuexternosBk());
-			
+
 			this.saveorupdateDtAsistenciaBk(dtAsistenciaBk, user, kyUsuarioMod, kyAreaMod, rmtaddress, null);
-			
+
+			// String url = "HTTP://AAAAAAAA";
 			List<DtAsistenciaUsuexternosBk> participantes = new ArrayList<>();
 			participantes.add(dtAsistenciaBk.getDtAsistenciaUsuexternosBk());
-			
+			// enviarConstanAtenPorCorreo(dtAsistenciaBk,
+			// dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss(), lstAsistTema,
+			// url, hoy);
 			enviarConstanAtenPorCorreo(dtAsistenciaBk, participantes, lstAsistTema, url, hoy);
-			
+
 		}
-		
-		
-		
-		
+
 		return dtAsistenciaBk;
 	}
-	
-	private void enviarConstanAtenPorCorreo( DtAsistenciaBk dtAsistenciaBke,
-											 List<DtAsistenciaUsuexternosBk> participantes,  
-											 List<DtAsistenciaTemasBk> temas,
-											 String url,  
-											 Timestamp fechaFinalizacion) {
+
+	private void enviarConstanAtenPorCorreo(DtAsistenciaBk dtAsistenciaBke,
+			List<DtAsistenciaUsuexternosBk> participantes, List<DtAsistenciaTemasBk> temas, String url,
+			Timestamp fechaFinalizacion) {
 
 		log.log(Level.INFO, "INICIO DE  enviarConstanAtenPorCorreo");
 
@@ -2789,39 +3154,49 @@ public class ServicioImp implements Servicio, Serializable {
 					DtUsuarioExterno usuarioExterno = new DtUsuarioExterno();
 					StringBuilder msg = null;
 					EmailUtil email = new EmailUtil();
-					String strAsunto = "CONFIRMACIÓN DE ATENCIÓN DEL SERVICIO DE ASISTENCIA TÉCNICA DEL CONECTAMEF";//MPINARES 17052023 - INICIO
+					String strAsunto = "CONFIRMACIÓN DE ATENCIÓN DEL SERVICIO DE ASISTENCIA TÉCNICA DEL CONECTAMEF";// MPINARES
+																													// 17052023
+																													// -
+																													// INICIO
 					String temaTotal = "";
 					String especialistaSisAdmTotal = "";
-					
 
 					for (DtAsistenciaUsuexternosBk participanteAsis : participantes) {
 						if (participanteAsis.getCorreoUsuext() != null && !participanteAsis.getCorreoUsuext().isEmpty())
 							recipients.add(participanteAsis.getCorreoUsuext());
 						idUsuarioAsisExterno = participanteAsis.getIdAsistUsuext();
 						for (DtAsistenciaTemasBk dtAsisTema : temas) {
-							if(!temaTotal.trim().toUpperCase().contains(dtAsisTema.getIdTemaTxt().trim().toUpperCase())){
-								temaTotal = temaTotal + " " + dtAsisTema.getIdTemaTxt().trim()+ ", ";
+							if (!temaTotal.trim().toUpperCase()
+									.contains(dtAsisTema.getIdTemaTxt().trim().toUpperCase())) {
+								temaTotal = temaTotal + " " + dtAsisTema.getIdTemaTxt().trim() + ", ";
 							}
-							if(!especialistaSisAdmTotal.trim().toUpperCase().contains((dtAsistenciaBke.getIdUsuinternoTxt().trim().toLowerCase()).trim().toUpperCase())){
-								especialistaSisAdmTotal = especialistaSisAdmTotal + " " + FuncionesStaticas.convertirFrasePrimerCaracMayúscula(dtAsistenciaBke.getIdUsuinternoTxt().trim().toLowerCase())+".";
+							if (!especialistaSisAdmTotal.trim().toUpperCase().contains(
+									(dtAsistenciaBke.getIdUsuinternoTxt().trim().toLowerCase()).trim().toUpperCase())) {
+								especialistaSisAdmTotal = especialistaSisAdmTotal + " "
+										+ FuncionesStaticas.convertirFrasePrimerCaracMayúscula(
+												dtAsistenciaBke.getIdUsuinternoTxt().trim().toLowerCase())
+										+ ".";
 							}
 						}
 						if (temaTotal != null && !temaTotal.isEmpty()) {
-							temaTotal = FuncionesStaticas.convertirFrasePrimerCaracMayúscula(temaTotal.trim().toLowerCase()) ;
-							especialistaSisAdmTotal = especialistaSisAdmTotal.trim() ;
-							
+							temaTotal = FuncionesStaticas
+									.convertirFrasePrimerCaracMayúscula(temaTotal.trim().toLowerCase());
+							especialistaSisAdmTotal = especialistaSisAdmTotal.trim();
+
 						}
 						if (recipients != null && !recipients.isEmpty()) {
 
 							usuarioExterno = dtUsuarioExternoDao
 									.getDtUsuarioExterno(participanteAsis.getIdUsuexterno());
 							if (usuarioExterno != null)
-								nombre = FuncionesStaticas.convertirFrasePrimerCaracMayúscula(usuarioExterno.getNombre().toLowerCase()) + " "
-										+ FuncionesStaticas.convertirFrasePrimerCaracMayúscula(usuarioExterno.getApaterno().toLowerCase());
-							
+								nombre = FuncionesStaticas
+										.convertirFrasePrimerCaracMayúscula(usuarioExterno.getNombre().toLowerCase())
+										+ " " + FuncionesStaticas.convertirFrasePrimerCaracMayúscula(
+												usuarioExterno.getApaterno().toLowerCase());
+
 							msg = new StringBuilder();
-						
-							//MPINARES 17052023 - INICIO
+
+							// MPINARES 17052023 - INICIO
 							msg.append("<table align='center' width='100%'>");
 							msg.append("<tr><td width='50%' align='left'><img src='" + url + "/images/u2.png'></td>");
 							msg.append("<td width='50%' align='right'><img src='" + url + "/images/u0.png'></td></tr>");
@@ -2835,12 +3210,15 @@ public class ServicioImp implements Servicio, Serializable {
 									"<div valign='middle' height='28px' style='line-height:28px;font-size:20px;background-color:#FFFFFF;'>Para corroborar que ha recibido <b>Asistencia Técnica Virtual</b> sobre <b>"
 											+ temaTotal.toUpperCase() + "</b> el día <b>"
 											+ (dtAsistenciaBke.getFechaAsistencia() != null
-													? FuncionesStaticas.getfechaLargaFormateadaSinHoraAnio(new Timestamp(
-															dtAsistenciaBke.getFechaAsistencia().getTime()))
+													? FuncionesStaticas
+															.getfechaLargaFormateadaSinHoraAnio(new Timestamp(
+																	dtAsistenciaBke.getFechaAsistencia().getTime()))
 													: "")
-											+ "</b>, por el/la servidor/a del CONECTAMEF, <b>" + especialistaSisAdmTotal.toUpperCase() +  "</b></br></br>Agradeceremos pueda confirmar la atención de este servicio dando clic en el botón de líneas abajo. "
+											+ "</b>, por el/la servidor/a del CONECTAMEF, <b>"
+											+ especialistaSisAdmTotal.toUpperCase()
+											+ "</b></br></br>Agradeceremos pueda confirmar la atención de este servicio dando clic en el botón de líneas abajo. "
 											+ " </div>");
-						
+
 							msg.append(
 									"<div valign='middle' height='28px' style='line-height:28px;font-size:19px;background-color:#FFFFFF;'></br>¡Gracias!</div>");
 							msg.append(
@@ -2848,12 +3226,11 @@ public class ServicioImp implements Servicio, Serializable {
 							msg.append("</div>");
 							msg.append(
 									"<div align='center' valign='middle' height='28px' style='font-size:20px;line-height:28px;align:center !important;valign:middle;background:#C8000E;-webkit-border-radius:1px;-moz-border-radius:1px;border-radius:1px;-ms-border-radius:1px; width:80%'>");
-							msg.append("<a style=text-decoration:none; width: 210px;  href='" + url
-									+ "?idu=" + idUsuarioAsisExterno + "&ids="
-									+ dtAsistenciaBke.getIdAsistencia()
+							msg.append("<a style=text-decoration:none; width: 210px;  href='" + url + "?idu="
+									+ idUsuarioAsisExterno + "&ids=" + dtAsistenciaBke.getIdAsistencia()
 									+ "'><font color=white><b>CLIC AQUÍ PARA CONFIRMAR ATENCIÓN</b></font></a>");
 							msg.append("</div>");
-							//MPINARES 17052023 - FIN
+							// MPINARES 17052023 - FIN
 							log.log(Level.INFO,
 									" INICIO INSTANCIANDO EL ENVIO AL SERVIDOR DE CORREO: idUsuarioExterno= "
 											+ idUsuarioAsisExterno + " nombre= " + nombre
@@ -2873,620 +3250,468 @@ public class ServicioImp implements Servicio, Serializable {
 		myThread.start();
 
 	}
-		
-		public DtAsistenciaBk finalizarDtAsistenciaBk(DtAsistenciaBk dtAsistenciaBk, 
-													String user, 
-													Long kyUsuarioMod,
-													Long kyAreaMod, 
-													String rmtaddress) throws Validador {
-			
-			Timestamp hoy = new Timestamp(System.currentTimeMillis());
-			
-			Long estadoFinalizado = PropertiesMg.getSistemLong(
-					PropertiesMg.KEY_ESTADOS_REGISTROS_FINALIZADO,
-					PropertiesMg.DEFOULT_ESTADOS_REGISTROS_FINALIZADO);
-			
-			dtAsistenciaBk.setIdusserModif(kyUsuarioMod);
-			dtAsistenciaBk.setFechaFinalizacion(hoy);
-			dtAsistenciaBk.setEstado(estadoFinalizado);
-			
-  		    this.saveorupdateDtAsistenciaBk(dtAsistenciaBk, user, kyUsuarioMod, kyAreaMod, rmtaddress, null);
-			
-			if(dtAsistenciaBk != null) {
-				Long idTipoServicioAsistencia = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN, 
-																		   PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
-				
-				System.out.println("idTipoServicioAsistencia: "+idTipoServicioAsistencia);
 
-				
-				 this.enviarEncuestaPorCorreo(
-								(dtAsistenciaBk.getDetalle() != null ? dtAsistenciaBk.getDetalle() : ""),
-								dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss(), 
-								idTipoServicioAsistencia,
-								dtAsistenciaBk.getIdAsistencia(),
-								dtAsistenciaBk.getFechaAsistencia(),
-								"HTTP://URL", hoy);
-				
-				this.encuesta(dtAsistenciaBk, kyUsuarioMod, idTipoServicioAsistencia);
-				
-			}
-			
-			return dtAsistenciaBk;
-		}
-		//FIN CUSCATA - 10072024
-		private void encuesta(DtAsistenciaBk dtAsistenciaBk, Long kyUsuarioMod, Long idTipoServicioAsistencia) throws Validador {
-			DtEncuestaBk encuesta = new DtEncuestaBk();
-			encuesta = this.getIdEncuesta(idTipoServicioAsistencia,
-												dtAsistenciaBk.getFechaAsistencia().getTime(),
-												dtAsistenciaBk.getIdAsistencia());// SPRINT_6
-			//INICIO CUSCATA - 10072024
-            if(encuesta != null) {
-				encuesta.setIdusserModif(kyUsuarioMod);
-			}
-            //FIN CUSCATA - 10072024
-			
-			if (encuesta == null || encuesta.getIdEncuesta() == null
-					|| encuesta.getIdEncuesta().longValue() < 1) {
-				System.out.println(Messages.getStringToKey("dtEncuesta.valida.no.enviar.correo") + " IdTipoServicio="
-						+ idTipoServicioAsistencia + " idServicio=" + dtAsistenciaBk.getIdAsistencia()
-						+ " fechaServicio=" + dtAsistenciaBk.getFechaAsistencia());
-			}
-			
-			if (encuesta != null) {
-				this.updateBloqueoEncuesta(encuesta);
-			}
-		}
-		
-		public void updateBloqueoEncuesta(DtEncuestaBk dtEncuestaBk) throws Validador {
+	public DtAsistenciaBk finalizarDtAsistenciaBk(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod,
+			Long kyAreaMod, String rmtaddress) throws Validador {
 
-			if (dtEncuestaBk.getIdEncuesta() != null) {
-				Long flagBloqueado = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_ENCUESTA_BLOQUEADO_SI,
-						PropertiesMg.DEFAULT_PRTPARAMETROS_ENCUESTA_BLOQUEADO_SI);
+		Timestamp hoy = new Timestamp(System.currentTimeMillis());
 
-				DtEncuesta encuesta = dtEncuestaDao.getDtEncuesta(dtEncuestaBk.getIdEncuesta());
+		Long estadoFinalizado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_FINALIZADO,
+				PropertiesMg.DEFOULT_ESTADOS_REGISTROS_FINALIZADO);
 
-				encuesta.setFlagBloqueo(flagBloqueado);
+		dtAsistenciaBk.setIdusserModif(kyUsuarioMod);
+		dtAsistenciaBk.setFechaFinalizacion(hoy);
+		dtAsistenciaBk.setEstado(estadoFinalizado);
 
-				encuesta.setIdusserModif(dtEncuestaBk.getIdusserModif());
-				encuesta.setFechaModif(new Timestamp(System.currentTimeMillis()));
-				encuesta.setRtmaddressrst(dtEncuestaBk.getRtmaddress());
-				dtEncuestaDao.updateDtEncuesta(encuesta);
-			}
+		this.saveorupdateDtAsistenciaBk(dtAsistenciaBk, user, kyUsuarioMod, kyAreaMod, rmtaddress, null);
+
+		if (dtAsistenciaBk != null) {
+			Long idTipoServicioAsistencia = PropertiesMg.getSistemLong(
+					PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
+
+			System.out.println("idTipoServicioAsistencia: " + idTipoServicioAsistencia);
+
+			this.enviarEncuestaPorCorreo((dtAsistenciaBk.getDetalle() != null ? dtAsistenciaBk.getDetalle() : ""),
+					dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss(), idTipoServicioAsistencia,
+					dtAsistenciaBk.getIdAsistencia(), dtAsistenciaBk.getFechaAsistencia(), "HTTP://URL", hoy);
+
+			this.encuesta(dtAsistenciaBk, kyUsuarioMod, idTipoServicioAsistencia);
 
 		}
-		
-//INICIO CUSCATA - 10072024
-		public void enviarEncuestaPorCorreo(String descpServicio,  
-											Collection<?> participantes,
-											Long tipoServicio, 
-											Long idServicio, 
-											Date fechaServicio, 
-											String url,
-											Timestamp fechaFinalizacion) throws Validador { // VBALDEONH
 
-			//FIN CUSCATA - 10072024
-            // SPRINT5 INICIO
-			log.log(Level.INFO, "INICIO DE  enviarEncuestaPorCorreo");// SPRINT53
-			String formatoJson = null;
-			DtEncuestaBk encuesta = new DtEncuestaBk();// SPRINT17
-			try {
+		return dtAsistenciaBk;
+	}
 
-				// DtEncuestaBk encuesta = getIdEncuesta(tipoServicio,
-				// fechaServicio.getTime());
-				encuesta = getIdEncuesta(tipoServicio, fechaServicio.getTime(), idServicio);// SPRINT_6
-				if (encuesta == null || encuesta.getIdEncuesta() == null || encuesta.getIdEncuesta().longValue() < 1) {
-					System.out.println(Messages.getStringToKey("dtEncuesta.valida.no.enviar.correo") + " IdTipoServicio="
-							+ tipoServicio + " idServicio=" + idServicio + " fechaServicio=" + fechaServicio);
-					return;
-				} else {
-					formatoJson = FuncionesStaticas.getTextFromFile(
-							FuncionesStaticas.getServerFile("encuesta-" + encuesta.getIdEncuesta() + ".json"));
-				}
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-				System.out.println(Messages.getStringToKey("dtEncuesta.valida.no.enviar.correo") + " IdTipoServicio=" + tipoServicio
-						+ " idServicio=" + idServicio + " fechaServicio=" + fechaServicio);
-				System.out.println(Messages.getStringToKey("dtEncuesta.valida.no.enviar.correo") + " IdTipoServicio="
-						+ tipoServicio + " idServicio=" + idServicio + " fechaServicio=" + fechaServicio);
-			}
+	private void encuesta(DtAsistenciaBk dtAsistenciaBk, Long kyUsuarioMod, Long idTipoServicioAsistencia)
+			throws Validador {
+		DtEncuestaBk encuesta = new DtEncuestaBk();
+		encuesta = this.getIdEncuesta(idTipoServicioAsistencia, dtAsistenciaBk.getFechaAsistencia().getTime(),
+				dtAsistenciaBk.getIdAsistencia());// SPRINT_6
 
-			if (formatoJson == null || formatoJson.trim().length() <= 1) {
-				System.out.println(Messages.getStringToKey("dtEncuesta.valida.no.enviar.correo") + " IdTipoServicio=" + tipoServicio
-						+ " idServicio=" + idServicio + " fechaServicio=" + fechaServicio);
+		// INICIO CUSCATA - 10072024
+		if (encuesta != null) {
+			encuesta.setIdusserModif(kyUsuarioMod);
+		}
+		// FIN CUSCATA - 10072024
+
+		if (encuesta == null || encuesta.getIdEncuesta() == null || encuesta.getIdEncuesta().longValue() < 1) {
+			System.out.println(Messages.getStringToKey("dtEncuesta.valida.no.enviar.correo") + " IdTipoServicio="
+					+ idTipoServicioAsistencia + " idServicio=" + dtAsistenciaBk.getIdAsistencia() + " fechaServicio="
+					+ dtAsistenciaBk.getFechaAsistencia());
+		}
+
+		if (encuesta != null) {
+			this.updateBloqueoEncuesta(encuesta);
+		}
+	}
+
+	public void updateBloqueoEncuesta(DtEncuestaBk dtEncuestaBk) throws Validador {
+
+		if (dtEncuestaBk.getIdEncuesta() != null) {
+			Long flagBloqueado = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_ENCUESTA_BLOQUEADO_SI,
+					PropertiesMg.DEFAULT_PRTPARAMETROS_ENCUESTA_BLOQUEADO_SI);
+
+			DtEncuesta encuesta = dtEncuestaDao.getDtEncuesta(dtEncuestaBk.getIdEncuesta());
+
+			encuesta.setFlagBloqueo(flagBloqueado);
+
+			encuesta.setIdusserModif(dtEncuestaBk.getIdusserModif());
+			encuesta.setFechaModif(new Timestamp(System.currentTimeMillis()));
+			encuesta.setRtmaddressrst(dtEncuestaBk.getRtmaddress());
+			dtEncuestaDao.updateDtEncuesta(encuesta);
+		}
+
+	}
+
+	// INICIO CUSCATA - 10072024
+	public void enviarEncuestaPorCorreo(String descpServicio, Collection<?> participantes, Long tipoServicio,
+			Long idServicio, Date fechaServicio, String url, Timestamp fechaFinalizacion) throws Validador { // VBALDEONH
+
+		// FIN CUSCATA - 10072024
+		// SPRINT5 INICIO
+		log.log(Level.INFO, "INICIO DE  enviarEncuestaPorCorreo");// SPRINT53
+		String formatoJson = null;
+		DtEncuestaBk encuesta = new DtEncuestaBk();// SPRINT17
+		try {
+
+			// DtEncuestaBk encuesta = getIdEncuesta(tipoServicio,
+			// fechaServicio.getTime());
+			encuesta = getIdEncuesta(tipoServicio, fechaServicio.getTime(), idServicio);// SPRINT_6
+			if (encuesta == null || encuesta.getIdEncuesta() == null || encuesta.getIdEncuesta().longValue() < 1) {
 				System.out.println(Messages.getStringToKey("dtEncuesta.valida.no.enviar.correo") + " IdTipoServicio="
 						+ tipoServicio + " idServicio=" + idServicio + " fechaServicio=" + fechaServicio);
 				return;
+			} else {
+				formatoJson = FuncionesStaticas.getTextFromFile(
+						FuncionesStaticas.getServerFile("encuesta-" + encuesta.getIdEncuesta() + ".json"));
 			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(Messages.getStringToKey("dtEncuesta.valida.no.enviar.correo") + " IdTipoServicio="
+					+ tipoServicio + " idServicio=" + idServicio + " fechaServicio=" + fechaServicio);
+			System.out.println(Messages.getStringToKey("dtEncuesta.valida.no.enviar.correo") + " IdTipoServicio="
+					+ tipoServicio + " idServicio=" + idServicio + " fechaServicio=" + fechaServicio);
+		}
 
-			// VBALDEONH SPRINT2 INCIO
-			Thread myThread = new Thread() {
-				public void run() {
-					try {
+		if (formatoJson == null || formatoJson.trim().length() <= 1) {
+			System.out.println(Messages.getStringToKey("dtEncuesta.valida.no.enviar.correo") + " IdTipoServicio="
+					+ tipoServicio + " idServicio=" + idServicio + " fechaServicio=" + fechaServicio);
+			System.out.println(Messages.getStringToKey("dtEncuesta.valida.no.enviar.correo") + " IdTipoServicio="
+					+ tipoServicio + " idServicio=" + idServicio + " fechaServicio=" + fechaServicio);
+			return;
+		}
 
-						List<String> recipients = new ArrayList<String>();
-						Long idUsuarioExterno = null;
+		// VBALDEONH SPRINT2 INCIO
+		Thread myThread = new Thread() {
+			public void run() {
+				try {
 
+					List<String> recipients = new ArrayList<String>();
+					Long idUsuarioExterno = null;
+
+					// SPRINT6 INICIO
+					PrtParametrosBk parametroBk = getParametro(tipoServicio);
+					String descripcionTipoServicio = parametroBk == null ? "" : parametroBk.getDescripcion();
+
+					String nombre = "";
+
+					DtUsuarioExterno usuarioExterno = new DtUsuarioExterno();
+					StringBuilder msg = null;
+					EmailUtil email = new EmailUtil();
+
+					Long idAsisteSi = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_ASISTENCIA_SI,
+							PropertiesMg.DEFAULT_PRTPARAMETROS_ASISTENCIA_SI);
+					String strAsunto = "ENCUESTA DE CALIDAD DE LOS SERVICIOS DE LOS CONECTAMEF ─ "
+							+ descripcionTipoServicio;// SPRINT_8
+
+					for (Object participante : participantes) {
+						recipients = new ArrayList<String>(); // SPRINT6
+						if (participante instanceof DtAsistenciaUsuexternosBk) {
+							DtAsistenciaUsuexternosBk participanteDeAsistencia = (DtAsistenciaUsuexternosBk) participante;
+							if (participanteDeAsistencia.getCorreoUsuext() != null
+									&& !participanteDeAsistencia.getCorreoUsuext().isEmpty())// SPRINT6
+								recipients.add(participanteDeAsistencia.getCorreoUsuext());
+							idUsuarioExterno = participanteDeAsistencia.getIdUsuexterno();
+						} else if (participante instanceof DtCapaUsuexternosBk) {
+							DtCapaUsuexternosBk participanteDeCapacitacion = (DtCapaUsuexternosBk) participante;
+							if (participanteDeCapacitacion.getFlagAsistencia() != null
+									&& participanteDeCapacitacion.getFlagAsistencia().intValue() == idAsisteSi
+											.intValue()
+									&& participanteDeCapacitacion.getCorreoUsuext() != null
+									&& !participanteDeCapacitacion.getCorreoUsuext().isEmpty())
+								recipients.add(participanteDeCapacitacion.getCorreoUsuext());
+							idUsuarioExterno = participanteDeCapacitacion.getIdUsuexterno();
+							strAsunto = "ENCUESTA Y DESCARGA DE MATERIAL DEL SERVICIO DE CAPACITACIÓN DE LOS CONECTAMEF";// SPRINT_8
+						} else if (participante instanceof DtVisitasUsuexternosBk) {
+							DtVisitasUsuexternosBk participanteDeVisita = (DtVisitasUsuexternosBk) participante;
+							if (participanteDeVisita.getCorreoUsuext() != null
+									&& !participanteDeVisita.getCorreoUsuext().isEmpty())// SPRINT6
+								recipients.add(participanteDeVisita.getCorreoUsuext());
+							idUsuarioExterno = participanteDeVisita.getIdUsuexterno();
+						} else if (participante instanceof DtConsultasBk) {
+							DtConsultasBk participanteDeConsulta = (DtConsultasBk) participante;
+							if (participanteDeConsulta.getCorreoUsuext() != null
+									&& !participanteDeConsulta.getCorreoUsuext().isEmpty())// SPRINT6
+								recipients.add(participanteDeConsulta.getCorreoUsuext());
+							idUsuarioExterno = participanteDeConsulta.getIdUsuexterno();
+						}
 						// SPRINT6 INICIO
-						PrtParametrosBk parametroBk = getParametro(tipoServicio);
-						String descripcionTipoServicio = parametroBk == null ? "" : parametroBk.getDescripcion();
 
-						String nombre = "";
+						if (recipients != null && !recipients.isEmpty()) {
 
-						DtUsuarioExterno usuarioExterno = new DtUsuarioExterno();
-						StringBuilder msg = null;
-						EmailUtil email = new EmailUtil();
+							usuarioExterno = dtUsuarioExternoDao.getDtUsuarioExterno(idUsuarioExterno);
+							if (usuarioExterno != null)
+								nombre = StringUtils.capitalize(usuarioExterno.getNombre().toLowerCase()) + " "
+										+ StringUtils.capitalize(usuarioExterno.getApaterno().toLowerCase());
 
-						Long idAsisteSi = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_ASISTENCIA_SI,
-								PropertiesMg.DEFAULT_PRTPARAMETROS_ASISTENCIA_SI);
-						String strAsunto = "ENCUESTA DE CALIDAD DE LOS SERVICIOS DE LOS CONECTAMEF ─ "
-								+ descripcionTipoServicio;// SPRINT_8
+							msg = new StringBuilder();
+							msg.append("<table align='center' width='100%'>");
+							msg.append("<tr><td width='50%' align='left'><img src='" + url + "/images/u2.png'></td>");// SPRINT13
+							msg.append("<td width='50%' align='right'><img src='" + url + "/images/u0.png'></td></tr>");// SPRINT13
+							msg.append("</table>");
+							msg.append(
+									"<div style='padding:11px;line-height:50px;background:#FFFFFF;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-ms-border-radius:5px; width:100%'>");// SPRINT17
+							msg.append(
+									"<div align='center' valign='middle' height='28px' style='background-color:#FFFFFF;'><h2><b>Nos encantaría conocer tu opinión sobre nuestro servicio de "
+											+ descripcionTipoServicio.toUpperCase() + "</b></h2></div>"); // SPRINT_3
+							msg.append(
+									"<div valign='middle' height='28px' style='line-height:28px;font-size:20px;background-color:#FFFFFF;'>Estimado(a),  <b>"
+											+ nombre + ":</b></div>");// SPRINT13
+							msg.append(
+									"<div valign='middle' height='28px' style='line-height:28px;font-size:20px;background-color:#FFFFFF;'>Con la finalidad de continuar mejorando el servicio de "
+											+ descripcionTipoServicio.toLowerCase()
+											+ " que brindan los CONECTAMEF a  nivel nacional, agradeceríamos puedas responder una breve encuesta sobre tu experiencia como participante en la  "
+											+ descripcionTipoServicio.toLowerCase()
+											+ (descpServicio.length() < 1 ? "" : " \"<b>" + descpServicio + "\" </b>")
+											+ " realizada el  "
+											+ (fechaServicio != null ? (descripcionTipoServicio.contains("CAPACITAC")
+													? FuncionesStaticas.getfechaLargaFormateadaConEstilo(
+															new Timestamp(fechaServicio.getTime()))
+													: FuncionesStaticas.getfechaLargaFormateadaSinHora(
+															new Timestamp(fechaServicio.getTime())))
+													: "")
+											+ " </div>"); // SPRINT_3
+							msg.append(
+									"<div valign='middle' height='28px' style='line-height:28px;font-size:19px;background-color:#FFFFFF;'></br>¡Gracias por participar!</div>");// SPRINT17
+							msg.append(
+									"<div valign='middle' height='50px' style='line-height:50px; font-size:19px;background-color:#FFFFFF;color:red;font-weight:bold'>Equipo CONECTAMEF</br></br></div>"); // SPRINT17
+							msg.append("</div>");
+							msg.append(
+									"<div align='center' valign='middle' height='28px' style='font-size:20px;line-height:28px;align:center !important;valign:middle;background:#C8000E;-webkit-border-radius:1px;-moz-border-radius:1px;border-radius:1px;-ms-border-radius:1px; width:80%'>"); // SPRINT17
+							msg.append("<a style=text-decoration:none; width: 210px;  href='" + url
+									+ "/encuesta/formPreguntas.htm?tps=" + tipoServicio + "&fcf="
+									+ fechaFinalizacion.getTime() + "&idu=" + idUsuarioExterno + "&ids=" + idServicio
+									+ "&fcs=" + fechaServicio.getTime()
+									+ "'><font color=white><b>CLIC AQUÍ PARA TOMAR ENCUESTA</b></font></a>"); // VBALDEONH
+																												// SPRINT2
+																												// //VBALDEONH
+																												// SPRINT4
+							msg.append("</div>");
 
-						for (Object participante : participantes) {
-							recipients = new ArrayList<String>(); // SPRINT6
-							if (participante instanceof DtAsistenciaUsuexternosBk) {
-								DtAsistenciaUsuexternosBk participanteDeAsistencia = (DtAsistenciaUsuexternosBk) participante;
-								if (participanteDeAsistencia.getCorreoUsuext() != null
-										&& !participanteDeAsistencia.getCorreoUsuext().isEmpty())// SPRINT6
-									recipients.add(participanteDeAsistencia.getCorreoUsuext());
-								idUsuarioExterno = participanteDeAsistencia.getIdUsuexterno();
-							} else if (participante instanceof DtCapaUsuexternosBk) {
-								DtCapaUsuexternosBk participanteDeCapacitacion = (DtCapaUsuexternosBk) participante;
-								if (participanteDeCapacitacion.getFlagAsistencia() != null
-										&& participanteDeCapacitacion.getFlagAsistencia().intValue() == idAsisteSi
-												.intValue()
-										&& participanteDeCapacitacion.getCorreoUsuext() != null
-										&& !participanteDeCapacitacion.getCorreoUsuext().isEmpty())
-									recipients.add(participanteDeCapacitacion.getCorreoUsuext());
-								idUsuarioExterno = participanteDeCapacitacion.getIdUsuexterno();
-								strAsunto = "ENCUESTA Y DESCARGA DE MATERIAL DEL SERVICIO DE CAPACITACIÓN DE LOS CONECTAMEF";// SPRINT_8
-							} else if (participante instanceof DtVisitasUsuexternosBk) {
-								DtVisitasUsuexternosBk participanteDeVisita = (DtVisitasUsuexternosBk) participante;
-								if (participanteDeVisita.getCorreoUsuext() != null
-										&& !participanteDeVisita.getCorreoUsuext().isEmpty())// SPRINT6
-									recipients.add(participanteDeVisita.getCorreoUsuext());
-								idUsuarioExterno = participanteDeVisita.getIdUsuexterno();
-							} else if (participante instanceof DtConsultasBk) {
-								DtConsultasBk participanteDeConsulta = (DtConsultasBk) participante;
-								if (participanteDeConsulta.getCorreoUsuext() != null
-										&& !participanteDeConsulta.getCorreoUsuext().isEmpty())// SPRINT6
-									recipients.add(participanteDeConsulta.getCorreoUsuext());
-								idUsuarioExterno = participanteDeConsulta.getIdUsuexterno();
-							}
-							// SPRINT6 INICIO
+							log.log(Level.INFO,
+									" INICIO INSTANCIANDO EL ENVIO AL SERVIDOR DE CORREO: idUsuarioExterno= "
+											+ idUsuarioExterno + " nombre= " + nombre + " tipoServicio= " + tipoServicio
+											+ " idServicio= " + idServicio + " fechaServicio=" + fechaServicio);// SPRINT53
 
-							if (recipients != null && !recipients.isEmpty()) {
+							email = new EmailUtil();
+							email.sendEmail(recipients, null, null, strAsunto, msg.toString()); // SPRINT_8
 
-								usuarioExterno = dtUsuarioExternoDao.getDtUsuarioExterno(idUsuarioExterno);
-								if (usuarioExterno != null)
-									nombre = StringUtils.capitalize(usuarioExterno.getNombre().toLowerCase()) + " "
-											+ StringUtils.capitalize(usuarioExterno.getApaterno().toLowerCase());
-
-								msg = new StringBuilder();
-								msg.append("<table align='center' width='100%'>");
-								msg.append("<tr><td width='50%' align='left'><img src='" + url + "/images/u2.png'></td>");// SPRINT13
-								msg.append("<td width='50%' align='right'><img src='" + url + "/images/u0.png'></td></tr>");// SPRINT13
-								msg.append("</table>");
-								msg.append(
-										"<div style='padding:11px;line-height:50px;background:#FFFFFF;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-ms-border-radius:5px; width:100%'>");// SPRINT17
-								msg.append(
-										"<div align='center' valign='middle' height='28px' style='background-color:#FFFFFF;'><h2><b>Nos encantaría conocer tu opinión sobre nuestro servicio de "
-												+ descripcionTipoServicio.toUpperCase() + "</b></h2></div>"); // SPRINT_3
-								msg.append(
-										"<div valign='middle' height='28px' style='line-height:28px;font-size:20px;background-color:#FFFFFF;'>Estimado(a),  <b>"
-												+ nombre + ":</b></div>");// SPRINT13
-								msg.append(
-										"<div valign='middle' height='28px' style='line-height:28px;font-size:20px;background-color:#FFFFFF;'>Con la finalidad de continuar mejorando el servicio de "
-												+ descripcionTipoServicio.toLowerCase()
-												+ " que brindan los CONECTAMEF a  nivel nacional, agradeceríamos puedas responder una breve encuesta sobre tu experiencia como participante en la  "
-												+ descripcionTipoServicio.toLowerCase()
-												+ (descpServicio.length() < 1 ? "" : " \"<b>" + descpServicio + "\" </b>")
-												+ " realizada el  "
-												+ (fechaServicio != null ? (descripcionTipoServicio.contains("CAPACITAC")
-														? FuncionesStaticas.getfechaLargaFormateadaConEstilo(
-																new Timestamp(fechaServicio.getTime()))
-														: FuncionesStaticas.getfechaLargaFormateadaSinHora(
-																new Timestamp(fechaServicio.getTime())))
-														: "")
-												+ " </div>"); // SPRINT_3
-								msg.append(
-										"<div valign='middle' height='28px' style='line-height:28px;font-size:19px;background-color:#FFFFFF;'></br>¡Gracias por participar!</div>");// SPRINT17
-								msg.append(
-										"<div valign='middle' height='50px' style='line-height:50px; font-size:19px;background-color:#FFFFFF;color:red;font-weight:bold'>Equipo CONECTAMEF</br></br></div>"); // SPRINT17
-								msg.append("</div>");
-								msg.append(
-										"<div align='center' valign='middle' height='28px' style='font-size:20px;line-height:28px;align:center !important;valign:middle;background:#C8000E;-webkit-border-radius:1px;-moz-border-radius:1px;border-radius:1px;-ms-border-radius:1px; width:80%'>"); // SPRINT17
-								msg.append("<a style=text-decoration:none; width: 210px;  href='" + url
-										+ "/encuesta/formPreguntas.htm?tps=" + tipoServicio + "&fcf="
-										+ fechaFinalizacion.getTime() + "&idu=" + idUsuarioExterno + "&ids=" + idServicio
-										+ "&fcs=" + fechaServicio.getTime()
-										+ "'><font color=white><b>CLIC AQUÍ PARA TOMAR ENCUESTA</b></font></a>"); // VBALDEONH
-																													// SPRINT2
-																													// //VBALDEONH
-																													// SPRINT4
-								msg.append("</div>");
-
-								log.log(Level.INFO,
-										" INICIO INSTANCIANDO EL ENVIO AL SERVIDOR DE CORREO: idUsuarioExterno= "
-												+ idUsuarioExterno + " nombre= " + nombre + " tipoServicio= " + tipoServicio
-												+ " idServicio= " + idServicio + " fechaServicio=" + fechaServicio);// SPRINT53
-
-								email = new EmailUtil();
-								email.sendEmail(recipients, null, null, strAsunto, msg.toString()); // SPRINT_8
-
-							}
 						}
-						// SPRINT6 FIN
-					} catch (Exception e) {
-						e.printStackTrace();
 					}
+					// SPRINT6 FIN
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			};
-			myThread.start();
-
-		}
-		
-
-		private Long getParametro(String key, Long defaultValue) throws Validador {
-			try {
-				return PropertiesMg.getSistemLong(key, defaultValue);
-			} catch (Exception e) {
-				throw new Validador(
-						"ERROR: INESPERADO: POR FAVOR ENVIE ESTE MENSAJE AL ADMINISTRADOR DEL SISTEMA, GRACIAS.\n"
-								+ e.getMessage());
 			}
+		};
+		myThread.start();
+
+	}
+
+	public Long getParametro(String key, Long defaultValue) throws Validador {
+		try {
+			return PropertiesMg.getSistemLong(key, defaultValue);
+		} catch (Exception e) {
+			throw new Validador(
+					"ERROR: INESPERADO: POR FAVOR ENVIE ESTE MENSAJE AL ADMINISTRADOR DEL SISTEMA, GRACIAS.\n"
+							+ e.getMessage());
 		}
-//INICIO CUSCATA - 10072024
-		public DtEncuestaBk getIdEncuesta(Long idTipoServicio, Long fechaServicio, Long idServicio) throws Validador {
-			DtEncuesta encuestaResultante = null; 
-			Long idOrigen = 0L;
-			Long idPresta = 0L;
-			Long idTipoServicioAsistencia = getParametro(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
-					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
-			Long idTipoServicioCapacitacion = getParametro(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA,
-					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA);
-			Long idTipoServicioVisita = getParametro(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA,
-					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA);
-			Long idTipoServicioConsulta = getParametro(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CONSULTA,
-					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CONSULTA);
+	}
 
-			//if (idTipoServicio.longValue() == idTipoServicioAsistencia.longValue()) {
-			if (String.valueOf(idTipoServicio).equals(String.valueOf(idTipoServicioAsistencia))) {
-				DtAsistencia dtAsistencia = dtAsistenciaDao.getDtAsistencia(idServicio);
-				if (dtAsistencia != null)
-					idOrigen = dtAsistencia.getIdOrigen();
-			//} else if (idTipoServicio.longValue() == idTipoServicioCapacitacion.longValue()) {
-			} else if (String.valueOf(idTipoServicio).equals(String.valueOf(idTipoServicioCapacitacion))) {
-				DtCapacitacion dtCapacitacion = dtCapacitacionDao.getDtCapacitacion(idServicio);
-				if (dtCapacitacion != null) {
-					idOrigen = dtCapacitacion.getIdOrigen();
-					idPresta = dtCapacitacion.getIdPrestacion();
-				}
-			//} else if (idTipoServicio.longValue() == idTipoServicioVisita.longValue()) {
-			} else if (String.valueOf(idTipoServicio).equals(String.valueOf(idTipoServicioVisita))) {
-				DtVisitas dtVisitas = dtVisitasDao.getDtVisitas(idServicio);
-				if (dtVisitas != null)
-					idOrigen = dtVisitas.getIdOrigen();
-			//} else if (idTipoServicio.longValue() == idTipoServicioConsulta.longValue()) {
-			} else if (String.valueOf(idTipoServicio).equals(String.valueOf(idTipoServicioConsulta))) {
-				DtConsultas dtConsultas = dtConsultasDao.getDtConsultas(idServicio);
-				if (dtConsultas != null)
-					idOrigen = dtConsultas.getIdOrigen();
+	public DtEncuestaBk getIdEncuesta(Long idTipoServicio, Long fechaServicio, Long idServicio) throws Validador {
+		DtEncuesta encuestaResultante = null;
+		Long idOrigen = 0L;
+		Long idPresta = 0L;
+		Long idTipoServicioAsistencia = getParametro(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
+		Long idTipoServicioCapacitacion = getParametro(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA);
+		Long idTipoServicioVisita = getParametro(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA);
+		Long idTipoServicioConsulta = getParametro(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CONSULTA,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CONSULTA);
+
+		// if (idTipoServicio.longValue() ==
+		// idTipoServicioAsistencia.longValue()) {
+		if (String.valueOf(idTipoServicio).equals(String.valueOf(idTipoServicioAsistencia))) {
+			DtAsistencia dtAsistencia = dtAsistenciaDao.getDtAsistencia(idServicio);
+			if (dtAsistencia != null)
+				idOrigen = dtAsistencia.getIdOrigen();
+			// } else if (idTipoServicio.longValue() ==
+			// idTipoServicioCapacitacion.longValue()) {
+		} else if (String.valueOf(idTipoServicio).equals(String.valueOf(idTipoServicioCapacitacion))) {
+			DtCapacitacion dtCapacitacion = dtCapacitacionDao.getDtCapacitacion(idServicio);
+			if (dtCapacitacion != null) {
+				idOrigen = dtCapacitacion.getIdOrigen();
+				idPresta = dtCapacitacion.getIdPrestacion();
 			}
+			// } else if (idTipoServicio.longValue() ==
+			// idTipoServicioVisita.longValue()) {
+		} else if (String.valueOf(idTipoServicio).equals(String.valueOf(idTipoServicioVisita))) {
+			DtVisitas dtVisitas = dtVisitasDao.getDtVisitas(idServicio);
+			if (dtVisitas != null)
+				idOrigen = dtVisitas.getIdOrigen();
+			// } else if (idTipoServicio.longValue() ==
+			// idTipoServicioConsulta.longValue()) {
+		} else if (String.valueOf(idTipoServicio).equals(String.valueOf(idTipoServicioConsulta))) {
+			DtConsultas dtConsultas = dtConsultasDao.getDtConsultas(idServicio);
+			if (dtConsultas != null)
+				idOrigen = dtConsultas.getIdOrigen();
+		}
 
-			List<DtEncuesta> lstEncuesta = dtEncuestaDao.findListPeriodo(idTipoServicio, new Date(fechaServicio));
-			if (lstEncuesta != null && lstEncuesta.size() > 0) {
+		List<DtEncuesta> lstEncuesta = dtEncuestaDao.findListPeriodo(idTipoServicio, new Date(fechaServicio));
+		if (lstEncuesta != null && lstEncuesta.size() > 0) {
 
-				// SPRINT_6.2 INICIO
-				for (DtEncuesta encuesta : lstEncuesta) {
-					if (encuesta.getIdEncuesta() != null) {
-						
-						if (encuesta.getIdOrigen() != null && encuesta.getIdPrestacion() != null) {
-							if (idPresta != null && idOrigen != null && idOrigen.compareTo(encuesta.getIdOrigen()) == 0
-									&& idPresta.compareTo(encuesta.getIdPrestacion()) == 0) {
-								encuestaResultante = encuesta;
-								break;
-							}
-						} else if (encuesta.getIdOrigen() != null) {
-							if (idOrigen != null &&
-									idOrigen.compareTo(encuesta.getIdOrigen()) == 0) {
-								encuestaResultante = encuesta;
-							}
-						} else if (encuesta.getIdPrestacion() != null) {
-							if (idPresta != null &&
-									idPresta.compareTo(encuesta.getIdPrestacion()) == 0) {
-								encuestaResultante = encuesta;
-							}
-						}
+			// SPRINT_6.2 INICIO
+			for (DtEncuesta encuesta : lstEncuesta) {
+				if (encuesta.getIdEncuesta() != null) {
 
-						if (encuesta == null &&
-								(encuesta.getIdOrigen() == null || 
-								encuesta.getIdOrigen().intValue() == 0)
-								&& (encuesta.getIdPrestacion() == null || encuesta.getIdPrestacion().intValue() == 0)) {// SPRINT_6.3
-							encuestaResultante = encuesta;
-						}
-						
-						/*if(idOrigen==encuesta.getIdOrigen() && idTipoServicioAsistencia == idTipoServicio) {
+					if (encuesta.getIdOrigen() != null && encuesta.getIdPrestacion() != null) {
+						if (idPresta != null && idOrigen != null && idOrigen.compareTo(encuesta.getIdOrigen()) == 0
+								&& idPresta.compareTo(encuesta.getIdPrestacion()) == 0) {
 							encuestaResultante = encuesta;
 							break;
-						}*/
-						//PARA PROBAR
-						if(String.valueOf(idTipoServicioAsistencia).equals(String.valueOf(idTipoServicio))) {
+						}
+					} else if (encuesta.getIdOrigen() != null) {
+						if (idOrigen != null && idOrigen.compareTo(encuesta.getIdOrigen()) == 0) {
 							encuestaResultante = encuesta;
 						}
-						
-						
+					} else if (encuesta.getIdPrestacion() != null) {
+						if (idPresta != null && idPresta.compareTo(encuesta.getIdPrestacion()) == 0) {
+							encuestaResultante = encuesta;
+						}
+					}
+
+					if (encuesta == null && (encuesta.getIdOrigen() == null || encuesta.getIdOrigen().intValue() == 0)
+							&& (encuesta.getIdPrestacion() == null || encuesta.getIdPrestacion().intValue() == 0)) {// SPRINT_6.3
+						encuestaResultante = encuesta;
+					}
+
+					/*
+					 * if(idOrigen==encuesta.getIdOrigen() &&
+					 * idTipoServicioAsistencia == idTipoServicio) {
+					 * encuestaResultante = encuesta; break; }
+					 */
+					// PARA PROBAR
+					if (String.valueOf(idTipoServicioAsistencia).equals(String.valueOf(idTipoServicio))) {
+						encuestaResultante = encuesta;
 					}
 
 				}
-				
+
 			}
 
-			DtEncuestaBk encuestaBk = toBeanBk(encuestaResultante, DtEncuestaBk.class);
-			/*if (encuestaBk == null) {
-				PrtParametrosBk parametro = getParametro(idTipoServicio);
-				if (parametro == null)
-					return encuestaBk; // throw new Validador("No se encontró el
-										// tipo de servicio");
-				else
-					return encuestaBk; // throw new Validador("No se encontró
-										
-			} else {
-				return encuestaBk;
-			}*/
-			return encuestaBk;
-			
 		}
-		//FIN CUSCATA - 10072024
-		public PrtParametrosBk getParametro(Long idParametro) throws Validador {
-			PrtParametrosBk prtParametrosBk = new PrtParametrosBk();
-			PrtParametros prtParametro = prtParametrosDao.getPrtParametros(idParametro);
-			FuncionesStaticas.copyPropertiesObject(prtParametrosBk, prtParametro);
-			return prtParametrosBk;
-		}
-		
-		public <T> T toBeanBk(Object objDomain, Class<T> classBk) throws Validador {
-			if (objDomain == null)
-				return null;
-			try {
-				Object objBk = classBk.newInstance();
-				BeanUtils.copyProperties(objDomain, objBk);
-				PropertyDescriptor[] atributos = Introspector.getBeanInfo(objDomain.getClass()).getPropertyDescriptors();
-				for (PropertyDescriptor atributo : atributos) {
-					try {
-						if (!DtServicioBk.esCampoSinDescripcion(atributo.getName())) {
-							BeanWrapper bwDomain = new BeanWrapperImpl(objDomain);
-							BeanWrapper bwBk = new BeanWrapperImpl(objBk);
-							Long valorId = Long.parseLong((bwDomain.getPropertyValue(atributo.getName()).toString()));
-							// if(atributo.getName().startsWith("tipo")) {
-							if (DtServicioBk.esCampoDePrtParametro(atributo.getName())) {
-								PrtParametros parametro = prtParametrosDao.getPrtParametros(valorId);
-								try {
-									String descripcionParametro = parametro.getDescripcion() != null
-											&& parametro.getDescripcion().equalsIgnoreCase("Eliminado") ? "ANULADO"
-													: parametro.getDescripcion();
-									bwBk.setPropertyValue(atributo.getName() + "_txt", descripcionParametro);
-								} catch (NotWritablePropertyException nwpe) {
-									bwBk.setPropertyValue("descripcion" + StringUtils.capitalize(atributo.getName()),
-											parametro.getDescripcion());
-								}
+
+		DtEncuestaBk encuestaBk = toBeanBk(encuestaResultante, DtEncuestaBk.class);
+		/*
+		 * if (encuestaBk == null) { PrtParametrosBk parametro =
+		 * getParametro(idTipoServicio); if (parametro == null) return
+		 * encuestaBk; // throw new Validador("No se encontró el // tipo de
+		 * servicio"); else return encuestaBk; // throw new Validador("No se
+		 * encontró
+		 * 
+		 * } else { return encuestaBk; }
+		 */
+		return encuestaBk;
+
+	}
+	// INICIO CUSCATA - 10072024
+
+	public PrtParametrosBk getParametro(Long idParametro) throws Validador {
+		PrtParametrosBk prtParametrosBk = new PrtParametrosBk();
+		PrtParametros prtParametro = prtParametrosDao.getPrtParametros(idParametro);
+		FuncionesStaticas.copyPropertiesObject(prtParametrosBk, prtParametro);
+		return prtParametrosBk;
+	}
+
+	public <T> T toBeanBk(Object objDomain, Class<T> classBk) throws Validador {
+		if (objDomain == null)
+			return null;
+		try {
+			Object objBk = classBk.newInstance();
+			BeanUtils.copyProperties(objDomain, objBk);
+			PropertyDescriptor[] atributos = Introspector.getBeanInfo(objDomain.getClass()).getPropertyDescriptors();
+			for (PropertyDescriptor atributo : atributos) {
+				try {
+					if (!DtServicioBk.esCampoSinDescripcion(atributo.getName())) {
+						BeanWrapper bwDomain = new BeanWrapperImpl(objDomain);
+						BeanWrapper bwBk = new BeanWrapperImpl(objBk);
+						Long valorId = Long.parseLong((bwDomain.getPropertyValue(atributo.getName()).toString()));
+						// if(atributo.getName().startsWith("tipo")) {
+						if (DtServicioBk.esCampoDePrtParametro(atributo.getName())) {
+							PrtParametros parametro = prtParametrosDao.getPrtParametros(valorId);
+							try {
+								String descripcionParametro = parametro.getDescripcion() != null
+										&& parametro.getDescripcion().equalsIgnoreCase("Eliminado") ? "ANULADO"
+												: parametro.getDescripcion();
+								bwBk.setPropertyValue(atributo.getName() + "_txt", descripcionParametro);
+							} catch (NotWritablePropertyException nwpe) {
+								bwBk.setPropertyValue("descripcion" + StringUtils.capitalize(atributo.getName()),
+										parametro.getDescripcion());
 							}
-							if (atributo.getName().equals("idUsuexterno")) {
-								DtUsuarioExterno usuarioExterno = dtUsuarioExternoDao.getDtUsuarioExterno(valorId);
-								bwBk.setPropertyValue("dniUser", usuarioExterno.getNumDocu());
-								bwBk.setPropertyValue("idUsuexterno_txt",
-										StringUtils.defaultString(usuarioExterno.getNombre(), "") + " "
-												+ StringUtils.defaultString(usuarioExterno.getApaterno(), "") + " "
-												+ StringUtils.defaultString(usuarioExterno.getAmaterno(), ""));
-								bwBk.setPropertyValue("correoUsuext", usuarioExterno.getCorreo());
-								bwBk.setPropertyValue("fijoUsuext", usuarioExterno.getOtroTelefono());
-								bwBk.setPropertyValue("celularUsuext", usuarioExterno.getOtroCelular());
+						}
+						if (atributo.getName().equals("idUsuexterno")) {
+							DtUsuarioExterno usuarioExterno = dtUsuarioExternoDao.getDtUsuarioExterno(valorId);
+							bwBk.setPropertyValue("dniUser", usuarioExterno.getNumDocu());
+							bwBk.setPropertyValue("idUsuexterno_txt",
+									StringUtils.defaultString(usuarioExterno.getNombre(), "") + " "
+											+ StringUtils.defaultString(usuarioExterno.getApaterno(), "") + " "
+											+ StringUtils.defaultString(usuarioExterno.getAmaterno(), ""));
+							bwBk.setPropertyValue("correoUsuext", usuarioExterno.getCorreo());
+							bwBk.setPropertyValue("fijoUsuext", usuarioExterno.getOtroTelefono());
+							bwBk.setPropertyValue("celularUsuext", usuarioExterno.getOtroCelular());
+						}
+						if (atributo.getName().equals("idSede")) {
+							MsSedes sede = msSedesDao.getMsSedes(valorId);
+							try {
+								bwBk.setPropertyValue("idSede_txt", sede.getSede());
+							} catch (NotWritablePropertyException nwpe) {
+								bwBk.setPropertyValue("nombreSede", sede.getSede());
 							}
-							if (atributo.getName().equals("idSede")) {
-								MsSedes sede = msSedesDao.getMsSedes(valorId);
+						}
+						if (atributo.getName().contains("idSistAdm") || atributo.getName().contains("idSistAdmi")
+								|| atributo.getName().contains("id_sist_admi")) {
+							MsSisAdmistrativo sistemaAdministrativo = msSisAdmistrativoDao
+									.getMsSisAdmistrativo(valorId);
+							try {
+								bwBk.setPropertyValue("nombreSistAdmi", sistemaAdministrativo.getDescripcion());
+							} catch (NotWritablePropertyException nwpe) {
 								try {
-									bwBk.setPropertyValue("idSede_txt", sede.getSede());
-								} catch (NotWritablePropertyException nwpe) {
-									bwBk.setPropertyValue("nombreSede", sede.getSede());
-								}
-							}
-							if (atributo.getName().contains("idSistAdm") || atributo.getName().contains("idSistAdmi")
-									|| atributo.getName().contains("id_sist_admi")) {
-								MsSisAdmistrativo sistemaAdministrativo = msSisAdmistrativoDao
-										.getMsSisAdmistrativo(valorId);
-								try {
-									bwBk.setPropertyValue("nombreSistAdmi", sistemaAdministrativo.getDescripcion());
-								} catch (NotWritablePropertyException nwpe) {
+									bwBk.setPropertyValue("idSistAdm_txt", sistemaAdministrativo.getDescripcion());
+								} catch (NotWritablePropertyException nwpe2) {
 									try {
-										bwBk.setPropertyValue("idSistAdm_txt", sistemaAdministrativo.getDescripcion());
-									} catch (NotWritablePropertyException nwpe2) {
-										try {
-											bwBk.setPropertyValue("idSistAdmi_txt", sistemaAdministrativo.getDescripcion());
-										} catch (NotWritablePropertyException nwpe3) {
-											bwBk.setPropertyValue("id_sist_admi_txt",
-													sistemaAdministrativo.getDescripcion());
-										}
+										bwBk.setPropertyValue("idSistAdmi_txt", sistemaAdministrativo.getDescripcion());
+									} catch (NotWritablePropertyException nwpe3) {
+										bwBk.setPropertyValue("id_sist_admi_txt",
+												sistemaAdministrativo.getDescripcion());
 									}
 								}
 							}
-							if (atributo.getName().equals("idProyecto")) {
-								MsProyectoInversion proyecto = msProyectoInversionDao.findByPk(valorId);
-								bwBk.setPropertyValue("codigo", proyecto.getCodigo());
-								bwBk.setPropertyValue("nombre", proyecto.getNombre());
-							}
-							if (atributo.getName().equals("idEntidad")) {
-								DtEntidades entidad = dtEntidadesDao.getDtEntidades(valorId);
-								bwBk.setPropertyValue("idEntidad_txt", entidad.getRazSocial());
-								try {
-									bwBk.setPropertyValue("codEjec", entidad.getCodEjec());
-								} catch (NotWritablePropertyException nwpe) {
-									bwBk.setPropertyValue("codEjecutora", entidad.getCodEjec());
-								}
-								bwBk.setPropertyValue("codEntidad_txt",
-										entidad.getCodEjec() + " " + entidad.getRazSocial());
-							}
-							if (atributo.getName().equals("idLocal")) {
-								MsLocal local = msLocalDao.getMsLocal(valorId);
-								bwBk.setPropertyValue("idLocal_txt", local.getDescripcion());
-							}
-							if (atributo.getName().equals("idTema") || atributo.getName().equals("id_tema")) {
-								MsTema tema = msTemasDao.getMsTema(valorId);
-								bwBk.setPropertyValue("idTema_txt", tema.getDescripcion());
-							}
-							bwDomain = null;
-							bwBk = null;
 						}
-					} catch (Exception e) {
-						// e.printStackTrace();
-						System.out
-								.println("WARNING: [toBeanBk] No se pudo obtener la descripción de " + atributo.getName());
-					}
-				}
-				return (T) objBk;
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new Validador(e.getMessage());
-			}
-			// IVILLAFANA 23052019 FIN
-
-		}
-		//INICIO CUSCATA - 10072024
-		@Override
-		public DtAsistenciaUsuexternosBk saveorupdateDtAsistenciaUsuexternosBk(
-				DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user, Long kyUsuarioMod, Long kyAreaMod,
-				String rmtaddress) throws Validador {
-
-			ValidacionDtAsistenciaUsuexternosMng.validarDtAsistenciaUsuexternosBk(dtAsistenciaUsuexternosBk);
-
-			DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
-			Timestamp hoy = new Timestamp(System.currentTimeMillis());
-
-			int nivel = 1;
-
-			try {
-				if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
-						&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
-
-					dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
-							.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
-
-					boolean cambios = AuditoriaDtAsistenciaUsuexternosMng.auditarCambiosDtAsistenciaUsuexternos(
-							dtAsistenciaUsuexternosBk, dtAsistenciaUsuexternos, kyUsuarioMod, user, rmtaddress, nivel);
-
-					if (cambios) {
-						dtAsistenciaUsuexternos.setRtmaddressrst(rmtaddress);
-						dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
-						dtAsistenciaUsuexternos.setFechaModif(hoy);
-						dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
-					}
-				} else {
-					dtAsistenciaUsuexternosBk.setRtmaddress(rmtaddress);
-					dtAsistenciaUsuexternosBk.setRtmaddressrst(rmtaddress);
-
-					dtAsistenciaUsuexternosBk.setFechaCrea(hoy);
-					dtAsistenciaUsuexternosBk.setIdusserCrea(kyUsuarioMod);
-					dtAsistenciaUsuexternosBk.setIdusserModif(kyUsuarioMod);
-					dtAsistenciaUsuexternosBk.setFechaModif(hoy);
-					dtAsistenciaUsuexternosBk.setEstado(Estado.ACTIVO.getValor());
-
-					dtAsistenciaUsuexternos = new DtAsistenciaUsuexternos();
-
-					FuncionesStaticas.copyPropertiesObject(dtAsistenciaUsuexternos, dtAsistenciaUsuexternosBk);
-					dtAsistenciaUsuexternosDao.saveDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
-
-					log.log(Level.INFO,
-							"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
-									+ "CREADO dtAsistenciaUsuexternos" + " :: "
-									+ dtAsistenciaUsuexternos.getIdAsistUsuext().toString() + " :: " + "0" + " :: " + "1");
-
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new Validador(e.getMessage());
-			}
-
-			dtAsistenciaUsuexternosBk = getDtAsistenciaUsuexternosBkXid(dtAsistenciaUsuexternos.getIdAsistUsuext(),
-					kyUsuarioMod);
-			return dtAsistenciaUsuexternosBk;
-		}
-		
-		public void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user,
-				Long kyUsuarioMod, Long kyAreaMod, Long kySedeMod, String rmtaddress) throws Validador {
-			try {
-				DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
-				if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
-						&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
-
-					dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
-							.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
-
-					// Date hoy = new Date(System.currentTimeMillis());
-					Timestamp hoy = new Timestamp(System.currentTimeMillis());
-
-					dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
-					dtAsistenciaUsuexternos.setFechaModif(hoy);
-					Long estadoanterior = dtAsistenciaUsuexternos.getEstado();
-					dtAsistenciaUsuexternos.setEstado(dtAsistenciaUsuexternosDao.getEstadoEliminado());
-
-					dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
-
-					log.log(Level.INFO,
-							"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
-									+ "ELIMINADO dtAsistenciaUsuexternos" + " :: "
-									+ dtAsistenciaUsuexternos.getIdAsistUsuext().toString() + " :: " + estadoanterior
-									+ " :: " + "0");
-
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new Validador(e.getMessage());
-			}
-		}
-		
-		private void saveOrUpdateAsistenciaUsuarioExt(DtAsistenciaBk dtAsistenciaBk, 
-													  DtAsistencia dtAsistencia,
-													  Timestamp hoy, Long kyUsuarioMod, String rmtaddress, String user) {
-			
-			DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
-			try {
-				if (dtAsistenciaBk != null && 
-						dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss() != null &&
-						 !dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss().isEmpty()) {
-					
-					List<DtAsistenciaUsuexternos> listaAsistenciaUsuexternosBD = dtAsistenciaUsuexternosDao.getXFiltro(dtAsistencia.getIdAsistencia(), null, null);
-					if(listaAsistenciaUsuexternosBD!=null && !listaAsistenciaUsuexternosBD.isEmpty()) {
-						for (DtAsistenciaUsuexternos dtAsistenciaUsuexternosBD : listaAsistenciaUsuexternosBD) {
-							this.deleteDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBD, user, kyUsuarioMod, rmtaddress);
+						if (atributo.getName().equals("idProyecto")) {
+							MsProyectoInversion proyecto = msProyectoInversionDao.findByPk(valorId);
+							bwBk.setPropertyValue("codigo", proyecto.getCodigo());
+							bwBk.setPropertyValue("nombre", proyecto.getNombre());
 						}
+						if (atributo.getName().equals("idEntidad")) {
+							DtEntidades entidad = dtEntidadesDao.getDtEntidades(valorId);
+							bwBk.setPropertyValue("idEntidad_txt", entidad.getRazSocial());
+							try {
+								bwBk.setPropertyValue("codEjec", entidad.getCodEjec());
+							} catch (NotWritablePropertyException nwpe) {
+								bwBk.setPropertyValue("codEjecutora", entidad.getCodEjec());
+							}
+							bwBk.setPropertyValue("codEntidad_txt",
+									entidad.getCodEjec() + " " + entidad.getRazSocial());
+						}
+						if (atributo.getName().equals("idLocal")) {
+							MsLocal local = msLocalDao.getMsLocal(valorId);
+							bwBk.setPropertyValue("idLocal_txt", local.getDescripcion());
+						}
+						if (atributo.getName().equals("idTema") || atributo.getName().equals("id_tema")) {
+							MsTema tema = msTemasDao.getMsTema(valorId);
+							bwBk.setPropertyValue("idTema_txt", tema.getDescripcion());
+						}
+						bwDomain = null;
+						bwBk = null;
 					}
-					
-					
-					for (DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk : dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss()) {
-							dtAsistenciaUsuexternosBk.setIdAsistUsuext(null);
-							dtAsistenciaUsuexternosBk.setIdAsistencia(dtAsistencia.getIdAsistencia());
-							dtAsistenciaUsuexternosBk.setRtmaddress(rmtaddress);
-							dtAsistenciaUsuexternosBk.setRtmaddressrst(rmtaddress);
-							dtAsistenciaUsuexternosBk.setFechaCrea(hoy);
-							dtAsistenciaUsuexternosBk.setIdusserCrea(kyUsuarioMod);
-							dtAsistenciaUsuexternosBk.setIdusserModif(kyUsuarioMod);
-							dtAsistenciaUsuexternosBk.setFechaModif(hoy);
-							dtAsistenciaUsuexternosBk.setEstado(Estado.ACTIVO.getValor());
-
-							dtAsistenciaUsuexternos = new DtAsistenciaUsuexternos();
-
-							FuncionesStaticas.copyPropertiesObject(dtAsistenciaUsuexternos, dtAsistenciaUsuexternosBk);
-							dtAsistenciaUsuexternosDao.saveDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
-					}
+				} catch (Exception e) {
+					// e.printStackTrace();
+					System.out
+							.println("WARNING: [toBeanBk] No se pudo obtener la descripción de " + atributo.getName());
 				}
-				
-				
-			} catch (Exception e) {
-				log.warning("Error: " + e.getMessage());
-
 			}
-
+			return (T) objBk;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Validador(e.getMessage());
 		}
-        //FIN CUSCATA - 10072024
-	//FIN CUSCATA - 18062024
+		// IVILLAFANA 23052019 FIN
+
+	}
+	// FIN CUSCATA - 18062024
 
 	@Override
 	public void deleteDtAsistencia(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod, Long kyAreaMod,
@@ -3507,7 +3732,8 @@ public class ServicioImp implements Servicio, Serializable {
 
 				if (dtAsistenciaBk.isAnulado()) {
 					throw new Validador(MessageFormat.format(
-							"LA ASISTENCIA DE ID: " + dtAsistenciaBk.getIdAsistencia() + " YA SE ENCUENTRA ANULADA",
+							"LA ASISTENCIA TÉCNICA DE ID: " + dtAsistenciaBk.getIdAsistencia()
+									+ " YA SE ENCUENTRA ANULADA",
 							Messages.getStringToKey("dtAsistencias.titulotabla")));
 				}
 				// MPINARES 13022024 - FIN
@@ -3577,7 +3803,8 @@ public class ServicioImp implements Servicio, Serializable {
 			for (DtAsistencia dtAsistencia : dtAsistenciasss) {
 				DtAsistenciaBk dtAsistenciaBk = new DtAsistenciaBk();
 				FuncionesStaticas.copyPropertiesObject(dtAsistenciaBk, dtAsistencia);
-				completarDtAsistencia(dtAsistenciaBk, kyUsuarioMod);//CUSCATA - 18062024
+				completarDtAsistencia(dtAsistenciaBk, kyUsuarioMod);// CUSCATA -
+																	// 18062024
 				setACLDtAsistenciaBk(dtAsistenciaBk, kyUsuarioMod);
 				dtAsistenciaBkss.add(dtAsistenciaBk);
 			}
@@ -3598,7 +3825,8 @@ public class ServicioImp implements Servicio, Serializable {
 			for (DtAsistencia dtAsistencia : dtAsistenciasss) {
 				DtAsistenciaBk dtAsistenciaBk = new DtAsistenciaBk();
 				FuncionesStaticas.copyPropertiesObject(dtAsistenciaBk, dtAsistencia);
-				completarDtAsistencia(dtAsistenciaBk, kyUsuarioMod);//CUSCATA - 18062024
+				completarDtAsistencia(dtAsistenciaBk, kyUsuarioMod);// CUSCATA -
+																	// 18062024
 				setACLDtAsistenciaBk(dtAsistenciaBk, kyUsuarioMod);
 				dtAsistenciaBkss.add(dtAsistenciaBk);
 			}
@@ -4001,6 +4229,7 @@ public class ServicioImp implements Servicio, Serializable {
 				for (DtCapaPublico dtCapaPublicoo : dtCapaPublicoList) {
 					DtCapaPublicoBk dtCapaPublicoBk = new DtCapaPublicoBk();
 					FuncionesStaticas.copyPropertiesObject(dtCapaPublicoBk, dtCapaPublicoo);
+					completarDtCapaPublico(dtCapaPublicoBk);
 					dtCapaPublicoBkLista.add(dtCapaPublicoBk);
 				}
 				dtCapacitacionBk.setDtCapaPublicoBkJSss(dtCapaPublicoBkLista);
@@ -4240,25 +4469,29 @@ public class ServicioImp implements Servicio, Serializable {
 						&& dtCapaPublicoBka.getIdCapaPublico().longValue() > 0) {
 					// ACTUALIZAR
 				} else {
-					// NUEVO
-					dtCapaPublicoBka.setIdCapacitacion(dtCapacitacion.getIdCapacitacion());
-					dtCapaPublicoBka.setEstado(Estado.ACTIVO.getValor());
-					dtCapaPublicoBka.setFechaCrea(hoy);
-					dtCapaPublicoBka.setFechaModif(hoy);
-					dtCapaPublicoBka.setIduserCrea(kyUsuarioMod);
-					dtCapaPublicoBka.setIduserModif(kyUsuarioMod);
-					dtCapaPublicoBka.setRtmaddress(rmtaddress);
-					dtCapaPublicoBka.setRtmaddressrst(rmtaddress);
+					if (dtCapaPublicoBka.getIdCargo() != null && dtCapaPublicoBka.getIdCargo().longValue() > 0) {
+						// NUEVO
+						dtCapaPublicoBka.setIdCapaPublico(null);
+						dtCapaPublicoBka.setIdCapacitacion(dtCapacitacion.getIdCapacitacion());
+						dtCapaPublicoBka.setEstado(Estado.ACTIVO.getValor());
+						dtCapaPublicoBka.setFechaCrea(hoy);
+						dtCapaPublicoBka.setFechaModif(hoy);
+						dtCapaPublicoBka.setIduserCrea(kyUsuarioMod);
+						dtCapaPublicoBka.setIduserModif(kyUsuarioMod);
+						dtCapaPublicoBka.setRtmaddress(rmtaddress);
+						dtCapaPublicoBka.setRtmaddressrst(rmtaddress);
 
-					dtCapaPublico = new DtCapaPublico();
+						dtCapaPublico = new DtCapaPublico();
 
-					FuncionesStaticas.copyPropertiesObject(dtCapaPublico, dtCapaPublicoBka);
-					dtCapaPublicoDao.saveDtCapaPublico(dtCapaPublico);
+						FuncionesStaticas.copyPropertiesObject(dtCapaPublico, dtCapaPublicoBka);
+						dtCapaPublicoDao.saveDtCapaPublico(dtCapaPublico);
 
-					log.log(Level.INFO,
-							"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
-									+ "CREADO dtCapaPublico" + " :: " + dtCapaPublico.getIdCapaPublico().toString()
-									+ " :: " + "0" + " :: " + "" + Estado.ACTIVO.getValor());
+						log.log(Level.INFO,
+								"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+										+ "CREADO dtCapaPublico" + " :: " + dtCapaPublico.getIdCapaPublico().toString()
+										+ " :: " + "0" + " :: " + "" + Estado.ACTIVO.getValor());
+					}
+
 				}
 			}
 		}
@@ -4330,7 +4563,7 @@ public class ServicioImp implements Servicio, Serializable {
 		dtCapacitacionBk = getDtCapacitacionBkXid(dtCapacitacion.getIdCapacitacion(), kyUsuarioMod);
 		return dtCapacitacionBk;
 	}
-	
+
 
 	@Override
 	public DtCapacitacionBk saveorupdateDtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, String user,
@@ -4658,7 +4891,7 @@ public class ServicioImp implements Servicio, Serializable {
 				log.log(Level.INFO,
 						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
 								+ "ELIMINADO dtCapacitacion" + " :: " + dtCapacitacion.getIdCapacitacion().toString()
-								+ " :: " + estadoanterior + " :: " + "0");
+								+ " :: " + estadoanterior + " :: " + " " + Estado.ELIMINADO.getValor());
 
 			}
 		} catch (Exception e) {
@@ -5692,6 +5925,178 @@ public class ServicioImp implements Servicio, Serializable {
 		}
 	}
 
+	private void completarDtEntidadesDtoo(DtEntidadesDto dtEntidadesBk) {
+		// try {
+		// if (dtEntidadesBk.getIdTipo() != null &&
+		// dtEntidadesBk.getIdTipo().longValue() > 0) {
+		// PrtParametros prtParametros =
+		// prtParametrosDao.getPrtParametros(dtEntidadesBk.getIdTipo());
+		// if (prtParametros != null)
+		// dtEntidadesBk.setIdTipoTxt(prtParametros.getDescripcion());
+		// }
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		try {
+			if (dtEntidadesBk.getCodDpto() != null && dtEntidadesBk.getCodDpto().intValue() > 0) {
+				int iiCodDpto = dtEntidadesBk.getCodDpto().intValue();
+				int iiCodProv = 0;
+				int iiCodDistr = 0;
+				MsUbigeoId msUbigeoId = new MsUbigeoId();
+				msUbigeoId.setCodDpto(iiCodDpto);
+				msUbigeoId.setCodProv(iiCodProv);
+				msUbigeoId.setCodDistr(iiCodDistr);
+				MsUbigeo msUbigeo = msUbigeoDao.getMsUbigeo(msUbigeoId);
+				if (msUbigeo != null)
+					dtEntidadesBk.setCodDptoTxt(msUbigeo.getDescripcion());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if (dtEntidadesBk.getCodDpto() != null && dtEntidadesBk.getCodDpto().intValue() > 0
+					&& dtEntidadesBk.getCodProv() != null && dtEntidadesBk.getCodProv().intValue() > 0) {
+				int iiCodDpto = dtEntidadesBk.getCodDpto().intValue();
+				int iiCodProv = dtEntidadesBk.getCodProv().intValue();
+				int iiCodDistr = 0;
+				MsUbigeoId msUbigeoId = new MsUbigeoId();
+				msUbigeoId.setCodDpto(iiCodDpto);
+				msUbigeoId.setCodProv(iiCodProv);
+				msUbigeoId.setCodDistr(iiCodDistr);
+				MsUbigeo msUbigeo = msUbigeoDao.getMsUbigeo(msUbigeoId);
+				if (msUbigeo != null)
+					dtEntidadesBk.setCodProvTxt(msUbigeo.getDescripcion());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if (dtEntidadesBk.getCodDpto() != null && dtEntidadesBk.getCodDpto().intValue() > 0
+					&& dtEntidadesBk.getCodProv() != null && dtEntidadesBk.getCodProv().intValue() > 0
+					&& dtEntidadesBk.getCodDistr() != null && dtEntidadesBk.getCodDistr().intValue() > 0) {
+				int iiCodDpto = dtEntidadesBk.getCodDpto().intValue();
+				int iiCodProv = dtEntidadesBk.getCodProv().intValue();
+				int iiCodDistr = dtEntidadesBk.getCodDistr().intValue();
+				MsUbigeoId msUbigeoId = new MsUbigeoId();
+				msUbigeoId.setCodDpto(iiCodDpto);
+				msUbigeoId.setCodProv(iiCodProv);
+				msUbigeoId.setCodDistr(iiCodDistr);
+				MsUbigeo msUbigeo = msUbigeoDao.getMsUbigeo(msUbigeoId);
+				if (msUbigeo != null)
+					dtEntidadesBk.setCodDistrTxt(msUbigeo.getDescripcion());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// try {
+		// if (dtEntidadesBk.getIdCaract() != null &&
+		// dtEntidadesBk.getIdCaract().longValue() > 0) {
+		// PrtParametros prtParametros =
+		// prtParametrosDao.getPrtParametros(dtEntidadesBk.getIdCaract());
+		// if (prtParametros != null)
+		// dtEntidadesBk.setIdCaractTxt(prtParametros.getDescripcion());
+		// }
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// try {
+		// if (dtEntidadesBk.getIdSistAdmi() != null &&
+		// dtEntidadesBk.getIdSistAdmi().longValue() > 0) {
+		// MsSisAdmistrativo msSisAdmistrativo = msSisAdmistrativoDao
+		// .getMsSisAdmistrativo(dtEntidadesBk.getIdSistAdmi());
+		// if (msSisAdmistrativo != null)
+		// dtEntidadesBk.setIdSistAdmiTxt(msSisAdmistrativo.getDescripcion());
+		// }
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		//
+		// try {
+		// if (dtEntidadesBk.getIdpais() != null &&
+		// dtEntidadesBk.getIdpais().longValue() > 0) {
+		// MsPaises msPaises =
+		// msPaisesDao.getMsPaises(dtEntidadesBk.getIdpais());
+		// if (msPaises != null)
+		// dtEntidadesBk.setIdpaisTxt(msPaises.getPaisNombre());
+		// }
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+
+		try {
+			if (dtEntidadesBk.getRazSocial() != null && dtEntidadesBk.getRazSocial().length() > 0) {
+				dtEntidadesBk.setRazSocialUbigeo(dtEntidadesBk.getRazSocial() + " DPTO:" + dtEntidadesBk.getCodDptoTxt()
+						+ " PROV:" + dtEntidadesBk.getCodProvTxt());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void completarDtEntidadesUbi(DtEntidadesBk dtEntidadesBk) {
+
+		try {
+			if (dtEntidadesBk.getCodDpto() != null && dtEntidadesBk.getCodDpto().intValue() > 0) {
+				int iiCodDpto = dtEntidadesBk.getCodDpto().intValue();
+				int iiCodProv = 0;
+				int iiCodDistr = 0;
+				MsUbigeoId msUbigeoId = new MsUbigeoId();
+				msUbigeoId.setCodDpto(iiCodDpto);
+				msUbigeoId.setCodProv(iiCodProv);
+				msUbigeoId.setCodDistr(iiCodDistr);
+				MsUbigeo msUbigeo = msUbigeoDao.getMsUbigeo(msUbigeoId);
+				if (msUbigeo != null)
+					dtEntidadesBk.setCodDptoTxt(msUbigeo.getDescripcion());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if (dtEntidadesBk.getCodDpto() != null && dtEntidadesBk.getCodDpto().intValue() > 0
+					&& dtEntidadesBk.getCodProv() != null && dtEntidadesBk.getCodProv().intValue() > 0) {
+				int iiCodDpto = dtEntidadesBk.getCodDpto().intValue();
+				int iiCodProv = dtEntidadesBk.getCodProv().intValue();
+				int iiCodDistr = 0;
+				MsUbigeoId msUbigeoId = new MsUbigeoId();
+				msUbigeoId.setCodDpto(iiCodDpto);
+				msUbigeoId.setCodProv(iiCodProv);
+				msUbigeoId.setCodDistr(iiCodDistr);
+				MsUbigeo msUbigeo = msUbigeoDao.getMsUbigeo(msUbigeoId);
+				if (msUbigeo != null)
+					dtEntidadesBk.setCodProvTxt(msUbigeo.getDescripcion());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if (dtEntidadesBk.getCodDpto() != null && dtEntidadesBk.getCodDpto().intValue() > 0
+					&& dtEntidadesBk.getCodProv() != null && dtEntidadesBk.getCodProv().intValue() > 0
+					&& dtEntidadesBk.getCodDistr() != null && dtEntidadesBk.getCodDistr().intValue() > 0) {
+				int iiCodDpto = dtEntidadesBk.getCodDpto().intValue();
+				int iiCodProv = dtEntidadesBk.getCodProv().intValue();
+				int iiCodDistr = dtEntidadesBk.getCodDistr().intValue();
+				MsUbigeoId msUbigeoId = new MsUbigeoId();
+				msUbigeoId.setCodDpto(iiCodDpto);
+				msUbigeoId.setCodProv(iiCodProv);
+				msUbigeoId.setCodDistr(iiCodDistr);
+				MsUbigeo msUbigeo = msUbigeoDao.getMsUbigeo(msUbigeoId);
+				if (msUbigeo != null)
+					dtEntidadesBk.setCodDistrTxt(msUbigeo.getDescripcion());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
+			if (dtEntidadesBk.getRazSocial() != null && dtEntidadesBk.getRazSocial().length() > 0) {
+				dtEntidadesBk.setRazSocialUbigeo(dtEntidadesBk.getRazSocial() + " DPTO:" + dtEntidadesBk.getCodDptoTxt()
+						+ " PROV:" + dtEntidadesBk.getCodProvTxt());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	// public DtEntidadesBk saveorupdateDtEntidadesBk(
 	// DtEntidadesBk dtEntidadesBk,
@@ -5701,14 +6106,11 @@ public class ServicioImp implements Servicio, Serializable {
 	// String rmtaddress
 	// , List<DtEntidadSedesBk> dtEntidadSedesBkss
 	// ) throws Validador{
-	//INICIO CUSCATA - 18062024
-		public DtEntidadesBk saveorupdateDtEntidadesBk(DtEntidadesBk dtEntidadesBk, 
-													String user, 
-													Long kyUsuarioMod,
-													Long kyAreaMod, 
-													String rmtaddress) throws Validador {
-			//FIN CUSCATA - 18062024
-			//MPINARES 24012023 - INICIO
+	// INICIO CUSCATA - 18062024
+	public DtEntidadesBk saveorupdateDtEntidadesBk(DtEntidadesBk dtEntidadesBk, String user, Long kyUsuarioMod,
+			Long kyAreaMod, String rmtaddress) throws Validador {
+		// FIN CUSCATA - 18062024
+		// MPINARES 24012023 - INICIO
 		if (dtEntidadesBk.getGeozona() != null && dtEntidadesBk.getGeozona().toString().equals("1")) {
 			dtEntidadesBk.setGeozona("SI");
 		} else {
@@ -7132,68 +7534,67 @@ public class ServicioImp implements Servicio, Serializable {
 	}
 
 	// JPUYEN 14052024 - INICIO
-		@Override
-		public DtVisitasUsuexternosBk saveorupdateDtEntidadesUsuexternosBk(
-				DtVisitasUsuexternosBk dtVisitasUsuexternosBk,			
-				String user,
-				Long kyUsuarioMod, 
-				Long kyAreaMod, 
-				String rmtaddress		
-				) throws Validador{
+	@Override
+	public DtVisitasUsuexternosBk saveorupdateDtEntidadesUsuexternosBk(DtVisitasUsuexternosBk dtVisitasUsuexternosBk,
+			String user, Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador {
 
-			ValidacionDtEntidadesUsuexternosMng.validarDtVisitasUsuexternoBk(dtVisitasUsuexternosBk);
+		ValidacionDtEntidadesUsuexternosMng.validarDtVisitasUsuexternoBk(dtVisitasUsuexternosBk);
 
-			DtEntidadesUsuexternos dtEntidadesUsuexternos = null;
-			Timestamp hoy = new Timestamp(System.currentTimeMillis());
+		DtEntidadesUsuexternos dtEntidadesUsuexternos = null;
+		Timestamp hoy = new Timestamp(System.currentTimeMillis());
 
-			int nivel=1;
+		int nivel = 1;
 
-			try {
-				if(dtVisitasUsuexternosBk.getIdUsuexterno()!=null && dtVisitasUsuexternosBk.getIdUsuexterno().longValue()>0){
+		try {
+			if (dtVisitasUsuexternosBk.getIdUsuexterno() != null
+					&& dtVisitasUsuexternosBk.getIdUsuexterno().longValue() > 0) {
 
-					dtEntidadesUsuexternos = dtEntidadesUsuexternosDao.getDtEntidadesUsuexternos(dtVisitasUsuexternosBk.getIdUsuexterno());
+				dtEntidadesUsuexternos = dtEntidadesUsuexternosDao
+						.getDtEntidadesUsuexternos(dtVisitasUsuexternosBk.getIdUsuexterno());
 
-					boolean cambios = AuditoriaDtEntidadesUsuexternosMng.auditarCambiosDtVisitasUsuexternos(dtVisitasUsuexternosBk,dtEntidadesUsuexternos, kyUsuarioMod, user, rmtaddress, nivel);
+				boolean cambios = AuditoriaDtEntidadesUsuexternosMng.auditarCambiosDtVisitasUsuexternos(
+						dtVisitasUsuexternosBk, dtEntidadesUsuexternos, kyUsuarioMod, user, rmtaddress, nivel);
 
-					if(cambios){	
-						dtEntidadesUsuexternos.setRtmaddressrst(rmtaddress);
-						dtEntidadesUsuexternos.setIdusserModif(kyUsuarioMod);
-						dtEntidadesUsuexternos.setFechaModif(hoy);		
-						dtEntidadesUsuexternosDao.updateDtEntidadesUsuexternos(dtEntidadesUsuexternos);				
-					}			
-				}else{
-					
-					if(dtVisitasUsuexternosBk.getEstado()==Estado.ACTIVO.getValor())
-					{
-						dtVisitasUsuexternosBk.setRtmaddress(rmtaddress);
-						dtVisitasUsuexternosBk.setRtmaddressrst(rmtaddress);
-
-						dtVisitasUsuexternosBk.setFechaCrea(hoy);				
-						dtVisitasUsuexternosBk.setIdusserCrea(kyUsuarioMod);				
-						dtVisitasUsuexternosBk.setIdusserModif(kyUsuarioMod);
-						dtVisitasUsuexternosBk.setFechaModif(hoy);
-						dtVisitasUsuexternosBk.setEstado(Estado.ACTIVO.getValor());		
-
-						dtEntidadesUsuexternos = new DtEntidadesUsuexternos();
-
-						FuncionesStaticas.copyPropertiesObject(dtEntidadesUsuexternos,dtVisitasUsuexternosBk);
-						dtEntidadesUsuexternosDao.saveDtEntidadesUsuexternos(dtEntidadesUsuexternos);
-
-						log.log(Level.INFO,"CAMBIO :: "+kyUsuarioMod+" :: "+ user + " :: "+ rmtaddress+" :: "+"CREADO dtEntidadesUsuexternos"+" :: "+dtEntidadesUsuexternos.getIdUsuextEnti().toString()+" :: "+ "0" + " :: "+ "1");
-
-					}
-					
+				if (cambios) {
+					dtEntidadesUsuexternos.setRtmaddressrst(rmtaddress);
+					dtEntidadesUsuexternos.setIdusserModif(kyUsuarioMod);
+					dtEntidadesUsuexternos.setFechaModif(hoy);
+					dtEntidadesUsuexternosDao.updateDtEntidadesUsuexternos(dtEntidadesUsuexternos);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new Validador(e.getMessage());
-			}
+			} else {
 
-			dtVisitasUsuexternosBk = getDtVisitasUsuexternoBkXid(dtEntidadesUsuexternos.getIdUsuextEnti(),kyUsuarioMod);			
-			return dtVisitasUsuexternosBk;		
+				if (dtVisitasUsuexternosBk.getEstado() == Estado.ACTIVO.getValor()) {
+					dtVisitasUsuexternosBk.setRtmaddress(rmtaddress);
+					dtVisitasUsuexternosBk.setRtmaddressrst(rmtaddress);
+
+					dtVisitasUsuexternosBk.setFechaCrea(hoy);
+					dtVisitasUsuexternosBk.setIdusserCrea(kyUsuarioMod);
+					dtVisitasUsuexternosBk.setIdusserModif(kyUsuarioMod);
+					dtVisitasUsuexternosBk.setFechaModif(hoy);
+					dtVisitasUsuexternosBk.setEstado(Estado.ACTIVO.getValor());
+
+					dtEntidadesUsuexternos = new DtEntidadesUsuexternos();
+
+					FuncionesStaticas.copyPropertiesObject(dtEntidadesUsuexternos, dtVisitasUsuexternosBk);
+					dtEntidadesUsuexternosDao.saveDtEntidadesUsuexternos(dtEntidadesUsuexternos);
+
+					log.log(Level.INFO, "CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+							+ "CREADO dtEntidadesUsuexternos" + " :: "
+							+ dtEntidadesUsuexternos.getIdUsuextEnti().toString() + " :: " + "0" + " :: " + "1");
+
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Validador(e.getMessage());
 		}
-		
-		// JPUYEN 14052024 - FIN
+
+		dtVisitasUsuexternosBk = getDtVisitasUsuexternoBkXid(dtEntidadesUsuexternos.getIdUsuextEnti(), kyUsuarioMod);
+		return dtVisitasUsuexternosBk;
+	}
+
+	// JPUYEN 14052024 - FIN
 
 	@Override
 	public void deleteDtEntidadesUsuexternos(DtEntidadesUsuexternosBk dtEntidadesUsuexternosBk, String user,
@@ -8094,46 +8495,45 @@ public class ServicioImp implements Servicio, Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		//JPUYEN 14052024 - INICIO
-		
-				try {
-					if (dtUsuarioExternoBk.getIdUsuexterno() != null && dtUsuarioExternoBk.getIdUsuexterno().longValue() > 0) {
-						List<DtEntidadesUsuexternos> dtEntidadesUsuexternosList = dtEntidadesUsuexternosDao
-								.getXFiltro(null,dtUsuarioExternoBk.getIdUsuexterno());
-						if (dtEntidadesUsuexternosList != null && dtEntidadesUsuexternosList.size() > 0) {
-							DtEntidadesUsuexternos dtEntidadesUsuexternosCopy = dtEntidadesUsuexternosList.get(0);
-							if (dtEntidadesUsuexternosCopy.getIdUsuextEnti() != null
-									&& dtEntidadesUsuexternosCopy.getIdUsuextEnti().longValue() > 0) {
-						
-								List<DtCargosUsuexter> dtCargosUsuexterList = dtCargosUsuexterDao.getXFiltro(dtEntidadesUsuexternosCopy.getIdUsuextEnti(),null);
-								if (dtCargosUsuexterList != null && dtCargosUsuexterList.size() > 0) {
-									List<DtCargosUsuexterBk> listaCargos = new ArrayList<DtCargosUsuexterBk>();
-									for (DtCargosUsuexter dtCargosUsuexteraa : dtCargosUsuexterList) {
-										if (dtCargosUsuexteraa.getIdCargo() != null && dtCargosUsuexteraa.getIdCargo().longValue() > 0) {
-											PrtParametros prtParametros = prtParametrosDao
-													.getPrtParametros(dtCargosUsuexteraa.getIdCargo());
-											if (prtParametros != null) {
-												 DtCargosUsuexterBk cargo = new DtCargosUsuexterBk();
-												 cargo.setIdCargoTxt(prtParametros.getDescripcion());
-												 listaCargos.add(cargo);
-											}
-										}
+
+		// JPUYEN 14052024 - INICIO
+
+		try {
+			if (dtUsuarioExternoBk.getIdUsuexterno() != null && dtUsuarioExternoBk.getIdUsuexterno().longValue() > 0) {
+				List<DtEntidadesUsuexternos> dtEntidadesUsuexternosList = dtEntidadesUsuexternosDao.getXFiltro(null,
+						dtUsuarioExternoBk.getIdUsuexterno());
+				if (dtEntidadesUsuexternosList != null && dtEntidadesUsuexternosList.size() > 0) {
+					DtEntidadesUsuexternos dtEntidadesUsuexternosCopy = dtEntidadesUsuexternosList.get(0);
+					if (dtEntidadesUsuexternosCopy.getIdUsuextEnti() != null
+							&& dtEntidadesUsuexternosCopy.getIdUsuextEnti().longValue() > 0) {
+
+						List<DtCargosUsuexter> dtCargosUsuexterList = dtCargosUsuexterDao
+								.getXFiltro(dtEntidadesUsuexternosCopy.getIdUsuextEnti(), null);
+						if (dtCargosUsuexterList != null && dtCargosUsuexterList.size() > 0) {
+							List<DtCargosUsuexterBk> listaCargos = new ArrayList<DtCargosUsuexterBk>();
+							for (DtCargosUsuexter dtCargosUsuexteraa : dtCargosUsuexterList) {
+								if (dtCargosUsuexteraa.getIdCargo() != null
+										&& dtCargosUsuexteraa.getIdCargo().longValue() > 0) {
+									PrtParametros prtParametros = prtParametrosDao
+											.getPrtParametros(dtCargosUsuexteraa.getIdCargo());
+									if (prtParametros != null) {
+										DtCargosUsuexterBk cargo = new DtCargosUsuexterBk();
+										cargo.setIdCargoTxt(prtParametros.getDescripcion());
+										listaCargos.add(cargo);
 									}
-									dtUsuarioExternoBk.setUsucargos(listaCargos);
 								}
 							}
+							dtUsuarioExternoBk.setUsucargos(listaCargos);
 						}
-
-						
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
-				
-				
-				
-				//JPUYEN 14052024 - FIN
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// JPUYEN 14052024 - FIN
 
 	}
 
@@ -9349,9 +9749,15 @@ public class ServicioImp implements Servicio, Serializable {
 				if (dtUsuarioExterno != null) {
 					dtAsistenciaUsuexternosBk.setIdUsuexternoTxt(dtUsuarioExterno.getNombre());
 					dtAsistenciaUsuexternosBk.setNombre(dtUsuarioExterno.getNombre());
-					dtAsistenciaUsuexternosBk.setaPaterno(dtUsuarioExterno.getApaterno());//CUSCATA - 18062024
-					dtAsistenciaUsuexternosBk.setaMaterno(dtUsuarioExterno.getAmaterno());//CUSCATA - 18062024
-					dtAsistenciaUsuexternosBk.setNumDocu(dtUsuarioExterno.getNumDocu());//CUSCATA - 18062024
+					dtAsistenciaUsuexternosBk.setaPaterno(dtUsuarioExterno.getApaterno());// CUSCATA
+																							// -
+																							// 18062024
+					dtAsistenciaUsuexternosBk.setaMaterno(dtUsuarioExterno.getAmaterno());// CUSCATA
+																							// -
+																							// 18062024
+					dtAsistenciaUsuexternosBk.setNumDocu(dtUsuarioExterno.getNumDocu());// CUSCATA
+																						// -
+																						// 18062024
 				}
 			}
 		} catch (Exception e) {
@@ -9381,7 +9787,49 @@ public class ServicioImp implements Servicio, Serializable {
 		}
 
 	}
-	//INICIO CUSCATA - 10072024
+
+	private void saveOrUpdateAsistenciaUsuarioExt(DtAsistenciaBk dtAsistenciaBk, DtAsistencia dtAsistencia,
+			Timestamp hoy, Long kyUsuarioMod, String rmtaddress, String user) {
+
+		DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
+		try {
+			if (dtAsistenciaBk != null && dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss() != null
+					&& !dtAsistenciaBk.getDtAsistenciaUsuariosBkJSss().isEmpty()) {
+
+				List<DtAsistenciaUsuexternos> listaAsistenciaUsuexternosBD = dtAsistenciaUsuexternosDao
+						.getXFiltro(dtAsistencia.getIdAsistencia(), null, null);
+				if (listaAsistenciaUsuexternosBD != null && !listaAsistenciaUsuexternosBD.isEmpty()) {
+					for (DtAsistenciaUsuexternos dtAsistenciaUsuexternosBD : listaAsistenciaUsuexternosBD) {
+						this.deleteDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBD, user, kyUsuarioMod, rmtaddress);
+					}
+				}
+
+				for (DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk : dtAsistenciaBk
+						.getDtAsistenciaUsuariosBkJSss()) {
+					dtAsistenciaUsuexternosBk.setIdAsistUsuext(null);
+					dtAsistenciaUsuexternosBk.setIdAsistencia(dtAsistencia.getIdAsistencia());
+					dtAsistenciaUsuexternosBk.setRtmaddress(rmtaddress);
+					dtAsistenciaUsuexternosBk.setRtmaddressrst(rmtaddress);
+					dtAsistenciaUsuexternosBk.setFechaCrea(hoy);
+					dtAsistenciaUsuexternosBk.setIdusserCrea(kyUsuarioMod);
+					dtAsistenciaUsuexternosBk.setIdusserModif(kyUsuarioMod);
+					dtAsistenciaUsuexternosBk.setFechaModif(hoy);
+					dtAsistenciaUsuexternosBk.setEstado(Estado.ACTIVO.getValor());
+
+					dtAsistenciaUsuexternos = new DtAsistenciaUsuexternos();
+
+					FuncionesStaticas.copyPropertiesObject(dtAsistenciaUsuexternos, dtAsistenciaUsuexternosBk);
+					dtAsistenciaUsuexternosDao.saveDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
+				}
+			}
+
+		} catch (Exception e) {
+			log.warning("Error: " + e.getMessage());
+
+		}
+
+	}
+
 	private void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternos dtAsistenciaUsuexternos, String user,
 			Long kyUsuarioMod, String rmtaddress) throws Validador {
 		try {
@@ -9398,45 +9846,9 @@ public class ServicioImp implements Servicio, Serializable {
 				dtAsistenciaUsuexternosBD.setIdusserModif(kyUsuarioMod);
 				dtAsistenciaUsuexternosBD.setFechaModif(hoy);
 				Long estadoanterior = dtAsistenciaUsuexternos.getEstado();
-				dtAsistenciaUsuexternosBD.setEstado(dtAsistenciaUsuexternosDao.getEstadoEliminado());
+				dtAsistenciaUsuexternosBD.setEstado(Estado.ELIMINADO.getValor());
 
 				dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBD);
-
-				log.log(Level.INFO,
-						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
-								+ "ELIMINADO dtAsistenciaUsuexternos" + " :: "
-								+ dtAsistenciaUsuexternos.getIdAsistUsuext().toString() + " :: " + estadoanterior
-								+ " :: " + "0");
-
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Validador(e.getMessage());
-		}
-	}
-//FIN CUSCATA - 10072024
-	
-
-	@Override
-	public void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user,
-			Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador {
-		try {
-			DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
-			if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
-					&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
-
-				dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
-						.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
-
-				Timestamp hoy = new Timestamp(System.currentTimeMillis());
-
-				dtAsistenciaUsuexternos.setRtmaddressrst(rmtaddress);
-				dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
-				dtAsistenciaUsuexternos.setFechaModif(hoy);
-				Long estadoanterior = dtAsistenciaUsuexternos.getEstado();
-				dtAsistenciaUsuexternos.setEstado(Estado.ELIMINADO.getValor());
-
-				dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
 
 				log.log(Level.INFO,
 						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
@@ -9727,7 +10139,7 @@ public class ServicioImp implements Servicio, Serializable {
 				log.log(Level.INFO,
 						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
 								+ "ELIMINADO dtCapaProyecto" + " :: " + dtCapaProyecto.getIdCapaProyecto().toString()
-								+ " :: " + estadoanterior + " :: " + "0");
+								+ " :: " + estadoanterior + " :: " + " " + Estado.ELIMINADO.getValor());
 
 			}
 		} catch (Exception e) {
@@ -12227,7 +12639,7 @@ public class ServicioImp implements Servicio, Serializable {
 				log.log(Level.INFO,
 						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
 								+ "ELIMINADO dtCapaTemas" + " :: " + dtCapaTemas.getIdCapaTemAgen().toString() + " :: "
-								+ estadoanterior + " :: " + "0");
+								+ estadoanterior + " :: " + " " + Estado.ELIMINADO.getValor());
 
 			}
 		} catch (Exception e) {
@@ -13531,7 +13943,7 @@ public class ServicioImp implements Servicio, Serializable {
 
 				log.log(Level.INFO, "CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
 						+ "ELIMINADO dtCapaUsuexternos" + " :: " + dtCapaUsuexternos.getIdCapaUsuext().toString()
-						+ " :: " + estadoanterior + " :: " + "0");
+						+ " :: " + estadoanterior + " :: " + " " + Estado.ELIMINADO.getValor());
 
 			}
 		} catch (Exception e) {
@@ -16738,29 +17150,34 @@ public class ServicioImp implements Servicio, Serializable {
 				for (String key : Roles.ROLES_POR_PERFIL.keySet()) {
 					List<String> rolesdelperfil = Roles.ROLES_POR_PERFIL.get(key);
 					boolean tieneelperfil = true;
-					
-					if (key.equals(Roles.PERFIL_USUARIO_EXTERNO_OGC) && perfilesSistema.contains(Roles.PERFIL_USU_OGC)) {
+
+					if (key.equals(Roles.PERFIL_USUARIO_EXTERNO_OGC)
+							&& perfilesSistema.contains(Roles.PERFIL_USU_OGC)) {
 						continue;
 					}
-					if (key.equals(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)	&& perfilesSistema.contains(Roles.PERFIL_USU_OGC)) {
+					if (key.equals(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+							&& perfilesSistema.contains(Roles.PERFIL_USU_OGC)) {
 						continue;
 					}
-					if (key.equals(Roles.PERFIL_USUARIO_EXTERNO_OGC) && perfilesSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
+					if (key.equals(Roles.PERFIL_USUARIO_EXTERNO_OGC)
+							&& perfilesSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
 						continue;
 					}
-					if (key.equals(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)	&& perfilesSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
+					if (key.equals(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+							&& perfilesSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
 						continue;
 					}
-					if (key.equals(Roles.PERFIL_ADMIN_REPORTES)	&& perfilesSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
+					if (key.equals(Roles.PERFIL_ADMIN_REPORTES)
+							&& perfilesSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
 						continue;
 					}
-					if (key.equals(Roles.PERFIL_USU_OGC)	&& perfilesSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
+					if (key.equals(Roles.PERFIL_USU_OGC) && perfilesSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
 						continue;
 					}
-					if (key.equals(Roles.PERFIL_GC)	&& perfilesSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
+					if (key.equals(Roles.PERFIL_GC) && perfilesSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
 						continue;
 					}
-					
+
 					for (String rolp : rolesdelperfil) {
 						if (!roles.contains(rolp)) {
 							tieneelperfil = false;
@@ -16769,28 +17186,33 @@ public class ServicioImp implements Servicio, Serializable {
 					}
 					if (tieneelperfil) {
 						perfilesSistema.add(key);
-						
-						if(key.equals(Roles.PERFIL_USU_OGC) && perfilesSistema.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)){
+
+						if (key.equals(Roles.PERFIL_USU_OGC)
+								&& perfilesSistema.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)) {
 							perfilesSistema.remove(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT);
-							 }
-							 if(key.equals(Roles.PERFIL_USU_OGC) && perfilesSistema.contains(Roles.PERFIL_USUARIO_EXTERNO_OGC)){
-								 perfilesSistema.remove(Roles.PERFIL_USUARIO_EXTERNO_OGC);
-							}
-							 if(key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesSistema.contains(Roles.PERFIL_USU_OGC)){
-								 perfilesSistema.remove(Roles.PERFIL_USU_OGC);
-								 }
-							 if(key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesSistema.contains(Roles.PERFIL_USUARIO_EXTERNO_OGC)){
-								 perfilesSistema.remove(Roles.PERFIL_USUARIO_EXTERNO_OGC);
-							}
-							 if(key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesSistema.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)){
-								 perfilesSistema.remove(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT);
-							}
-							 if(key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesSistema.contains(Roles.PERFIL_ADMIN_REPORTES)){
-								 perfilesSistema.remove(Roles.PERFIL_ADMIN_REPORTES);
-							}
-							 if(key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesSistema.contains(Roles.PERFIL_GC)){
-								 perfilesSistema.remove(Roles.PERFIL_GC);
-							}
+						}
+						if (key.equals(Roles.PERFIL_USU_OGC)
+								&& perfilesSistema.contains(Roles.PERFIL_USUARIO_EXTERNO_OGC)) {
+							perfilesSistema.remove(Roles.PERFIL_USUARIO_EXTERNO_OGC);
+						}
+						if (key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesSistema.contains(Roles.PERFIL_USU_OGC)) {
+							perfilesSistema.remove(Roles.PERFIL_USU_OGC);
+						}
+						if (key.equals(Roles.PERFIL_ADMINISTRADOR)
+								&& perfilesSistema.contains(Roles.PERFIL_USUARIO_EXTERNO_OGC)) {
+							perfilesSistema.remove(Roles.PERFIL_USUARIO_EXTERNO_OGC);
+						}
+						if (key.equals(Roles.PERFIL_ADMINISTRADOR)
+								&& perfilesSistema.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)) {
+							perfilesSistema.remove(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT);
+						}
+						if (key.equals(Roles.PERFIL_ADMINISTRADOR)
+								&& perfilesSistema.contains(Roles.PERFIL_ADMIN_REPORTES)) {
+							perfilesSistema.remove(Roles.PERFIL_ADMIN_REPORTES);
+						}
+						if (key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesSistema.contains(Roles.PERFIL_GC)) {
+							perfilesSistema.remove(Roles.PERFIL_GC);
+						}
 					}
 				}
 				msUsuariosBk.setPerfilesSistema(perfilesSistema);
@@ -16838,22 +17260,26 @@ public class ServicioImp implements Servicio, Serializable {
 				if (key.equals(Roles.PERFIL_USUARIO_EXTERNO_OGC) && perfilesOldSistema.contains(Roles.PERFIL_USU_OGC)) {
 					continue;
 				}
-				if (key.equals(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)	&& perfilesOldSistema.contains(Roles.PERFIL_USU_OGC)) {
+				if (key.equals(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+						&& perfilesOldSistema.contains(Roles.PERFIL_USU_OGC)) {
 					continue;
 				}
-				if (key.equals(Roles.PERFIL_USUARIO_EXTERNO_OGC) && perfilesOldSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
+				if (key.equals(Roles.PERFIL_USUARIO_EXTERNO_OGC)
+						&& perfilesOldSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
 					continue;
 				}
-				if (key.equals(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)	&& perfilesOldSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
+				if (key.equals(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)
+						&& perfilesOldSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
 					continue;
 				}
-				if (key.equals(Roles.PERFIL_ADMIN_REPORTES)	&& perfilesOldSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
+				if (key.equals(Roles.PERFIL_ADMIN_REPORTES)
+						&& perfilesOldSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
 					continue;
 				}
-				if (key.equals(Roles.PERFIL_USU_OGC)	&& perfilesOldSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
+				if (key.equals(Roles.PERFIL_USU_OGC) && perfilesOldSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
 					continue;
 				}
-				if (key.equals(Roles.PERFIL_GC)	&& perfilesOldSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
+				if (key.equals(Roles.PERFIL_GC) && perfilesOldSistema.contains(Roles.PERFIL_ADMINISTRADOR)) {
 					continue;
 				}
 				for (String rolp : rolesdelperfil) {
@@ -16864,27 +17290,32 @@ public class ServicioImp implements Servicio, Serializable {
 				}
 				if (tieneelperfil) {
 					perfilesOldSistema.add(key);
-					 
-					 if(key.equals(Roles.PERFIL_USU_OGC) && perfilesOldSistema.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)){
-					 perfilesOldSistema.remove(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT);
-					 }
-					 if(key.equals(Roles.PERFIL_USU_OGC) && perfilesOldSistema.contains(Roles.PERFIL_USUARIO_EXTERNO_OGC)){
-						 perfilesOldSistema.remove(Roles.PERFIL_USUARIO_EXTERNO_OGC);
+
+					if (key.equals(Roles.PERFIL_USU_OGC)
+							&& perfilesOldSistema.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)) {
+						perfilesOldSistema.remove(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT);
 					}
-					 if(key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesOldSistema.contains(Roles.PERFIL_USU_OGC)){
-						 perfilesOldSistema.remove(Roles.PERFIL_USU_OGC);
-						 }
-					 if(key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesOldSistema.contains(Roles.PERFIL_USUARIO_EXTERNO_OGC)){
-						 perfilesOldSistema.remove(Roles.PERFIL_USUARIO_EXTERNO_OGC);
+					if (key.equals(Roles.PERFIL_USU_OGC)
+							&& perfilesOldSistema.contains(Roles.PERFIL_USUARIO_EXTERNO_OGC)) {
+						perfilesOldSistema.remove(Roles.PERFIL_USUARIO_EXTERNO_OGC);
 					}
-					 if(key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesOldSistema.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)){
-						 perfilesOldSistema.remove(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT);
+					if (key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesOldSistema.contains(Roles.PERFIL_USU_OGC)) {
+						perfilesOldSistema.remove(Roles.PERFIL_USU_OGC);
 					}
-					 if(key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesOldSistema.contains(Roles.PERFIL_ADMIN_REPORTES)){
-						 perfilesOldSistema.remove(Roles.PERFIL_ADMIN_REPORTES);
+					if (key.equals(Roles.PERFIL_ADMINISTRADOR)
+							&& perfilesOldSistema.contains(Roles.PERFIL_USUARIO_EXTERNO_OGC)) {
+						perfilesOldSistema.remove(Roles.PERFIL_USUARIO_EXTERNO_OGC);
 					}
-					 if(key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesOldSistema.contains(Roles.PERFIL_GC)){
-						 perfilesOldSistema.remove(Roles.PERFIL_GC);
+					if (key.equals(Roles.PERFIL_ADMINISTRADOR)
+							&& perfilesOldSistema.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT)) {
+						perfilesOldSistema.remove(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT);
+					}
+					if (key.equals(Roles.PERFIL_ADMINISTRADOR)
+							&& perfilesOldSistema.contains(Roles.PERFIL_ADMIN_REPORTES)) {
+						perfilesOldSistema.remove(Roles.PERFIL_ADMIN_REPORTES);
+					}
+					if (key.equals(Roles.PERFIL_ADMINISTRADOR) && perfilesOldSistema.contains(Roles.PERFIL_GC)) {
+						perfilesOldSistema.remove(Roles.PERFIL_GC);
 					}
 				}
 			}
@@ -17805,7 +18236,7 @@ public class ServicioImp implements Servicio, Serializable {
 
 			if (dtEntidadessss == null || dtEntidadessss.size() < 1) {
 				throw new Validador(
-						MessageFormat.format("NO SE ENCONTRÓ LA ENTIDAD CON EL CÓDIGO DE EJECUTORA INGRESADO",
+						MessageFormat.format("NO SE ENCONTRÓ LA ENTIDAD CON EL CÓDIGO DE EJECUTORA " + codEjec,
 								Messages.getStringToKey("dtAsistencias.titulotabla")));
 			}
 
@@ -17843,6 +18274,94 @@ public class ServicioImp implements Servicio, Serializable {
 
 			DtEntidadesDto msInstitucionesBk = new DtEntidadesDto();
 			FuncionesStaticas.copyPropertiesObject(msInstitucionesBk, msObjectBks);
+			completarDtEntidadesDtoo(msInstitucionesBk);
+			msInstitucionesBks.add(msInstitucionesBk);
+
+			// for (DtEntidades msInstituciones : dtEntidadessss) {
+			// DtEntidadesDto msInstitucionesBk = new DtEntidadesDto();
+			// FuncionesStaticas.copyPropertiesObject(msInstitucionesBk,
+			// msInstituciones);
+			//// completarMsInstitucionesDto(msInstitucionesBk);
+			//// completarDtEntidades(msInstitucionesBk);
+			// msInstitucionesBks.add(msInstitucionesBk);
+			// }
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Validador(e.getMessage());
+		}
+		return msInstitucionesBks;
+	}
+
+	@Override
+	public List<DtEntidadesDto> getMsInstitucionesXEjecutoraSisAdminSede(String codEjec, Long idSistAdmi, Long idSede)
+			throws Validador {
+
+		List<DtEntidadesDto> msInstitucionesBks = new ArrayList<DtEntidadesDto>();
+		try {
+			// List<DtEntidades> dtEntidadessss =
+			// dtEntidadesDao.getXFiltro(codEjec, null, null, null, null,
+			// null, null, null, null, null);
+			List<DtEntidades> dtEntidadessss = dtEntidadesDao.getXFiltro(codEjec, null, null, null, null, null, null,
+					null, null, null);
+			if (dtEntidadessss != null && dtEntidadessss.size() > 1) {
+				throw new Validador(
+						MessageFormat.format("SE ENCONTRÓ MAS DE UNA RESPUESTA PARA EL CODIGO DE EJECUTORA INGRESADO",
+								Messages.getStringToKey("dtAsistencias.titulotabla")));
+			}
+
+			if (dtEntidadessss == null || dtEntidadessss.size() < 1) {
+				throw new Validador(
+						MessageFormat.format("NO SE ENCONTRÓ LA ENTIDAD CON EL CÓDIGO DE EJECUTORA " + codEjec,
+								Messages.getStringToKey("dtAsistencias.titulotabla")));
+			}
+
+			DtEntidades msObjectBks = dtEntidadessss.get(0);
+
+			if (msObjectBks != null && msObjectBks.getIdEntidad() != null) {
+				// PARA VERIFICAR SISTEMA ADMINISTRATIVO
+				List<DtEntidadSisAdmin> dtEntidadSistemaAdminList = dtEntidadSisAdminDao
+						.getDtEntidadSistemaAdminByIdEntity(msObjectBks.getIdEntidad());
+
+				if (dtEntidadSistemaAdminList != null && dtEntidadSistemaAdminList.size() > 0) {
+					boolean estaVinculado = false;
+					for (DtEntidadSisAdmin dtEntidadSistemaAdminBkko : dtEntidadSistemaAdminList) {
+						if (dtEntidadSistemaAdminBkko.getIdSistAdmi() != null
+								&& dtEntidadSistemaAdminBkko.getIdSistAdmi().longValue() > 0) {
+							if (dtEntidadSistemaAdminBkko.getIdSistAdmi().longValue() == idSistAdmi) {
+								estaVinculado = true;
+							}
+
+						}
+					}
+					if (estaVinculado == false) {
+						throw new Validador(MessageFormat.format(
+								"LA ENTIDAD " + msObjectBks.getRazSocial().trim()
+										+ " NO ESTA VINCULADA A SU SISTEMA ADMINISTRATIVO.",
+								Messages.getStringToKey("dtAsistencias.titulotabla")));
+					}
+
+				} else {
+					throw new Validador(MessageFormat.format(
+							"LA ENTIDAD " + msObjectBks.getRazSocial().trim()
+									+ " NO ESTA VINCULADA A NINGÚN SISTEMA ADMINISTRATIVO.",
+							Messages.getStringToKey("dtAsistencias.titulotabla")));
+				}
+
+				// PARA VERIFICAR SEDE
+				List<DtEntidadSedes> dtEntidadSedesList = dtEntidadSedesDao.getXFiltro(msObjectBks.getIdEntidad(),
+						idSede);
+				if (dtEntidadSedesList == null || dtEntidadSedesList.size() < 1) {
+					throw new Validador(MessageFormat.format(
+							"LA ENTIDAD " + msObjectBks.getRazSocial().trim()
+									+ " NO ESTA VINCULADA A LA SEDE DEL USUARIO.",
+							Messages.getStringToKey("dtAsistencias.titulotabla")));
+				}
+
+			}
+
+			DtEntidadesDto msInstitucionesBk = new DtEntidadesDto();
+			FuncionesStaticas.copyPropertiesObject(msInstitucionesBk, msObjectBks);
+			completarDtEntidadesDtoo(msInstitucionesBk);
 			msInstitucionesBks.add(msInstitucionesBk);
 
 			// for (DtEntidades msInstituciones : dtEntidadessss) {
@@ -17906,8 +18425,9 @@ public class ServicioImp implements Servicio, Serializable {
 			for (DtAsistencia dtAsistencia : dtAsistenciasss) {
 				DtAsistenciaBk dtAsistenciaBk = new DtAsistenciaBk();
 				FuncionesStaticas.copyPropertiesObject(dtAsistenciaBk, dtAsistencia);
-//				completarDtAsistencia(dtAsistenciaBk);
-				completarDtAsistencia(dtAsistenciaBk, kyUsuarioMod);//CUSCATA - 18062024
+				// completarDtAsistencia(dtAsistenciaBk);
+				completarDtAsistencia(dtAsistenciaBk, kyUsuarioMod);// CUSCATA -
+																	// 18062024
 				setACLDtAsistenciaBk(dtAsistenciaBk, kyUsuarioMod);
 				dtAsistenciaBkss.add(dtAsistenciaBk);
 			}
@@ -17916,11 +18436,10 @@ public class ServicioImp implements Servicio, Serializable {
 		}
 		return dtAsistenciaBkss;
 	}
-	//INICIO CUSCATA - 10072024
-	@Override
-	public List<DtAsistenciaBk> getDtAsistenciaXFiltro(Date fechaInicio, Date fechaFin, Long idProgramacion,
-														Long kyUsuarioMod,long sede,int rol,long sistemaadmi) throws Validador {
 
+	@Override
+	public List<DtAsistenciaBk> getDtAsistenciaXFiltroV2(Date fechaInicio, Date fechaFin, Long idProgramacion,
+			Long kyUsuarioMod, long sede, int rol, long sistemaadmi) throws Validador {
 
 		if (fechaInicio != null && fechaFin != null) {
 			if (fechaInicio.after(fechaFin)) {
@@ -17942,185 +18461,61 @@ public class ServicioImp implements Servicio, Serializable {
 
 		List<DtAsistenciaBk> dtAsistenciaBkss = new ArrayList<DtAsistenciaBk>();
 		try {
-			List<DtAsistencia> dtAsistenciasss = null;
-			int rolAdminAndOGC = 0;
-			int rolGC = 1;
-			int rolImplantador = 2;
-			
-			System.out.println("fechaInicio: " + fechaInicio);
-			System.out.println("fechaFin: " + fechaFin);
-			System.out.println("idProgramacion: " + idProgramacion);
-			System.out.println("sede: " + sede);
-			System.out.println("sistemaadmi: " + sistemaadmi);
-			System.out.println("kyUsuarioMod: " + kyUsuarioMod);
-			System.out.println("rol: " + rol);
-			
-			if (rol == rolAdminAndOGC) {
-				 dtAsistenciasss = dtAsistenciaDao.getXFiltroV(fechaInicio, fechaFin, null);
-			} else if(rol == rolGC) {
-				dtAsistenciasss = dtAsistenciaDao.getXFiltro(fechaInicio, fechaFin, null, sede, null, null);
-			} else if(rol == rolImplantador) {
-				dtAsistenciasss = dtAsistenciaDao.getXFiltro(fechaInicio, fechaFin, idProgramacion, sede, sistemaadmi, kyUsuarioMod);
+			List<DtAsistencia> dtAsistenciasss = new ArrayList<>();
+			// List<DtAsistencia> dtAsistenciasss =
+			// dtAsistenciaDao.getXFiltroV(fechaInicio, fechaFin,
+			// idProgramacion);
+			Long idProgram = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
+			if (rol == 0) {
+				if (idProgram == idProgramacion)
+
+				{
+					dtAsistenciasss = dtAsistenciaDao.getXFiltro(fechaInicio, fechaFin, idProgramacion, null, null,
+							null);
+				} else {
+					dtAsistenciasss = dtAsistenciaDao.getXFiltro(fechaInicio, fechaFin, idProgramacion, null, null,
+							null);
+				}
+			} else if (rol == 1) {
+				if (idProgram == idProgramacion)
+
+				{
+					dtAsistenciasss = dtAsistenciaDao.getXFiltro(fechaInicio, fechaFin, idProgramacion, sede, null,
+							null);
+				} else {
+					dtAsistenciasss = dtAsistenciaDao.getXFiltro(fechaInicio, fechaFin, idProgramacion, sede, null,
+							null);
+				}
+
+			} else if (rol == 2) {
+
+				if (idProgram == idProgramacion)
+
+				{
+					dtAsistenciasss = dtAsistenciaDao.getXFiltro(fechaInicio, fechaFin, idProgramacion, sede,
+							sistemaadmi, kyUsuarioMod);
+				} else {
+					dtAsistenciasss = dtAsistenciaDao.getXFiltro(fechaInicio, fechaFin, idProgramacion, sede,
+							sistemaadmi, kyUsuarioMod);
+				}
+
 			}
-			
-			System.out.println("dtAsistenciasss.size(): " + dtAsistenciasss.size());
-			//PrtParametros prtParametros = prtParametrosDao.getPrtParametros(dtAsistenciaBk.getIdOrigen());
-			List<PrtParametros> lstPrtParametros = prtParametrosDao.getAllPrtParametros();
-			//List<DtUsuarioExterno> lstDtUsuarioExterno = dtUsuarioExternoDao.getAllDtUsuarioExterno();
-			System.out.println("param loaded...");
-			
 			for (DtAsistencia dtAsistencia : dtAsistenciasss) {
 				DtAsistenciaBk dtAsistenciaBk = new DtAsistenciaBk();
 				FuncionesStaticas.copyPropertiesObject(dtAsistenciaBk, dtAsistencia);
-				completarDtAsistenciaBandeja(dtAsistenciaBk, kyUsuarioMod, lstPrtParametros);
+				// completarDtAsistencia(dtAsistenciaBk);
+				completarDtAsistencia(dtAsistenciaBk, kyUsuarioMod);// CUSCATA -
+																	// 18062024
 				setACLDtAsistenciaBk(dtAsistenciaBk, kyUsuarioMod);
 				dtAsistenciaBkss.add(dtAsistenciaBk);
 			}
-			
-			System.out.println("completed dtAsistenciaBkss.size(): " + dtAsistenciaBkss.size());
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return dtAsistenciaBkss;
 	}
-	
-	private PrtParametros getPrtParametros(List<PrtParametros> lstPrtParametros, Long idParam) {
-		return lstPrtParametros.stream().filter(c->String.valueOf(c.getIdparametro()).equals(String.valueOf(idParam))).findFirst().orElse(null);
-	}
-	
-	/*private DtUsuarioExterno getDtUsuarioExternoPorId(List<DtUsuarioExterno> lstDtUsuarioExterno, Long idUsuexterno) {
-		return lstDtUsuarioExterno.stream().filter(c->String.valueOf(c.getIdUsuexterno()).equals(String.valueOf(idUsuexterno))).findFirst().orElse(null);
-	}*/
-	
-	private void completarDtAsistenciaBandeja(DtAsistenciaBk dtAsistenciaBk, Long kyUsuarioMod, List<PrtParametros> lstPrtParametros) {
 
-		try {
-
-			if (dtAsistenciaBk.getEstado() != null && dtAsistenciaBk.getEstado().longValue() > 0) {
-				Long estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO,
-						PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);
-				Long estadoEliminado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_ELIMINADO,
-						PropertiesMg.DEFOULT_ESTADOS_REGISTROS_ELIMINADO);
-				if (dtAsistenciaBk.getEstado().longValue() == estadoNuevo) {
-					dtAsistenciaBk.setEstadoTxt("EN PROCESO");
-				} else if (dtAsistenciaBk.getEstado().longValue() == estadoEliminado) {
-					dtAsistenciaBk.setEstadoTxt("ANULADO");
-				} else {
-					PrtParametros prtParametros = this.getPrtParametros(lstPrtParametros, dtAsistenciaBk.getEstado());
-					if (prtParametros != null)
-						dtAsistenciaBk.setEstadoTxt(prtParametros.getDescripcion());
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			if (dtAsistenciaBk.getIdEntidad() != null && dtAsistenciaBk.getIdEntidad().longValue() > 0) {
-				DtEntidades dtEntidades = dtEntidadesDao.getDtEntidades(dtAsistenciaBk.getIdEntidad());
-				if (dtEntidades != null)
-					dtAsistenciaBk.setIdEntidadTxt(dtEntidades.getRazSocial());
-				dtAsistenciaBk.setCodEjecutora(dtEntidades.getCodEjec());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			if (dtAsistenciaBk.getIdSede() != null && dtAsistenciaBk.getIdSede().longValue() > 0) {
-				MsSedes msSedes = msSedesDao.getMsSedes(dtAsistenciaBk.getIdSede());
-				if (msSedes != null)
-					dtAsistenciaBk.setIdSedeTxt(msSedes.getSede());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			if (dtAsistenciaBk.getIdUsuinterno() != null && dtAsistenciaBk.getIdUsuinterno().longValue() > 0) {
-				MsUsuarios msUsuarios = msUsuariosDao.getMsUsuarios(dtAsistenciaBk.getIdUsuinterno());
-				if (msUsuarios != null)
-					dtAsistenciaBk.setIdUsuinternoTxt(msUsuarios.getNombres() + " " + msUsuarios.getApellidoPaterno()
-							+ " " + msUsuarios.getApellidoMaterno());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			if (dtAsistenciaBk.getIdSistAdm() != null && dtAsistenciaBk.getIdSistAdm().longValue() > 0) {
-				MsSisAdmistrativo msSisAdmistrativo = msSisAdmistrativoDao
-						.getMsSisAdmistrativo(dtAsistenciaBk.getIdSistAdm());
-				if (msSisAdmistrativo != null)
-					dtAsistenciaBk.setIdSistAdmTxt(msSisAdmistrativo.getDescripcion());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			if (dtAsistenciaBk.getIdOrigen() != null && dtAsistenciaBk.getIdOrigen().longValue() > 0) {
-				PrtParametros prtParametros = this.getPrtParametros(lstPrtParametros, dtAsistenciaBk.getIdOrigen());
-				if (prtParametros != null)
-					dtAsistenciaBk.setIdOrigenTxt(prtParametros.getDescripcion());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			if (dtAsistenciaBk.getIdProgramacion() != null && dtAsistenciaBk.getIdProgramacion().longValue() > 0) {
-				PrtParametros prtParametros = this.getPrtParametros(lstPrtParametros, dtAsistenciaBk.getIdProgramacion());
-				if (prtParametros != null)
-					dtAsistenciaBk.setIdProgramacionTxt(prtParametros.getDescripcion());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			if (dtAsistenciaBk.getIdModalidad() != null && dtAsistenciaBk.getIdModalidad().longValue() > 0) {
-				PrtParametros prtParametros = this.getPrtParametros(lstPrtParametros, dtAsistenciaBk.getIdModalidad());
-				if (prtParametros != null)
-					dtAsistenciaBk.setIdModalidadTxt(prtParametros.getDescripcion());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			if (dtAsistenciaBk.getIdFinancia() != null && dtAsistenciaBk.getIdFinancia().longValue() > 0) {
-				PrtParametros prtParametros = this.getPrtParametros(lstPrtParametros, dtAsistenciaBk.getIdFinancia());
-				if (prtParametros != null)
-					dtAsistenciaBk.setIdFinanciaTxt(prtParametros.getDescripcion());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		List<DtAsistenciaUsuexternos> DtAsistenciaUsuexternosList = dtAsistenciaUsuexternosDao
-				.getByIdAsistDtAsisteUsuariosExt(dtAsistenciaBk.getIdAsistencia());
-
-		if (DtAsistenciaUsuexternosList != null && DtAsistenciaUsuexternosList.size() > 0) {
-			List<String> usueExt = new ArrayList<String>();
-			List<String> dniExt = new ArrayList<String>();
-			for (DtAsistenciaUsuexternos dtObjetc : DtAsistenciaUsuexternosList) {
-				if (dtObjetc.getIdUsuexterno() != null && dtObjetc.getIdUsuexterno().longValue() > 0) {
-
-					DtUsuarioExterno dtUsuarioExterno = dtUsuarioExternoDao
-							.getDtUsuarioExterno(dtObjetc.getIdUsuexterno());
-
-					if (dtUsuarioExterno != null) {
-						usueExt.add(dtUsuarioExterno.getApaterno() + " " + dtUsuarioExterno.getAmaterno() + " "
-								+ dtUsuarioExterno.getNombre());
-						if (dtUsuarioExterno.getNumDocum() != null)
-							dniExt.add(dtUsuarioExterno.getNumDocum() + "");
-					}
-				}
-
-			}
-			dtAsistenciaBk.setUsuExt(usueExt);
-			dtAsistenciaBk.setDniUser(dniExt);
-		}
-
-	}
-	
-//FIN CUSCATA - 10072024
 	@Override
 	public List<DtAsistenciaTemasBk> getDtAsistenciaTemasXIdAsistencia(Long idAsistencia) {
 		List<DtAsistenciaTemasBk> dtAsistenciaTemasBkss = new ArrayList<DtAsistenciaTemasBk>();
@@ -18152,6 +18547,26 @@ public class ServicioImp implements Servicio, Serializable {
 		for (DtEntidades msInstituciones : msInstitucionessss) {
 			DtEntidadesBk msInstitucionesBk = new DtEntidadesBk();
 			FuncionesStaticas.copyPropertiesObject(msInstitucionesBk, msInstituciones);
+			completarDtEntidadesUbi(msInstitucionesBk);
+			msInstitucionesIdproveeLista.add(msInstitucionesBk);
+		}
+		return msInstitucionesIdproveeLista;
+	}
+
+	@Override
+	public List<DtEntidadesBk> getMsInstitucionesIdSisadminIdsede(String rasonsocial, Long idSistAdmi, Long idSede) {
+
+		List<DtEntidadesBk> msInstitucionesIdproveeLista = new ArrayList<DtEntidadesBk>();
+		if (rasonsocial == null)
+			return msInstitucionesIdproveeLista;
+		if (rasonsocial.length() < 3)
+			return msInstitucionesIdproveeLista;
+		List<DtEntidades> msInstitucionessss = dtEntidadesDao
+				.getListaRasonsocialXSisAdminSede(rasonsocial.toUpperCase(), idSistAdmi, idSede);
+		for (DtEntidades msInstituciones : msInstitucionessss) {
+			DtEntidadesBk msInstitucionesBk = new DtEntidadesBk();
+			FuncionesStaticas.copyPropertiesObject(msInstitucionesBk, msInstituciones);
+			completarDtEntidadesUbi(msInstitucionesBk);
 			msInstitucionesIdproveeLista.add(msInstitucionesBk);
 		}
 		return msInstitucionesIdproveeLista;
@@ -18244,15 +18659,14 @@ public class ServicioImp implements Servicio, Serializable {
 
 	@Override
 	public List<IDValorDto> getMsTemaIdTemaIdTemaXSisAdmin(Long idSistAdmi) {
-		if (msTemaIdTemaIdTemaListaCache == null) {
-			List<MsTema> msTemasss = msTemaDao.getTemaByIdSistemaAdmin(idSistAdmi);
-			msTemaIdTemaIdTemaListaCache = new ArrayList<IDValorDto>();
-			for (MsTema msTema : msTemasss) {
-				IDValorDto idTemaDto = new IDValorDto(msTema.getIdTema(), msTema.getDescripcion());
-				msTemaIdTemaIdTemaListaCache.add(idTemaDto);
-			}
+		List<IDValorDto> retorno = new ArrayList<IDValorDto>();
+		List<MsTema> msTemasss = msTemaDao.getTemaByIdSistemaAdmin(idSistAdmi);
+		for (MsTema msTema : msTemasss) {
+			IDValorDto idTemaDto = new IDValorDto(msTema.getIdTema(), msTema.getDescripcion());
+			retorno.add(idTemaDto);
 		}
-		return msTemaIdTemaIdTemaListaCache;
+		return retorno;
+
 	}
 
 	public List<IDValorDto> getSubTemaByIdSistemaAdminTema(Long idTema) throws Validador {
@@ -18473,6 +18887,83 @@ public class ServicioImp implements Servicio, Serializable {
 		try {
 			List<DtCapacitacion> dtCapacitacionssss = dtCapacitacionDao.getXFiltroV(fechaInicio, fechaFin,
 					idProgramacion);
+			for (DtCapacitacion dtCapacitacion : dtCapacitacionssss) {
+				DtCapacitacionBk dtCapacitacionBk = new DtCapacitacionBk();
+				FuncionesStaticas.copyPropertiesObject(dtCapacitacionBk, dtCapacitacion);
+				completarDtCapacitacion(dtCapacitacionBk);
+				setACLDtCapacitacionBk(dtCapacitacionBk, kyUsuarioMod);
+				dtCapacitacionBkss.add(dtCapacitacionBk);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dtCapacitacionBkss;
+	}
+
+	@Override
+	public List<DtCapacitacionBk> getDtCapacitacionXFiltroV2(Date fechaInicio, Date fechaFin, Long idProgramacion,
+			Long kyUsuarioMod, long sede, int rol, long sistemaadmi) {
+		if (fechaInicio != null && fechaFin != null) {
+			if (fechaInicio.after(fechaFin)) {
+				Date fechatmp = fechaInicio;
+				fechaInicio = fechaFin;
+				fechaFin = fechatmp;
+			}
+		} else if (fechaInicio != null) {
+			fechaFin = fechaInicio;
+		} else if (fechaFin != null) {
+			fechaInicio = fechaFin;
+			fechaFin = fechaInicio;
+		}
+
+		if (fechaFin != null) {
+			Timestamp fechFin = new Timestamp(fechaFin.getTime());
+			fechaFin = FuncionesStaticas.getDiaMasUno(fechFin);
+		}
+
+		List<DtCapacitacionBk> dtCapacitacionBkss = new ArrayList<DtCapacitacionBk>();
+		try {
+			List<DtCapacitacion> dtCapacitacionssss = new ArrayList<>();
+			Long idProgram = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
+			if (rol == 0) {
+				if (idProgram == idProgramacion)
+
+				{
+					dtCapacitacionssss = dtCapacitacionDao.getXFiltroV2(fechaInicio, fechaFin, idProgramacion, null,
+							null, null);
+				} else {
+					dtCapacitacionssss = dtCapacitacionDao.getXFiltroV2(fechaInicio, fechaFin, idProgramacion, null,
+							null, null);
+				}
+			} else if (rol == 1) {
+				if (idProgram == idProgramacion)
+
+				{
+					dtCapacitacionssss = dtCapacitacionDao.getXFiltroV2(fechaInicio, fechaFin, idProgramacion, sede,
+							null, null);
+				} else {
+					dtCapacitacionssss = dtCapacitacionDao.getXFiltroV2(fechaInicio, fechaFin, idProgramacion, sede,
+							null, null);
+				}
+
+			} else if (rol == 2) {
+
+				if (idProgram == idProgramacion)
+
+				{
+					dtCapacitacionssss = dtCapacitacionDao.getXFiltroV2(fechaInicio, fechaFin, idProgramacion, sede,
+							sistemaadmi, kyUsuarioMod);
+				} else {
+					dtCapacitacionssss = dtCapacitacionDao.getXFiltroV2(fechaInicio, fechaFin, idProgramacion, sede,
+							sistemaadmi, kyUsuarioMod);
+				}
+
+			}
+
+			// List<DtCapacitacion> dtCapacitacionssss =
+			// dtCapacitacionDao.getXFiltroV(fechaInicio,
+			// fechaFin,idProgramacion);
 			for (DtCapacitacion dtCapacitacion : dtCapacitacionssss) {
 				DtCapacitacionBk dtCapacitacionBk = new DtCapacitacionBk();
 				FuncionesStaticas.copyPropertiesObject(dtCapacitacionBk, dtCapacitacion);
@@ -19536,8 +20027,14 @@ public class ServicioImp implements Servicio, Serializable {
 
 			}
 			if (dtVisitasBk.getIdVisita() != null && dtVisitasBk.getIdVisita().longValue() > 0) {
-				List<DtVisitasUsuinternos> dtVisitasUsuinternoss = dtVisitasUsuinternosDao
-						.getXFiltro(dtVisitasBk.getIdVisita());
+				//JPUYEN 17062024 - INICIO
+				List<DtVisitasUsuinternos> dtVisitasUsuinternoss = new ArrayList<>();
+				if(dtVisitasBk.getEstado() == Estado.ELIMINADO.getValor()){
+					dtVisitasUsuinternoss = dtVisitasUsuinternosDao.getXFiltroConcatenacionLista(dtVisitasBk.getIdVisita());
+				}else{
+					dtVisitasUsuinternoss = dtVisitasUsuinternosDao.getXFiltro(dtVisitasBk.getIdVisita());
+				}
+				//JPUYEN 17062024 - INICIO
 
 				if (dtVisitasUsuinternoss != null) {
 					int totalRegistros = dtVisitasUsuinternoss.size();
@@ -19624,7 +20121,7 @@ public class ServicioImp implements Servicio, Serializable {
 						// msm = "La visita de id: "+
 						// dtVisitasBk.getIdVisita()+" ya se encuentra
 						// anulada";//PURIBE 29032024 INICIO-->
-						msm = "La reunión de trabajo de id: " + dtVisitasBk.getIdVisita() + " ya se encuentra anulada";// PURIBE
+						msm = "La reunión de trabajo de ID: " + dtVisitasBk.getIdVisita() + " ya se encuentra anulada";// PURIBE
 																														// 29032024
 																														// INICIO-->//PURIBE
 																														// 12042024
@@ -19635,7 +20132,7 @@ public class ServicioImp implements Servicio, Serializable {
 					} else if (dtVisitasBk.getEstado().longValue() == estadoFinalizado) {
 						// msm = "NO ES POSIBLE ANULAR UN REGISTRO FINALIZADO,
 						// ID: "+dtVisitasBk.getIdVisita();
-						msm = "No es posible anular un registo finalizado, id: " + dtVisitasBk.getIdVisita();// PURIBE
+						msm = "No es posible anular un registo finalizado, ID: " + dtVisitasBk.getIdVisita();// PURIBE
 																												// 29032024
 																												// INICIO-->
 						// JSFUtil.showMessageError(msm, Messages
@@ -19685,8 +20182,7 @@ public class ServicioImp implements Servicio, Serializable {
 		List<DtVisitasBk> dtVisitasBkss = new ArrayList<DtVisitasBk>();
 		try {
 			List<DtVisitas> dtVisitassss = dtVisitasDao.getXFiltro(fechaVisita, idOrigen, idProgramacion, idModalidad,
-					idTipo, idLugar, idEntidad, idSede, idSistAdm, idFinancia, fechaProgramada, null, null,
-					kyUsuarioMod); // PURIBE 04042024 - INICIO-->
+					idTipo, idLugar, idEntidad, idSede, idSistAdm, idFinancia, fechaProgramada,null,null,kyUsuarioMod);//JPUYEN 17062024 - se grega kyUsuarioMod
 			for (DtVisitas dtVisitas : dtVisitassss) {
 				DtVisitasBk dtVisitasBk = new DtVisitasBk();
 				FuncionesStaticas.copyPropertiesObject(dtVisitasBk, dtVisitas);
@@ -20237,192 +20733,218 @@ public class ServicioImp implements Servicio, Serializable {
 		return msInstitucionesIdproveeLista;
 	}
 
-//	public DtEncuestaBk getIdEncuesta(Long idTipoServicio, Long fechaServicio, Long idServicio) throws Validador {
-//		DtEncuesta encuesta = null;
-//		Long idOrigen = 0L;
-//		Long idPresta = 0L;
-//		Long idTipoServicioAsistencia = PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN;
-//		Long idTipoServicioCapacitacion = PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA;
-//		Long idTipoServicioVisita = PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA;
-//		Long idTipoServicioConsulta = PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CONSULTA;
-//
-//		if (idTipoServicio.longValue() == idTipoServicioAsistencia.longValue()) {
-//			DtAsistencia dtAsistencia = dtAsistenciaDao.getDtAsistencia(idServicio);
-//			if (dtAsistencia != null)
-//				idOrigen = dtAsistencia.getIdOrigen();
-//		} else if (idTipoServicio.longValue() == idTipoServicioCapacitacion.longValue()) {
-//			DtCapacitacion dtCapacitacion = dtCapacitacionDao.getDtCapacitacion(idServicio);
-//			if (dtCapacitacion != null) {
-//				idOrigen = dtCapacitacion.getIdOrigen();
-//				idPresta = dtCapacitacion.getIdPrestacion();
-//			}
-//		} else if (idTipoServicio.longValue() == idTipoServicioVisita.longValue()) {
-//			DtVisitas dtVisitas = dtVisitasDao.getDtVisitas(idServicio);
-//			if (dtVisitas != null)
-//				idOrigen = dtVisitas.getIdOrigen();
-//		} else if (idTipoServicio.longValue() == idTipoServicioConsulta.longValue()) {
-//			DtConsultas dtConsultas = dtConsultasDao.getDtConsultas(idServicio);
-//			if (dtConsultas != null)
-//				idOrigen = dtConsultas.getIdOrigen();
-//		}
-//
-//		List<DtEncuesta> lstEncuesta = dtEncuestaDao.getXFiltro(idTipoServicio, null, null, null, null,
-//				new Date(fechaServicio));
-//		if (lstEncuesta != null && lstEncuesta.size() > 0) {
-//
-//			for (DtEncuesta ent : lstEncuesta) {
-//				if (ent.getIdEncuesta() != null) {
-//					if (ent.getIdOrigen() != null && ent.getIdPrestacion() != null) {
-//						if (idPresta != null && idOrigen != null && idOrigen.compareTo(ent.getIdOrigen()) == 0
-//								&& idPresta.compareTo(ent.getIdPrestacion()) == 0) {
-//							encuesta = ent;
-//							break;
-//						}
-//					} else if (ent.getIdOrigen() != null) {
-//						if (idOrigen != null && idOrigen.compareTo(ent.getIdOrigen()) == 0) {
-//							encuesta = ent;
-//						}
-//					} else if (ent.getIdPrestacion() != null) {
-//						if (idPresta != null && idPresta.compareTo(ent.getIdPrestacion()) == 0) {
-//							encuesta = ent;
-//						}
-//					}
-//
-//					if (encuesta == null && (ent.getIdOrigen() == null || ent.getIdOrigen().intValue() == 0)
-//							&& (ent.getIdPrestacion() == null || ent.getIdPrestacion().intValue() == 0)) {
-//						encuesta = ent;
-//					}
-//				}
-//
-//			}
-//
-//		}
-//
-//		DtEncuestaBk encuestaBk = toBeanBk(encuesta, DtEncuestaBk.class);
-//		if (encuestaBk == null) {
-//
-//			PrtParametros prtParametros = prtParametrosDao.getPrtParametros(idTipoServicio);
-//			// PrtParametrosBk parametro = getParametro(idTipoServicio);
-//			if (prtParametros == null)
-//				return encuestaBk; // throw new Validador("No se encontró el
-//									// tipo de servicio");
-//			else
-//				return encuestaBk; // throw new Validador("No se encontró
-//									// encuesta de
-//									// "+parametro.getDescripcion()+" para el
-//									// "+FuncionesStaticas.toString(new
-//									// Date(fechaServicio)));
-//		} else {
-//			return encuestaBk;
-//		}
-//	}
+	// public DtEncuestaBk getIdEncuesta(Long idTipoServicio, Long
+	// fechaServicio, Long idServicio) throws Validador {
+	// DtEncuesta encuesta = null;
+	// Long idOrigen = 0L;
+	// Long idPresta = 0L;
+	// Long idTipoServicioAsistencia =
+	// PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN;
+	// Long idTipoServicioCapacitacion =
+	// PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA;
+	// Long idTipoServicioVisita =
+	// PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA;
+	// Long idTipoServicioConsulta =
+	// PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CONSULTA;
+	//
+	// if (idTipoServicio.longValue() == idTipoServicioAsistencia.longValue()) {
+	// DtAsistencia dtAsistencia = dtAsistenciaDao.getDtAsistencia(idServicio);
+	// if (dtAsistencia != null)
+	// idOrigen = dtAsistencia.getIdOrigen();
+	// } else if (idTipoServicio.longValue() ==
+	// idTipoServicioCapacitacion.longValue()) {
+	// DtCapacitacion dtCapacitacion =
+	// dtCapacitacionDao.getDtCapacitacion(idServicio);
+	// if (dtCapacitacion != null) {
+	// idOrigen = dtCapacitacion.getIdOrigen();
+	// idPresta = dtCapacitacion.getIdPrestacion();
+	// }
+	// } else if (idTipoServicio.longValue() ==
+	// idTipoServicioVisita.longValue()) {
+	// DtVisitas dtVisitas = dtVisitasDao.getDtVisitas(idServicio);
+	// if (dtVisitas != null)
+	// idOrigen = dtVisitas.getIdOrigen();
+	// } else if (idTipoServicio.longValue() ==
+	// idTipoServicioConsulta.longValue()) {
+	// DtConsultas dtConsultas = dtConsultasDao.getDtConsultas(idServicio);
+	// if (dtConsultas != null)
+	// idOrigen = dtConsultas.getIdOrigen();
+	// }
+	//
+	// List<DtEncuesta> lstEncuesta = dtEncuestaDao.getXFiltro(idTipoServicio,
+	// null, null, null, null,
+	// new Date(fechaServicio));
+	// if (lstEncuesta != null && lstEncuesta.size() > 0) {
+	//
+	// for (DtEncuesta ent : lstEncuesta) {
+	// if (ent.getIdEncuesta() != null) {
+	// if (ent.getIdOrigen() != null && ent.getIdPrestacion() != null) {
+	// if (idPresta != null && idOrigen != null &&
+	// idOrigen.compareTo(ent.getIdOrigen()) == 0
+	// && idPresta.compareTo(ent.getIdPrestacion()) == 0) {
+	// encuesta = ent;
+	// break;
+	// }
+	// } else if (ent.getIdOrigen() != null) {
+	// if (idOrigen != null && idOrigen.compareTo(ent.getIdOrigen()) == 0) {
+	// encuesta = ent;
+	// }
+	// } else if (ent.getIdPrestacion() != null) {
+	// if (idPresta != null && idPresta.compareTo(ent.getIdPrestacion()) == 0) {
+	// encuesta = ent;
+	// }
+	// }
+	//
+	// if (encuesta == null && (ent.getIdOrigen() == null ||
+	// ent.getIdOrigen().intValue() == 0)
+	// && (ent.getIdPrestacion() == null || ent.getIdPrestacion().intValue() ==
+	// 0)) {
+	// encuesta = ent;
+	// }
+	// }
+	//
+	// }
+	//
+	// }
+	//
+	// DtEncuestaBk encuestaBk = toBeanBk(encuesta, DtEncuestaBk.class);
+	// if (encuestaBk == null) {
+	//
+	// PrtParametros prtParametros =
+	// prtParametrosDao.getPrtParametros(idTipoServicio);
+	// // PrtParametrosBk parametro = getParametro(idTipoServicio);
+	// if (prtParametros == null)
+	// return encuestaBk; // throw new Validador("No se encontró el
+	// // tipo de servicio");
+	// else
+	// return encuestaBk; // throw new Validador("No se encontró
+	// // encuesta de
+	// // "+parametro.getDescripcion()+" para el
+	// // "+FuncionesStaticas.toString(new
+	// // Date(fechaServicio)));
+	// } else {
+	// return encuestaBk;
+	// }
+	// }
 
-//	@SuppressWarnings({ "unchecked" })
-//	public <T> T toBeanBk(Object objDomain, Class<T> classBk) throws Validador {
-//		if (objDomain == null)
-//			return null;
-//		try {
-//			Object objBk = classBk.newInstance();
-//			BeanUtils.copyProperties(objDomain, objBk);
-//			PropertyDescriptor[] atributos = Introspector.getBeanInfo(objDomain.getClass()).getPropertyDescriptors();
-//			for (PropertyDescriptor atributo : atributos) {
-//				try {
-//
-//					if (!DtServicioBk.esCampoSinDescripcion(atributo.getName())) {
-//						BeanWrapper bwDomain = new BeanWrapperImpl(objDomain);
-//						BeanWrapper bwBk = new BeanWrapperImpl(objBk);
-//						Long valorId = Long.parseLong((bwDomain.getPropertyValue(atributo.getName()).toString()));
-//						// if(atributo.getName().startsWith("tipo")) {
-//						if (DtServicioBk.esCampoDePrtParametro(atributo.getName())) {
-//							PrtParametros parametro = prtParametrosDao.getPrtParametros(valorId);
-//							try {
-//								String descripcionParametro = parametro.getDescripcion() != null
-//										&& parametro.getDescripcion().equalsIgnoreCase("Eliminado") ? "ANULADO"
-//												: parametro.getDescripcion();
-//								bwBk.setPropertyValue(atributo.getName() + "_txt", descripcionParametro);
-//							} catch (NotWritablePropertyException nwpe) {
-//								bwBk.setPropertyValue("descripcion" + StringUtils.capitalize(atributo.getName()),
-//										parametro.getDescripcion());
-//							}
-//						}
-//						if (atributo.getName().equals("idUsuexterno")) {
-//							DtUsuarioExterno usuarioExterno = dtUsuarioExternoDao.getDtUsuarioExterno(valorId);
-//							bwBk.setPropertyValue("dniUser", usuarioExterno.getNumDocu());
-//							bwBk.setPropertyValue("idUsuexterno_txt",
-//									FuncionesStaticas.defaultString(usuarioExterno.getNombre(), "") + " "
-//											+ FuncionesStaticas.defaultString(usuarioExterno.getAPaterno(), "") + " "
-//											+ FuncionesStaticas.defaultString(usuarioExterno.getAMaterno(), ""));
-//							bwBk.setPropertyValue("correoUsuext", usuarioExterno.getCorreo());
-//							bwBk.setPropertyValue("fijoUsuext", usuarioExterno.getOtroTelefono());
-//							bwBk.setPropertyValue("celularUsuext", usuarioExterno.getOtroCelular());
-//						}
-//						if (atributo.getName().equals("idSede")) {
-//							MsSedes sede = msSedesDao.getMsSedes(valorId);
-//							try {
-//								bwBk.setPropertyValue("idSede_txt", sede.getSede());
-//							} catch (NotWritablePropertyException nwpe) {
-//								bwBk.setPropertyValue("nombreSede", sede.getSede());
-//							}
-//						}
-//						if (atributo.getName().contains("idSistAdm") || atributo.getName().contains("idSistAdmi")
-//								|| atributo.getName().contains("id_sist_admi")) {
-//							MsSisAdmistrativo sistemaAdministrativo = msSisAdmistrativoDao
-//									.getMsSisAdmistrativo(valorId);
-//							try {
-//								bwBk.setPropertyValue("nombreSistAdmi", sistemaAdministrativo.getDescripcion());
-//							} catch (NotWritablePropertyException nwpe) {
-//								try {
-//									bwBk.setPropertyValue("idSistAdm_txt", sistemaAdministrativo.getDescripcion());
-//								} catch (NotWritablePropertyException nwpe2) {
-//									try {
-//										bwBk.setPropertyValue("idSistAdmi_txt", sistemaAdministrativo.getDescripcion());
-//									} catch (NotWritablePropertyException nwpe3) {
-//										bwBk.setPropertyValue("id_sist_admi_txt",
-//												sistemaAdministrativo.getDescripcion());
-//									}
-//								}
-//							}
-//						}
-//						if (atributo.getName().equals("idProyecto")) {
-//							MsProyectoInversion proyecto = msProyectoInversionDao.getMsProyectoInversion(valorId);
-//							bwBk.setPropertyValue("codigo", proyecto.getCodigo());
-//							bwBk.setPropertyValue("nombre", proyecto.getNombre());
-//						}
-//						if (atributo.getName().equals("idEntidad")) {
-//							DtEntidades entidad = dtEntidadesDao.getDtEntidades(valorId);
-//							bwBk.setPropertyValue("idEntidad_txt", entidad.getRazSocial());
-//							try {
-//								bwBk.setPropertyValue("codEjec", entidad.getCodEjec());
-//							} catch (NotWritablePropertyException nwpe) {
-//								bwBk.setPropertyValue("codEjecutora", entidad.getCodEjec());
-//							}
-//							bwBk.setPropertyValue("codEntidad_txt",
-//									entidad.getCodEjec() + " " + entidad.getRazSocial());
-//						}
-//						if (atributo.getName().equals("idLocal")) {
-//							MsLocal local = msLocalDao.getMsLocal(valorId);
-//							bwBk.setPropertyValue("idLocal_txt", local.getDescripcion());
-//						}
-//						if (atributo.getName().equals("idTema") || atributo.getName().equals("id_tema")) {
-//							MsTema tema = msTemaDao.getMsTema(valorId);
-//							bwBk.setPropertyValue("idTema_txt", tema.getDescripcion());
-//						}
-//						bwDomain = null;
-//						bwBk = null;
-//					}
-//				} catch (Exception e) {
-//					// e.printStackTrace();
-//					System.out
-//							.println("WARNING: [toBeanBk] No se pudo obtener la descripción de " + atributo.getName());
-//				}
-//			}
-//			return (T) objBk;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			throw new Validador(e.getMessage());
-//		}
-//
-//	}
+	// @SuppressWarnings({ "unchecked" })
+	// public <T> T toBeanBk(Object objDomain, Class<T> classBk) throws
+	// Validador {
+	// if (objDomain == null)
+	// return null;
+	// try {
+	// Object objBk = classBk.newInstance();
+	// BeanUtils.copyProperties(objDomain, objBk);
+	// PropertyDescriptor[] atributos =
+	// Introspector.getBeanInfo(objDomain.getClass()).getPropertyDescriptors();
+	// for (PropertyDescriptor atributo : atributos) {
+	// try {
+	//
+	// if (!DtServicioBk.esCampoSinDescripcion(atributo.getName())) {
+	// BeanWrapper bwDomain = new BeanWrapperImpl(objDomain);
+	// BeanWrapper bwBk = new BeanWrapperImpl(objBk);
+	// Long valorId =
+	// Long.parseLong((bwDomain.getPropertyValue(atributo.getName()).toString()));
+	// // if(atributo.getName().startsWith("tipo")) {
+	// if (DtServicioBk.esCampoDePrtParametro(atributo.getName())) {
+	// PrtParametros parametro = prtParametrosDao.getPrtParametros(valorId);
+	// try {
+	// String descripcionParametro = parametro.getDescripcion() != null
+	// && parametro.getDescripcion().equalsIgnoreCase("Eliminado") ? "ANULADO"
+	// : parametro.getDescripcion();
+	// bwBk.setPropertyValue(atributo.getName() + "_txt", descripcionParametro);
+	// } catch (NotWritablePropertyException nwpe) {
+	// bwBk.setPropertyValue("descripcion" +
+	// StringUtils.capitalize(atributo.getName()),
+	// parametro.getDescripcion());
+	// }
+	// }
+	// if (atributo.getName().equals("idUsuexterno")) {
+	// DtUsuarioExterno usuarioExterno =
+	// dtUsuarioExternoDao.getDtUsuarioExterno(valorId);
+	// bwBk.setPropertyValue("dniUser", usuarioExterno.getNumDocu());
+	// bwBk.setPropertyValue("idUsuexterno_txt",
+	// FuncionesStaticas.defaultString(usuarioExterno.getNombre(), "") + " "
+	// + FuncionesStaticas.defaultString(usuarioExterno.getAPaterno(), "") + " "
+	// + FuncionesStaticas.defaultString(usuarioExterno.getAMaterno(), ""));
+	// bwBk.setPropertyValue("correoUsuext", usuarioExterno.getCorreo());
+	// bwBk.setPropertyValue("fijoUsuext", usuarioExterno.getOtroTelefono());
+	// bwBk.setPropertyValue("celularUsuext", usuarioExterno.getOtroCelular());
+	// }
+	// if (atributo.getName().equals("idSede")) {
+	// MsSedes sede = msSedesDao.getMsSedes(valorId);
+	// try {
+	// bwBk.setPropertyValue("idSede_txt", sede.getSede());
+	// } catch (NotWritablePropertyException nwpe) {
+	// bwBk.setPropertyValue("nombreSede", sede.getSede());
+	// }
+	// }
+	// if (atributo.getName().contains("idSistAdm") ||
+	// atributo.getName().contains("idSistAdmi")
+	// || atributo.getName().contains("id_sist_admi")) {
+	// MsSisAdmistrativo sistemaAdministrativo = msSisAdmistrativoDao
+	// .getMsSisAdmistrativo(valorId);
+	// try {
+	// bwBk.setPropertyValue("nombreSistAdmi",
+	// sistemaAdministrativo.getDescripcion());
+	// } catch (NotWritablePropertyException nwpe) {
+	// try {
+	// bwBk.setPropertyValue("idSistAdm_txt",
+	// sistemaAdministrativo.getDescripcion());
+	// } catch (NotWritablePropertyException nwpe2) {
+	// try {
+	// bwBk.setPropertyValue("idSistAdmi_txt",
+	// sistemaAdministrativo.getDescripcion());
+	// } catch (NotWritablePropertyException nwpe3) {
+	// bwBk.setPropertyValue("id_sist_admi_txt",
+	// sistemaAdministrativo.getDescripcion());
+	// }
+	// }
+	// }
+	// }
+	// if (atributo.getName().equals("idProyecto")) {
+	// MsProyectoInversion proyecto =
+	// msProyectoInversionDao.getMsProyectoInversion(valorId);
+	// bwBk.setPropertyValue("codigo", proyecto.getCodigo());
+	// bwBk.setPropertyValue("nombre", proyecto.getNombre());
+	// }
+	// if (atributo.getName().equals("idEntidad")) {
+	// DtEntidades entidad = dtEntidadesDao.getDtEntidades(valorId);
+	// bwBk.setPropertyValue("idEntidad_txt", entidad.getRazSocial());
+	// try {
+	// bwBk.setPropertyValue("codEjec", entidad.getCodEjec());
+	// } catch (NotWritablePropertyException nwpe) {
+	// bwBk.setPropertyValue("codEjecutora", entidad.getCodEjec());
+	// }
+	// bwBk.setPropertyValue("codEntidad_txt",
+	// entidad.getCodEjec() + " " + entidad.getRazSocial());
+	// }
+	// if (atributo.getName().equals("idLocal")) {
+	// MsLocal local = msLocalDao.getMsLocal(valorId);
+	// bwBk.setPropertyValue("idLocal_txt", local.getDescripcion());
+	// }
+	// if (atributo.getName().equals("idTema") ||
+	// atributo.getName().equals("id_tema")) {
+	// MsTema tema = msTemaDao.getMsTema(valorId);
+	// bwBk.setPropertyValue("idTema_txt", tema.getDescripcion());
+	// }
+	// bwDomain = null;
+	// bwBk = null;
+	// }
+	// } catch (Exception e) {
+	// // e.printStackTrace();
+	// System.out
+	// .println("WARNING: [toBeanBk] No se pudo obtener la descripción de " +
+	// atributo.getName());
+	// }
+	// }
+	// return (T) objBk;
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// throw new Validador(e.getMessage());
+	// }
+	//
+	// }
 
 	@Override
 	public List<DtUsuarioExternoBk> getDtUsuarioExternoXFiltro2(String nombre, Long kyUsuarioMod) {
@@ -20501,268 +21023,509 @@ public class ServicioImp implements Servicio, Serializable {
 	}
 
 	// PURIBE 22042024 -FIN-->
-	
-	//INICIO CUSCATA - 18062024
-		private List<DtAsistenciaUsuexternosBk> getAllDtAsistenciaUsuexternosByIdAsistencia(Long idAsistencia, Long kyUsuarioMod){
-			List<DtAsistenciaUsuexternosBk> dtAsistenciaUsuexternosBkss = new ArrayList<DtAsistenciaUsuexternosBk>();
-			try{
-				List<DtAsistenciaUsuexternos>  dtAsistenciaUsuexternoss = dtAsistenciaUsuexternosDao.getByIdAsistDtAsisteUsuariosExt(idAsistencia);
-				for (DtAsistenciaUsuexternos dtAsistenciaUsuexternos : dtAsistenciaUsuexternoss) {
-					DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk = new DtAsistenciaUsuexternosBk();
-					FuncionesStaticas.copyPropertiesObject(dtAsistenciaUsuexternosBk, dtAsistenciaUsuexternos);
-					completarDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk);
-					setACLDtAsistenciaUsuexternosBk(dtAsistenciaUsuexternosBk,kyUsuarioMod);
-					dtAsistenciaUsuexternosBkss.add(dtAsistenciaUsuexternosBk);
-				}
-			}catch(Exception e){
-				e.printStackTrace();
-			}		
-			return dtAsistenciaUsuexternosBkss;
+
+	// INICIO CUSCATA - 18062024
+	private List<DtAsistenciaUsuexternosBk> getAllDtAsistenciaUsuexternosByIdAsistencia(Long idAsistencia,
+			Long kyUsuarioMod) {
+		List<DtAsistenciaUsuexternosBk> dtAsistenciaUsuexternosBkss = new ArrayList<DtAsistenciaUsuexternosBk>();
+		try {
+			List<DtAsistenciaUsuexternos> dtAsistenciaUsuexternoss = dtAsistenciaUsuexternosDao
+					.getByIdAsistDtAsisteUsuariosExt(idAsistencia);
+			for (DtAsistenciaUsuexternos dtAsistenciaUsuexternos : dtAsistenciaUsuexternoss) {
+				DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk = new DtAsistenciaUsuexternosBk();
+				FuncionesStaticas.copyPropertiesObject(dtAsistenciaUsuexternosBk, dtAsistenciaUsuexternos);
+				completarDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk);
+				setACLDtAsistenciaUsuexternosBk(dtAsistenciaUsuexternosBk, kyUsuarioMod);
+				dtAsistenciaUsuexternosBkss.add(dtAsistenciaUsuexternosBk);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	//FIN CUSCATA - 18062024
-		
-		//CUSCATA - 18062024
-		@Override
-		public DtUsuarioExternoBk getUsuarioPorDNI(Long numDocum, Long kyUsuarioMod) {
-			long startMethod = System.currentTimeMillis();
+		return dtAsistenciaUsuexternosBkss;
+	}
+	// FIN CUSCATA - 18062024
 
-			DtUsuarioExternoBk dtUsuarioExternoBk = new DtUsuarioExternoBk();
+	// CUSCATA - 18062024
+	@Override
+	public DtUsuarioExternoBk getUsuarioPorDNI(Long numDocum, Long kyUsuarioMod) {
+		long startMethod = System.currentTimeMillis();
 
-			DtUsuarioExterno dtUsuarioExterno = null;
-			List<DtUsuarioExterno> listaUsuarioExterno = dtUsuarioExternoDao.getXFiltro(null, null, null, numDocum, null,
-					null, null, null, null);
+		DtUsuarioExternoBk dtUsuarioExternoBk = new DtUsuarioExternoBk();
 
-			if (listaUsuarioExterno != null && !listaUsuarioExterno.isEmpty()) {
-				dtUsuarioExterno = listaUsuarioExterno.iterator().next();
-				FuncionesStaticas.copyPropertiesObject(dtUsuarioExternoBk, dtUsuarioExterno);
+		DtUsuarioExterno dtUsuarioExterno = null;
+		List<DtUsuarioExterno> listaUsuarioExterno = dtUsuarioExternoDao.getXFiltro(null, null, null, numDocum, null,
+				null, null, null, null);
 
-				List<DtEntidadesUsuexternos> dtEntidadesUsuexternosList = dtEntidadesUsuexternosDao
-						.getXFiltroidUsuexterno(dtUsuarioExterno.getIdUsuexterno());
-				if (dtEntidadesUsuexternosList != null && !dtEntidadesUsuexternosList.isEmpty()) {
-					DtEntidadesUsuexternos dtEntidadesUsuexternos = dtEntidadesUsuexternosList.iterator().next();
+		if (listaUsuarioExterno != null && !listaUsuarioExterno.isEmpty()) {
+			dtUsuarioExterno = listaUsuarioExterno.iterator().next();
+			FuncionesStaticas.copyPropertiesObject(dtUsuarioExternoBk, dtUsuarioExterno);
 
-					List<DtCargosUsuexterBk> dtCargosUsuexterList = this
-							.getDtCargosUsuexterXFiltro(dtEntidadesUsuexternos.getIdUsuextEnti(), null, kyUsuarioMod);
-					if (dtCargosUsuexterList != null && !dtCargosUsuexterList.isEmpty()) {
-						dtUsuarioExternoBk.setUsucargos(dtCargosUsuexterList);
-					}
+			List<DtEntidadesUsuexternos> dtEntidadesUsuexternosList = dtEntidadesUsuexternosDao
+					.getXFiltroidUsuexterno(dtUsuarioExterno.getIdUsuexterno());
+			if (dtEntidadesUsuexternosList != null && !dtEntidadesUsuexternosList.isEmpty()) {
+				DtEntidadesUsuexternos dtEntidadesUsuexternos = dtEntidadesUsuexternosList.iterator().next();
 
+				List<DtCargosUsuexterBk> dtCargosUsuexterList = this
+						.getDtCargosUsuexterXFiltro(dtEntidadesUsuexternos.getIdUsuextEnti(), null, kyUsuarioMod);
+				if (dtCargosUsuexterList != null && !dtCargosUsuexterList.isEmpty()) {
+					dtUsuarioExternoBk.setUsucargos(dtCargosUsuexterList);
 				}
 
 			}
 
-			long finalMethod = System.currentTimeMillis() - startMethod;
-			log.log(Level.INFO, "finalMethod getUsuarioPorDNI:: " + finalMethod);
-
-			return dtUsuarioExternoBk;
 		}
 
-//		@Override
-//		public List<DtUsuarioExternoBk> getMsUsuariosExternoBkXnombreapellido(String nombreapellido) throws Validador {
-//			if (nombreapellido == null){
-//				return null;
-//			}
-//			List<DtUsuarioExternoBk> dtusuarioExternoBkList = new ArrayList<>();
-//			
-//			if(nombreapellido==null || nombreapellido.length()<3){
-//				return dtusuarioExternoBkList;
-//			}
-//			
-//			String[] terms = nombreapellido.split(" ");
-//			 List<DtUsuarioExterno> usuarios = dtUsuarioExternoDao.getDtUsuarioExtByNombreapellido(terms);
-//		        for (DtUsuarioExterno usuario : usuarios) {
-//		        	DtUsuarioExternoBk usuariobk = new DtUsuarioExternoBk();
-//		        	usuariobk.setIdUsuexterno(usuario.getIdUsuexterno());
-//		        	usuariobk.setApaterno(usuario.getApaterno());
-//		        	usuariobk.setAmaterno(usuario.getAmaterno());
-//		        	usuariobk.setNombre(usuario.getNombre());
-//		        	usuariobk.setNombresCompletos(usuario.getApaterno()+" "+usuario.getAmaterno()+" "+usuario.getNombre() );
-//		        	usuariobk.setCorreo(usuario.getCorreo());
-//		        	usuariobk.setOtroTelefono(usuario.getOtroTelefono());
-//		        	usuariobk.setOtroCelular(usuario.getOtroCelular());
-//		        	usuariobk.setNumDocum(usuario.getNumDocum());
-//		            dtusuarioExternoBkList.add(usuariobk);
-//		        }
-//		        return dtusuarioExternoBkList;
-//		}
+		long finalMethod = System.currentTimeMillis() - startMethod;
+		log.log(Level.INFO, "finalMethod getUsuarioPorDNI:: " + finalMethod);
 
-		//FIN CUSCATA - 18062024
-		
-		// JPUYEN 14052024 - INICIO
-		@Override
-		public DtVisitasUsuexternosBk getDtVisitasUsuexternoBkXid(Long id, Long kyUsuarioMod){
-			if(id==null) return null;
-			DtVisitasUsuinternos dtVisitasUsuinternos = dtVisitasUsuinternosDao.getDtVisitasUsuinternos(id);
-			DtVisitasUsuexternosBk dtVisitasUsuexternosBk = null;
-			if(dtVisitasUsuinternos!=null){
-				dtVisitasUsuexternosBk = new DtVisitasUsuexternosBk();
-				FuncionesStaticas.copyPropertiesObject(dtVisitasUsuexternosBk,dtVisitasUsuinternos);
-				//completarDtVisitasUsuinternos(dtVisitasUsuexternosBk);
-				if(kyUsuarioMod!=null){
-					setACLDtVisitasUsuexternosBk(dtVisitasUsuexternosBk,kyUsuarioMod);
-				}
-			}		
-			return dtVisitasUsuexternosBk;
-		}	
-		// JPUYEN 14052024 - FIN
-		
-		//JPUYEN 14052024 - INICIO
-		@Override
-		public DtUsuarioExternoBk getMsUsuariosExternoBkXDni(String dni) throws Validador {
-			
-			
-			if (dni == null){
-				return null;
+		return dtUsuarioExternoBk;
+	}
+
+	// @Override
+	// public List<DtUsuarioExternoBk>
+	// getMsUsuariosExternoBkXnombreapellido(String nombreapellido) throws
+	// Validador {
+	// if (nombreapellido == null){
+	// return null;
+	// }
+	// List<DtUsuarioExternoBk> dtusuarioExternoBkList = new ArrayList<>();
+	//
+	// if(nombreapellido==null || nombreapellido.length()<3){
+	// return dtusuarioExternoBkList;
+	// }
+	//
+	// String[] terms = nombreapellido.split(" ");
+	// List<DtUsuarioExterno> usuarios =
+	// dtUsuarioExternoDao.getDtUsuarioExtByNombreapellido(terms);
+	// for (DtUsuarioExterno usuario : usuarios) {
+	// DtUsuarioExternoBk usuariobk = new DtUsuarioExternoBk();
+	// usuariobk.setIdUsuexterno(usuario.getIdUsuexterno());
+	// usuariobk.setApaterno(usuario.getApaterno());
+	// usuariobk.setAmaterno(usuario.getAmaterno());
+	// usuariobk.setNombre(usuario.getNombre());
+	// usuariobk.setNombresCompletos(usuario.getApaterno()+"
+	// "+usuario.getAmaterno()+" "+usuario.getNombre() );
+	// usuariobk.setCorreo(usuario.getCorreo());
+	// usuariobk.setOtroTelefono(usuario.getOtroTelefono());
+	// usuariobk.setOtroCelular(usuario.getOtroCelular());
+	// usuariobk.setNumDocum(usuario.getNumDocum());
+	// dtusuarioExternoBkList.add(usuariobk);
+	// }
+	// return dtusuarioExternoBkList;
+	// }
+
+	// FIN CUSCATA - 18062024
+
+	// JPUYEN 14052024 - INICIO
+	@Override
+	public DtVisitasUsuexternosBk getDtVisitasUsuexternoBkXid(Long id, Long kyUsuarioMod) {
+		if (id == null)
+			return null;
+		DtVisitasUsuinternos dtVisitasUsuinternos = dtVisitasUsuinternosDao.getDtVisitasUsuinternos(id);
+		DtVisitasUsuexternosBk dtVisitasUsuexternosBk = null;
+		if (dtVisitasUsuinternos != null) {
+			dtVisitasUsuexternosBk = new DtVisitasUsuexternosBk();
+			FuncionesStaticas.copyPropertiesObject(dtVisitasUsuexternosBk, dtVisitasUsuinternos);
+			// completarDtVisitasUsuinternos(dtVisitasUsuexternosBk);
+			if (kyUsuarioMod != null) {
+				setACLDtVisitasUsuexternosBk(dtVisitasUsuexternosBk, kyUsuarioMod);
 			}
-			List<DtUsuarioExterno> msUsuariosExterno = dtUsuarioExternoDao.getDtUsuarioExtByDni(dni);
-			
-			if (!msUsuariosExterno.isEmpty()) {
-				if (msUsuariosExterno.size() > 1) {
-					log.info("ERROR EXISTE MÁS DE UNA PERSONA CON EL DNI " + dni);
-					throw new Validador("SE ENCONTRÓ MAS DE UNA PERSONA CON EL DNI INGRESADO");
-					
-				} else if(msUsuariosExterno.size() > 1){
-					throw new Validador("EL DNI INGRESADO NO SE ENCUENTRA REGISTRADO, POR FAVOR COMPLETE LOS DATOS");
-				}
-				
+		}
+		return dtVisitasUsuexternosBk;
+	}
+	// JPUYEN 14052024 - FIN
+
+	// JPUYEN 14052024 - INICIO
+	@Override
+	public DtUsuarioExternoBk getMsUsuariosExternoBkXDni(String dni) throws Validador {
+
+		if (dni == null) {
+			return null;
+		}
+		List<DtUsuarioExterno> msUsuariosExterno = dtUsuarioExternoDao.getDtUsuarioExtByDni(dni);
+
+		if (!msUsuariosExterno.isEmpty()) {
+			if (msUsuariosExterno.size() > 1) {
+				log.info("ERROR EXISTE MÁS DE UNA PERSONA CON EL DNI " + dni);
+				throw new Validador("SE ENCONTRÓ MAS DE UNA PERSONA CON EL DNI INGRESADO");
+
+			} else if (msUsuariosExterno.size() > 1) {
+				throw new Validador("EL DNI INGRESADO NO SE ENCUENTRA REGISTRADO, POR FAVOR COMPLETE LOS DATOS");
 			}
 
+		}
+
+		DtUsuarioExternoBk usuariobk = new DtUsuarioExternoBk();
+
+		for (DtUsuarioExterno usuario : msUsuariosExterno) {
+			// FuncionesStaticas.copyPropertiesObject(usuariobk, usuario);
+			usuariobk.setIdUsuexterno(usuario.getIdUsuexterno());
+			usuariobk.setApaterno(usuario.getApaterno());
+			usuariobk.setAmaterno(usuario.getAmaterno());
+			usuariobk.setNombre(usuario.getNombre());
+			usuariobk.setNombresCompletos(
+					usuario.getApaterno() + " " + usuario.getAmaterno() + " " + usuario.getNombre());
+			usuariobk.setCorreo(usuario.getCorreo());
+			usuariobk.setOtroTelefono(usuario.getOtroTelefono());
+			usuariobk.setOtroCelular(usuario.getOtroCelular());
+			usuariobk.setNumDocum(usuario.getNumDocum());
+
+			completarDtUsuarioExterno(usuariobk);
+		}
+		return usuariobk;
+
+	}
+
+	@Override
+	public List<DtUsuarioExternoBk> getMsUsuariosExternoBkXnombreapellido(String nombreapellido) throws Validador {
+		if (nombreapellido == null) {
+			return null;
+		}
+		List<DtUsuarioExternoBk> dtusuarioExternoBkList = new ArrayList<>();
+
+		if (nombreapellido == null || nombreapellido.length() < 3) {
+			return dtusuarioExternoBkList;
+		}
+
+		String[] terms = nombreapellido.split(" ");
+
+		List<DtUsuarioExterno> usuarios = dtUsuarioExternoDao.getDtUsuarioExtByNombreapellido(terms);
+		for (DtUsuarioExterno usuario : usuarios) {
 			DtUsuarioExternoBk usuariobk = new DtUsuarioExternoBk();
-			
-			 for (DtUsuarioExterno usuario : msUsuariosExterno) {
-		            //FuncionesStaticas.copyPropertiesObject(usuariobk, usuario);
-		        	usuariobk.setIdUsuexterno(usuario.getIdUsuexterno());
-		        	usuariobk.setApaterno(usuario.getApaterno());
-		        	usuariobk.setAmaterno(usuario.getAmaterno());
-		        	usuariobk.setNombre(usuario.getNombre());
-		        	usuariobk.setNombresCompletos(usuario.getApaterno()+" "+usuario.getAmaterno()+" "+usuario.getNombre() );
-		        	usuariobk.setCorreo(usuario.getCorreo());
-		        	usuariobk.setOtroTelefono(usuario.getOtroTelefono());
-		        	usuariobk.setOtroCelular(usuario.getOtroCelular());
-		        	usuariobk.setNumDocum(usuario.getNumDocum());
-		        	
-		        	completarDtUsuarioExterno(usuariobk);
-		        }
-		        return usuariobk;
-		        
+			// FuncionesStaticas.copyPropertiesObject(usuariobk, usuario);
+			usuariobk.setIdUsuexterno(usuario.getIdUsuexterno());
+			usuariobk.setApaterno(usuario.getApaterno());
+			usuariobk.setAmaterno(usuario.getAmaterno());
+			usuariobk.setNombre(usuario.getNombre());
+			usuariobk.setNombresCompletos(
+					usuario.getApaterno() + " " + usuario.getAmaterno() + " " + usuario.getNombre());
+			usuariobk.setCorreo(usuario.getCorreo());
+			usuariobk.setOtroTelefono(usuario.getOtroTelefono());
+			usuariobk.setOtroCelular(usuario.getOtroCelular());
+			usuariobk.setNumDocum(usuario.getNumDocum());
+			dtusuarioExternoBkList.add(usuariobk);
 		}
-		
-		
-		@Override
-		public List<DtUsuarioExternoBk> getMsUsuariosExternoBkXnombreapellido(String nombreapellido) throws Validador {
-			if (nombreapellido == null){
-				return null;
-			}
-			List<DtUsuarioExternoBk> dtusuarioExternoBkList = new ArrayList<>();
-			
-			if(nombreapellido==null || nombreapellido.length()<3){
-				return dtusuarioExternoBkList;
-			}
-			
-			
-			String[] terms = nombreapellido.split(" ");
-					
-			 List<DtUsuarioExterno> usuarios = dtUsuarioExternoDao.getDtUsuarioExtByNombreapellido(terms);
-		        for (DtUsuarioExterno usuario : usuarios) {
-		        	DtUsuarioExternoBk usuariobk = new DtUsuarioExternoBk();
-		            //FuncionesStaticas.copyPropertiesObject(usuariobk, usuario);
-		        	usuariobk.setIdUsuexterno(usuario.getIdUsuexterno());
-		        	usuariobk.setApaterno(usuario.getApaterno());
-		        	usuariobk.setAmaterno(usuario.getAmaterno());
-		        	usuariobk.setNombre(usuario.getNombre());
-		        	usuariobk.setNombresCompletos(usuario.getApaterno()+" "+usuario.getAmaterno()+" "+usuario.getNombre() );
-		        	usuariobk.setCorreo(usuario.getCorreo());
-		        	usuariobk.setOtroTelefono(usuario.getOtroTelefono());
-		        	usuariobk.setOtroCelular(usuario.getOtroCelular());
-		        	usuariobk.setNumDocum(usuario.getNumDocum());
-		            dtusuarioExternoBkList.add(usuariobk);
-		        }
-		        return dtusuarioExternoBkList;
-				        
-		}
-		
-		//JPUYEN 14052024 - FIN
-		
-		//JPUYEN 14052024 - INICIO
-		@Override
-		public List<MsUsuariosDto> getMsUsuariosFilter(Long idSede) {
-			
-			//if (msUsuariosListaCache == null) {
-			
-				List<MsUsuarios> msUsuariossss = new ArrayList<>();
-				
-				if (idSede!= null && idSede.intValue() > 0) {
-					msUsuariossss = msUsuariosDao.getActivasMsUsuariosFilterXsede(idSede);
-				}else{
-					msUsuariossss = msUsuariosDao.getActivasMsUsuarios();
-				}
-				
-				msUsuariosListaCache = new ArrayList<MsUsuariosDto>();
-				for (MsUsuarios msUsuarios : msUsuariossss) {
-					MsUsuariosDto msUsuariosDto = new MsUsuariosDto();
-					FuncionesStaticas.copyPropertiesObject(msUsuariosDto, msUsuarios);
-				    String Nombrecompleto=	FuncionesStaticas.getNombreCompleto(msUsuarios);
-				   msUsuariosDto.setIdUsuinternoTxt(Nombrecompleto);
-				   
-				   try {
-						if (msUsuariosDto.getIdusuario() != null && msUsuariosDto.getIdusuario().longValue() > 0) {
-							MsSisAdmistrativo msSisAdmistrativo = msSisAdmistrativoDao
-									.getMsSisAdmistrativo(msUsuariosDto.getIdSistAdmi());
-							if (msSisAdmistrativo != null)
-								msUsuariosDto.setIdSistAdmiTxt(msSisAdmistrativo.getDescripcion());
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				   
-					msUsuariosListaCache.add(msUsuariosDto);
-					
-				}
-			//}
-			return msUsuariosListaCache;
-		}
-		//JPUYEN 14052024 - FIN
-//INICIO CUSCATA - 10072024
-		@Override
-		public void updateDtAsistenciaUsuexCorreo(Long id) throws Validador {
-			dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexCorreo(id);
-			
+		return dtusuarioExternoBkList;
+
+	}
+
+	// JPUYEN 14052024 - FIN
+
+	// JPUYEN 14052024 - INICIO
+	@Override
+	public List<MsUsuariosDto> getMsUsuariosFilter(Long idSede) {
+
+		// if (msUsuariosListaCache == null) {
+
+		List<MsUsuarios> msUsuariossss = new ArrayList<>();
+
+		if (idSede != null && idSede.intValue() > 0) {
+			msUsuariossss = msUsuariosDao.getActivasMsUsuariosFilterXsede(idSede);
+		} else {
+			msUsuariossss = msUsuariosDao.getActivasMsUsuarios();
 		}
 
-		@Override
-		public void deleteDtAsistenciaUsuario(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user, Long kyUsuarioMod,
-				Long kyAreaMod, String rmtaddress) throws Validador {
-			
-			DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
-			
+		msUsuariosListaCache = new ArrayList<MsUsuariosDto>();
+		for (MsUsuarios msUsuarios : msUsuariossss) {
+			MsUsuariosDto msUsuariosDto = new MsUsuariosDto();
+			FuncionesStaticas.copyPropertiesObject(msUsuariosDto, msUsuarios);
+			String Nombrecompleto = FuncionesStaticas.getNombreCompleto(msUsuarios);
+			msUsuariosDto.setIdUsuinternoTxt(Nombrecompleto);
+
 			try {
-				if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
-						&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
-					dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
-							.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
-					
-					Timestamp hoy = new Timestamp(System.currentTimeMillis());
-					
-					dtAsistenciaUsuexternos.setRtmaddressrst(rmtaddress);
-					dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
-					dtAsistenciaUsuexternos.setFechaModif(hoy);
-					Long estadoanterior = dtAsistenciaUsuexternos.getEstado();
-					dtAsistenciaUsuexternos.setEstado(Estado.ELIMINADO.getValor());
-
-					dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
-					
-					log.log(Level.INFO,
-							"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
-									+ "ELIMINADO DtAsistenciaUsuexternos" + " :: " + dtAsistenciaUsuexternos.getIdAsistUsuext().toString()
-									+ " :: " + estadoanterior + " :: " + "0");
-					
+				if (msUsuariosDto.getIdusuario() != null && msUsuariosDto.getIdusuario().longValue() > 0) {
+					MsSisAdmistrativo msSisAdmistrativo = msSisAdmistrativoDao
+							.getMsSisAdmistrativo(msUsuariosDto.getIdSistAdmi());
+					if (msSisAdmistrativo != null)
+						msUsuariosDto.setIdSistAdmiTxt(msSisAdmistrativo.getDescripcion());
 				}
 			} catch (Exception e) {
-				throw new Validador(e.getMessage());
+				e.printStackTrace();
 			}
+
+			msUsuariosListaCache.add(msUsuariosDto);
+
+		}
+		// }
+		return msUsuariosListaCache;
+	}
+	// JPUYEN 14052024 - FIN
+
+
+	@Override
+	public void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user,
+			Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador {
+		try {
+			DtAsistenciaUsuexternos dtAsistenciaUsuexternos = null;
+			if (dtAsistenciaUsuexternosBk.getIdAsistUsuext() != null
+					&& dtAsistenciaUsuexternosBk.getIdAsistUsuext().longValue() > 0) {
+
+				dtAsistenciaUsuexternos = dtAsistenciaUsuexternosDao
+						.getDtAsistenciaUsuexternos(dtAsistenciaUsuexternosBk.getIdAsistUsuext());
+
+				Timestamp hoy = new Timestamp(System.currentTimeMillis());
+
+				dtAsistenciaUsuexternos.setRtmaddressrst(rmtaddress);
+				dtAsistenciaUsuexternos.setIdusserModif(kyUsuarioMod);
+				dtAsistenciaUsuexternos.setFechaModif(hoy);
+				Long estadoanterior = dtAsistenciaUsuexternos.getEstado();
+				dtAsistenciaUsuexternos.setEstado(Estado.ELIMINADO.getValor());
+
+				dtAsistenciaUsuexternosDao.updateDtAsistenciaUsuexternos(dtAsistenciaUsuexternos);
+
+				log.log(Level.INFO,
+						"CAMBIO :: " + kyUsuarioMod + " :: " + user + " :: " + rmtaddress + " :: "
+								+ "ELIMINADO dtAsistenciaUsuexternos" + " :: "
+								+ dtAsistenciaUsuexternos.getIdAsistUsuext().toString() + " :: " + estadoanterior
+								+ " :: " + "0");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Validador(e.getMessage());
+		}
+	}
+	
+	@Override
+	public DtVisitasBk finalizarDtVisitasBk(
+			DtVisitasBk dtVisitasBk,	
+			List<DtAnexoBk> dtAnexosBkss,// JPUYEN 17062024 - NUEVO PARAMETRO
+			String user,
+			Long kyUsuarioMod, 
+			Long kyAreaMod, 
+			String rmtaddress		
+			) throws Validador{
+		
+		//PURIBE 14032024 -INICIO-->
+		
+				Long idSisAdmTodos = PropertiesMg.getSistemLong(PropertiesMg.KEY_IDSISTEMA_ADMINISTRATIVO_TODOS,
+						PropertiesMg.DEFOULT_IDSISTEMA_ADMINISTRATIVO_TODOS);
+				Long idSedeTodas = PropertiesMg.getSistemLong(PropertiesMg.KEY_IDSEDES_TODAS,
+						PropertiesMg.DEFOULT_IDSEDES_TODAS);
+
+				
+				Long idTipoFechaCorteProgramada = PropertiesMg.getSistemLong(
+						PropertiesMg.KEY_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_PROG,
+						PropertiesMg.DEFOULT_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_PROG);
+				DtAmpliacionFecha autorizacionProgramacion = dtAmpliacionFechaDao.getXFiltro(idTipoFechaCorteProgramada,
+						dtVisitasBk.getIdSede(), dtVisitasBk.getIdSistAdm(), FuncionesStaticas.getMonth());
+
+				// ***********************************************************************************************************
+				DtAmpliacionFecha autorizacionProgramacion2 = dtAmpliacionFechaDao.getXFiltro(idTipoFechaCorteProgramada, dtVisitasBk.getIdSede(),
+						dtVisitasBk.getIdSistAdm(), FuncionesStaticas.getMonth());
+				
+				if (autorizacionProgramacion2 != null) {
+					if (autorizacionProgramacion != null) {
+						if (autorizacionProgramacion2.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
+							autorizacionProgramacion = autorizacionProgramacion2;
+						}
+					} else {
+						autorizacionProgramacion = autorizacionProgramacion2;
+					}
+				}
+
+				DtAmpliacionFecha autorizacionProgramacion3 = dtAmpliacionFechaDao.getXFiltro(idTipoFechaCorteProgramada,
+						dtVisitasBk.getIdSede(), idSisAdmTodos, FuncionesStaticas.getMonth());
+				if (autorizacionProgramacion3 != null) {
+					if (autorizacionProgramacion != null) {
+						if (autorizacionProgramacion3.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
+							autorizacionProgramacion = autorizacionProgramacion3;
+						}
+					} else {
+						autorizacionProgramacion = autorizacionProgramacion3;
+					}
+				}
+
+				DtAmpliacionFecha autorizacionProgramacion4 = dtAmpliacionFechaDao.getXFiltro(idTipoFechaCorteProgramada, idSedeTodas,
+						idSisAdmTodos, FuncionesStaticas.getMonth());
+				if (autorizacionProgramacion4 != null) {
+					if (autorizacionProgramacion != null) {
+						if (autorizacionProgramacion4.getFechaFin().after(autorizacionProgramacion.getFechaFin())) {
+							autorizacionProgramacion = autorizacionProgramacion4;
+						}
+					} else {
+						autorizacionProgramacion = autorizacionProgramacion4;
+					}
+				}
+
+			
+				Long idTipoFechaCorteEjecucion = PropertiesMg.getSistemLong(
+						PropertiesMg.KEY_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_EJEC,
+						PropertiesMg.DEFOULT_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_EJEC);
+				// Integer mesServicio=dtVisitasBk.getFechaVisita().getMonth()+1;
+				// SPRINT_4.1 INICIO
+
+				Integer mesServicio = dtVisitasBk.getFechaVisita().getMonth() + 1;
+
 				
 			
+				if (mesServicio.intValue() == 12) {
+					mesServicio = 0;
+				}
+				DtAmpliacionFecha autorizacionEjecucion = dtAmpliacionFechaDao.getXFiltro(idTipoFechaCorteEjecucion,
+						dtVisitasBk.getIdSede(), dtVisitasBk.getIdSistAdm(), mesServicio + 1);// Ahora
+																								// Mes
+																								// Actual,
+																								// por
+																								// confirmar
+
+				if (autorizacionEjecucion == null) {
+					autorizacionEjecucion = dtAmpliacionFechaDao.getXFiltro(idTipoFechaCorteEjecucion, idSedeTodas,
+							dtVisitasBk.getIdSistAdm(), mesServicio + 1);// Ahora Mes
+																			// Actual,
+																			// por
+																			// confirmar
+					if (autorizacionEjecucion == null) {
+						autorizacionEjecucion = dtAmpliacionFechaDao.getXFiltro(idTipoFechaCorteEjecucion, dtVisitasBk.getIdSede(),
+								idSisAdmTodos, mesServicio + 1);// Ahora Mes Actual, por
+																// confirmar
+						if (autorizacionEjecucion == null) {
+							autorizacionEjecucion = dtAmpliacionFechaDao.getXFiltro(idTipoFechaCorteEjecucion, idSedeTodas,
+									idSisAdmTodos, mesServicio + 1);// Ahora Mes Actual,
+																	// por confirmar
+						}
+					}
+				}
+
+				
+				DtVisitas dtVisitasOrig = null;
+				if (dtVisitasBk.getIdVisita() != null && dtVisitasBk.getIdVisita().longValue() > 0) {
+					dtVisitasOrig = dtVisitasDao.getDtVisitas(dtVisitasBk.getIdVisita());
+				}
+				//PURIBE 14032024 -FIN-->
+
+				//PURIBE 14032024 -INICIO-->
+				ValidacionDtVisitasMng.validarDtVisitasBk(dtVisitasBk,autorizacionProgramacion,autorizacionEjecucion,msRolesDao.isRolAdministradorOGC(kyUsuarioMod),dtVisitasOrig);
+				//PURIBE 14032024 -FIN-->
+				ValidacionDtVisitasMng.validarAnexos(dtAnexosBkss);// JPUYEN 17062024 - SE AGREGA VALIDADOR DE ARCHIVOS
+
+		DtVisitas dtVisitas = null;
+		Timestamp hoy = new Timestamp(System.currentTimeMillis());
+
+		int nivel=1;
+
+		try {
+			if(dtVisitasBk.getIdVisita()!=null && dtVisitasBk.getIdVisita().longValue()>0){
+
+				dtVisitas = dtVisitasDao.getDtVisitas(dtVisitasBk.getIdVisita());
+
+				boolean cambios = AuditoriaDtVisitasMng.auditarCambiosDtVisitas(dtVisitasBk,dtVisitas, kyUsuarioMod, user, rmtaddress, nivel);
+
+				if(cambios){	
+					dtVisitas.setRtmaddressrst(rmtaddress);
+					dtVisitas.setIdusserModif(kyUsuarioMod);
+					dtVisitas.setFechaModif(hoy);		
+					dtVisitasDao.updateDtVisitas(dtVisitas);				
+				}			
+			}else{
+				dtVisitasBk.setRtmaddress(rmtaddress);
+				dtVisitasBk.setRtmaddressrst(rmtaddress);
+
+				dtVisitasBk.setFechaCrea(hoy);				
+				dtVisitasBk.setIdusserCrea(kyUsuarioMod);				
+				dtVisitasBk.setIdusserModif(kyUsuarioMod);
+				dtVisitasBk.setFechaModif(hoy);
+				dtVisitasBk.setEstado(Estado.ACTIVO.getValor());		
+
+				dtVisitas = new DtVisitas();
+
+				FuncionesStaticas.copyPropertiesObject(dtVisitas,dtVisitasBk);
+				dtVisitasDao.saveDtVisitas(dtVisitas);
+
+				log.log(Level.INFO,"CAMBIO :: "+kyUsuarioMod+" :: "+ user + " :: "+ rmtaddress+" :: "+"CREADO dtVisitas"+" :: "+dtVisitas.getIdVisita().toString()+" :: "+ "0" + " :: "+ "1");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Validador(e.getMessage());
 		}
-//FIN CUSCATA - 10072024
 		
+		
+		
+		cargarAnexos(dtAnexosBkss, dtVisitas.getIdVisita(), user, kyUsuarioMod, kyAreaMod, rmtaddress);
+		
+
+		dtVisitasBk = getDtVisitasBkXid(dtVisitas.getIdVisita(),kyUsuarioMod);			
+		return dtVisitasBk;		
+	}
+	
+	// JPUYEN 17062024 - INICIO
+		private void cargarAnexos(List<DtAnexoBk> tdAnexosBkss, Long iddocumento, String user, Long kyUsuarioMod,
+				Long kyAreaMod, String rmtaddress) throws Validador {
+
+			Long idTiposervicio = PropertiesMg
+					.getSistemLong(
+							PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA,
+							PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA);
+			
+			List<DtAnexoBk> TdAnexosBksssActuales = getDtAnexoXFiltro(null, null, idTiposervicio, null, iddocumento,kyUsuarioMod);
+
+			if (tdAnexosBkss != null && !tdAnexosBkss.isEmpty()) {
+				for (DtAnexoBk tdAnexosBkAct : TdAnexosBksssActuales) {
+					if (!tdAnexosBkss.contains(tdAnexosBkAct)) {
+						deleteDtAnexo(tdAnexosBkAct, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+					}
+				}
+				for (DtAnexoBk tdAnexosBk : tdAnexosBkss) {
+					if (tdAnexosBk.getIdmaestro() == null || tdAnexosBk.getIdmaestro().longValue() <= 0) {
+						tdAnexosBk.setIdmaestro(iddocumento);
+						tdAnexosBk.setIdTiposervicio(idTiposervicio);
+						
+						tdAnexosBk = this.saveorupdateDtAnexoBk(tdAnexosBk, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+						if (tdAnexosBk.getFilename() != null) {
+							if (tdAnexosBk.getFilename().startsWith("TEMP")) {
+								File file_tdAnexosBk = FuncionesStaticas
+										.getFileSistemaCompletoSearch(tdAnexosBk.getFilename(), tdAnexosBk.getFechaCrea());
+								if (file_tdAnexosBk != null && file_tdAnexosBk.exists()) {
+									String nuevonombre = FuncionesStaticas.getFileNameSistemaVisita(iddocumento,
+											tdAnexosBk.getIdusserCrea(), tdAnexosBk.getFilenameoriginal());
+									String nuevaruta = FuncionesStaticas.getFileNameRutaSistema(nuevonombre);
+									if (FuncionesStaticas.moveTo(file_tdAnexosBk, nuevaruta)) {
+										tdAnexosBk.setFilename(nuevonombre);
+										tdAnexosBk = this.saveorupdateDtAnexoBk(tdAnexosBk, user, kyUsuarioMod, kyAreaMod,rmtaddress);
+									} else {
+										log.info("NO SE PUDO MOVER EL ARCHIVO DE: " + file_tdAnexosBk.getAbsolutePath()
+												+ " A " + nuevaruta);
+									}
+								} else {
+									SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm");
+									log.info("ARCHIVO NO ENCONTRADO: " + tdAnexosBk.getFilename() + " en " + sdf);
+								}
+							}
+						}
+					} else {
+						this.saveorupdateDtAnexoBk(tdAnexosBk, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+					}
+				}
+			} else {
+				for (DtAnexoBk tdAnexosBkAct : TdAnexosBksssActuales) {
+					deleteDtAnexo(tdAnexosBkAct, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+				}
+			}
+		}
+		
+		public DtEncuestaBk getIdEncuesta(Long idTipoServicio, Long fechaServicio) throws Validador {
+			// System.out.println("RegistramefServiceImp.getIdEncuesta("+idTipoServicio+",
+			// "+FuncionesStaticas.toString(new Date(fechaServicio))+")"); 
+			DtEncuesta encuesta = dtEncuestaDao.findPeriodo(idTipoServicio, new Date(fechaServicio));
+			DtEncuestaBk encuestaBk = toBeanBk(encuesta, DtEncuestaBk.class);
+			if (encuestaBk == null) {
+				PrtParametrosBk parametro = getParametro(idTipoServicio);
+				if (parametro == null)
+					return encuestaBk; // throw new Validador("No se encontró el
+										// tipo de servicio");
+				else
+					return encuestaBk; // throw new Validador("No se encontró
+										// encuesta de
+										// "+parametro.getDescripcion()+" para el
+										// "+FuncionesStaticas.toString(new
+										// Date(fechaServicio)));
+			} else {
+				return encuestaBk;
+			}
+		}
+		
+		
+
+		// JPUYEN 17062024 - FIN
 }

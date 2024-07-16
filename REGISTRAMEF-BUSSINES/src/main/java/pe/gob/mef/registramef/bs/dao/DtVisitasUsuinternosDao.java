@@ -31,5 +31,6 @@ public interface DtVisitasUsuinternosDao {
 	List<DtVisitasUsuinternos> getXFiltro(Long idVisita,Long idUsuinterno);
 	List<DtVisitasUsuinternos> getXFiltro(Long idVisita);//PURIBE 14032024 - INICIO-->
 	long getTotalXFiltro(Long idVisita,Long idUsuinterno);
+	List<DtVisitasUsuinternos> getXFiltroConcatenacionLista(Long idVisita);
 	
 }

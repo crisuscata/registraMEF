@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,9 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import pe.gob.mef.registramef.bs.ctlracceso.Roles;
 import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.service.Servicio;
 import pe.gob.mef.registramef.bs.transfer.IDValorDto;
+import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaBk;
 import pe.gob.mef.registramef.bs.transfer.bk.MsUsuariosBk;
 import pe.gob.mef.registramef.bs.transfer.bk.PrtParametrosBk;
 import pe.gob.mef.registramef.bs.utils.FuncionesStaticas;
@@ -415,4 +418,38 @@ public class TituloRsCtrl {
 		}
 
 		// PURIBE 25012024 - FIN
+		
+		
+		@GET
+		@Path("/currentserverdate")
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response currentserverdate(
+				@Context HttpServletRequest req, 
+				@Context HttpServletResponse res,
+				@HeaderParam("authorization") String authString			
+				) {
+			SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+			Principal usuario = req.getUserPrincipal();
+			MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+			if (msUsuariosBk == null)
+				return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+						new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+				}).build();
+
+			try {
+				
+				Date hoy = new Date(System.currentTimeMillis());
+				GenericEntity<Date> registrosx = new GenericEntity<Date>(hoy) {
+				};
+				return Response.status(200).entity(registrosx).build();
+			} catch (Exception e) {
+				String mensaje = e.getMessage();
+				System.out.println("ERROR: " + mensaje);
+				return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+						.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+						}).build();
+			}
+		}
 }

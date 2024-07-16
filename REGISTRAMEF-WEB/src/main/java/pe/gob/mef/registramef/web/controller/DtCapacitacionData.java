@@ -24,9 +24,13 @@ public class DtCapacitacionData implements Serializable{
 
 	@SuppressWarnings("unchecked")
 //	public List<DtCapacitacionBk> getDtCapacitacionActivos(Servicio servicio, Long kyUsuarioMod){	
-	public List<DtCapacitacionBk> getDtCapacitacionActivos(Servicio servicio, Long kyUsuarioMod, String fechaInicio, String fechaFin,String idProgramacion){	//MPINARES 14022024 - INICIO	
+	public List<DtCapacitacionBk> getDtCapacitacionActivos(Servicio servicio, Long kyUsuarioMod, String fechaInicio, String fechaFin,String idProgramacion,int reload, long sede,int rol,long sistemaadmi){	//MPINARES 14022024 - INICIO	
 		List<DtCapacitacionBk> dtCapacitacionBksss = null;
 		String key = DtCapacitacionBk.class.getSimpleName();
+		if(reload==1)
+		{
+			dataCache = new HashMap<>();
+		}
 		if(dataCache.containsKey(key)){
 			Entrada entrada = dataCache.get(key);
 			dtCapacitacionBksss = (List<DtCapacitacionBk>) entrada.getLista();
@@ -41,7 +45,8 @@ public class DtCapacitacionData implements Serializable{
 		                      SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
 		                      Date fechaIniciod=sdformat.parse(fechaInicio);
 		                      Date fechaFind=sdformat.parse(fechaFin);
-		                      List<DtCapacitacionBk> dtCapacitacionBkssss = servicio.getDtCapacitacionXFiltroV(fechaIniciod, fechaFind, idProgramacionl, kyUsuarioMod);
+//		                      List<DtCapacitacionBk> dtCapacitacionBkssss = servicio.getDtCapacitacionXFiltroV(fechaIniciod, fechaFind, idProgramacionl, kyUsuarioMod);
+		                      List<DtCapacitacionBk> dtCapacitacionBkssss = servicio.getDtCapacitacionXFiltroV2(fechaIniciod, fechaFind, idProgramacionl, kyUsuarioMod, sede, rol, sistemaadmi);
 //		                	List<DtCapacitacionBk> dtCapacitacionBkssss = servicio.getAllDtCapacitacionActivosCero(kyUsuarioMod);
 		    				entrada.setLista(dtCapacitacionBkssss);
 		    				entrada.setUltimoacceso(System.currentTimeMillis());
@@ -61,7 +66,7 @@ public class DtCapacitacionData implements Serializable{
 	            SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
 	            Date fechaIniciod=sdformat.parse(fechaInicio);
 	            Date fechaFind=sdformat.parse(fechaFin);
-				dtCapacitacionBksss = servicio.getDtCapacitacionXFiltroV(fechaIniciod, fechaFind, idProgramacionl, kyUsuarioMod);
+				dtCapacitacionBksss = servicio.getDtCapacitacionXFiltroV2(fechaIniciod, fechaFind, idProgramacionl, kyUsuarioMod, sede, rol, sistemaadmi);
 				entrada.setLista(dtCapacitacionBksss);
 				entrada.setTiempomuerto(60000);
 				entrada.setUltimoacceso(System.currentTimeMillis());
@@ -75,7 +80,7 @@ public class DtCapacitacionData implements Serializable{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void add(Servicio servicio, Long kyUsuarioMod, DtCapacitacionBk dtCapacitacionC){		
+	public void add(Servicio servicio, Long kyUsuarioMod, DtCapacitacionBk dtCapacitacionC, String fechaInicio, String fechaFin,String idProgramacion, long sede,int rol,long sistemaadmi){		
 		List<DtCapacitacionBk> dtCapacitacionBksss = null;
 		String key = DtCapacitacionBk.class.getSimpleName();
 		if(dataCache.containsKey(key)){
@@ -86,7 +91,12 @@ public class DtCapacitacionData implements Serializable{
 				new Thread() {
 		            public void run() {
 		                try {
-		                	List<DtCapacitacionBk> dtCapacitacionBkssss = servicio.getAllDtCapacitacionActivosCero(kyUsuarioMod);
+		                	Long idProgramacionl=Long.parseLong(idProgramacion);
+		                	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
+		                	Date fechaIniciod=sdformat.parse(fechaInicio);
+		                	Date fechaFind=sdformat.parse(fechaFin);
+//		                	List<DtCapacitacionBk> dtCapacitacionBkssss = servicio.getAllDtCapacitacionActivosCero(kyUsuarioMod);
+		                	List<DtCapacitacionBk> dtCapacitacionBkssss = servicio.getDtCapacitacionXFiltroV2(fechaIniciod, fechaFind, idProgramacionl, kyUsuarioMod, sede, rol, sistemaadmi);
 		    				entrada.setLista(dtCapacitacionBkssss);
 		    				entrada.setUltimoacceso(System.currentTimeMillis());
 		                } catch (Exception ex) {
@@ -97,12 +107,22 @@ public class DtCapacitacionData implements Serializable{
 		        }.start();				
 			}
 		}else{
+			try {
 			Entrada entrada = new Entrada();
-			dtCapacitacionBksss = servicio.getAllDtCapacitacionActivosCero(kyUsuarioMod);
+			Long idProgramacionl=Long.parseLong(idProgramacion);
+        	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
+        	Date fechaIniciod=sdformat.parse(fechaInicio);
+        	Date fechaFind=sdformat.parse(fechaFin);
+//			dtCapacitacionBksss = servicio.getAllDtCapacitacionActivosCero(kyUsuarioMod);
+        	dtCapacitacionBksss = servicio.getDtCapacitacionXFiltroV2(fechaIniciod, fechaFind, idProgramacionl, kyUsuarioMod, sede, rol, sistemaadmi);
 			entrada.setLista(dtCapacitacionBksss);
 			entrada.setTiempomuerto(60000);
 			entrada.setUltimoacceso(System.currentTimeMillis());
 			dataCache.put(key, entrada);
+			} catch (Exception ex) {
+            	log.info(ex.getMessage());
+                
+            } 
 		}
 		if (!dtCapacitacionBksss.contains(dtCapacitacionC)) {
 			dtCapacitacionBksss.add(dtCapacitacionC);
@@ -115,14 +135,19 @@ public class DtCapacitacionData implements Serializable{
 	}
 	
 //	public void refrescar(Servicio servicio, Long kyUsuarioMod){
-	public void refrescar(Servicio servicio, Long kyUsuarioMod, String fechaInicio, String fechaFin,String idProgramacion){//MPINARES 14022024 - INICIO
+	public void refrescar(Servicio servicio, Long kyUsuarioMod, String fechaInicio, String fechaFin,String idProgramacion, long sede,int rol,long sistemaadmi){//MPINARES 14022024 - INICIO
 		String key = DtCapacitacionBk.class.getSimpleName();
 		if(dataCache.containsKey(key)){
 			Entrada entrada = dataCache.get(key);
 		new Thread() {
             public void run() {
                 try {
-                	List<DtCapacitacionBk> dtCapacitacionBkssss = servicio.getAllDtCapacitacionActivosCero(kyUsuarioMod);
+                	Long idProgramacionl=Long.parseLong(idProgramacion);
+                	SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
+                	Date fechaIniciod=sdformat.parse(fechaInicio);
+                	Date fechaFind=sdformat.parse(fechaFin);
+//                	List<DtCapacitacionBk> dtCapacitacionBkssss = servicio.getAllDtCapacitacionActivosCero(kyUsuarioMod);
+                	List<DtCapacitacionBk> dtCapacitacionBkssss = servicio.getDtCapacitacionXFiltroV2(fechaIniciod, fechaFind, idProgramacionl, kyUsuarioMod, sede, rol, sistemaadmi);
     				entrada.setLista(dtCapacitacionBkssss);
     				entrada.setUltimoacceso(System.currentTimeMillis());
                 } catch (Exception ex) {

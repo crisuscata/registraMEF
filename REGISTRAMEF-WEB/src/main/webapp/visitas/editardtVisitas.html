@@ -127,7 +127,7 @@ data-ng-init="editdtVisitas()">
                             <label class="letraLabel" style="width: 150px;" flex>Origen</label>  
                              <!--   PURIBE 22032024 - INICIO-->  
                             <md-select  required
-                                       placeholder="Origen" ng-disabled="isEditablefecha()"
+                                       placeholder="Origen" ng-disabled="true"
                                        name="Origen" ng-model="dtVisitasModelo.idOrigen" ng-disabled="true"
                                        >
                                         <!--   PURIBE 22032024 - FIN-->
@@ -160,8 +160,7 @@ data-ng-init="editdtVisitas()">
                   <!--PURIBE 29032024  INICIO-->
                   <input ng-keypress="validateFormat($event)"
                   id="codigoEjecutora" style="width:150px;"
-                  ng-model="dtVisitasModelo.codEjecutora" 
-                  placeholder="Buscar por C&oacute;digo"/> 
+                  ng-model="dtVisitasModelo.codEjecutora" /> 
                   <!--PURIBE 29032024   FIN-->
                   <md-button
                   aria-label="Buscar por Cod. ejecutora" ng-disabled="dtVisitasModelo.editopcion==2"
@@ -175,7 +174,7 @@ data-ng-init="editdtVisitas()">
 
   <!--   PURIBE 22042024 - INICIO-->
             <div class="letraenvoltura"
-               flex="40">
+               flex="60">
                <md-input-container
                   class="input-container-margen letraTexto nomarginbotottom"
                   flex="100" md-no-float="true" style="width: 400%;">
@@ -193,15 +192,12 @@ data-ng-init="editdtVisitas()">
                   md-search-text="dtVisitasModelo.idEntidadTxt"
                   md-selected-item-change="selectedItemChangeMsInstitucionesIdprovee(item)"
                   md-items="item in querySearchMsInstitucionesIdprovee(dtVisitasModelo.idEntidadTxt)"
-                  md-item-text="item.razSocial" md-min-length="4" 
-                  input-aria-labelledby="raz&oacute;n social" md-delay="3000"
-                  placeholder="raz&oacute;n social">
+                  md-item-text="item.razSocialUbigeo" md-min-length="4" 
+                  input-aria-labelledby="raz&oacute;n social" md-delay="3000">
                <md-item-template> <span
                   md-highlight-text="dtVisitasModelo.idEntidadTxt"
-                  md-highlight-flags="^i"> {{item.razSocial}} </span> </md-item-template> <md-not-found>
-              No hay concidencias para "{{dtVisitasModelo.idEntidadTxt}}". <a
-                  ng-click="newStateMsInstitucionesIdprovee(dtVisitasModelo.idEntidadTxt)">Crea
-                  uno nuevo!</a> </md-not-found>
+                  md-highlight-flags="^i"> {{item.razSocialUbigeo}} </span> </md-item-template> <md-not-found>
+              No se encontraron coincidencias con los datos ingresados. La entidad no existe o no se encuentra asociada a su sistema administrativo</md-not-found></md-not-found>
                    <!--PURIBE 04042024   FIN-->
                <div
                   ng-messages="dtVisitasForm.nameMsInstitucionesIdprovee.$error"
@@ -237,7 +233,7 @@ data-ng-init="editdtVisitas()">
 							  aria-label="Agregar Participante"
 								ng-click="agregarparticipante($event)">
 							  <md-icon md-font-set="material-icons" style="color: grey;">work_outline</md-icon>
-							  <span>Agregar Temas</span>
+							  <span>Agregar Participante</span>
 							</md-button>
                         </div>
                      </div>
@@ -253,8 +249,8 @@ data-ng-init="editdtVisitas()">
                      <thead id="tablewidth" ng-if="!options.decapitate" md-head
                               md-order="query.order" md-on-reorder="logOrder">
                      <tr md-row class="md-table-head-label">
-                           <th class="md-title ttamblanco" md-column><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                           </th>
+<!--                            <th class="md-title ttamblanco" md-column><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> -->
+<!--                            </th> -->
                            <th class="md-title ttam20" md-column><span>Nro</span></th>
                            <th class="md-title ttam120" md-column>
                               <span>Gestor</span></th>
@@ -262,9 +258,9 @@ data-ng-init="editdtVisitas()">
                               <span>Sistema Administrativo</span></th>
                            <th class="md-title ttam50" md-column>
                               <span>Tema</span></th>
-                           <th class="md-title ttam10" md-column>
-                              <span>&nbsp;</span></th>
-                           <th class="md-title ttamblanco" md-column><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<!--                            <th class="md-title ttam10" md-column> -->
+<!--                               <span>&nbsp;</span></th> -->
+                           <th class="md-title ttamopciones" md-column flex="20"><span>Anular</span></th>
                            </th>
                      </tr>
                      </thead>
@@ -274,31 +270,36 @@ data-ng-init="editdtVisitas()">
                            md-on-select="logItem"  md-auto-select="options.autoSelect" 
                            ng-if="dato.estado !== 2"  ng-repeat-start="dato in visitausuarios">   
                            <!--   PURIBE 22032024 - FIN -->
-                           <td>
-                                <!--   PURIBE 22042024 - INICIO-->
-                              <md-button class="md-icon-button"  ng-disabled="dtVisitasModelo.editopcion==2"
-                                          ng-click="eliminarParticipante($index)">
-                                 <md-icon md-font-set="material-icons">cancel
-                                 </md-icon>
-                              </md-button>
-                                <!--   PURIBE 22042024 - FIN-->
-                           </td>
+<!--                            <td> -->
+<!--                                   PURIBE 22042024 - INICIO -->
+<!--                               <md-button class="md-icon-button"  ng-disabled="dtVisitasModelo.editopcion==2" -->
+<!--                                           ng-click="eliminarParticipante($index)"> -->
+<!--                                  <md-icon md-font-set="material-icons">cancel -->
+<!--                                  </md-icon> -->
+<!--                               </md-button> -->
+<!--                                   PURIBE 22042024 - FIN -->
+<!--                            </td> -->
                            <td md-cell>{{$index + 1}}</td>
                          
-                           <td class="tdaa1 md-table-cuerpo" data-title="Gestor" md-cell>
+                           <td class="tdaa2 md-table-cuerpo" data-title="Gestor" md-cell>
                               {{dato.idUsuinternoTxt}}
                            </td>
-                           <td class="tdaa1 md-table-cuerpo" data-title="SistemaAdministrativo" md-cell>
+                           <td class="tdaa2 md-table-cuerpo" data-title="SistemaAdministrativo" md-cell>
                               {{dato.idSistAdmTxt}}
                            </td>
-                           <td class="tdaa1 md-table-cuerpo" data-title="Tema"
+                           <td class="tdaa2 md-table-cuerpo" data-title="Tema"
                               md-cell>
                               {{dato.idTemaTxt}}
                            </td>
-                           <td class="tdaa1 md-table-cuerpo" data-title="Etapa"
-                              md-cell>
-                              <span class="circle background-green" ng-if="dato.instanciaActual"></span>
-                           </td>
+                           <td class="tdaa2 md-table-cuerpo" data-title="Anular" md-cell>
+							<md-button class="md-icon-button"
+								ng-click="eliminarParticipante($index)" ng-disabled="dtVisitasModelo.editopcion==2">
+							<md-icon md-font-set="material-icons">delete</md-icon> </md-button> 
+						</td>
+<!--                            <td class="tdaa2 md-table-cuerpo" data-title="Etapa" -->
+<!--                               md-cell> -->
+<!--                               <span class="circle background-green" ng-if="dato.instanciaActual"></span> -->
+<!--                            </td> -->
                            <!--   PURIBE 22032024 - INICIO 
                            <td class="tdaa8 md-table-cuerpo" data-title="Acciones" md-cell>
                               <div layout="row" layout-xs="column" layout-align="center center">

@@ -165,7 +165,7 @@ table.md-table td.md-cell {
 
 				</div>
 				<div class="letraenvoltura"
-					ng-if="dtAsistenciaModelo.editopcion < 2" flex="40">
+					ng-if="dtAsistenciaModelo.editopcion < 2" flex="60">
 					<md-input-container
 						class="input-container-margen letraTexto nomarginbotottom"
 						flex="100" md-no-float="true" style="width: 400%;">
@@ -182,14 +182,13 @@ table.md-table td.md-cell {
 						md-search-text="dtAsistenciaModelo.idEntidadTxt"
 						md-selected-item-change="selectedItemChangeMsInstitucionesIdprovee(item)"
 						md-items="item in querySearchMsInstitucionesIdprovee(dtAsistenciaModelo.idEntidadTxt)"
-						md-item-text="item.razSocial" md-min-length="4"
+						md-item-text="item.razSocialUbigeo" md-min-length="4"
 						input-aria-labelledby="raz&oacute;n social" md-delay="3000"
 						>
 					<md-item-template> <span
 						md-highlight-text="dtAsistenciaModelo.idEntidadTxt"
-						md-highlight-flags="^i"> {{item.razSocial}} </span> </md-item-template> <md-not-found>
-					No hay coincidencias para "{{dtAsistenciaModelo.idEntidadTxt}}". <a
-						ng-click="newStateMsInstitucionesIdprovee(dtAsistenciaModelo.idEntidadTxt)">No existe o no esta vinculado a su sistema administrativo</a> </md-not-found>
+						md-highlight-flags="^i"> {{item.razSocialUbigeo}} </span> </md-item-template> <md-not-found>
+					No se encontraron coincidencias con los datos ingresados. La entidad no existe o no se encuentra asociada a su sistema administrativo</md-not-found>
 					<div
 						ng-messages="dtAsistenciaForm.nameMsInstitucionesIdprovee.$error"
 						ng-if="dtAsistenciaForm.nameMsInstitucionesIdprovee.$touched">
@@ -238,7 +237,7 @@ table.md-table td.md-cell {
 						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Tema</span></th>
 						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Subtema</span></th>
 						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Detalle</span></th>
-						<th class="md-title ttamopciones" md-column flex="20"><span>Opciones</span></th>
+						<th class="md-title ttamopciones" md-column flex="20"><span>Anular</span></th>
 					</tr>
 				<tbody md-body style="font-size: 14px;">
 					<tr class="primary tridtdPersonalPersonal md-table-cuerpo"
@@ -247,19 +246,19 @@ table.md-table td.md-cell {
 						ng-repeat-start="dato in datoAsistenciaTema">
 
 						<td md-cell flex="20">{{$index + 1}}</td>
-						<td class="tdaa1 md-table-cuerpo" data-title="idTemaTxt" md-cell>
+						<td class="tdaa2 md-table-cuerpo" data-title="idTemaTxt" md-cell>
 								<div class="letraTexto">{{dato.idTemaTxt}}</div>								
 							</td>
-						<td class="tdaa1 md-table-cuerpo" data-title="idSubtemaTxt" md-cell>
+						<td class="tdaa2 md-table-cuerpo" data-title="idSubtemaTxt" md-cell>
 								<div class="letraTexto">{{dato.idSubtemaTxt}}</div>								
 							</td>
-						<td class="tdaa1 md-table-cuerpo" data-title="detalle" md-cell>
+						<td class="tdaa2 md-table-cuerpo" data-title="detalle" md-cell>
 								<div class="letraTexto">{{dato.detalle}}</div>								
 							</td>
-						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
-							<md-button class="md-icon-button md-primary"
+						<td class="tdaa2 md-table-cuerpo" data-title="Anular" md-cell>
+							<md-button class="md-icon-button"
 								ng-click="removeAsistenciaTema($event,dato)" ng-if="!dato.add">
-							<md-icon md-font-set="material-icons">remove</md-icon> </md-button> 
+							<md-icon md-font-set="material-icons">delete</md-icon> </md-button> 
 						</td>
 
 <!-- 						<td class="tdaa1 md-table-cuerpo" data-title="Tema" md-cell> -->

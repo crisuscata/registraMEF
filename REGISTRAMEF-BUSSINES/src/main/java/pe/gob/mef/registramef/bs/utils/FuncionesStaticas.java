@@ -25,6 +25,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.UUID;
@@ -1559,7 +1560,8 @@ public class FuncionesStaticas implements Serializable {
 					}
 				 
 				// JPUYEN 14052024 - FIN
-				 //INICIO CUSCATA - 10072024
+				 
+				//INICIO CUSCATA - 10072024
 				 public static String convertirFrasePrimerCaracMayuscula(String str) {
 						if (str == null || str.length() == 0) {
 							return str;
@@ -1575,5 +1577,41 @@ public class FuncionesStaticas implements Serializable {
 						return str.trim();
 					}
                  //FIN CUSCATA - 10072024
+				 
+				 public static String getFileNameSistemaVisita(long idVisita, long idusuario, String solofilenameoriginal) {
+						int eslashDot = solofilenameoriginal.lastIndexOf("\\");
+						String filenameoriginal = solofilenameoriginal;
+						if (eslashDot > 0){
+							filenameoriginal = filenameoriginal.substring(eslashDot + 1);
+						}
+						int extDot = filenameoriginal.lastIndexOf('.');
+						
+						Random rand = new Random();
+						int max = 9;
+						int min = 1;
+						int randomNum = rand.nextInt((max - min) + 1) + min;
+						
+						String extension = filenameoriginal.substring(extDot + 1);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+						DecimalFormat df = new DecimalFormat("000000");
+						Timestamp diahoy = new Timestamp(System.currentTimeMillis());
+						String filename = "V"+df.format(idVisita) + df.format(idusuario) + sdf.format(diahoy) + randomNum + "." + extension;
+						return filename;
+					}
+				 
+				 public static String getFileNameTempSistemaVisita(long idVisita, long idusuario, String solofilenameoriginal) {
+						int eslashDot = solofilenameoriginal.lastIndexOf("\\");
+						String filenameoriginal = solofilenameoriginal;
+						if (eslashDot > 0){
+							filenameoriginal = filenameoriginal.substring(eslashDot + 1);
+						}
+						int extDot = filenameoriginal.lastIndexOf('.');
+						String extension = filenameoriginal.substring(extDot + 1);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+						DecimalFormat df = new DecimalFormat("000000");
+						Timestamp diahoy = new Timestamp(System.currentTimeMillis());
+						String filename = "TEMP_"+df.format(idVisita) + df.format(idusuario) + sdf.format(diahoy) + UUID.randomUUID() + "." + extension;
+						return filename;
+					}
 
 }

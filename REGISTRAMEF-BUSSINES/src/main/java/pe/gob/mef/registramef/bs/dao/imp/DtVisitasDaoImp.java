@@ -320,7 +320,7 @@ public class DtVisitasDaoImp extends
 					hs.add(fechaFin);
 				}
 			
-				// sb.append("order by t.idVisita desc ");
+				 sb.append("order by t.idVisita desc ");
 
 				Object param[] = new Object[hs.size()];
 				hs.toArray(param);

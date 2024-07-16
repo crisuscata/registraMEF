@@ -8,6 +8,7 @@ import java.util.Map;
 
 import pe.gob.mef.registramef.bs.cache.clases.CacheMsUsuariosBk;
 import pe.gob.mef.registramef.bs.domain.DtAmpliacionFecha;
+import pe.gob.mef.registramef.bs.domain.DtAsistenciaTemas;
 import pe.gob.mef.registramef.bs.domain.MsUbigeoId;
 import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.transfer.DtEntidadSedesDto;
@@ -189,22 +190,22 @@ public interface Servicio {
 	List<DtAsistenciaBk> getAllDtAsistenciaActivos(Long kyUsuarioMod);
 
 	List<DtAsistenciaBk> getAllDtAsistenciaActivosCero(Long kyUsuarioMod);
-//INICIO CUSCATA - 10072024
+
 	DtAsistenciaBk saveorupdateDtAsistenciaBk(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador;
 	
-	DtAsistenciaBk validarCambiosAsistencia(DtAsistenciaBk dtAsistenciaBk, Long kyUsuarioMod) throws Validador;
-	
-	DtAsistenciaBk enviarConstanciaAtencion(DtAsistenciaBk dtAsistenciaBk, String url, String user, Long kyUsuarioMod,
-			Long kyAreaMod, String rmtaddress) throws Validador;
-	
-	DtAsistenciaBk finalizarDtAsistenciaBk(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod,
-			Long kyAreaMod, String rmtaddress) throws Validador;
+	//INICIO CUSCATA - 18062024
+		DtAsistenciaBk enviarConstanciaAtencion(DtAsistenciaBk dtAsistenciaBk, String url, String user, Long kyUsuarioMod,
+				Long kyAreaMod, String rmtaddress) throws Validador;
+		
+		DtAsistenciaBk finalizarDtAsistenciaBk(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod,
+				Long kyAreaMod, String rmtaddress) throws Validador;
 
-	void enviarEncuestaPorCorreo(final String descpServicio, final Collection<?> participantes, final Long tipoServicio,
-			final Long idServicio, final Date fechaServicio, final String url, final Timestamp fechaFinalizacion)
-			throws Validador; 		
-//FIN CUSCATA - 10072024
+		void enviarEncuestaPorCorreo(final String descpServicio, final Collection<?> participantes, final Long tipoServicio,
+				final Long idServicio, final Date fechaServicio, final String url, final Timestamp fechaFinalizacion)
+				throws Validador; 		
+	//FIN CUSCATA - 18062024
+
 	void deleteDtAsistencia(DtAsistenciaBk dtAsistenciaBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador;
 
@@ -488,10 +489,7 @@ public interface Servicio {
 
 	void deleteDtAsistenciaTemas(DtAsistenciaTemasBk dtAsistenciaTemasBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
-	//INICIO CUSCATA - 10072024
-	void deleteDtAsistenciaUsuario(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user, Long kyUsuarioMod,
-			Long kyAreaMod, String rmtaddress) throws Validador;
-//FIN CUSCATA - 10072024
+
 	List<DtAsistenciaTemasBk> getDtAsistenciaTemasXFiltro(String detalle, Long idAsistencia, Long idTema,
 			Long idSubtema, int inicial, int MAX, Long kyUsuarioMod);
 
@@ -521,10 +519,6 @@ public interface Servicio {
 
 	void deleteDtUsuarioExterno(DtUsuarioExternoBk dtUsuarioExternoBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador;
-	//INICIO CUSCATA - 10072024
-	void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user,
-			Long kyUsuarioMod, Long kyAreaMod, Long kySedeMod, String rmtaddress) throws Validador;
-//FIN CUSCATA - 10072024
 /// ADICIONALES
 
 	List<IDValorDto> getPrtParametrosIdparametroIdTipodocumento();
@@ -604,9 +598,7 @@ public interface Servicio {
 
 	DtAsistenciaUsuexternosBk saveorupdateDtAsistenciaUsuexternosBk(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk,
 			String user, Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador;
-	//INICIO CUSCATA - 10072024
-	void updateDtAsistenciaUsuexCorreo(Long id) throws Validador;
-//FIN CUSCATA - 10072024
+
 	void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user,
 			Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador;
 
@@ -1596,7 +1588,6 @@ public interface Servicio {
 	//MPINARES 24012023 - INICIO
 		List<DtEntidadesDto> getMsInstitucionesXCodigoEjecutora(String codEjec, Long idSistAdmi) throws Validador ;
 		List<DtAsistenciaBk> getDtAsistenciaXFiltroV(Date fechaInicio, Date fechaFin, Long idProgramacion,Long kyUsuarioMod) throws Validador;
-		List<DtAsistenciaBk> getDtAsistenciaXFiltro(Date fechaInicio, Date fechaFin, Long idProgramacion,Long kyUsuarioMod,long sede,int rol,long sistemaadmi) throws Validador;//CUSCATA - 10072024
 		List<DtAsistenciaTemasBk> getDtAsistenciaTemasXIdAsistencia(Long idAsistencia);
 		List<IDValorDto> getPrtParametrosIdparametroIdTipoEntidad();
 		List<IDValorDto> getListaMsPaisesActivos() ;
@@ -1674,4 +1665,27 @@ public interface Servicio {
 		List<MsUsuariosDto> getMsUsuariosFilter(Long idSede);//JPUYEN 14052024
 		DtUsuarioExternoBk getMsUsuariosExternoBkXDni(String dni) throws Validador ;//JPUYEN 14052024
 		DtVisitasUsuexternosBk getDtVisitasUsuexternoBkXid(Long id, Long kyUsuarioMod); // JPUYEN 14052024 - INICIO
+		List<DtAsistenciaBk> getDtAsistenciaXFiltroV2(Date fechaInicio, Date fechaFin, Long idProgramacion,
+				Long kyUsuarioMod, long sede, int rol, long sistemaadmi) throws Validador;
+		List<DtCapacitacionBk> getDtCapacitacionXFiltroV2(Date fechaInicio, Date fechaFin, Long idProgramacion,
+				Long kyUsuarioMod, long sede, int rol, long sistemaadmi) ;
+		List<DtEntidadesDto> getMsInstitucionesXEjecutoraSisAdminSede(String codEjec, Long idSistAdmi, Long idSede) throws Validador;
+		List<DtEntidadesBk> getMsInstitucionesIdSisadminIdsede(String rasonsocial, Long idSistAdmi, Long idSede);
+		//INICIO CUSCATA - 10072024
+		DtAsistenciaBk validarCambiosAsistencia(DtAsistenciaBk asistenciaJS, Long kyUsuarioMod) throws Validador;
+		void deleteDtAsistenciaTema(DtAsistenciaTemas dtAsistenciaTemas) throws Validador;
+		void deleteTdAnexos(DtAnexoBk tdAnexosBk, String user, Long kyUsuarioMod, Long kyAreaMod, String rmtaddress)
+				throws Validador;
+		List<DtAsistenciaBk> getDtAsistenciaXFiltro(Date fechaInicio, Date fechaFin, Long idProgramacion,
+				Long kyUsuarioMod,long sede,int rol,long sistemaadmi) throws Validador;
+		void updateDtAsistenciaUsuexCorreo(Long id) throws Validador ;
+		void deleteDtAsistenciaUsuario(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk, String user, Long kyUsuarioMod,
+				Long kyAreaMod, String rmtaddress) throws Validador;
+		//FIN CUSCATA - 10072024
+		// JPUYEN 17062024 - INICIO
+		DtVisitasBk finalizarDtVisitasBk(DtVisitasBk dtVisitasBk, List<DtAnexoBk> dtAnexosBkss,// JPUYEN 17062024 - NUEVO PARAMETRO
+				String user, Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador;
+		DtEncuestaBk getIdEncuesta(Long idTipoServicio, Long fechaServicio) throws Validador;
+		Long getParametro(String key, Long defaultValue) throws Validador;
+		// JPUYEN 17062024 - FIN
 }

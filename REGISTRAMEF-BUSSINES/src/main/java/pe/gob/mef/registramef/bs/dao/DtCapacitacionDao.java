@@ -40,5 +40,6 @@ public interface DtCapacitacionDao {
 //		Long getEstadoEliminado(); 
 		List<DtCapacitacion> getDtcapaXIDPadre(Long idCapaPadre);
 		//MPINARES 14022024 - FIN
+		List<DtCapacitacion> getXFiltroV2(Date fechaInicio, Date fechaFin,Long idProgramacion, Long idSede,Long idSistAdm, Long idUsuario);
 	
 }

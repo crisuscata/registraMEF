@@ -181,7 +181,7 @@
          <tr class="primary triddtAsistencia md-table-cuerpo" md-row md-select="dato" md-on-select="logItem" md-auto-select="options.autoSelect"   
              ng-disabled="dato.idAsistencia > 0" ng-repeat-start="dato in datos">
           <td md-cell>{{$index + 1}}</td>
-          <td style="padding-right: 0;"><input type="checkbox" ng-model="dato.checked" ng-change="selection(dato)"></td>
+          <td class="tdaa8 md-table-cuerpo" md-cell style="padding-right: 0;"><input type="checkbox" ng-model="dato.checked" ng-change="selection(dato)"></td>
           <td class="tdaa8 md-table-cuerpo" data-title="Acciones" md-cell style="padding-right: 0;">
              <div layout="row" layout-xs="column" layout-align="center center">
                 <md-button class="md-icon-button"

@@ -18,7 +18,6 @@ import pe.gob.mef.registramef.bs.domain.DtEncuesta;
 import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.utils.Estado;
 import pe.gob.mef.registramef.bs.utils.FuncionesStaticas;
-import pe.gob.mef.registramef.bs.utils.PropertiesMg;//CUSCATA - 10072024
 
 /**
  * DT_ENCUESTA REPOSITORIO: LISTA DE ENCUESTAS
@@ -37,8 +36,6 @@ public class DtEncuestaDaoImp extends
 
 	private static final Logger log = Logger.getLogger(DtEncuestaDaoImp.class.getName());
 	
-	protected Long estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);//CUSCATA - 10072024
-
 	public DtEncuestaDaoImp() {
 		log.log(Level.INFO,null,"INICIALIZANDO JPA TEMPLATE PARA DtEncuestaDaoImp");
 	}
@@ -249,21 +246,39 @@ public class DtEncuestaDaoImp extends
 			return retorno;
 		}
 	}
-//INICIO CUSCATA - 10072024
-	@Override
-	public List<DtEncuesta> findListPeriodo(Long idTipoServicio, Date fechaServicio) throws Validador {
-		System.out.println("DtEncuestaDaoImp.findPeriodo("+idTipoServicio+", "+FuncionesStaticas.toString(fechaServicio)+")");
-		StringBuilder query = new StringBuilder();
-		query.append(" SELECT e ");
-		query.append(" FROM DtEncuesta e ");
-		query.append(" WHERE e.estado = ? ");
-		query.append(" AND e.tipoServicio = ? ");
-		query.append(" AND TO_DATE(?, 'dd/MM/yyyy') BETWEEN e.fechaInicio AND e.fechaFin ");
-		Object[] params = new Object[3];
-		params[0] = estadoNuevo;
-		params[1] = idTipoServicio;
-		params[2] = FuncionesStaticas.toString(fechaServicio);
-		return super.findList(query.toString(), params);
-	}
-//FIN CUSCATA - 10072024
+//	params[0] = Estado.ACTIVO.getValor();
+		//INICIO CUSCATA - 10072024
+		@Override
+		public List<DtEncuesta> findListPeriodo(Long idTipoServicio, Date fechaServicio) throws Validador {
+			System.out.println("DtEncuestaDaoImp.findPeriodo("+idTipoServicio+", "+FuncionesStaticas.toString(fechaServicio)+")");
+			StringBuilder query = new StringBuilder();
+			query.append(" SELECT e ");
+			query.append(" FROM DtEncuesta e ");
+			query.append(" WHERE e.estado = ? ");
+			query.append(" AND e.tipoServicio = ? ");
+			query.append(" AND TO_DATE(?, 'dd/MM/yyyy') BETWEEN e.fechaInicio AND e.fechaFin ");
+			Object[] params = new Object[3];
+			params[0] = Estado.ACTIVO.getValor();
+			params[1] = idTipoServicio;
+			params[2] = FuncionesStaticas.toString(fechaServicio);
+			return super.findList(query.toString(), params);
+		}
+	//FIN CUSCATA - 10072024
+		
+		public DtEncuesta findPeriodo(Long idTipoServicio, Date fechaServicio) throws Validador{
+			System.out.println("DtEncuestaDaoImp.findPeriodo("+idTipoServicio+", "+FuncionesStaticas.toString(fechaServicio)+")");
+			
+				StringBuilder query = new StringBuilder();
+				query.append(" SELECT e ");
+				query.append(" FROM DtEncuesta e ");
+				query.append(" WHERE e.estado = ? ");
+				query.append(" AND e.tipoServicio = ? ");
+				query.append(" AND TO_DATE(?, 'dd/MM/yyyy') BETWEEN e.fechaInicio AND e.fechaFin ");
+				Object[] params = new Object[3];
+				params[0] = Estado.ACTIVO;
+				params[1] = idTipoServicio;
+				params[2] = FuncionesStaticas.toString(fechaServicio);
+				
+				return super.findOne(query.toString(), params);
+			}
 }

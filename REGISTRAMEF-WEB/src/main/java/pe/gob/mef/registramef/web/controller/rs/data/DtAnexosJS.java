@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import pe.gob.mef.registramef.bs.ctlracceso.DtAnexoACL;//CUSCATA - 10072024
+import pe.gob.mef.registramef.bs.ctlracceso.DtAnexoACL;
 
 /**
  * MSUSUARIOS BAKING: ANEXOS
@@ -48,79 +48,79 @@ public class DtAnexosJS implements java.io.Serializable {
 	private boolean materialCapa=false;
 	private String materialCapaTxt=null;
 	private String data = null;
-	private byte[] databyte = null;
+	//private byte[] databyte = null;// JPUYEN 17062024 - SE COMENTA PORQUE YA NO
 	private String letter = null;
 	private Integer editopcion = 1;
 	private Long tamanio = null;
 	private String tipo = null;
 	
-//INICIO CUSCATA - 10072024
-	// PROPIEDADES
-	private Long iddocumento = null;
-	private Long lastmodified = null;
-	private Integer tipodocumento = null;
+	//INICIO CUSCATA - 10072024
+		// PROPIEDADES
+		private Long iddocumento = null;
+		private Long lastmodified = null;
+		private Integer tipodocumento = null;
 
-	// ADICIONALES
-	private String iduserCreaTxt = null;
-	private String iduserModifTxt = null;
-	
-	private String estadoTxt = null;
-	private String idTiposervicioTxt=null;
-	private String tipoAnexoTxt = null;
-	
-	private DtAnexoACL dtAnexoACL = null;	
-	
+		// ADICIONALES
+		private String iduserCreaTxt = null;
+		private String iduserModifTxt = null;
+		
+		private String estadoTxt = null;
+		private String idTiposervicioTxt=null;
+		private String tipoAnexoTxt = null;
+		
+		private DtAnexoACL dtAnexoACL = null;	
+		
+				
+		public Long getIddocumento() {
+			return iddocumento;
+		}
+
+
+		public void setIddocumento(Long iddocumento) {
+			this.iddocumento = iddocumento;
+		}
+
+
+		public Long getLastmodified() {
+			return lastmodified;
+		}
+
+
+		public void setLastmodified(Long lastmodified) {
+			this.lastmodified = lastmodified;
+		}
+
+
+		public Integer getTipodocumento() {
+			return tipodocumento;
+		}
+
+
+		public void setTipodocumento(Integer tipodocumento) {
+			this.tipodocumento = tipodocumento;
+		}
+
+
+		public String getIduserCreaTxt() {
+			return iduserCreaTxt;
+		}
+
+
+		public void setIduserCreaTxt(String iduserCreaTxt) {
+			this.iduserCreaTxt = iduserCreaTxt;
+		}
+
+
+		public String getIduserModifTxt() {
+			return iduserModifTxt;
+		}
+
+
+		public void setIduserModifTxt(String iduserModifTxt) {
+			this.iduserModifTxt = iduserModifTxt;
+		}
+	//FIN CUSCATA - 10072024
 			
-	public Long getIddocumento() {
-		return iddocumento;
-	}
-
-
-	public void setIddocumento(Long iddocumento) {
-		this.iddocumento = iddocumento;
-	}
-
-
-	public Long getLastmodified() {
-		return lastmodified;
-	}
-
-
-	public void setLastmodified(Long lastmodified) {
-		this.lastmodified = lastmodified;
-	}
-
-
-	public Integer getTipodocumento() {
-		return tipodocumento;
-	}
-
-
-	public void setTipodocumento(Integer tipodocumento) {
-		this.tipodocumento = tipodocumento;
-	}
-
-
-	public String getIduserCreaTxt() {
-		return iduserCreaTxt;
-	}
-
-
-	public void setIduserCreaTxt(String iduserCreaTxt) {
-		this.iduserCreaTxt = iduserCreaTxt;
-	}
-
-
-	public String getIduserModifTxt() {
-		return iduserModifTxt;
-	}
-
-
-	public void setIduserModifTxt(String iduserModifTxt) {
-		this.iduserModifTxt = iduserModifTxt;
-	}
-//FIN CUSCATA - 10072024
-
 		public DtAnexosJS() {
 		}
 
@@ -354,7 +354,8 @@ public class DtAnexosJS implements java.io.Serializable {
 			this.tipo = tipo;
 		}
 
-
+/*
+ * // JPUYEN 17062024 - INICIO
 		public byte[] getDatabyte() {
 			return databyte;
 		}
@@ -363,48 +364,6 @@ public class DtAnexosJS implements java.io.Serializable {
 		public void setDatabyte(byte[] databyte) {
 			this.databyte = databyte;
 		}
-//INICIO CUSCATA - 10072024
-
-		public DtAnexoACL getDtAnexoACL() {
-			return dtAnexoACL;
-		}
-
-
-		public void setDtAnexoACL(DtAnexoACL dtAnexoACL) {
-			this.dtAnexoACL = dtAnexoACL;
-		}
-
-
-		public String getEstadoTxt() {
-			return estadoTxt;
-		}
-
-
-		public void setEstadoTxt(String estadoTxt) {
-			this.estadoTxt = estadoTxt;
-		}
-
-
-		public String getIdTiposervicioTxt() {
-			return idTiposervicioTxt;
-		}
-
-
-		public void setIdTiposervicioTxt(String idTiposervicioTxt) {
-			this.idTiposervicioTxt = idTiposervicioTxt;
-		}
-
-
-		public String getTipoAnexoTxt() {
-			return tipoAnexoTxt;
-		}
-
-
-		public void setTipoAnexoTxt(String tipoAnexoTxt) {
-			this.tipoAnexoTxt = tipoAnexoTxt;
-		}
-
-//FIN CUSCATA - 10072024
-	
-		
+	// JPUYEN 17062024 - FIN
+	*/	
 }

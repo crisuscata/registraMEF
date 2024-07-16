@@ -55,8 +55,8 @@ public class DtAsistenciaJS implements java.io.Serializable {
 	private String idFinanciaTxt = null;
 	
 	//MPINARES 24012023 - INICIO
-		private List<DtAsistenciaTemasBk> dtAsistenciaTemasBkJSss = null;//CUSCATA - 10072024
-		private List<DtAsistenciaUsuexternosBk> dtAsistenciaUsuariosBkJSss=null;
+		private List<DtAsistenciaTemasBk> dtAsistenciaTemasBkJSss = null;
+		private List<DtAsistenciaUsuexternosBk> dtAsistenciaUsuariosBkJSss=null;//CUSCATA - 18062024
 		private String codEjecutora = null;
 		private List<String> dniUser = null;
 		private List<String> usuExt = null;
@@ -66,10 +66,11 @@ public class DtAsistenciaJS implements java.io.Serializable {
 		private boolean checked = false;
 		//MPINARES 24012023 - FIN
 		
-	private DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk=null;//CUSCATA - 10072024
-	
-	//private List<DtAnexoBk> dtAnexosBKJSss = null;//CUSCATA - 10072024
-	private List<DtAnexosJS> tdAnexosJSss = null;//CUSCATA - 10072024
+		private DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk=null;//CUSCATA - 18062024
+		private boolean addEntidad = false;
+		
+		//private List<DtAnexoBk> dtAnexosBKJSss = null;//CUSCATA - 10072024
+		private List<DtAnexosJS> tdAnexosJSss = null;//CUSCATA - 10072024
 	
 	private Integer editopcion = 1;
 
@@ -356,48 +357,57 @@ public class DtAsistenciaJS implements java.io.Serializable {
 
 		public void setEstado(Long estado) {
 			this.estado = estado;
-		}
-//INICIO CUSCATA - 10072024
-		public Timestamp getFechaServicioJUD() {
-			return fechaServicioJUD;
-		}
+		}	
 
-		public void setFechaServicioJUD(Timestamp fechaServicioJUD) {
-			this.fechaServicioJUD = fechaServicioJUD;
-		}
+				public boolean isAddEntidad() {
+					return addEntidad;
+				}
 
-		public List<DtAsistenciaUsuexternosBk> getDtAsistenciaUsuariosBkJSss() {
-			return dtAsistenciaUsuariosBkJSss;
-		}
-
-		public void setDtAsistenciaUsuariosBkJSss(List<DtAsistenciaUsuexternosBk> dtAsistenciaUsuariosBkJSss) {
-			this.dtAsistenciaUsuariosBkJSss = dtAsistenciaUsuariosBkJSss;
-		}
-
-		public DtAsistenciaUsuexternosBk getDtAsistenciaUsuexternosBk() {
-			return dtAsistenciaUsuexternosBk;
-		}
-
-		public void setDtAsistenciaUsuexternosBk(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk) {
-			this.dtAsistenciaUsuexternosBk = dtAsistenciaUsuexternosBk;
-		}
-
-		public List<DtAnexosJS> getTdAnexosJSss() {
-			return tdAnexosJSss;
-		}
-
-		public void setTdAnexosJSss(List<DtAnexosJS> tdAnexosJSss) {
-			this.tdAnexosJSss = tdAnexosJSss;
-		}
-
-		public Timestamp getFechaReprogramacionJUD() {
-			return fechaReprogramacionJUD;
-		}
-
-		public void setFechaReprogramacionJUD(Timestamp fechaReprogramacionJUD) {
-			this.fechaReprogramacionJUD = fechaReprogramacionJUD;
-		}
-//FIN CUSCATA - 10072024
+				public void setAddEntidad(boolean addEntidad) {
+					this.addEntidad = addEntidad;
+				}
 		
 		//MPINARES 24012023 - FIN
+				
+				//INICIO CUSCATA - 10072024
+				public Timestamp getFechaServicioJUD() {
+					return fechaServicioJUD;
+				}
+
+				public void setFechaServicioJUD(Timestamp fechaServicioJUD) {
+					this.fechaServicioJUD = fechaServicioJUD;
+				}
+
+				public List<DtAsistenciaUsuexternosBk> getDtAsistenciaUsuariosBkJSss() {
+					return dtAsistenciaUsuariosBkJSss;
+				}
+
+				public void setDtAsistenciaUsuariosBkJSss(List<DtAsistenciaUsuexternosBk> dtAsistenciaUsuariosBkJSss) {
+					this.dtAsistenciaUsuariosBkJSss = dtAsistenciaUsuariosBkJSss;
+				}
+
+				public DtAsistenciaUsuexternosBk getDtAsistenciaUsuexternosBk() {
+					return dtAsistenciaUsuexternosBk;
+				}
+
+				public void setDtAsistenciaUsuexternosBk(DtAsistenciaUsuexternosBk dtAsistenciaUsuexternosBk) {
+					this.dtAsistenciaUsuexternosBk = dtAsistenciaUsuexternosBk;
+				}
+
+				public List<DtAnexosJS> getTdAnexosJSss() {
+					return tdAnexosJSss;
+				}
+
+				public void setTdAnexosJSss(List<DtAnexosJS> tdAnexosJSss) {
+					this.tdAnexosJSss = tdAnexosJSss;
+				}
+
+				public Timestamp getFechaReprogramacionJUD() {
+					return fechaReprogramacionJUD;
+				}
+
+				public void setFechaReprogramacionJUD(Timestamp fechaReprogramacionJUD) {
+					this.fechaReprogramacionJUD = fechaReprogramacionJUD;
+				}
+		//FIN CUSCATA - 10072024
 }

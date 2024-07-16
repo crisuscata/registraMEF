@@ -48,6 +48,9 @@ var validacmularCapacitacionListUrl = contexto+"/rs/ctrldtCapacitacion/validacmu
 var insertdtCapacitacionAcumulaUrl = contexto+"/rs/ctrldtCapacitacion/salvardtCapacitacionAcumula";
 var reactivardtCapacitacionUrl = contexto+"/rs/ctrldtCapacitacion/reactivardtCapacitacion";
 //MPINARES 14022024 - FIN
+var eliminardtCapaEntidadesUrl = contexto+"/rs/ctrldtCapacitacion/eliminardtCapaEntidades";
+var eliminardtCapaTemasUrl = contexto+"/rs/ctrldtCapacitacion/eliminardtCapaTemas";
+var currentserverdateUrl = contexto+"/rs/ctrltitulo/currentserverdate";
 
 /**
  * 
@@ -129,7 +132,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 	  console.log('order: ', order);
 	  $scope.loaddtCapacitacions();
 	 };
-	 
+	 $scope.refrescar= 0;//puribe
 	 $scope.logItem = function (item) {
 	  console.log(item.name, 'was selected');
 	 };
@@ -140,9 +143,45 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 	  $scope.loaddtCapacitacions();
          };
      $scope.creadtCapacitacion = false;
+     $scope.prepublicarCapa = false;
+     $scope.acumularCapa = false;
     // ///////////////////////////////////////////
 	$scope.datos = [];
 	$scope.total = 0;
+	$scope.currentserverdate = null;
+	
+	$scope.getCurrentserverdate = function(){           
+        var surl = currentserverdateUrl;
+        $http.get(surl).then(function(res){
+              var dato = res.data;
+              $scope.currentserverdate = new Date(dato);
+              $scope.filtro.fechaInicio=$scope.firstDate(new Date(dato));
+              $scope.filtro.fechaFin= $scope.getLastDayOfMonth(new Date(dato));
+              $scope.loaddtCapacitacions();
+//            $scope.firstDate($scope.getCurrentserverdate())
+//            return $scope.currentserverdate;
+        },
+        function error(errResponse) {
+              console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+              var dato = errResponse.data;
+              if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+                    $mdDialog.show(
+                                $mdDialog.alert()
+                                .parent(angular.element(document.body))
+                                .clickOutsideToClose(true)
+                                .title('Obtener fecha servidor')
+                                .textContent(dato.message)
+                                .ariaLabel('ERROR')
+                                .ok('OK')
+                                .targetEvent(ev)
+                    );
+              }                            
+        });                                                   
+  };
+	
+	$scope.example = {
+	        value: new Date(2010, 11, 28, 14, 57)
+	      };
 	
 	//PURIBE 15042024  INICIO-->
 
@@ -193,19 +232,22 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 			    		 var tiempoenBD = res.data.tiempoenBD;
 			    		 var tiempoenproceso = res.data.tiempoenproceso;
 //			    		 $scope.creadtCapacitacion = res.data.creamodifica; // PURIBE 15042024 - INICIO -->
+			    		 $scope.prepublicarCapa = res.data.prepublicar;
+			    		 $scope.acumularCapa = res.data.acumular;
 			    		 console.log("data " +$scope.datos.length+" DE "+ $scope.total);
 			    		 console.log("Tiempo respuesta BD dtCapacitacion " +tiempoenBD+" Tiempo en Paginar "+tiempoenproceso);
+			    		 $scope.refrescar=0; //puribe
 	    		 }else{
-	    			 $mdDialog.show(
-								$mdDialog.alert()
-								.parent(angular.element(document.body))
-								.clickOutsideToClose(true)
-								.title('Buscar capacitaciones')
-								.textContent("No se encontraron resultados para la búsqueda")
-								.ariaLabel('Lucky day')
-								.ok('ACEPTAR')
-						);
-						return;
+//	    			 $mdDialog.show(
+//								$mdDialog.alert()
+//								.parent(angular.element(document.body))
+//								.clickOutsideToClose(true)
+//								.title('Buscar capacitaciones')
+//								.textContent("No se encontraron resultados para la búsqueda")
+//								.ariaLabel('Lucky day')
+//								.ok('ACEPTAR')
+//						);
+//						return;
 	    		 }
 				},
 				function error(errResponse) {
@@ -217,7 +259,9 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 			if(errResponse.message){ 
 				console.log("Message " + errResponse.message);
 				dato = errResponse.message;
+				$scope.refrescar=0; //puribe
 			}			
+			$scope.refrescar=0; //puribe
 			if(typeof(dato) != 'undefined'){
 		            	$mdDialog.show(
 						         $mdDialog.alert()
@@ -289,6 +333,24 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 		            }
 		          }
 		      //MPINARES 14022024 - FIN
+		        
+		        if($scope.refrescar == 1){
+					if(elprimero){
+						elprimero=false;
+						filtroparametro += "?reload=1";
+					}else{
+						filtroparametro += "&reload=1";
+					}	
+				}
+				else if($scope.refrescar == 0)
+				{
+					if(elprimero){
+					elprimero=false;
+					filtroparametro += "?reload=0";
+				}else{
+					filtroparametro += "&reload=0";
+				}	
+				}
 			});
                   console.log('Parametros del URL: '+order+limit+page+filtroparametro);	 
 		  return order+limit+page+filtroparametro;
@@ -822,28 +884,40 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 				$scope.nuevoCapaTemasmodelo = function (ev) {
 					ev.target.disabled = true;
 					
-					if (!$scope.dtCapacitacionForm3.$valid) {
-						
+					if ($scope.isNull($scope.capaTemasmodelo.idTema)) {
 						// PURIBE 15042024 - INICIO -->
 						$mdDialog.show(
-							$mdDialog.alert()
+							$mdDialog.alert().multiple(true)
 							.parent(angular.element(document.body))
 							.clickOutsideToClose(true)
-							.title('Guardar capacitación')
-							.textContent("El diálogo no cumple con los campos obligatorios...")
+							.title('Temas agendados')
+							.textContent("No se ha seleccionado el tema")
 							.ariaLabel('Lucky day')
 							.ok('ACEPTAR')
 					);
 						ev.target.disabled = false;
 						return;
+					}
 					
-					// PURIBE 15042024 - FIN-->					
-			}
+					if ($scope.isNull($scope.capaTemasmodelo.idSubtema)) {
+						// PURIBE 15042024 - INICIO -->
+						$mdDialog.show(
+							$mdDialog.alert().multiple(true)
+							.parent(angular.element(document.body))
+							.clickOutsideToClose(true)
+							.title('Temas agendados')
+							.textContent("No se ha seleccionado el subtema")
+							.ariaLabel('Lucky day')
+							.ok('ACEPTAR')
+					);
+						ev.target.disabled = false;
+						return;
+					}
 					
 					if ($scope.datoCapasTema.filter(e => e.idSubtema === $scope.capaTemasmodelo.idSubtema).length > 0) {
 						  /* vendors contains the element we're looking for */
 						$mdDialog.show(
-								$mdDialog.alert()
+								$mdDialog.alert().multiple(true)
 								.parent(angular.element(document.body))
 								.clickOutsideToClose(true)
 								.title('Guardar capacitación')
@@ -954,7 +1028,13 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 									.ok('ACEPTAR')
 									.targetEvent(ev)
 							);
-						}			           
+						}		
+						$scope.dtCapacitacionModelo.stdAsunto = null;
+						$scope.dtCapacitacionModelo.stdTipoDoc = null;
+						$scope.dtCapacitacionModelo.stdNumeroDoc = null;
+						$scope.dtCapacitacionModelo.stdIddoc = null; 
+						$scope.dtCapacitacionModelo.stdModalidadIng = null;
+						$scope.dtCapacitacionModelo.stdFechaRecepcion = null;
 						ev.target.disabled = false;
 					});		
 				};
@@ -1106,8 +1186,10 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
           }else{
 			 var keyCode = ev.which || ev.keyCode;
 			    if (keyCode === 13) {
+			    	$scope.refrescar=1;
 			    	$scope.loaddtCapacitacions();
 			    }else if (keyCode === 1) {
+			    	$scope.refrescar=1;
 			    	$scope.loaddtCapacitacions();
 			    }
           }
@@ -1162,7 +1244,7 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 					            var dato = errResponse.data;
 					            if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
 					            	$mdDialog.show(
-									         $mdDialog.alert()
+									         $mdDialog.alert().multiple(true)
 									        .parent(angular.element(document.body))
 									        .clickOutsideToClose(true)
 									        .title('Guardar capacitaciones')
@@ -1530,6 +1612,18 @@ myapp.controller('ctrlListadtCapacitacion', ['$mdEditDialog', '$scope', '$timeou
 //						        $scope.total = $scope.datos.length;
 //					        }	
 					        $scope.loaddtCapacitacions();
+					        
+					        $mdDialog.show(
+							         $mdDialog.alert()
+							        .parent(angular.element(document.body))
+							        .clickOutsideToClose(true)
+							        .title('Pre-publicar capacitación')
+							        .textContent("Se han pre-publicado las capacitaciones seleccionadas")
+							        .ariaLabel('ERROR')
+							        .ok('ACEPTAR')
+							        .targetEvent(ev)
+							    );
+					        
 						},
 						function error(errResponse) {
 				            console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
@@ -1826,10 +1920,14 @@ $scope.dtCapacitacionModelo.idFinanciaTxt = dtCapacitacionBk.idFinanciaTxt;
 $scope.dtCapacitacionModelo.dtCapaTemasBkJSss = dtCapacitacionBk.dtCapaTemasBkJSss;
 if(dtCapacitacionBk.dtCapaTemasBkJSss!=null && dtCapacitacionBk.dtCapaTemasBkJSss.length>0){
 	$scope.datoCapasTema = $scope.dtCapacitacionModelo.dtCapaTemasBkJSss;
+}else{
+	$scope.datoCapasTema = [];
 }
 $scope.dtCapacitacionModelo.dtCapaEntidadesBkJSss = dtCapacitacionBk.dtCapaEntidadesBkJSss;
 if(dtCapacitacionBk.dtCapaEntidadesBkJSss!=null && dtCapacitacionBk.dtCapaEntidadesBkJSss.length>0){
 	$scope.datoCapaEntidades = $scope.dtCapacitacionModelo.dtCapaEntidadesBkJSss;
+}else{
+	$scope.datoCapaEntidades = [];
 }
 $scope.dtCapacitacionModelo.dtCapaPublicoBkJSss = dtCapacitacionBk.dtCapaPublicoBkJSss;
 if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoBkJSss.length>0){
@@ -1858,6 +1956,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 				contador: i+ 1, 
 				idCapaPublico: capaPublico.idCapaPublico,
 				idCargo: capaPublico.idCargo, 
+				idCargoTxt: capaPublico.idCargoTxt,
 				add: addx
 
 			})
@@ -2169,7 +2268,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 				                console.log(JSON.stringify(institucion));
 				                dato.codEjecutora = institucion.codEjec; 
 //				                dato.ruc = institucion.ruc;
-				                dato.idEntidadTxt = institucion.razSocial;
+				                dato.idEntidadTxt = institucion.razSocialUbigeo;
 				                dato.idEntidad = institucion.idEntidad;
 				                console.log('modelo', dato);
 
@@ -2186,7 +2285,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 				            var errData = errResponse.data;
 				            if(errData && typeof(errData.message) != 'undefined'){
 				                $mdDialog.show(
-				                    $mdDialog.alert()
+				                    $mdDialog.alert().multiple(true)
 				                    .parent(angular.element(document.body))
 				                    .clickOutsideToClose(true)
 				                    .title('Buscar por ejecutora - Registramef')
@@ -2202,20 +2301,36 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 				    };
 				    
 				    //***********************************************************************************************
-				    $scope.datoCapaPublico = [
-					{contador: 1, idCapaPublico: "", idCargo: "",  add: true}
-			    ];
+				    $scope.datoCapaPublico = [];
+//				    $scope.datoCapaPublico = [
+//					{contador: 1, idCapaPublico: $scope.generateRandomInteger(1000)*-1, idCargo: "",  searchText: null, add: true}
+//			    ];
 				    
 				    $scope.nuevoCapaPublico= function (ev,dato) {
 				    	if(dato.idCargo!=null && dato.idCargo>0){
-				    		$scope.datoCapaPublico.push({
-					        	contador: $scope.datoCapaPublico.length + 1,
-					        	idCapaPublico: "",
-					        	idCargo: "", 	           
-					            add: false
-					        })
-
-					        $scope.settingFlagAddAndRemoveDetCapaPublico();
+//				    		var datoactual = Object.assign({}, dato);
+//							datoactual.idCapaPublico = $scope.generateRandomInteger(1000)*-1;
+//				    		datoactual.contador = $scope.datoCapaPublico.length + 1;
+//				    		datoactual.idCargo = "";
+//				    		datoactual.searchText = null;
+//				    		datoactual.add = false;
+//				    		$scope.datoCapaPublico.push(datoactual);	
+//				    		$scope.datoCapaPublico.push({
+//					        	contador: $scope.datoCapaPublico.length + 1,
+//					        	idCapaPublico: $scope.generateRandomInteger(1000)*-1,
+//					        	idCargo: "", 
+//					        	searchText: null,
+//					            add: false
+//					        })
+				    		ev.target.disabled = true;
+				    		var datoactual = Object.assign({}, $scope.capaPublicomodelo);
+				    		datoactual.idCapaPublico = $scope.generateRandomInteger(1000)*-1;
+				    		datoactual.contador = $scope.datoCapaPublico.length + 1;
+				    		datoactual.idCargo = $scope.capaPublicomodelo.idCargo;
+				    		datoactual.idCargoTxt = $scope.capaPublicomodelo.idCargoTxt;
+				    		$scope.datoCapaPublico.push(datoactual);
+				    		$scope.clearCapaPublicomodelo();
+//					        $scope.settingFlagAddAndRemoveDetCapaPublico();
 				    	}else{
 					    	$mdDialog.show(
 									$mdDialog.alert()
@@ -2283,12 +2398,72 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 				    }
 					
 					$scope.removeCapasTema = function (ev,dato) {
-				    	if(dato.idCapaTemAgen!=null && dato.idCapaTemAgen>0){
+						$scope.showConfirmDeleteCapaTemas(ev, dato);
+//				    	if(dato.idCapaTemAgen!=null && dato.idCapaTemAgen>0){
 //				    		$scope.showConfirmDeleteAsistenciaTema(ev, dato);
-				    	}else{
-				    		$scope.datoCapasTema = $scope.datoCapasTema.filter(val => val.idCapaTemAgen !== dato.idCapaTemAgen);
-				    	} 
+//				    	}else{
+//				    		$scope.datoCapasTema = $scope.datoCapasTema.filter(val => val.idCapaTemAgen !== dato.idCapaTemAgen);
+//				    	} 
 				    }
+					
+					$scope.showConfirmDeleteCapaTemas = function(ev, dtCapaTemasBk) {
+					    var confirm = $mdDialog.confirm()
+					      .title('Temas agendados')
+					      .textContent('¿Estás seguro que deseas eliminar el registro?')
+					      .ariaLabel('Lucky day')
+					      .targetEvent(ev)
+					      .ok('Si')
+					      .cancel('No');
+
+					    $mdDialog.show(confirm).then(function () {
+					    	if(dtCapaTemasBk.idCapaTemAgen!=null && dtCapaTemasBk.idCapaTemAgen>0){
+//					    		$scope.showConfirmDeleteCapaEntidades(ev, dato);
+					    		 $scope.status = 'SI';
+							      $scope.clearCapaTemasmodelo();
+							      $scope.setCapaTemasmodelo(dtCapaTemasBk);
+							      $scope.eliminardtCapaTemas(ev, $scope.capaTemasmodelo);
+					    	}else{
+					    		$scope.datoCapasTema = $scope.datoCapasTema.filter(val => val.idCapaTemAgen !== dtCapaTemasBk.idCapaTemAgen);
+					    	} 
+					    }, function () {
+					      $scope.status = 'NO';
+					    });
+					  };
+					  
+					  $scope.eliminardtCapaTemas = function(ev,dtCapaTemasBk){		
+						    ev.target.disabled = true;
+						    var datainsert = angular.toJson(dtCapaTemasBk);
+							console.log("datainsert = "+datainsert);	
+						$http.post(eliminardtCapaTemasUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
+								var dato = res.data;
+								var instrumentos = $scope.datos;
+						        var index = $scope.datos.findIndex(obj => obj.idCapaTemAgen === dato.idCapaTemAgen);
+								console.log("INDEX " + index);
+						        if(instrumentos.length>index){
+						        	instrumentos.splice(index, 1);
+							        $scope.datos = instrumentos;
+							        $scope.total = $scope.datos.length;
+						        }	
+						        $scope.editdtCapacitacion();
+							},
+							function error(errResponse) {
+					            console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+					            var dato = errResponse.data;
+					            if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+					            	$mdDialog.show(
+							         $mdDialog.alert()
+							        .parent(angular.element(document.body))
+							        .clickOutsideToClose(true)
+							        .title('Eliminar registro')
+							        .textContent(dato.message)
+							        .ariaLabel('ERROR')
+							        .ok('ACEPTAR')
+							        .targetEvent(ev)
+								   );
+					            }
+					        });			        			        	
+				      	ev.target.disabled = false;
+					 };
 					
 					//***********************************************************************************************
 					$scope.datoCapaEntidades= [];
@@ -2322,12 +2497,72 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 				    }
 					
 					$scope.removeCapaEntidades = function (ev,dato) {
-				    	if(dato.idCapaEnti!=null && dato.idCapaEnti>0){
-//				    		$scope.showConfirmDeleteAsistenciaTema(ev, dato);
-				    	}else{
-				    		$scope.datoCapaEntidades = $scope.datoCapaEntidades.filter(val => val.idCapaEnti !== dato.idCapaEnti);
-				    	} 
+						$scope.showConfirmDeleteCapaEntidades(ev, dato);			
+//				    	if(dato.idCapaEnti!=null && dato.idCapaEnti>0){
+//				    		$scope.showConfirmDeleteCapaEntidades(ev, dato);
+//				    	}else{
+//				    		$scope.datoCapaEntidades = $scope.datoCapaEntidades.filter(val => val.idCapaEnti !== dato.idCapaEnti);
+//				    	} 
 				    }
+					
+					$scope.showConfirmDeleteCapaEntidades = function(ev, dtCapaEntidadesBk) {
+					    var confirm = $mdDialog.confirm()
+					      .title('Entidades agregadas')
+					      .textContent('¿Estás seguro que deseas eliminar el registro?')
+					      .ariaLabel('Lucky day')
+					      .targetEvent(ev)
+					      .ok('Si')
+					      .cancel('No');
+
+					    $mdDialog.show(confirm).then(function () {
+					    	if(dtCapaEntidadesBk.idCapaEnti!=null && dtCapaEntidadesBk.idCapaEnti>0){
+//					    		$scope.showConfirmDeleteCapaEntidades(ev, dato);
+					    		 $scope.status = 'SI';
+							      $scope.clearCapaEntidadmodelo();
+							      $scope.setCapaEntidadmodelo(dtCapaEntidadesBk);
+							      $scope.eliminardtCapaEntidades(ev, $scope.capaEntidadmodelo);
+					    	}else{
+					    		$scope.datoCapaEntidades = $scope.datoCapaEntidades.filter(val => val.idCapaEnti !== dtCapaEntidadesBk.idCapaEnti);
+					    	} 
+					    }, function () {
+					      $scope.status = 'NO';
+					    });
+					  };
+					  
+					  $scope.eliminardtCapaEntidades = function(ev,dtCapaEntidadesBk){		
+						    ev.target.disabled = true;
+						    var datainsert = angular.toJson(dtCapaEntidadesBk);
+							console.log("datainsert = "+datainsert);	
+						$http.post(eliminardtCapaEntidadesUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
+								var dato = res.data;
+								var instrumentos = $scope.datos;
+						        var index = $scope.datos.findIndex(obj => obj.idCapaEnti === dato.idCapaEnti);
+								console.log("INDEX " + index);
+						        if(instrumentos.length>index){
+						        	instrumentos.splice(index, 1);
+							        $scope.datos = instrumentos;
+							        $scope.total = $scope.datos.length;
+						        }	
+						        $scope.editdtCapacitacion();
+							},
+							function error(errResponse) {
+					            console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+					            var dato = errResponse.data;
+					            if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+					            	$mdDialog.show(
+							         $mdDialog.alert()
+							        .parent(angular.element(document.body))
+							        .clickOutsideToClose(true)
+							        .title('Eliminar registro')
+							        .textContent(dato.message)
+							        .ariaLabel('ERROR')
+							        .ok('ACEPTAR')
+							        .targetEvent(ev)
+								   );
+					            }
+					        });			        			        	
+				      	ev.target.disabled = false;
+					 };
 					
 					//***********************************************************************************************
 					
@@ -2373,11 +2608,94 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 			    		if($scope.isObject(item)){
 			    			console.log('Item changed to ' + JSON.stringify(item));
 			    			$scope.capaEntidadmodelo.idEntidad = item.idEntidad;
-			    			$scope.capaEntidadmodelo.idEntidadTxt = item.razSocial;
+			    			$scope.capaEntidadmodelo.idEntidadTxt = item.razSocialUbigeo;
 			    			$scope.capaEntidadmodelo.codEjecutora  = item.codEjec;
 			    		}
 			    	}
 //			    	AUTOCOMPLETE FIN
+			    	
+			    	//***********************************************************************************************
+			    	//***********************************************************************************************
+			    	
+			    	$scope.capaPublicomodelo = {
+			    			contador: null,
+			    			idCapaPublico: null,
+			    			idCargo: null,
+			    			idCargoTxt: null,
+			    			add: null
+						};
+			    	
+			    	$scope.clearCapaPublicomodelo= function(){
+						$scope.capaPublicomodelo.contador= null;
+						$scope.capaPublicomodelo.idCapaPublico= null;
+						$scope.capaPublicomodelo.idCargo= null;
+						$scope.capaPublicomodelo.idCargoTxt= null;
+						$scope.capaPublicomodelo.add= null;
+					};
+					
+					//AUTOCOMPLETE PUBLICO INI
+			    	$scope.ctrlDtcapaPublico={
+			    			simulateQuery: false,
+			    			isDisabled: false,
+			    			selectedItem: null
+			    	};
+			    	
+			    	//AUTOCOMPLETE PUBLICO INI
+			    	$scope.ctrlMsLocal={
+			    			simulateQuery: false,
+			    			isDisabled: false,
+			    			selectedItem: null
+			    	};
+			    	
+			    	$scope.searchTextChangeMsLocal = function(text) {
+			    		console.log('Text changed to ' + text);
+			    	}
+
+			    	$scope.searchTextChangeDtcapaPublico = function(text) {
+			    		console.log('Text changed to ' + text);
+			    	}
+			    	
+			    	$scope.querySearchDtcapaPublico = function (query) {
+//			    		var upperCaseQuery = query.toUpperCase();
+			    		var results = null;
+			    	    results = query ? $scope.listaPrtParametrosIdPublico.filter($scope.createFilterFor(query)) : $scope.listaPrtParametrosIdPublico;
+			    	      return results;
+			    	    }
+			    	
+			    	$scope.querySearchMsLocal = function (query) {
+//			    		var upperCaseQuery = query.toUpperCase();
+			    		var results = null;
+			    	    results = query ? $scope.listaMsLocalIdLocal.filter($scope.createFilterFor(query)) : $scope.listaMsLocalIdLocal;
+			    	      return results;
+			    	    }
+
+			    	$scope.selectedItemChangeDtcapaPublico = function(item) {
+			    		if($scope.isObject(item)){
+			    			console.log('Item changed to ' + JSON.stringify(item));
+			    			$scope.capaPublicomodelo.idCargo = item.id;
+			    			$scope.capaPublicomodelo.idCargoTxt = item.valor;
+			    		}
+			    	}
+			    	
+			    	$scope.selectedItemChangeMsLocal = function(item) {
+			    		if($scope.isObject(item)){
+			    			console.log('Item changed to ' + JSON.stringify(item));
+			    			$scope.dtCapacitacionModelo.idLocal = item.id;
+			    			$scope.dtCapacitacionModelo.idLocalTxt = item.valor;
+			    		}
+			    	}
+			    	
+			    	$scope.createFilterFor = function (query) {
+			    	      var upperCaseQuery = query.toUpperCase();
+			    	      return function filterFn(item) {
+//			    	        return (item.valor.indexOf(upperCaseQuery) === 0);
+			    	    	return item.valor.toUpperCase().includes(upperCaseQuery);
+			    	      };
+
+			    	    }
+			    	
+			    	
+//			    	AUTOCOMPLETE PUBLICO FIN
 			    	
 			    	//***********************************************************************************************
 				    

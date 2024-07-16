@@ -333,6 +333,18 @@ public class DtEntidadesDaoImp extends
 			return super.find(sb.toString());
 		}
 		
+		@Override
+		public List<DtEntidades> getListaRasonsocialXSisAdminSede(String razonsocial, Long idSistAdmi, Long idSede) {
+			StringBuffer sb = new StringBuffer(100);
+			sb.append("SELECT tablaa FROM DtEntidades tablaa, DtEntidadSisAdmin e, DtEntidadSedes f  ");
+			sb.append("WHERE tablaa.idEntidad=e.idEntidad and tablaa.idEntidad=f.idEntidad  and tablaa.estado >= "+Estado.ACTIVO.getValor()+" and e.estado >= "+Estado.ACTIVO.getValor()+" and f.estado >= "+Estado.ACTIVO.getValor()+"  ");
+			sb.append("AND e.idSistAdmi = "+idSistAdmi+" ");
+			sb.append("AND f.idSede = "+idSede+" ");
+			sb.append("AND tablaa.razSocial LIKE '%"+razonsocial+"%'");
+			sb.append(" ORDER BY tablaa.razSocial asc ");
+			return super.find(sb.toString());
+		}
+		
 //		public Long getEstadoNuevo() {
 //			return estadoNuevo;
 //		}

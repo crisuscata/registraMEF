@@ -56,6 +56,7 @@ public class DtEntidadesBk implements java.io.Serializable {
 	private String idSistAdmiTxt = null;
 	private String estadoTxt = null;
 	private String idpaisTxt = null;
+	private String razSocialUbigeo = null;
 	
 	private List<DtEntidadSedesDto> dtEntidadSedesss = null;
 	
@@ -352,6 +353,16 @@ public class DtEntidadesBk implements java.io.Serializable {
 	public void setDtEntidadSisAdminBkJSss(List<DtEntidadSisAdminBk> dtEntidadSisAdminBkJSss) {
 		this.dtEntidadSisAdminBkJSss = dtEntidadSisAdminBkJSss;
 	}
+
+	public String getRazSocialUbigeo() {
+		return razSocialUbigeo;
+	}
+
+	public void setRazSocialUbigeo(String razSocialUbigeo) {
+		this.razSocialUbigeo = razSocialUbigeo;
+	}
+	
+	
 	
 	
     

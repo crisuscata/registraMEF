@@ -89,8 +89,16 @@ public class DtCapacitacionJS implements java.io.Serializable {
 		private List<DtCapaPublicoBk> dtCapaPublicoBkJSss = null;
 		private List<DtCapacitacionBk> dtCapaAcumulaListBkJSss = null;
 		//MPINARES 14022024 - FIN
-		
-	private List<DtAnexosJS> tdAnexosJSss = null;
+        private List<DtAnexosJS> tdAnexosJSss = null;
+		private boolean addEntidad = false;
+
+	public boolean isAddEntidad() {
+			return addEntidad;
+		}
+
+		public void setAddEntidad(boolean addEntidad) {
+			this.addEntidad = addEntidad;
+		}
 
 	public DtCapacitacionJS() {
 	}

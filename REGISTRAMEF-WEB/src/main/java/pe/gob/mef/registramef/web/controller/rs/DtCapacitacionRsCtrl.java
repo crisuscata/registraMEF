@@ -56,6 +56,10 @@ import pe.gob.mef.registramef.bs.transfer.DtEntidadesDto;
 import pe.gob.mef.registramef.bs.transfer.IDValorDto;
 import pe.gob.mef.registramef.bs.transfer.IIDValorDto;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAnexoBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaTemasBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtCapaEntidadesBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtCapaTemasBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapacitacionBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtEntidadesBk;
 import pe.gob.mef.registramef.bs.transfer.bk.MsUsuariosBk;
@@ -64,6 +68,10 @@ import pe.gob.mef.registramef.bs.utils.PropertiesMg;
 import pe.gob.mef.registramef.web.controller.DtAsistenciaData;
 import pe.gob.mef.registramef.web.controller.DtCapacitacionData;
 import pe.gob.mef.registramef.web.controller.rs.data.DtAnexosJS;
+import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaJS;
+import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaTemasJS;
+import pe.gob.mef.registramef.web.controller.rs.data.DtCapaEntidadesJS;
+import pe.gob.mef.registramef.web.controller.rs.data.DtCapaTemasJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtCapacitacionJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtCapacitacionLC;
 import pe.gob.mef.registramef.web.controller.rs.data.DtEntidadesJS;
@@ -131,6 +139,7 @@ public class DtCapacitacionRsCtrl {
 			//MPINARES 14022024 - FIN
 			
             String sestado = req.getParameter("estado");
+            int reload = Integer.parseInt(req.getParameter("reload"));
 			
 			Integer iestado = null;
 			if(sestado!=null){
@@ -138,6 +147,19 @@ public class DtCapacitacionRsCtrl {
 					iestado = Integer.parseInt(sestado);
 				}catch(Exception e){}
 			}		
+			
+			int rol=-1;
+			if (req.isUserInRole(Roles.ADMINISTRADOR) || msUsuariosBk.getPerfil().contains(Roles.PERFIL_USU_OGC))
+			{
+				rol =0;
+			}else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_GC))
+				{
+				rol =1;
+					}
+			else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+			{
+			rol =2;
+			}
 			
 //			DtCapacitacionFiltro dtCapacitacionFiltro = new DtCapacitacionFiltro(fechaInic,fechaFin,nomEvento,idSistAdm,idUsuinterno,flagPubli,idModalidad,idProgramacion,estado,cantPartic,iestado);
 			//MPINARES 14022024 - INICIO
@@ -154,13 +176,23 @@ public class DtCapacitacionRsCtrl {
 			DtCapacitacionLC dtCapacitacionLC = new DtCapacitacionLC();
 			long inicio = System.currentTimeMillis();
 //			List<DtCapacitacionBk> dtCapacitacionsss = dtCapacitacionData.getDtCapacitacionActivos(servicio,msUsuariosBk.getIdusuario());
-			List<DtCapacitacionBk> dtCapacitacionsss = dtCapacitacionData.getDtCapacitacionActivos(servicio,msUsuariosBk.getIdusuario(), fechaInicio, fechaFin, idProgramacion);
+			List<DtCapacitacionBk> dtCapacitacionsss = dtCapacitacionData.getDtCapacitacionActivos(servicio,msUsuariosBk.getIdusuario(), fechaInicio, fechaFin, idProgramacion, reload, msUsuariosBk.getIdSede(), rol, msUsuariosBk.getIdSistAdmi());
 			long lfinal =System.currentTimeMillis()-inicio;
 			dtCapacitacionLC.setTiempoenBD(lfinal);
 			
 			if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.DTCAPACITACION_CREA)){
 				dtCapacitacionLC.setCreamodifica(true);
-			}			
+			}		
+			
+			if (req.isUserInRole(Roles.ADMINISTRADOR) || msUsuariosBk.getPerfil().contains(Roles.PERFIL_USU_OGC) 
+					|| msUsuariosBk.getPerfil().contains(Roles.PERFIL_GC) || req.isUserInRole(Roles.PRE_PUBLICA_DTCAPACITACION_CREA)){
+				dtCapacitacionLC.setPrepublicar(true);
+			}
+			
+			if (req.isUserInRole(Roles.ADMINISTRADOR) || msUsuariosBk.getPerfil().contains(Roles.PERFIL_USU_OGC) 
+					|| msUsuariosBk.getPerfil().contains(Roles.PERFIL_GC) || req.isUserInRole(Roles.ACUMULAR_DTCAPACITACION_CREA)){
+				dtCapacitacionLC.setAcumular(true);
+			}
 			
 			/////
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
@@ -563,6 +595,21 @@ public class DtCapacitacionRsCtrl {
 
 		try {
 			servicio.deleteDtCapacitacion(dtCapacitacionC, msUsuariosBk.getUsername(), msUsuariosBk.getIdusuario(), null, adressRemoto);
+			String fechaInicio = req.getParameter("fechaInicio");
+			String fechaFin = req.getParameter("fechaFin");
+			String idProgramacion = req.getParameter("idProgramacion");
+			int rol=-1;
+			if (req.isUserInRole(Roles.ADMINISTRADOR) || msUsuariosBk.getPerfil().contains(Roles.PERFIL_USU_OGC))
+			{
+				rol =0;
+			}else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_GC))
+				{
+				rol =1;
+					}
+			else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+			{
+			rol =2;
+			}
 			
 			DtCapacitacionData dtCapacitacionData = (DtCapacitacionData) req.getSession().getAttribute("DtCapacitacionData");
 			if(dtCapacitacionData==null){
@@ -570,7 +617,7 @@ public class DtCapacitacionRsCtrl {
 				req.getSession().setAttribute("DtCapacitacionData",dtCapacitacionData);
 			}
 //			dtCapacitacionData.refrescar(servicio, msUsuariosBk.getIdusuario());
-			
+			dtCapacitacionData.refrescar(servicio, msUsuariosBk.getIdusuario(), fechaInicio, fechaFin, idProgramacion, msUsuariosBk.getIdSede(), rol, msUsuariosBk.getIdSistAdmi());
 			GenericEntity<DtCapacitacionBk> registro = new GenericEntity<DtCapacitacionBk>(dtCapacitacionC) {
 			};
 			return Response.status(HttpURLConnection.HTTP_OK).entity(registro).build();
@@ -610,6 +657,21 @@ public class DtCapacitacionRsCtrl {
 
 		try {
 			servicio.activarDtCapacitacion(dtCapacitacionC, msUsuariosBk.getUsername(), msUsuariosBk.getIdusuario(), null, adressRemoto);
+			String fechaInicio = req.getParameter("fechaInicio");
+			String fechaFin = req.getParameter("fechaFin");
+			String idProgramacion = req.getParameter("idProgramacion");
+			int rol=-1;
+			if (req.isUserInRole(Roles.ADMINISTRADOR) || msUsuariosBk.getPerfil().contains(Roles.PERFIL_USU_OGC))
+			{
+				rol =0;
+			}else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_GC))
+				{
+				rol =1;
+					}
+			else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+			{
+			rol =2;
+			}
 			
 			DtCapacitacionData dtCapacitacionData = (DtCapacitacionData) req.getSession().getAttribute("DtCapacitacionData");
 			if(dtCapacitacionData==null){
@@ -617,6 +679,7 @@ public class DtCapacitacionRsCtrl {
 				req.getSession().setAttribute("DtCapacitacionData",dtCapacitacionData);
 			}
 //			dtCapacitacionData.refrescar(servicio, msUsuariosBk.getIdusuario());
+			dtCapacitacionData.refrescar(servicio, msUsuariosBk.getIdusuario(), fechaInicio, fechaFin, idProgramacion, msUsuariosBk.getIdSede(), rol, msUsuariosBk.getIdSistAdmi());
 			
 			GenericEntity<DtCapacitacionBk> registro = new GenericEntity<DtCapacitacionBk>(dtCapacitacionC) {
 			};
@@ -664,6 +727,21 @@ public class DtCapacitacionRsCtrl {
 				DtCapacitacionBk dtCapacitacionC = servicio.getDtCapacitacionBkXid(idCapacitacion, msUsuariosBk.getIdusuario());
 				servicio.deleteDtCapacitacion(dtCapacitacionC, msUsuariosBk.getUsername(), msUsuariosBk.getIdusuario(), null, adressRemoto);
 			}
+			String fechaInicio = req.getParameter("fechaInicio");
+			String fechaFin = req.getParameter("fechaFin");
+			String idProgramacion = req.getParameter("idProgramacion");
+			int rol=-1;
+			if (req.isUserInRole(Roles.ADMINISTRADOR) || msUsuariosBk.getPerfil().contains(Roles.PERFIL_USU_OGC))
+			{
+				rol =0;
+			}else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_GC))
+				{
+				rol =1;
+					}
+			else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+			{
+			rol =2;
+			}
 			
 			DtCapacitacionData dtCapacitacionData = (DtCapacitacionData) req.getSession().getAttribute("DtCapacitacionData");
 			if(dtCapacitacionData==null){
@@ -671,7 +749,7 @@ public class DtCapacitacionRsCtrl {
 				req.getSession().setAttribute("DtCapacitacionData",dtCapacitacionData);
 			}
 //			dtCapacitacionData.refrescar(servicio, msUsuariosBk.getIdusuario());
-			
+			dtCapacitacionData.refrescar(servicio, msUsuariosBk.getIdusuario(), fechaInicio, fechaFin, idProgramacion, msUsuariosBk.getIdSede(), rol, msUsuariosBk.getIdSistAdmi());
                         GenericEntity<String> registro = new GenericEntity<String>("SE ELIMINARON "+tamanio+" REGISTROS.") {
 			};
 			return Response.status(HttpURLConnection.HTTP_OK).entity(registro).build();
@@ -1078,13 +1156,27 @@ public class DtCapacitacionRsCtrl {
 	        //MPINARES 14022024 - INICIO
 			
             String sestado = req.getParameter("estado");
+            int reload = Integer.parseInt(req.getParameter("reload"));
 			
 			Integer iestado = null;
 			if(sestado!=null){
 				try{
 					iestado = Integer.parseInt(sestado);
 				}catch(Exception e){}
-			}		
+			}	
+			
+			int rol=-1;
+			if (req.isUserInRole(Roles.ADMINISTRADOR) || msUsuariosBk.getPerfil().contains(Roles.PERFIL_USU_OGC))
+			{
+				rol =0;
+			}else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_GC))
+				{
+				rol =1;
+					}
+			else if (msUsuariosBk.getPerfil().contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT))
+			{
+			rol =2;
+			}
 			
 //			DtCapacitacionFiltro dtCapacitacionFiltro = new DtCapacitacionFiltro(fechaInic,fechaFin,nomEvento,idSistAdm,idUsuinterno,flagPubli,idModalidad,idProgramacion,estado,cantPartic,iestado);
 			//MPINARES 14022024 - INICIO
@@ -1101,7 +1193,7 @@ public class DtCapacitacionRsCtrl {
 			DtCapacitacionLC dtCapacitacionLC = new DtCapacitacionLC();
 			long inicio = System.currentTimeMillis();
 //			List<DtCapacitacionBk> dtCapacitacionsss = dtCapacitacionData.getDtCapacitacionActivos(servicio,msUsuariosBk.getIdusuario());
-			List<DtCapacitacionBk> dtCapacitacionsss = dtCapacitacionData.getDtCapacitacionActivos(servicio,msUsuariosBk.getIdusuario(), fechaInicio, fechaFin, idProgramacion);//MPINARES 14022024 - INICIO
+			List<DtCapacitacionBk> dtCapacitacionsss = dtCapacitacionData.getDtCapacitacionActivos(servicio,msUsuariosBk.getIdusuario(), fechaInicio, fechaFin, idProgramacion, reload, msUsuariosBk.getIdSede(), rol, msUsuariosBk.getIdSistAdmi());//MPINARES 14022024 - INICIO
 			long lfinal =System.currentTimeMillis()-inicio;
 			dtCapacitacionLC.setTiempoenBD(lfinal);
 			
@@ -1667,7 +1759,7 @@ public class DtCapacitacionRsCtrl {
     	                }).build();
 
     	    try {
-    	        List<DtEntidadesDto> msInstitucionesDtosss = servicio.getMsInstitucionesXCodigoEjecutora(codigoEjecutora, msUsuariosBk.getIdSistAdmi()); // Asegúrate de tener este método en tu servicio
+    	        List<DtEntidadesDto> msInstitucionesDtosss = servicio.getMsInstitucionesXEjecutoraSisAdminSede(codigoEjecutora, msUsuariosBk.getIdSistAdmi(), msUsuariosBk.getIdSede()); // Asegúrate de tener este método en tu servicio
     	        GenericEntity<List<DtEntidadesDto>> registrosx = new GenericEntity<List<DtEntidadesDto>>(
     	                msInstitucionesDtosss) {
     	        };
@@ -1702,7 +1794,7 @@ public class DtCapacitacionRsCtrl {
     			}).build();
 
     		try {
-    			List<DtEntidadesBk> datos = servicio.getMsInstitucionesIdprovee(idprovee, msUsuariosBk.getIdSistAdmi());  
+    			List<DtEntidadesBk> datos = servicio.getMsInstitucionesIdSisadminIdsede(idprovee, msUsuariosBk.getIdSistAdmi(), msUsuariosBk.getIdSede());  
     			GenericEntity<List<DtEntidadesBk>> registrosx = new GenericEntity<List<DtEntidadesBk>>(datos) {
     			};
     			return Response.status(200).entity(registrosx).build();
@@ -1775,7 +1867,7 @@ public class DtCapacitacionRsCtrl {
     			}).build();
 
     		try {
-    			//String endpointstdventanilla = "http://localhost:8380/tramite/webservice/consultasstd";
+//    			String endpointstdventanilla = "http://localhost:8380/tramite/webservice/consultasstd";
     			String endpointstdventanilla = servicio.getEndpointVentanilla();
     			ConsultasstdProxy consultasstdProxy=new ConsultasstdProxy(endpointstdventanilla);
 				 ExpedienteRegWSDto expedienteDto=consultasstdProxy.consultaExpedienteReg(anio, numero);
@@ -2499,5 +2591,88 @@ public class DtCapacitacionRsCtrl {
      			}
 
      			// PURIBE 15042024 - FIN
+     			
+     			@POST
+     	    	@Path("/eliminardtCapaTemas")
+     	    	@Produces(MediaType.APPLICATION_JSON)
+     	    	public Response eliminardtCapaTemas(@Context HttpServletRequest req, @Context HttpServletResponse res,
+     	    			@HeaderParam("authorization") String authString, DtCapaTemasJS dtCapaTemasE) {
+     	    		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+     	    		Principal usuario = req.getUserPrincipal();
+     	    		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+     	    		if (msUsuariosBk == null)
+     	    			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+     	    					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+     	    			}).build();
+
+     	    		if(!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTCAPACITACION_CREA))
+     	    			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+     	    					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+     	    			}).build();
+     	    		
+     	    		String adressRemoto = getRemoteAdress(req);
+     	    		DtCapaTemasBk dtCapaTemasC = new DtCapaTemasBk();
+     	    		FuncionesStaticas.copyPropertiesObject(dtCapaTemasC, dtCapaTemasE);
+
+     	    		try {
+//     	    			servicio.deleteDtAsistenciaTemas(dtAsistenciaTemasC, msUsuariosBk.getUsername(), msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede(), adressRemoto);
+     	    			servicio.deleteDtCapaTemas(dtCapaTemasC, msUsuariosBk.getUsername(), msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede(), adressRemoto);
+     	    			
+     	    			GenericEntity<DtCapaTemasBk> registro = new GenericEntity<DtCapaTemasBk>(dtCapaTemasC) {
+     	    			};
+     	    			return Response.status(200).entity(registro).build();
+     	    		} catch (Validador e) {
+     	    			// e.printStackTrace();
+//     	    			String mensaje = e.getMessage().toUpperCase();
+     	    			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
+     	    			System.out.println("ERROR: " + mensaje);
+     	    			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+     	    					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+     	    					}).build();
+     	    		}
+     	    	}
+     			
+     			
+     			@POST
+     	    	@Path("/eliminardtCapaEntidades")
+     	    	@Produces(MediaType.APPLICATION_JSON)
+     	    	public Response eliminardtCapaEntidades(@Context HttpServletRequest req, @Context HttpServletResponse res,
+     	    			@HeaderParam("authorization") String authString, DtCapaEntidadesJS dtCapaEntidadesE) {
+     	    		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+     	    		Principal usuario = req.getUserPrincipal();
+     	    		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+     	    		if (msUsuariosBk == null)
+     	    			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+     	    					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+     	    			}).build();
+
+     	    		if(!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTCAPACITACION_CREA))
+     	    			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+     	    					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+     	    			}).build();
+     	    		
+     	    		String adressRemoto = getRemoteAdress(req);
+     	    		DtCapaEntidadesBk dtCapaEntidadesC = new DtCapaEntidadesBk();
+     	    		FuncionesStaticas.copyPropertiesObject(dtCapaEntidadesC, dtCapaEntidadesE);
+
+     	    		try {
+//     	    			servicio.deleteDtAsistenciaTemas(dtAsistenciaTemasC, msUsuariosBk.getUsername(), msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede(), adressRemoto);
+     	    			servicio.deleteDtCapaEntidades(dtCapaEntidadesC, msUsuariosBk.getUsername(), msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede(), adressRemoto);
+     	    			
+     	    			GenericEntity<DtCapaEntidadesBk> registro = new GenericEntity<DtCapaEntidadesBk>(dtCapaEntidadesC) {
+     	    			};
+     	    			return Response.status(200).entity(registro).build();
+     	    		} catch (Validador e) {
+     	    			// e.printStackTrace();
+//     	    			String mensaje = e.getMessage().toUpperCase();
+     	    			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
+     	    			System.out.println("ERROR: " + mensaje);
+     	    			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+     	    					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+     	    					}).build();
+     	    		}
+     	    	}
 
 }

@@ -35,5 +35,6 @@ public interface DtEncuestaDao {
 	List<DtEncuesta> getXFiltro(Long tipoServicio,Timestamp fechaInicio,Timestamp fechaFin,Long idOrigen,Long idPrestacion,Date fechaServicio); //PURIBE 22042024 - INICIO-->
 	long getTotalXFiltro(Long tipoServicio,Timestamp fechaInicio,Timestamp fechaFin,Long idOrigen,Long idPrestacion);
 	List<DtEncuesta> findListPeriodo(Long idTipoServicio, Date fechaServicio) throws Validador;
+	DtEncuesta findPeriodo(Long idTipoServicio, Date fechaServicio) throws Validador;
 	
 }

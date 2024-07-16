@@ -110,7 +110,6 @@
         <url-pattern>/confirmacion-page</url-pattern>
     </servlet-mapping>
 	<!-- FIN CUSCATA - 10072024-->
-	
 	<session-config>
 		<session-timeout>60</session-timeout>
 		<cookie-config>

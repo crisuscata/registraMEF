@@ -1,12 +1,18 @@
-<md-dialog layout-padding flex>
+<md-dialog layout-padding>
 <!-- //MPINARES 14022024 - INICIO - NUEVO HTML-->
 <md-dialog-content md-whiteframe="1" class="overflowEsconder" md-colors="{background: 'background-A100'}">
  <form name="dtCapacitacionForm3">
  
- <div layout="row" layout-aling="center start" flex
+ <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Agregar temas</h2>
+    </div>
+  </md-toolbar>
+ 
+ <div layout="row" layout-aling="center start" 
 				style="font-size: 14px;">      
         
-       		 <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2" flex >
+       		 <div class="letraenvoltura" ng-if="dtCapacitacionModelo.editopcion < 2"  >
 					<md-input-container class="input-container-margen letraTexto">
 						<label>Tema</label>
 						<md-select ng-model="capaTemasmodelo.idTema" ng-change="changeIdTema(capaTemasmodelo.idTema)"
@@ -20,8 +26,8 @@
 					 
  </div>
  
-  <div layout="row" layout-aling="center start" flex style="font-size: 14px;">  
-				<div class="letraenvoltura" flex 
+  <div layout="row" layout-aling="center start"  style="font-size: 14px;">  
+				<div class="letraenvoltura"  
 									ng-if="dtCapacitacionModelo.editopcion < 2">
 				<md-input-container class="input-container-margen letraTexto">
 				<label>Subtema</label>

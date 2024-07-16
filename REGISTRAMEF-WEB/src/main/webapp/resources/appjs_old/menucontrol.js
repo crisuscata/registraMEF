@@ -264,7 +264,7 @@ myapp.controller('menuCtrl', ['$scope','$mdPanel','$mdDialog','$http', function 
 			      name: 'Registro',
 			      items: [
 			    	  {'name':'Asistencias técnicas','refe':'asistencia/listadtAsistencia.html','activo':true},
-			    	  {'name':'Capacitaciones','refe':'capacitacion/listadtCapacitacionNoProg.html','activo':true},
+			    	  {'name':'Capacitaciones','refe':'capacitacion/listadtCapacitacion.html','activo':true},
 			    	  {'name':'Reuniones de trabajo','refe':'visitas/listadtVisitas.html','activo':true},
 			    	  {'name':'Consultas','refe':'visitas/listadtVisitas.html','activo':true}			    	  
 			      ]
