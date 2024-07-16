@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -53,14 +55,15 @@ import pe.gob.mef.registramef.bs.service.Servicio;
 import pe.gob.mef.registramef.bs.transfer.DtEntidadesDto;
 import pe.gob.mef.registramef.bs.transfer.IDValorDto;
 import pe.gob.mef.registramef.bs.transfer.IIDValorDto;
-import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtAnexoBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapacitacionBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtEntidadesBk;
 import pe.gob.mef.registramef.bs.transfer.bk.MsUsuariosBk;
 import pe.gob.mef.registramef.bs.utils.FuncionesStaticas;
+import pe.gob.mef.registramef.bs.utils.PropertiesMg;
 import pe.gob.mef.registramef.web.controller.DtAsistenciaData;
 import pe.gob.mef.registramef.web.controller.DtCapacitacionData;
-import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaJS;
+import pe.gob.mef.registramef.web.controller.rs.data.DtAnexosJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtCapacitacionJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtCapacitacionLC;
 import pe.gob.mef.registramef.web.controller.rs.data.DtEntidadesJS;
@@ -396,6 +399,62 @@ public class DtCapacitacionRsCtrl {
 		}
 	}
 	
+    @POST
+	@Path("/insertarchivo")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response insertArchivo(@Context HttpServletRequest req, @Context HttpServletResponse res,
+			@HeaderParam("authorization") String authString, DtAnexosJS tdAnexosJS) {
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+		Principal usuario = req.getUserPrincipal();
+		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+		if (msUsuariosBk == null)
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+					.entity(new GenericEntity<RespuestaError>(
+							new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
+									HttpURLConnection.HTTP_UNAUTHORIZED)) {
+					}).build();
+
+
+		String sdata = tdAnexosJS.getData().substring(tdAnexosJS.getData().indexOf(";base64,") + 8);
+		byte[] data = Base64.getDecoder().decode(sdata);
+		String filename = null;
+		String rutaFilename = null;
+		if (tdAnexosJS.getFilename() == null) {
+			if (tdAnexosJS.getIdAnexo() != null && tdAnexosJS.getIdAnexo().longValue() > 0
+					&& tdAnexosJS.getIddocumento() != null && tdAnexosJS.getIddocumento().longValue() > 0) {
+				filename = FuncionesStaticas.getFileNameSistema(tdAnexosJS.getIddocumento(), tdAnexosJS.getIdAnexo(), msUsuariosBk.getIdusuario(), msUsuariosBk.getIdSede());
+			} else {
+				filename = FuncionesStaticas.getFileNameTempSistema(msUsuariosBk.getIdusuario(),msUsuariosBk.getIdSede());
+			}
+			rutaFilename = FuncionesStaticas.getFileNameRutaSistema(filename);
+		} else {
+			filename = tdAnexosJS.getFilename();
+			rutaFilename = FuncionesStaticas.getFileNameRutaSistema(filename);
+		}
+
+		try {
+			FileOutputStream fos = new FileOutputStream(rutaFilename, true);
+			fos.write(data);
+			fos.close();
+
+			tdAnexosJS.setData(null);
+			tdAnexosJS.setFilename(filename);
+
+			GenericEntity<DtAnexosJS> registrors = new GenericEntity<DtAnexosJS>(tdAnexosJS) {
+			};
+			return Response.status(200).entity(registrors).build();
+		} catch (Exception e) {
+			// e.printStackTrace();
+			String mensaje = e.getMessage();
+			System.out.println("ERROR: " + mensaje);
+			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+					new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+					}).build();
+		}
+	}
+	
 	@POST
 	@Path("/salvardtCapacitacionNoProg")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -424,7 +483,42 @@ public class DtCapacitacionRsCtrl {
 		dtCapacitacionC.setIdSistAdm(msUsuariosBk.getIdSistAdmi());
 
 		try {
-			dtCapacitacionC = servicio.saveorupdateDtCapacitacionNoProg(dtCapacitacionC, msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto);
+			
+			Long idProgramacion = PropertiesMg.getSistemLong(
+					PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_NOPROGRAMADA,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_NOPROGRAMADA);
+			
+			/*Long idOrigen = PropertiesMg.getSistemLong(
+					PropertiesMg.KEY_PRTPARAMETROS_IDORIGEN_DEMANDA,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDORIGEN_DEMANDA);
+			//SPRINT60 INICIO
+			Long pagOrigen = PropertiesMg.getSistemLong(
+					PropertiesMg.KEY_PAGINA_ORIGEN_NO_PROGRAMADO,
+					PropertiesMg.DEFAULT_PAGINA_ORIGEN_NO_PROGRAMADO);*/
+			
+			dtCapacitacionC.setIdProgramacion(idProgramacion);
+			
+			
+			List<DtAnexosJS> tdAnexosJSsss = dtCapacitacionJS.getTdAnexosJSss();
+			List<DtAnexoBk> tdAnexosBkss = null;
+			if (tdAnexosJSsss != null && !tdAnexosJSsss.isEmpty()) {
+				tdAnexosBkss = new ArrayList<DtAnexoBk>();
+				for (DtAnexosJS tdAnexosJS : tdAnexosJSsss) {
+					DtAnexoBk tdAnexosBk = new DtAnexoBk();
+					
+					FuncionesStaticas.copyPropertiesObject(tdAnexosBk, tdAnexosJS);
+					
+					if(tdAnexosJS.isMaterialCapa()){
+						tdAnexosBk.setFlagMaterialCapa(1L);
+					}else{
+						tdAnexosBk.setFlagMaterialCapa(0L);
+					}
+					
+					tdAnexosBkss.add(tdAnexosBk);
+				}
+			}
+			
+			dtCapacitacionC = servicio.saveorupdateDtCapacitacionNoProg(dtCapacitacionC, msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto,tdAnexosBkss);
 			
 			DtCapacitacionData dtCapacitacionData = (DtCapacitacionData) req.getSession().getAttribute("DtCapacitacionData");
 			if(dtCapacitacionData==null){

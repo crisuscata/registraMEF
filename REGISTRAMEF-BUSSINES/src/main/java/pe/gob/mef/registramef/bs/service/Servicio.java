@@ -231,7 +231,7 @@ public interface Servicio {
 			Long kyAreaMod, String rmtaddress) throws Validador;
 	
 	DtCapacitacionBk saveorupdateDtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
-			Long kyAreaMod, String rmtaddress) throws Validador;
+			Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador;
 
 	void deleteDtCapacitacion(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador;

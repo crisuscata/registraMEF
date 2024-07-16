@@ -1579,7 +1579,7 @@ public class DtAsistenciaRsCtrl {
 			String idSistAdmTxt = req.getParameter("idSistAdmTxt");
 			String idOrigenTxt = req.getParameter("idOrigenTxt");
 			String estadoTxt = req.getParameter("estadoTxt");
-			String fechaServicio = req.getParameter("fechaServicio");
+			String fechaServicio = req.getParameter("fechaServicio");//CUSCATA - 30072024
 			//MPINARES 13022024 - FIN
 			
             String sestado = req.getParameter("estado");
@@ -1610,7 +1610,7 @@ public class DtAsistenciaRsCtrl {
 			if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.DTASISTENCIA_CREA)){
 				dtAsistenciaLC.setCreamodifica(true);
 			}
-			
+			//INICIO CUSCATA - 30072024
 			List<DtAsistenciaBk> listAsistenciaFilter  = dtAsistenciasss.stream()
 					 .filter(c-> usuExtTxt == null || usuExtTxt.isEmpty() || this.contienCoincidenciaUsuexterno(c.getUsuExtTxt(), usuExtTxt))
 					 .filter(c-> dniUserTxt == null || dniUserTxt.isEmpty() || this.contienCoincidenciaDni(c.getDniUserTxt(), dniUserTxt))
@@ -1622,7 +1622,7 @@ public class DtAsistenciaRsCtrl {
 					 .filter(c->  fechaServicio == null || fechaServicio.isEmpty() || this.contienCoincidenciaFechaServicio(c.getFechaAsistencia(), fechaServicio) )
 					 .filter(c->  idProgramacion == null || idProgramacion.isEmpty() || c.getIdProgramacionTxt().trim().toLowerCase().contains(idProgramacion.toLowerCase()) )
 					 .collect(Collectors.toList());
-			
+			//FIN CUSCATA - 30072024
 			//FIN CUSCATA - 10072024
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
 			List<DtAsistenciaBk> dtAsistenciasssData = new ArrayList<DtAsistenciaBk> ();
@@ -1909,7 +1909,7 @@ public class DtAsistenciaRsCtrl {
 			CellStyle cellStyleDATO = cell7A.getCellStyle();
 
 //			List<String> caposvista = Arrays.asList("idEntidad","idSede","fechaAsistencia","idUsuinterno","idSistAdm","idOrigen","idProgramacion","estado");
-			List<String> caposvista = Arrays.asList("idAsistencia","dniUserTxt","usuExtTxt","codEjecutora","idEntidadTxt","idSedeTxt","fechaAsistencia","idUsuinternoTxt","idSistAdmTxt","idOrigenTxt","idProgramacionTxt","estadoTxt");//INICIO CUSCATA - 10072024
+			List<String> caposvista = Arrays.asList("idAsistencia","dniUserTxt","usuExtTxt","codEjecutora","idEntidadTxt","idSedeTxt","fechaAsistencia","idUsuinternoTxt","idSistAdmTxt","idOrigenTxt","idProgramacionTxt","estadoTxt");//INICIO CUSCATA - 30072024
                         int tituloscontador = 1;
 			int titulofilacontador = 6;
 			Row rowX = hoja.getRow(titulofilacontador);

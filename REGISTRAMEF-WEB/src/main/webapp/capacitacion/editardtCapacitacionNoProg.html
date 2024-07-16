@@ -35,20 +35,6 @@ data-ng-init="editdtCapacitacion()">
 			ng-if="dtCapacitacionModelo.editopcion==1" aria-label="Guardar">
 		<!--          <md-icon md-font-set="material-icons">save</md-icon>  -->
 		<span>Guardar</span> </md-button>
-<!--       <div flex="auto" ng-if="nuevo">         -->
-<!--         <h2 md-truncate md-colors="{color: 'background-A100'}">Nuevo Capacitaciones</h2> -->
-<!--       </div> -->
-<!--       <div flex="auto" ng-if="!nuevo">         -->
-<!--         <h2 md-truncate md-colors="{color: 'background-A100'}">{{dtCapacitacionModelo.XXX}}</h2> -->
-<!--       </div>         -->
-<!--        <md-button class="md-button-borde md-sm" ng-click="cancelarDtCapacitacion()" aria-label="Salir"> -->
-<!--          <span ng-if="nuevo">Salir</span> -->
-<!--          <span ng-if="!nuevo">Salir</span>    -->
-<!--        </md-button> -->
-<!--        <md-button class="md-button-borde md-sm" ng-click="salvarDtCapacitacion($event)"  -->
-<!--        ng-if="dtCapacitacionModelo.editopcion==1" aria-label="Grabar"> -->
-<!--          <span >Grabar</span>        -->
-<!--        </md-button> -->
       </div>
 </md-toolbar>    
 
@@ -556,76 +542,7 @@ data-ng-init="editdtCapacitacion()">
 </fieldset>
 
 <fieldset style="margin-left: 15px;">
-	<legend>Datos de la entidad</legend>
-	<md-content md-whiteframe="1" class="overflowEsconder noshadow"
-				md-colors="{background: 'background-A100'}">
-				
-				
-				<div layout="row" layout-align="center center" flex="100">
-				  <div>
-				  <md-button class="md-raised"
-				  aria-label="Agregar Entidad"
-					ng-click="addCapaEntidad($event)">
-				  <md-icon md-font-set="material-icons" style="color: grey;">work_outline</md-icon>
-				  <span>Agregar Entidad</span>
-				  </md-button>
-					</div>
-				</div>
-				
-				<div layout="row" layout-aling="center start" flex="100"
-				style="font-size: 14px;">
-				
-				<table md-progress="promise" md-row-select="options.rowSelection"
-				md-table multiple="{{options.multiSelect}}" ng-model="selected"
-				resize>
-				<thead id="tablewidth" md-head md-on-reorder="logOrder"
-					md-order="query.order" ng-if="!options.decapitate">
-
-					<tr class="md-table-head-label" md-row>
-						<th class="md-title ttamnumero" md-column flex="13"><span>&nbsp;</span></th>
-						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>C&oacute;digo ejecutora</span></th>
-						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Entidad</span></th>
-						<th class="md-title ttamopciones" md-column flex="20"><span>Opciones</span></th>
-					</tr>
-				<tbody md-body style="font-size: 14px;">
-					<tr class="primary tridtdPersonalPersonal md-table-cuerpo"
-						md-auto-select="options.autoSelect" md-on-select="logItem" md-row
-						md-select="dato" ng-disabled="dato.id > 0"
-						ng-repeat-start="dato in datoCapaEntidades">
-
-						<td md-cell flex="20">{{$index + 1}}</td>
-						<td class="tdaa1 md-table-cuerpo" data-title="codEjecutora" md-cell>
-								<div class="letraTexto">{{dato.codEjecutora}}</div>								
-							</td>
-						<td class="tdaa1 md-table-cuerpo" data-title="idEntidadTxt" md-cell>
-								<div class="letraTexto">{{dato.idEntidadTxt}}</div>								
-							</td>
-
-						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
-							<md-button class="md-icon-button md-primary"
-								ng-click="removeCapaEntidades($event,dato)" ng-if="!dato.add">
-							<md-icon md-font-set="material-icons">remove</md-icon> </md-button> 
-<!-- 							<md-button -->
-<!-- 								class="md-icon-button md-primary" -->
-<!-- 								ng-click="nuevoCapaEntidades()" ng-if="dato.add"> -->
-<!-- 							<md-icon md-font-set="material-icons">add_circle</md-icon> </md-button> -->
-						</td>
-
-					</tr>
-					<tr class="secondary childidtdPersonalPersonal" ng-repeat-end></tr>
-				</tbody>
-
-			</table>
-				
-				</div>
-				
-				
-		
-	</md-content>
-</fieldset>
-
-<fieldset style="margin-left: 15px;">
-	<legend>Temas programados</legend>
+	<legend>Expositores y Temas de la Capacitaci&oacute;n</legend>
 	
 			<div layout="row" layout-align="center center" flex="100">
 				  <div>
@@ -693,23 +610,78 @@ data-ng-init="editdtCapacitacion()">
 	
 </fieldset>
 
-	<div layout="column" layout-aling="center start" flex ng-if="dtCapacitacionModelo.addEntidad"> 
-			<md-fab-speed-dial md-open="isOpenxx" md-direction="up"
-					class="md-scale md-fab-bottom-right" ng-mouseenter="isOpenxx=true"
-					ng-mouseleave="isOpenxx=false"> 
-						<md-fab-trigger>
-							<md-button aria-label="menu" class="md-fab md-warn" style="background-color: #009688;"> <md-icon
-							md-font-set="material-icons" style="color: rgb(255,255,255)">add</md-icon> </md-button> 
-							</md-fab-trigger> 
-							<md-fab-actions>
-							<md-button aria-label="Nueva entidad" class="md-fab md-raised md-mini"
-							ng-click="showdlgInstitucionDialog()" > 
-							<md-tooltip md-direction="left" md-visible="tooltipVisible">Nueva entidad</md-tooltip>
-							<md-icon md-font-set="material-icons" >add</md-icon> 
-							</md-button> 
-						</md-fab-actions> 
-				</md-fab-speed-dial>
-		</div>
+	<fieldset style="margin-left: 15px;" >  
+	<!--	<fieldset style="margin-left: 15px;" > -->
+			<legend>Adjuntar lista de participantes y programa del evento</legend>
+			
+			<div layout="row" layout-aling="center start"  flex> 
+			        
+			        <div flex="90">
+				        <input type="file" ng-file-model multiple letter="A" style="font-size: 83%;margin-top: 17px;"/> 
+				          <table>
+				          
+					          <tr>
+								  <th><span><b>N&deg;</b></span></th>
+								  <th><span><b>Anexo</b></span></th>
+								  <th><span><b>Tama&ntilde;o</b></span></th>
+								  <th><span><b>Estado</b></span></th>
+								  <th><span><b>Opci&oacute;n</b></span></th>
+								  <th><span><b>Material de Capacitaci&oacute;n</b></span></th>
+							  </tr>
+				          
+							  <tr ng-repeat="x in archivos">
+								    <td>{{ $index + 1 }}</td>
+								    <td>
+								  		  <img src="resources/imagen/mime/{{x.tipo}}.gif" alt="{{ x.filenameoriginal }}" style="float:left;">
+								    	  {{ x.filenameoriginal }}
+								    </td>
+								    <td>{{ (x.tamanio/1024).toFixed() }} KB</td>
+								    <td>
+								    <p id="dbi-upload-progressA_{{$index}}">.</p>
+								    <div class="progress">    
+								   		<div class="progress-bar" id="progress-barA_{{$index}}"></div> 
+								    </div>
+								    </td>
+								    
+								    <td>
+									    <md-button class="md-icon-button md-accent" aria-label="Eliminar" ng-click="handleremover($index)">
+									        <md-icon md-font-set="material-icons">clear</md-icon>
+									    </md-button>
+								    </td>
+								    
+								    <td>
+										<md-checkbox ng-model="x.materialCapa"></md-checkbox>
+									</td>
+								    
+							  </tr>
+						</table>  
+			         </div>
+			         <br />
+			 </div>
+ <!-- 
+			  <div  ng-if="dtAsistenciaModelo.tdAnexosJSss.length > 0" flex="auto">   
+			   		 <table>
+					 <tr>
+					  <th><span><b>N°</b></span></th>
+					  <th><span><b>Anexo</b></span></th>
+					  <th><span><b>Tama&ntilde;o</b></span></th>
+					 </tr>
+					  <tr ng-repeat="x in dtAsistenciaModelo.tdAnexosJSss">
+					    <td>{{ $index + 1 }}</td>
+					    <td>
+					    <a href="download?anex={{x.idAnexo}}" target="_blank_">
+					    <img src="resources/imagen/mime/{{x.idTiposervicio}}.gif" alt="{{ x.filenameoriginal }}" style="float:left;">
+					    	{{ x.filenameoriginal }}
+					    </a>
+					    </td>
+					    <td>{{ (x.tamanio/1024).toFixed() }} KB</td>
+					  </tr>
+					</table>
+			       
+			  </div>
+		 -->	
+			
+		</fieldset>	
 
 </div>
 <div>&nbsp;</div>

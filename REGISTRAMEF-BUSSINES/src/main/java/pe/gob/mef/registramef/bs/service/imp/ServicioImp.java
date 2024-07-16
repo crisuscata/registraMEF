@@ -4334,7 +4334,7 @@ public class ServicioImp implements Servicio, Serializable {
 
 	@Override
 	public DtCapacitacionBk saveorupdateDtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, String user,
-			Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador {
+			Long kyUsuarioMod, Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador {
 
 		Long idSisAdmTodos = PropertiesMg.getSistemLong(PropertiesMg.KEY_IDSISTEMA_ADMINISTRATIVO_TODOS,
 				PropertiesMg.DEFOULT_IDSISTEMA_ADMINISTRATIVO_TODOS);
@@ -4459,7 +4459,7 @@ public class ServicioImp implements Servicio, Serializable {
 						Messages.getStringToKey("dtCapacitacion.titulotabla")));
 			}
 		}
-
+		/*
 		if (dtCapacitacionBk.getDtCapaTemasBkJSss() == null || dtCapacitacionBk.getDtCapaTemasBkJSss().size() < 1) {
 			throw new Validador(MessageFormat.format("DEBE SELECCIONAR EL TEMA Y SUBTEMA DE LA CAPACITACIÓN",
 					Messages.getStringToKey("dtCapacitacion.titulotabla")));
@@ -4470,6 +4470,7 @@ public class ServicioImp implements Servicio, Serializable {
 			throw new Validador(MessageFormat.format("DEBE SELECCIONAR LA ENTIDAD VINCULADA LA CAPACITACIÓN",
 					Messages.getStringToKey("dtCapacitacion.titulotabla")));
 		}
+		*/
 
 		// MPINARES 14022024 - FIN
 
@@ -4612,8 +4613,13 @@ public class ServicioImp implements Servicio, Serializable {
 			}
 		}
 		// MPINARES 14022024 - FIN
+		
+		Long idTiposervicio=PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA, PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA);
+		
+		this.cargarAnexos(tdAnexosBkss, dtCapacitacion.getIdCapacitacion(), user, kyUsuarioMod, kyAreaMod, rmtaddress, idTiposervicio);
 
 		dtCapacitacionBk = getDtCapacitacionBkXid(dtCapacitacion.getIdCapacitacion(), kyUsuarioMod);
+		
 		return dtCapacitacionBk;
 	}
 

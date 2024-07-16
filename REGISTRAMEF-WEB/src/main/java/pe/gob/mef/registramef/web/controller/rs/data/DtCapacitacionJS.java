@@ -89,6 +89,8 @@ public class DtCapacitacionJS implements java.io.Serializable {
 		private List<DtCapaPublicoBk> dtCapaPublicoBkJSss = null;
 		private List<DtCapacitacionBk> dtCapaAcumulaListBkJSss = null;
 		//MPINARES 14022024 - FIN
+		
+	private List<DtAnexosJS> tdAnexosJSss = null;
 
 	public DtCapacitacionJS() {
 	}
@@ -549,6 +551,14 @@ public class DtCapacitacionJS implements java.io.Serializable {
 
 		public void setEstado(Long estado) {
 			this.estado = estado;
+		}
+
+		public List<DtAnexosJS> getTdAnexosJSss() {
+			return tdAnexosJSss;
+		}
+
+		public void setTdAnexosJSss(List<DtAnexosJS> tdAnexosJSss) {
+			this.tdAnexosJSss = tdAnexosJSss;
 		}
 		
 		

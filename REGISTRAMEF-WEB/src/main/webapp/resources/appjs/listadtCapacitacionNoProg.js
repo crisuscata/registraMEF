@@ -99,7 +99,156 @@ myapp.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
 	};
 }]);
 
-myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$timeout', '$http', '$mdDialog','$location','$routeParams', '$mdPanel',  function ($mdEditDialog, $scope, $timeout, $http, $mdDialog, $location, $routeParams, $mdPanel) {
+myapp.directive('ngFileModel', function () {
+	return {
+		scope:true,
+		link: function (scope, element, attrs) {
+			console.log("ngFileModel link2");
+			var letraatrib = attrs.letter==null?'':attrs.letter;
+			element.bind('change', function (changeEvent) {                  		
+				var files = changeEvent.target.files;
+				for (var i = 0;i<files.length;i++) {
+					var name = files[i].name.toLowerCase();
+					if ( /\.(jpe?g|png|gif|html|pdf|msg|doc?x|xls?x)$/i.test(name) ) {
+						cargar(files[i],letraatrib);               	
+					}
+				}                                       
+			});
+
+			function cargarBase64(archivo){
+				var reader = new FileReader();
+				reader.onload = function (loadEvent) {
+					var ngFileModel = {
+							lastModified: archivo.lastModified,
+							lastModifiedDate: archivo.lastModifiedDate,
+							name: archivo.name,
+							tamanio: archivo.size,
+							tipo: archivo.type,
+							data: loadEvent.target.result
+					};
+					scope.$emit("fileSelected", ngFileModel);
+
+				}
+				reader.readAsDataURL(archivo);
+			}
+
+			function cargar(archivo,letraatrib){
+				console.log("ngFileModel cargar");
+				// emit event upward
+				var ngFileModel = {
+						iddocumento: null,
+						lastmodified: archivo.lastModified,						
+						filenameoriginal: archivo.name,
+						filename: null,
+						tamanio: archivo.size,
+						tipo: archivo.type,
+						tipodocumento: null,
+						data: archivo,
+						letter:letraatrib
+				};
+				scope.$emit("fileSelected", ngFileModel);
+			}
+		},//FIN FUNCION LINK
+	};
+});
+
+myapp.service('fileUploadServ', ['$http','$mdDialog',
+						function ($http,$mdDialog) {
+	
+	this.uploadFileToUrl = function(posicion, archivo, uploadUrl){
+		var reader = {};
+		var slice_size = 1000 * 1024;
+		var file = archivo.data;
+
+		function start_upload() {
+			reader = new FileReader();
+			upload_file( 0 );
+		}
+
+		function upload_file( start ) {
+
+			var next_slice = start + slice_size + 1;
+			var blob = file.slice( start, next_slice );
+
+			reader.onloadend = function(event) {
+				if ( event.target.readyState !== FileReader.DONE ) {
+					return;
+				}
+				$http( {
+					url: uploadUrl,
+					method: 'POST', 
+					headers: { 'Content-Type': 'application/json' },
+					transformRequest: angular.identity,
+					data: angular.toJson({
+						iddocumento: archivo.iddocumento,
+						lastmodified: archivo.lastmodified,						
+						filenameoriginal: archivo.filenameoriginal,
+						filename: archivo.filename,
+						tamanio: archivo.tamanio,
+						tipo: archivo.tipo,
+						tipodocumento: archivo.tipodocumento,
+						data: event.target.result 	
+					})    				
+				}).then(function (response){
+					var data = response.data; 
+					console.log( "SUCCESS: "+response);
+					if(archivo.filename=== null)
+						archivo.filename = data.filename;    					
+					var size_done = start + slice_size;
+					var percent_done = Math.floor( ( size_done / archivo.tamanio ) * 100 );    					
+					if ( next_slice < archivo.tamanio ) {
+						// Update upload progress
+						document.getElementById('dbi-upload-progress'+archivo.letter+'_'+posicion).innerHTML = 'Uploading File - ' + percent_done + '%' ;
+						// More to upload, call function recursively
+						document.getElementById('progress-bar'+archivo.letter+'_'+posicion).style.width = percent_done+ '%';
+						document.getElementById('progress-bar'+archivo.letter+'_'+posicion).innerHTML = percent_done+ '%';
+
+						upload_file( next_slice );
+					} else {
+						document.getElementById('dbi-upload-progress'+archivo.letter+'_'+posicion).innerHTML = 'Upload Complete!' ;
+						document.getElementById('progress-bar'+archivo.letter+'_'+posicion).style.width = '100%';
+						document.getElementById('progress-bar'+archivo.letter+'_'+posicion).innerHTML = '100%';
+						archivo.data = null;
+					}
+				},
+				function error(errResponse) {
+					console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+					var dato = errResponse.data;
+					if(typeof(dato) != 'undefined' && typeof(dato.message) != 'undefined'){
+						$mdDialog.show(
+								$mdDialog.alert()
+								.parent(angular.element(document.body))
+								.clickOutsideToClose(true)
+								.title('Cargar archivos')
+								.textContent(dato.message)
+								.ariaLabel('ERROR')
+								.ok('OK')
+								.targetEvent(event)
+						);
+					}
+				})    			
+			};
+			reader.readAsDataURL(blob);
+		}
+
+		start_upload();
+
+		function uuidv4() {
+			return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+				var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+				return v.toString(16);
+			});
+		}
+
+		function to2digit(n) {
+			return ('00' + n).slice(-2);
+		}
+	}
+}]);
+
+
+myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$timeout', '$http', '$mdDialog','$location','$routeParams', '$mdPanel',  'fileUploadServ',
+											function ($mdEditDialog, $scope, $timeout, $http, $mdDialog, $location, $routeParams, $mdPanel, fileUploadSrv) {
 	'use strict';
 	 
 	 $scope.limitOptions = [100, 500, 1000, 5000];
@@ -146,6 +295,8 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 	$scope.datos = [];
 	$scope.total = 0;
 	$scope.currentserverdate = null;
+	
+	$scope.archivos = [];
 	
 	$scope.getCurrentserverdate = function(){           
         var surl = currentserverdateUrl;
@@ -1978,8 +2129,68 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 		    $scope.cleardtCapacitacion();
 		    $location.url('/');
 	  }
-	  			  
+	  
+	  $scope.handleremover = function(pos){
+			$scope.archivos.splice(pos,1);			  
+	  }
+	  
+	  $scope.$on("fileSelected", function (event, args) {
+			$scope.$apply(function () {
+				console.log("PROBANDO ENVIAR EL ARCHIVO:" +JSON.stringify( args ) );           
+				$scope.archivos.push(args);	            
+				var pos = $scope.archivos.length-1;
+				fileUploadSrv.uploadFileToUrl(pos,$scope.archivos[pos],insertDocUrl);
+			});
+	  });
+	  		
+	 /* $scope.salvarDtCapacitacionTest = function(ev){	
+		  
+		  console.log( "$scope.archivos:"+ JSON.stringify( $scope.archivos ));
+		  
+	  }*/
+	  
+	  $scope.uploadFileTotdAnexoJsModel = function(){
+		  	//FILES
+		    if($scope.isArray($scope.archivos)){
+				if($scope.archivos.length>0){
+					for(var i = 0; i < $scope.archivos.length; i++)
+					{
+						var archivo = $scope.archivos[i];
+						if(archivo.filename!=null &&  archivo.data!=null){
+							$mdDialog.show(
+									$mdDialog.alert()
+									.parent(angular.element(document.body))
+									.clickOutsideToClose(true)
+									.title('Cargar archivos')
+									.textContent("TODAVÍA SE ESTA CARGANDO EL ARCHIVO "+archivo.filenameoriginal+" ESPERE QUE CULMINE LA OPERACIÓN...")
+									.ariaLabel('ERROR')
+									.ok('OK')
+									.targetEvent(ev)
+							);
+							return;
+						}else if(archivo.filename===null && archivo.data!=null){					
+							$mdDialog.show(
+									$mdDialog.alert()
+									.parent(angular.element(document.body))
+									.clickOutsideToClose(true)
+									.title('Cargar archivos')
+									.textContent("TODAVÍA SE ESTA CARGANDO EL ARCHIVO "+archivo.filenameoriginal+" ESPERE QUE CULMINE LA OPERACIÓN...")
+									.ariaLabel('ERROR')
+									.ok('OK')
+									.targetEvent(ev)
+							);
+							return;
+						}
+					}
+					
+					$scope.dtCapacitacionModelo.tdAnexosJSss = $scope.archivos;
+				}}
+	  }	
+	  
 	  $scope.salvarDtCapacitacion = function(ev){	
+		  
+		  $scope.uploadFileTotdAnexoJsModel();
+		  
 			//MPINARES 14022024 - INICIO
 		  if($scope.isArray($scope.datoCapaPublico)){
 				if($scope.datoCapaPublico.length>0){
