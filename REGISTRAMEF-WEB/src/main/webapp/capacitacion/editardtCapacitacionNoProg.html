@@ -6,6 +6,12 @@ table.md-table td.md-cell {
 }
 </style>
 
+<style>
+    .md-tabs {
+      justify-content: flex-end; /* Alinea las pestañas a la derecha */
+    }
+  </style>
+
 <div flex="100" layout="column" layout-align="start stretch" class="margenForm" 
 data-ng-init="editdtCapacitacion()">
 <!-- //MPINARES 14022024 - INICIO - SE CAMBIA TODO -->
@@ -36,8 +42,11 @@ data-ng-init="editdtCapacitacion()">
 		<!--          <md-icon md-font-set="material-icons">save</md-icon>  -->
 		<span>Guardar</span> </md-button>
       </div>
-</md-toolbar>    
-aaaaaa
+</md-toolbar>  
+  
+ <md-tabs md-dynamic-height md-border-bottom>
+	<md-tab label="Datos de la capacitaci&oacute;n">
+      
 <div layout="column">
 
 <fieldset style="margin-left: 15px;">
@@ -684,7 +693,18 @@ aaaaaa
 		</fieldset>	
 
 </div>
-bbbbbb
+
+
+	<md-tab label="Participantes">
+        <md-content class="md-padding">
+          <fieldset style="margin-left: 15px;">
+            <legend>Participantes</legend>
+            aaaaaaaaa
+          </fieldset>
+        </md-content>
+      </md-tab>
+      
+</md-tabs>
 
 <div>&nbsp;</div>
 

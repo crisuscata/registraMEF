@@ -1,0 +1,254 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.Date, java.text.SimpleDateFormat" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<link type="text/css" rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/servicio-inscripcion.css" />
+
+<link type="text/css" rel="stylesheet"
+	href="/registramef/javax.faces.resource/theme.css.htm?ln=primefaces-blitzer" />
+	
+<link type="text/css" rel="stylesheet"
+	href="/registramef/javax.faces.resource/dtRegistroExtParticipante.css.htm?ln=css" />
+	
+<link type="text/css" rel="stylesheet"
+	href="/registramef/javax.faces.resource/w3.css.htm?ln=css" />
+	
+<link type="text/css" rel="stylesheet"
+	href="/registramef/javax.faces.resource/font-awesome.min.css.htm?ln=css" />
+	
+<script type="text/javascript"
+	src="/registramef/javax.faces.resource/jquery/jquery.js.htm?ln=primefaces&amp;v=5.2"></script>
+	
+<script type="text/javascript"
+	src="/registramef/javax.faces.resource/primefaces.js.htm?ln=primefaces&amp;v=5.2"></script>
+	
+<link type="text/css" rel="stylesheet"
+	href="/registramef/javax.faces.resource/primefaces.css.htm?ln=primefaces&amp;v=5.2" />
+	
+<script type="text/javascript"
+	src="/registramef/javax.faces.resource/jquery/jquery-plugins.js.htm?ln=primefaces&amp;v=5.2"></script>
+	
+<script type="text/javascript"
+	src="/registramef/javax.faces.resource/idlemonitor/idlemonitor.js.htm?ln=primefaces&amp;v=5.2"></script>
+	
+<script type="text/javascript">if(window.PrimeFaces){PrimeFaces.settings.projectStage='Development';}</script>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<script type="text/javascript"
+	src="/registramef/javax.faces.resource/comun.js.htm?ln=js"></script>
+	
+<script type="text/javascript"
+	src="/registramef/javax.faces.resource/strength.js.htm?ln=js"></script>
+	
+<style type="text/css"></style>
+
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<div class="logo">
+				<img src="${pageContext.request.contextPath}/resources/imagen/u2.png" class="left" /> 
+				<img src="${pageContext.request.contextPath}/resources/imagen/u0.png" class="right" />
+			</div>
+
+
+		</div>
+
+		<div class="contLeft">
+
+			<div class="col-s-12">
+				<div class="contCenter">
+					<style type="text/css">
+.ui-widget-header {
+	color: white;
+}
+</style>
+					<form id="idformasis" name="idformasis" method="post"
+						action="${actionForm}"
+						enctype="application/x-www-form-urlencoded"
+						style="text-align: left;">
+						<input type="hidden" name="idformasis" value="idformasis" />
+
+						<div class="barSede" style="padding: 2%;">
+							<div align="left"
+								style="width: 85%; text-align: center !important; float: center;">
+								11274 - aaaaaaaaaaaaaa <br /> <br />23/07/2024 05:00<label>
+									a </label>31/07/2024 06:00<label> - </label>LAMBAYEQUE-AUDITORIO DE LA
+								GERENCIA SUB REGIONAL JAEN
+							</div>
+						</div>
+						<br />
+
+						<div class="subTitulo">
+							<div style="width: 100%; float: left;">CONFIRMAR ASISTENCIA DE CAPACITACIÓN</div>
+						</div>
+						<span id="idformasis-growl"></span>
+						<div id="idformasis-messages" class="ui-messages ui-widget"
+							aria-live="polite"></div>
+						<br /> <br /> <br />
+						<div
+							style="background: white !important; border-color: rgba(215, 215, 215, 1) !important; border: 1px solid #ccc !important;">
+							<span id="idformasis-idConsulta"><div class="divTablaRow">
+									<div id="idformasis-idEditNumDocuL" class="divTablaCol">
+										<span style="color: red;"> *</span><span style="color: black;">Ingrese
+											su nÚmero de documento de identidad</span>
+									</div>
+									<br />
+									<div id="idformasis-idEditNumDocuI" class="divTablaCol">
+										<span id="idformasis-idItemNumDocu"><input
+											id="idformasis-j_idt33" name="idformasis-j_idt33" type="text"
+											onkeyup="this.value=formateaNumero(this.value,8);"
+											style="min-width: 30px; width: 30%;"
+											class="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all" />
+										<script id="idformasis-j_idt33_s" type="text/javascript">PrimeFaces.cw("InputText","widget_idformasis_j_idt33",{id:"idformasis-j_idt33",widgetVar:"widget_idformasis_j_idt33"});</script></span>
+									</div>
+								</div></span> <br />
+							<div align="left" style="width: 100%">
+								<span id="idformasis-idcaptcha" style="width: 100%"><span
+									style="color: red;"> *</span><span style="color: black;">Ingrese
+										el cÓdigo captcha</span> <br /> <br />
+								<label
+									id="idformasis-j_idt40" class="ui-outputlabel ui-widget">/registramef</label>
+
+									<p class="capcha" style="width: 100%;">
+
+										<img src="/registramef/captcha_rd.png" id="captcha"
+											style="width: 120px; height: 30px; top: 5px; margin-left: 10px; color: white;" /><input
+											id="idformasis-j_idt42" name="idformasis-j_idt42" type="text"
+											style="min-width: 30px; height: 30px; font-size: 14px; border-width: 1px; border: 2px solid gray; background-color: white; margin-left: 2px;"
+											class="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all" />
+										
+										<button id="idformasis-j_idt43" name="idformasis-j_idt43"
+											class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
+											onclick="/"
+											style="background: rgba(153, 153, 153, 1); color: white; font-family: 'Arial Normal', 'Arial'; margin-bottom: 2px; font-size: 14px;"
+											type="submit">
+											<span class="ui-button-icon-left ui-icon ui-c ui-icon-search"></span><span
+												class="ui-button-text ui-c">Refrescar cÓdigo</span>
+										</button>
+									</p></span>
+
+							</div>
+							<br /> <br /> <br /> <br /> <br /> <br />
+
+						</div>
+
+						<div align="center"
+							style="border-color: rgba(215, 215, 215, 1) !important; border: 1px solid #ccc !important;">
+							<button id="idformasis-j_idt64" name="idformasis-j_idt64"
+								class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+								onclick="PrimeFaces.ab({s:&quot;idformasis-j_idt64&quot;,u:&quot;idformasis&quot;});return false;"
+								style="height: 40px; width: 100%; text-align: center !important; padding: 1px !important; background: rgba(80, 199, 80, 1); color: white; font-family: 'Arial Normal', 'Arial'; margin-bottom: 2px; font-size: 14px;"
+								title="BUSCAR" type="submit">
+								<span class="ui-button-text ui-c">BUSCAR</span>
+							</button>
+							<script id="idformasis-j_idt64_s" type="text/javascript">PrimeFaces.cw("CommandButton","widget_idformasis_j_idt64",{id:"idformasis-j_idt64",widgetVar:"widget_idformasis_j_idt64"});</script>
+						</div>
+						<input type="hidden" name="javax.faces.ViewState"
+							id="javax.faces.ViewState"
+							value="H4sIAAAAAAAAAM1XX2gcRRif3OUSE9sQ0yQklrQFoyCYPdM0NhLEnM2FnL0msReDtQ9x7naSTLK7M52ZvewVDPZFwSJUarFCxD70oWjfCkIRKlJEKDSgIIIiqPha8UER1Adn5v7sXrMhTUzSLtx3387ON/P7ft9838xcvQNilDPwyDzMQ8MV2DJGIZ87Bmms/vsvbra/9nUUREZAo0WgOQJzgrAUaBBzDPE5YpkefX4IqKdj8SEpD8hfmwB189PYFAMuA3tOpvW4FnRmjfHsPMqJwXMrr3zUzJ+0IgB4VBpE3FNgCUSlFqPSpPVkiE3H5/9kfl344VbZpqZiE8kz0K36e8YMzCFuoDxyhDFBuEiY5iSZwmgxqZp+P3v9y++ar11XQzDwxGqTI8SmxJFapsAFsrXRjdmBP6ZWppqKRl2rjQJ9H194/yb+sXOl2LfN51N/LTqSfqdhrMN+/Yr2Q7K+x++VYAwW0pgL78w3XR98BT+MgpoUqOX4NCrStFirJL8Le66M2sgIKNCoDApiGZhH7MSta8+dX759LAIiadCQsyDnY9BGArRofuOK33hGMOzMDqZBI5c2ph5DgPZiD0ziGcQwtPBpmLXQoEdpXvHexJVsFiAZjuTlVIXL7jBWlZfIQSxhQioQ82NZHrdXjmVw1ymNzJAjnVrAwpgTtjWdhRznjEyOYSqO60+IUbkM9q2FZtwV1BXAfzwqXaG0vFKf9REE16JS66oXm1J2a5RNgZBo1FTJ1qKuRPvdbinRqXvtrZq9f0dmF6D/XkgVBUtmNkI+sasBP7NjdD0dMvvh+zR7vZ69tzd0evn4b0sMGOsnxgQjFDFROIoKvLwuW3TpaPLLX9Jx7eBHiaMRCpmzWVcgXvEtqn2LlnzTOQpKLwLsq467khYS3EhMTKRTyeFSP1lX+tfoiG1qGcNoBrqWGCk2dicotQqTZAE5f1556sTy0PzQLgVvsQc8FqcSuqxosuDEbWIiixyBFCY9mekOMTy12mSYzt34uJ96nuSqf2NcTTCcl0UqyIry4EUBWn1mJuegSDCUkfDXjb/WX/L8GB8Oz8iqGCvl6Br8KzkeHLtMsfrLLO4HbUGKKEZVpBBP+zO1GeDhmfm/gSuZ2zyqvgcS1cCDhaoFmzOE2bIK8x4N8NDBCpDaYgWKqfZDIbDrqmDXV8OO6cljIbAlFRbOMsgKlYZGyrCNdCpW2modeWqovDX5PYwc596S+pASYBcrbRiTBSpPEPuDSS0Pi8RlORTYXqoJWk1tkKALAf1dr3JW1QXyBUIsBJ3bB9gb3y7//VsE1LwKYnlouerQpAzeVl753N73UJfCGFZiNhlGTUtAPx9CnQAd86dcxArx4l8PtdxZ7HBjnmsHLgqwNzxi+pS1+WgpeUmJT8qeh9WobfX8UWxayCYOlneXeECv+K7Ep1vg4meVM8o2VrzJragtfX2htWX9s01U7tc9a+3X6qp1nJC1jzZqFLlP18ltT6TM6kROOQLNItbyy6XLf515ayCiLj+lRGag2e835tpZxN68eqHr4fd+Olu+D9YpHzo1sGkNbNoiOSgwcaZHk4nhe1toGw3CRXnnqM0TbAL/8ejGwlNZPD+XYnBwp9OjuaowbHlS3CkvrrCc2FbHdgd2qq326l/q/QeGwj+MOREAAA=="
+							autocomplete="off" />
+					</form>
+				</div>
+			</div>
+
+		</div>
+
+
+		<div class="footer">
+			<p>
+				<div class="ocultarPhone" style="background: white; width: 100%;">
+					<hr size="1"
+						style="border-top: 1px solid #827b7b; top: 10; bottom: -10; margin-bottom: 10px;" />
+					<div align="center"
+						style="font-size: 10px; color: #898989; font-weight: bold; font-family: 'Inconsolata', sans-serif; margin-bottom: 10px;">
+						
+						<%
+					        Date now = new Date();
+					        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+					        String currentDate = sdf.format(now);
+					    %>
+
+						<font size="1">Copyright © <%= currentDate %> MINISTERIO DE ECONOMÍA Y
+							FINANZAS ®<br />Dirección: Jr. Junín 319, Cercado de Lima, Lima
+							- Perú Central: (511) 311 5930
+						</font> <br /> <font size="1">Versión ® 2017-06-01 0.01 </font>
+					</div>
+				</div>
+			</p>
+		</div>
+
+	</div>
+	<div id="j_idt82"></div>
+	<script id="j_idt82_s" type="text/javascript">$(function(){PrimeFaces.cw("AjaxStatus","widget_j_idt82",{id:"j_idt82",widgetVar:"widget_j_idt82",start:function(){PF('statusDialog').show()},error:function(){PF('statusDialog').hide()},success:function(){PF('statusDialog').hide()}});});</script>
+	<div id="j_idt83"
+		class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-shadow ui-hidden-container">
+		<div class="ui-dialog-content ui-widget-content">
+			<img id="j_idt84"
+				src="/registramef/images/pleasewait.gif?pfdrid_c=true" alt="" />
+		</div>
+	</div>
+	<script id="j_idt83_s" type="text/javascript">$(function(){PrimeFaces.cw("Dialog","statusDialog",{id:"j_idt83",widgetVar:"statusDialog",draggable:false,resizable:false,modal:true});});</script>
+	<script id="j_idt85_s" type="text/javascript">$(function(){PrimeFaces.cw("IdleMonitor","widget_j_idt85",{id:"j_idt85",widgetVar:"widget_j_idt85",timeout:7200000,onactive:function(){sessionTimeOutDialog.show();}},"idlemonitor");});</script>
+	
+	<script id="j_idt86_s" type="text/javascript">$(function(){PrimeFaces.cw("Dialog","sessionTimeOutDialog",{id:"j_idt86",widgetVar:"sessionTimeOutDialog",modal:true,width:"400"});});</script>
+	<div id="j_idt89"
+		class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-shadow ui-hidden-container">
+		<div
+			class="ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-corner-top">
+			<span id="j_idt89_title" class="ui-dialog-title">DETALLE DE LA
+				INSCRIPCIÓN</span><a href="#"
+				class="ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all"><span
+				class="ui-icon ui-icon-closethick"></span></a>
+		</div>
+		<!-- 
+		<div class="ui-dialog-content ui-widget-content">
+			<form id="idconfirmformregistroinformacion"
+				name="idconfirmformregistroinformacion" method="post"
+				action="/registramef/servicioInscripcion/dtAsisExtParticipante.htm"
+				enctype="application/x-www-form-urlencoded">
+				<input type="hidden" name="idconfirmformregistroinformacion"
+					value="idconfirmformregistroinformacion" />
+				<div id="idconfirmformregistroinformacion-idoutmsg"
+					class="ui-outputpanel ui-widget"
+					style="text-align: center; padding-top: 10px; margin-bottom: 20px;">¿ESTAS
+					SEGURO DE CONFIRMAR LA ASISTENCIA?</div>
+				<div id="idconfirmformregistroinformacion-j_idt91"
+					class="ui-outputpanel ui-widget"
+					style="text-align: center; margin-bottom: 10px;">
+					<button id="idconfirmformregistroinformacion-j_idt92"
+						name="idconfirmformregistroinformacion-j_idt92"
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+						onclick="PrimeFaces.ab({s:&quot;idconfirmformregistroinformacion-j_idt92&quot;,u:&quot;idformasis&quot;,onco:function(xhr,status,args){PF('confirmDlgEnviar').hide();}});return false;"
+						type="submit">
+						<span class="ui-button-text ui-c">ACEPTAR</span>
+					</button>
+					<script id="idconfirmformregistroinformacion-j_idt92_s"
+						type="text/javascript">PrimeFaces.cw("CommandButton","widget_idconfirmformregistroinformacion_j_idt92",{id:"idconfirmformregistroinformacion-j_idt92",widgetVar:"widget_idconfirmformregistroinformacion_j_idt92"});</script>
+					<button id="idconfirmformregistroinformacion-j_idt93"
+						name="idconfirmformregistroinformacion-j_idt93"
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+						onclick="PrimeFaces.ab({s:&quot;idconfirmformregistroinformacion-j_idt93&quot;,onco:function(xhr,status,args){PF('confirmDlgEnviar').hide();}});return false;"
+						type="submit">
+						<span class="ui-button-text ui-c">CERRAR</span>
+					</button>
+					<script id="idconfirmformregistroinformacion-j_idt93_s"
+						type="text/javascript">PrimeFaces.cw("CommandButton","widget_idconfirmformregistroinformacion_j_idt93",{id:"idconfirmformregistroinformacion-j_idt93",widgetVar:"widget_idconfirmformregistroinformacion_j_idt93"});</script>
+				</div>
+				<input type="hidden" name="javax.faces.ViewState"
+					id="javax.faces.ViewState"
+					value="H4sIAAAAAAAAAM1XX2gcRRif3OUSE9sQ0yQklrQFoyCYPdM0NhLEnM2FnL0msReDtQ9x7naSTLK7M52ZvewVDPZFwSJUarFCxD70oWjfCkIRKlJEKDSgIIIiqPha8UER1Adn5v7sXrMhTUzSLtx3387ON/P7ft9838xcvQNilDPwyDzMQ8MV2DJGIZ87Bmms/vsvbra/9nUUREZAo0WgOQJzgrAUaBBzDPE5YpkefX4IqKdj8SEpD8hfmwB189PYFAMuA3tOpvW4FnRmjfHsPMqJwXMrr3zUzJ+0IgB4VBpE3FNgCUSlFqPSpPVkiE3H5/9kfl344VbZpqZiE8kz0K36e8YMzCFuoDxyhDFBuEiY5iSZwmgxqZp+P3v9y++ar11XQzDwxGqTI8SmxJFapsAFsrXRjdmBP6ZWppqKRl2rjQJ9H194/yb+sXOl2LfN51N/LTqSfqdhrMN+/Yr2Q7K+x++VYAwW0pgL78w3XR98BT+MgpoUqOX4NCrStFirJL8Le66M2sgIKNCoDApiGZhH7MSta8+dX759LAIiadCQsyDnY9BGArRofuOK33hGMOzMDqZBI5c2ph5DgPZiD0ziGcQwtPBpmLXQoEdpXvHexJVsFiAZjuTlVIXL7jBWlZfIQSxhQioQ82NZHrdXjmVw1ymNzJAjnVrAwpgTtjWdhRznjEyOYSqO60+IUbkM9q2FZtwV1BXAfzwqXaG0vFKf9REE16JS66oXm1J2a5RNgZBo1FTJ1qKuRPvdbinRqXvtrZq9f0dmF6D/XkgVBUtmNkI+sasBP7NjdD0dMvvh+zR7vZ69tzd0evn4b0sMGOsnxgQjFDFROIoKvLwuW3TpaPLLX9Jx7eBHiaMRCpmzWVcgXvEtqn2LlnzTOQpKLwLsq467khYS3EhMTKRTyeFSP1lX+tfoiG1qGcNoBrqWGCk2dicotQqTZAE5f1556sTy0PzQLgVvsQc8FqcSuqxosuDEbWIiixyBFCY9mekOMTy12mSYzt34uJ96nuSqf2NcTTCcl0UqyIry4EUBWn1mJuegSDCUkfDXjb/WX/L8GB8Oz8iqGCvl6Br8KzkeHLtMsfrLLO4HbUGKKEZVpBBP+zO1GeDhmfm/gSuZ2zyqvgcS1cCDhaoFmzOE2bIK8x4N8NDBCpDaYgWKqfZDIbDrqmDXV8OO6cljIbAlFRbOMsgKlYZGyrCNdCpW2modeWqovDX5PYwc596S+pASYBcrbRiTBSpPEPuDSS0Pi8RlORTYXqoJWk1tkKALAf1dr3JW1QXyBUIsBJ3bB9gb3y7//VsE1LwKYnlouerQpAzeVl753N73UJfCGFZiNhlGTUtAPx9CnQAd86dcxArx4l8PtdxZ7HBjnmsHLgqwNzxi+pS1+WgpeUmJT8qeh9WobfX8UWxayCYOlneXeECv+K7Ep1vg4meVM8o2VrzJragtfX2htWX9s01U7tc9a+3X6qp1nJC1jzZqFLlP18ltT6TM6kROOQLNItbyy6XLf515ayCiLj+lRGag2e835tpZxN68eqHr4fd+Olu+D9YpHzo1sGkNbNoiOSgwcaZHk4nhe1toGw3CRXnnqM0TbAL/8ejGwlNZPD+XYnBwp9OjuaowbHlS3CkvrrCc2FbHdgd2qq326l/q/QeGwj+MOREAAA=="
+					autocomplete="off" />
+			</form>
+		</div>
+		 -->
+	</div>
+	<script id="j_idt89_s" type="text/javascript">$(function(){PrimeFaces.cw("Dialog","confirmDlgEnviar",{id:"j_idt89",widgetVar:"confirmDlgEnviar",modal:true});});</script>
+</body>
+</html>

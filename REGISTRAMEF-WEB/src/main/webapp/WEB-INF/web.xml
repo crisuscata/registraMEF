@@ -110,6 +110,18 @@
         <url-pattern>/confirmacion-page</url-pattern>
     </servlet-mapping>
 	<!-- FIN CUSCATA - 10072024-->
+	
+	<servlet>
+        <servlet-name>AsisExtParticipanteServlet</servlet-name>
+        <servlet-class>pe.gob.mef.registramef.web.srvlt.AsisExtParticipanteServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AsisExtParticipanteServlet</servlet-name>
+        <url-pattern>/servicio-inscripcion-page</url-pattern>
+    </servlet-mapping>
+	
+	
 	<session-config>
 		<session-timeout>60</session-timeout>
 		<cookie-config>
