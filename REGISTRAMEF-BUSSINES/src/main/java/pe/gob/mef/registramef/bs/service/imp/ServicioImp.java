@@ -4564,7 +4564,7 @@ public class ServicioImp implements Servicio, Serializable {
 		return dtCapacitacionBk;
 	}
 
-
+//INICIO CUSCATA - 18072024
 	@Override
 	public DtCapacitacionBk saveorupdateDtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, String user,
 			Long kyUsuarioMod, Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador {
@@ -4855,7 +4855,7 @@ public class ServicioImp implements Servicio, Serializable {
 		
 		return dtCapacitacionBk;
 	}
-
+//FIN CUSCATA - 18072024
 	@Override
 	public void deleteDtCapacitacion(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador {

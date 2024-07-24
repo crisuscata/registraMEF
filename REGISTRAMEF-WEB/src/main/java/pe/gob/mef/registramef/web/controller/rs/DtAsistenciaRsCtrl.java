@@ -972,7 +972,7 @@ public class DtAsistenciaRsCtrl {
 					}).build();
 		}
 	}
-        
+        //INICIO CUSCATA - 18072024
     private boolean contienCoincidenciaFechaServicio(Timestamp fechaAsistencia, String fechaServicio) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		String fechaAsistenciaStr = dateFormat.format(fechaAsistencia);
@@ -983,7 +983,7 @@ public class DtAsistenciaRsCtrl {
 		
 		return false;
 	}
-
+//FIN CUSCATA - 18072024
         @GET
 	@Path("/descargarvista")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -1032,15 +1032,16 @@ public class DtAsistenciaRsCtrl {
 			String idSistAdmTxt = req.getParameter("idSistAdmTxt");
 			String idOrigenTxt = req.getParameter("idOrigenTxt");
 			String estadoTxt = req.getParameter("estadoTxt");
-            String fechaServicio = req.getParameter("fechaServicio");//CUSCATA - 30072024
+            String fechaServicio = req.getParameter("fechaServicio");//CUSCATA - 18072024
 			//MPINARES 13022024 - FIN
 			
             String sestado = req.getParameter("estado");
+//INICIO CUSCATA - 18072024
             int reload = 0;
             if(req.getParameter("reload")!=null) {
             	reload = Integer.parseInt(req.getParameter("reload"));
             }
-            
+//FIN CUSCATA - 18072024            
 			
 			Integer iestado = null;
 			if(sestado!=null){
@@ -1087,7 +1088,7 @@ public class DtAsistenciaRsCtrl {
 			if (req.isUserInRole(Roles.ADMINISTRADOR) || req.isUserInRole(Roles.DTASISTENCIA_CREA)){
 				dtAsistenciaLC.setCreamodifica(true);
 			}
-			
+			//INICIO CUSCATA - 18072024
 			List<DtAsistenciaBk> listAsistenciaFilter  = dtAsistenciasss.stream()
 					 .filter(c-> usuExtTxt == null || usuExtTxt.isEmpty() || this.contienCoincidenciaUsuexterno(c.getUsuExtTxt(), usuExtTxt))
 					 .filter(c-> dniUserTxt == null || dniUserTxt.isEmpty() || this.contienCoincidenciaDni(c.getDniUserTxt(), dniUserTxt))
@@ -1099,7 +1100,7 @@ public class DtAsistenciaRsCtrl {
 					 .filter(c->  fechaServicio == null || fechaServicio.isEmpty() || this.contienCoincidenciaFechaServicio(c.getFechaAsistencia(), fechaServicio) )
 					 .filter(c->  idProgramacion == null || idProgramacion.isEmpty() || c.getIdProgramacionTxt().trim().toLowerCase().contains(idProgramacion.toLowerCase()) )
 					 .collect(Collectors.toList());
-			
+			//FIN CUSCATA - 18072024
 			//FIN CUSCATA - 10072024		
 			
 			/////
@@ -1400,7 +1401,7 @@ public class DtAsistenciaRsCtrl {
 			CellStyle cellStyleDATO = cell7A.getCellStyle();
 
 //			List<String> caposvista = Arrays.asList("idEntidad","idSede","fechaAsistencia","idUsuinterno","idSistAdm","idOrigen","idProgramacion","estado");
-			List<String> caposvista = Arrays.asList("idAsistencia","dniUserTxt","usuExtTxt","codEjecutora","idEntidadTxt","idSedeTxt","fechaAsistencia","idUsuinternoTxt","idSistAdmTxt","idOrigenTxt","idProgramacionTxt","estadoTxt");//INICIO CUSCATA - 30072024
+			List<String> caposvista = Arrays.asList("idAsistencia","dniUserTxt","usuExtTxt","codEjecutora","idEntidadTxt","idSedeTxt","fechaAsistencia","idUsuinternoTxt","idSistAdmTxt","idOrigenTxt","idProgramacionTxt","estadoTxt");//INICIO CUSCATA - 18072024
                         int tituloscontador = 1;
 			int titulofilacontador = 6;
 			Row rowX = hoja.getRow(titulofilacontador);

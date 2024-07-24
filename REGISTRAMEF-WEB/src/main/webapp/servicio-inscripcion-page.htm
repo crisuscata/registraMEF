@@ -1,3 +1,4 @@
+<!-- NUEVO ARCHIVO INICIO CUSCATA - 18072024-->
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.Date, java.text.SimpleDateFormat" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -101,8 +102,9 @@
 									</div>
 									<br />
 									<div id="idformasis-idEditNumDocuI" class="divTablaCol">
-										<span id="idformasis-idItemNumDocu"><input
-											id="idformasis-j_idt33" name="idformasis-j_idt33" type="text"
+										<span id="idformasis-idItemNumDocu">
+										<input
+											id="txtDni" name="txtDni" type="text"
 											onkeyup="this.value=formateaNumero(this.value,8);"
 											style="min-width: 30px; width: 30%;"
 											class="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all" />
@@ -113,16 +115,19 @@
 								<span id="idformasis-idcaptcha" style="width: 100%"><span
 									style="color: red;"> *</span><span style="color: black;">Ingrese
 										el cÓdigo captcha</span> <br /> <br />
-								<label
-									id="idformasis-j_idt40" class="ui-outputlabel ui-widget">/registramef</label>
 
 									<p class="capcha" style="width: 100%;">
 
-										<img src="/registramef/captcha_rd.png" id="captcha"
-											style="width: 120px; height: 30px; top: 5px; margin-left: 10px; color: white;" /><input
-											id="idformasis-j_idt42" name="idformasis-j_idt42" type="text"
+										<label style="color:red"> <%= session.getAttribute("info_captcha") %> </label>
+											
+										<input
+											id="j_captcha" 
+											name="j_captcha" 
+											type="text"
 											style="min-width: 30px; height: 30px; font-size: 14px; border-width: 1px; border: 2px solid gray; background-color: white; margin-left: 2px;"
 											class="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all" />
+											
+											
 										
 										<button id="idformasis-j_idt43" name="idformasis-j_idt43"
 											class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
@@ -150,10 +155,7 @@
 							</button>
 							<script id="idformasis-j_idt64_s" type="text/javascript">PrimeFaces.cw("CommandButton","widget_idformasis_j_idt64",{id:"idformasis-j_idt64",widgetVar:"widget_idformasis_j_idt64"});</script>
 						</div>
-						<input type="hidden" name="javax.faces.ViewState"
-							id="javax.faces.ViewState"
-							value="H4sIAAAAAAAAAM1XX2gcRRif3OUSE9sQ0yQklrQFoyCYPdM0NhLEnM2FnL0msReDtQ9x7naSTLK7M52ZvewVDPZFwSJUarFCxD70oWjfCkIRKlJEKDSgIIIiqPha8UER1Adn5v7sXrMhTUzSLtx3387ON/P7ft9838xcvQNilDPwyDzMQ8MV2DJGIZ87Bmms/vsvbra/9nUUREZAo0WgOQJzgrAUaBBzDPE5YpkefX4IqKdj8SEpD8hfmwB189PYFAMuA3tOpvW4FnRmjfHsPMqJwXMrr3zUzJ+0IgB4VBpE3FNgCUSlFqPSpPVkiE3H5/9kfl344VbZpqZiE8kz0K36e8YMzCFuoDxyhDFBuEiY5iSZwmgxqZp+P3v9y++ar11XQzDwxGqTI8SmxJFapsAFsrXRjdmBP6ZWppqKRl2rjQJ9H194/yb+sXOl2LfN51N/LTqSfqdhrMN+/Yr2Q7K+x++VYAwW0pgL78w3XR98BT+MgpoUqOX4NCrStFirJL8Le66M2sgIKNCoDApiGZhH7MSta8+dX759LAIiadCQsyDnY9BGArRofuOK33hGMOzMDqZBI5c2ph5DgPZiD0ziGcQwtPBpmLXQoEdpXvHexJVsFiAZjuTlVIXL7jBWlZfIQSxhQioQ82NZHrdXjmVw1ymNzJAjnVrAwpgTtjWdhRznjEyOYSqO60+IUbkM9q2FZtwV1BXAfzwqXaG0vFKf9REE16JS66oXm1J2a5RNgZBo1FTJ1qKuRPvdbinRqXvtrZq9f0dmF6D/XkgVBUtmNkI+sasBP7NjdD0dMvvh+zR7vZ69tzd0evn4b0sMGOsnxgQjFDFROIoKvLwuW3TpaPLLX9Jx7eBHiaMRCpmzWVcgXvEtqn2LlnzTOQpKLwLsq467khYS3EhMTKRTyeFSP1lX+tfoiG1qGcNoBrqWGCk2dicotQqTZAE5f1556sTy0PzQLgVvsQc8FqcSuqxosuDEbWIiixyBFCY9mekOMTy12mSYzt34uJ96nuSqf2NcTTCcl0UqyIry4EUBWn1mJuegSDCUkfDXjb/WX/L8GB8Oz8iqGCvl6Br8KzkeHLtMsfrLLO4HbUGKKEZVpBBP+zO1GeDhmfm/gSuZ2zyqvgcS1cCDhaoFmzOE2bIK8x4N8NDBCpDaYgWKqfZDIbDrqmDXV8OO6cljIbAlFRbOMsgKlYZGyrCNdCpW2modeWqovDX5PYwc596S+pASYBcrbRiTBSpPEPuDSS0Pi8RlORTYXqoJWk1tkKALAf1dr3JW1QXyBUIsBJ3bB9gb3y7//VsE1LwKYnlouerQpAzeVl753N73UJfCGFZiNhlGTUtAPx9CnQAd86dcxArx4l8PtdxZ7HBjnmsHLgqwNzxi+pS1+WgpeUmJT8qeh9WobfX8UWxayCYOlneXeECv+K7Ep1vg4meVM8o2VrzJragtfX2htWX9s01U7tc9a+3X6qp1nJC1jzZqFLlP18ltT6TM6kROOQLNItbyy6XLf515ayCiLj+lRGag2e835tpZxN68eqHr4fd+Olu+D9YpHzo1sGkNbNoiOSgwcaZHk4nhe1toGw3CRXnnqM0TbAL/8ejGwlNZPD+XYnBwp9OjuaowbHlS3CkvrrCc2FbHdgd2qq326l/q/QeGwj+MOREAAA=="
-							autocomplete="off" />
+						
 					</form>
 				</div>
 			</div>

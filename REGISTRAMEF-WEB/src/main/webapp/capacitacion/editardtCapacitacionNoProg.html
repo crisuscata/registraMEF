@@ -1,3 +1,4 @@
+<!-- NUEVO ARCHIVO CUSCATA - 18072024-->
 <style type="text/css">
 table.md-table td.md-cell {
     color: rgba(0, 0, 0, 0.87);
@@ -557,7 +558,7 @@ data-ng-init="editdtCapacitacion()">
 				  <div>
 				  <md-button class="md-raised"
 				  aria-label="Agregar Temas"
-					ng-click="addCapaTemas($event)">
+					ng-click="showCapaTemas($event)">
 				  <md-icon md-font-set="material-icons" style="color: grey;">work_outline</md-icon>
 				  <span>Agregar Temas</span>
 				  </md-button>
@@ -578,6 +579,8 @@ data-ng-init="editdtCapacitacion()">
 
 					<tr class="md-table-head-label" md-row>
 						<th class="md-title ttamnumero" md-column flex="13"><span>&nbsp;</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Gestor/Especialista/Implantador</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Sistema Administrativo</span></th>
 						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Tema</span></th>
 						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Subtema</span></th>
 						<th class="md-title ttamopciones" md-column flex="20"><span>Opciones</span></th>
@@ -589,22 +592,28 @@ data-ng-init="editdtCapacitacion()">
 						ng-repeat-start="dato in datoCapasTema">
 
 						<td md-cell flex="20">{{$index + 1}}</td>
+						
+						<td class="tdaa1 md-table-cuerpo" data-title="idTemaTxt" md-cell>
+								<div class="letraTexto">{{dato.idUsuinternoTxt}}</div>								
+						</td>
+						
+						<td class="tdaa1 md-table-cuerpo" data-title="idTemaTxt" md-cell>
+								<div class="letraTexto">{{dato.idSistAdmiTxt}}</div>								
+						</td>
+						
 						<td class="tdaa1 md-table-cuerpo" data-title="idTemaTxt" md-cell>
 								<div class="letraTexto">{{dato.idTemaTxt}}</div>								
-							</td>
+						</td>
+							
 						<td class="tdaa1 md-table-cuerpo" data-title="idSubtemaTxt" md-cell>
 								<div class="letraTexto">{{dato.idSubtemaTxt}}</div>								
-							</td>
+						</td>
 
 
 						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
 							<md-button class="md-icon-button md-primary"
 								ng-click="removeCapasTema($event,dato)" ng-if="!dato.add">
 							<md-icon md-font-set="material-icons">remove</md-icon> </md-button> 
-<!-- 							<md-button -->
-<!-- 								class="md-icon-button md-primary" -->
-<!-- 								ng-click="nuevoCapasTemas()" ng-if="dato.add"> -->
-<!-- 							<md-icon md-font-set="material-icons">add_circle</md-icon> </md-button> -->
 						</td>
 
 					</tr>
@@ -699,7 +708,153 @@ data-ng-init="editdtCapacitacion()">
         <md-content class="md-padding">
           <fieldset style="margin-left: 15px;">
             <legend>Participantes</legend>
-            aaaaaaaaa
+            
+			
+			
+			
+			<div layout="row" layout-align="center center" flex="100">
+				  <div>
+					  <md-button class="md-raised"
+					 			 aria-label="Agregar Participante"
+								 ng-click="showDialogUsuario($event)">
+								 
+					 		 <md-icon md-font-set="material-icons" style="color: grey;">work_outline</md-icon>
+					  <span>Agregar Participante</span>
+					  
+					  </md-button>
+					  
+					  <md-button class="md-raised"
+					 			 aria-label="Agregar Participante"
+								 ng-click="showDialogUsuario($event)">
+								 
+					 		 <md-icon md-font-set="material-icons" style="color: grey;">check</md-icon>
+					  <span>Confirmar</span>
+					  
+					  </md-button>
+					  
+					  <md-button class="md-raised"
+					 			 aria-label="Agregar Participante"
+								 ng-click="showDialogUsuario($event)">
+								 
+					 		 <md-icon md-font-set="material-icons" style="color: grey;">check</md-icon>
+					  <span>Asistio</span>
+					  
+					  </md-button>
+					  
+					  
+					  <md-button class="md-raised"
+					 			 aria-label="Agregar Participante"
+								 ng-click="showDialogUsuario($event)">
+								 
+					 		 <md-icon md-font-set="material-icons" style="color: grey;">close</md-icon>
+					  <span>No Asistio</span>
+					  
+					  </md-button>
+					  
+					  <md-button class="md-raised"
+					 			 aria-label="Agregar Participante"
+								 ng-click="showDialogUsuario($event)">
+								 
+					 		 <md-icon md-font-set="material-icons" style="color: grey;">close</md-icon>
+					  <span>Registrar Participante</span>
+					  
+					  </md-button>
+					  
+					  
+					</div>
+				</div>
+			
+			<md-content md-whiteframe="1" class="overflowEsconder noshadow"
+				md-colors="{background: 'background-A100'}"> 
+				<md-table-container flex="80">
+				
+			<table  md-progress="promise" 
+					md-row-select="options.rowSelection"
+					md-table multiple="{{options.multiSelect}}" 
+					ng-model="selected"
+					resize>
+				<thead id="tablewidth" md-head md-on-reorder="logOrder"
+					md-order="query.order" ng-if="!options.decapitate">
+
+					<tr class="md-table-head-label" md-row>
+						<th class="md-title ttamnumero" md-column flex="13"><span>&nbsp;</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>DNI</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Usuario Externo</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Entidad</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Cargo</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Correo</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Fijo</span></th>
+						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>celular</span></th>
+						<th class="md-title ttamopciones" md-column flex="20"><span>Opciones</span></th>
+					</tr>
+				<tbody md-body style="font-size: 14px;">
+					<tr class="primary tridtdPersonalPersonal md-table-cuerpo"
+						md-auto-select="options.autoSelect" md-on-select="logItem" md-row
+						md-select="dato" ng-disabled="dato.id > 0"
+						ng-repeat-start="dato in datoUsuario">
+
+						<td md-cell flex="20">{{$index + 1}}</td>
+						
+						<td class="tdaa1 md-table-cuerpo" data-title="numDocu" md-cell>
+								<div class="letraTexto">{{dato.numDocu}}</div>								
+						</td>
+							
+						<td class="tdaa1 md-table-cuerpo" data-title="apellidoNombres" md-cell>
+								<div class="letraTexto">{{dato.nombresApellidos}}</div>								
+						</td>
+						
+						<td class="tdaa1 md-table-cuerpo" data-title="idCargoUsuextTxt" md-cell>
+								<div class="letraTexto">{{dato.idCargoUsuextTxt}}</div>								
+						</td>
+							
+						<td class="tdaa1 md-table-cuerpo" data-title="idCargoUsuextTxt" md-cell>
+								<div class="letraTexto">{{dato.idCargoUsuextTxt}}</div>								
+						</td>
+						
+						<td class="tdaa1 md-table-cuerpo" data-title="correoUsuext" md-cell>
+								<div class="letraTexto">{{dato.correoUsuext}}</div>								
+						</td>
+							
+						<td class="tdaa1 md-table-cuerpo" data-title="fijoUsuext" md-cell>
+								<div class="letraTexto">{{dato.fijoUsuext}}</div>								
+						</td>
+							
+						<td class="tdaa1 md-table-cuerpo" data-title="celularUsuext" md-cell>
+								<div class="letraTexto">{{dato.celularUsuext}}</div>								
+						</td>
+
+						<td class="tdaa1 md-table-cuerpo" data-title="Opciones" md-cell>
+						
+							<md-button  class="md-icon-button md-primary"
+										ng-click="showSendMailUsuario($event,dato)" 
+										>
+								<md-icon md-font-set="material-icons">mail</md-icon>
+							 </md-button>
+						
+							<md-button  class="md-icon-button md-primary"
+										ng-click="removeUsuario($event,dato)" 
+										>
+								<md-icon md-font-set="material-icons">remove</md-icon>
+							 </md-button> 
+							 
+							 
+						</td>
+
+					</tr>
+					<tr class="secondary childidtdPersonalPersonal" ng-repeat-end></tr>
+				</tbody>
+
+			</table>
+			
+			</md-table-container> 
+			</md-content>
+			
+			
+			
+			
+			
+		
+
           </fieldset>
         </md-content>
       </md-tab>

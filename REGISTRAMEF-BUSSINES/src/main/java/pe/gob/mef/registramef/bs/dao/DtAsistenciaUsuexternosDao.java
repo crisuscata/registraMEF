@@ -32,7 +32,6 @@ public interface DtAsistenciaUsuexternosDao {
 	long getTotalXFiltro(Long idAsistencia,Long idUsuexterno,Long idCargoUsuext);
 	
 	List<DtAsistenciaUsuexternos> getByIdAsistDtAsisteUsuariosExt(Long idAsiste);//MPINARES 24012023 - INICIO
-	void updateDtAsistenciaUsuexCorreo(Long id);//CUSCATA - 10072024
-	
+	void updateDtAsistenciaUsuexCorreo(Long id);
 	
 }

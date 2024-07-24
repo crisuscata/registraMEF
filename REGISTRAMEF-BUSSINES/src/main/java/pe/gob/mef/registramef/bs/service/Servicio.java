@@ -230,10 +230,10 @@ public interface Servicio {
 
 	DtCapacitacionBk saveorupdateDtCapacitacionBk(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
-	
+	//INICIO CUSCATA - 18072024
 	DtCapacitacionBk saveorupdateDtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador;
-
+//FIN CUSCATA - 18072024
 	void deleteDtCapacitacion(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador;
 

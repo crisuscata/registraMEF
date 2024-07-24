@@ -1,0 +1,109 @@
+
+<md-dialog aria-label="Lista de Participantes" style="width: 800px;"><!-- JPUYEN 14052024 - SE AGREGO style y se quito class-->
+   <!--PURIBE 14032024 -INICIO-->
+    <md-progress-linear md-mode="determinate" value="{{determinateValue}}"></md-progress-linear>
+    <form ng-cloak name="dtVisitasForm" ng-submit="dtVisitasForm.$valid && hideParticipante()" novalidate>
+        <md-toolbar style="background-color: rgb(255,255,255);">
+            <div class="md-toolbar-tools">
+                <h2 style="color: #1E82AD; font-weight: bold;">Agregar Participante</h2>
+                <span flex></span>
+                <md-button ng-click="cancel()" style="color: rgb(255,87,34);"  >
+                    Cancelar
+                </md-button>    
+                <md-button style="color: rgb(255,87,34);" type="submit" ng-if="activar" >
+                    Agregar
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}"
+                        style="margin: 0px 30px;">
+                <div layout="row" layout-wrap class="modal-wrapped">
+                    <div class="letraenvoltura"  >
+                    
+                        <label class="letraLabel" flex>Gestor/Especialista/Implantador:</label>   
+                        
+                        <md-input-container md-no-float="true" class="input-container-margen letraTexto" style="width: 600px;">
+                     
+                            <md-select ng-model="capacitacionTemasmodelo.idUsuinterno"   
+                            		   ng-change="loadlistamstema(capacitacionTemasmodelo.idUsuinterno)" required
+                                       placeholder="Ingresar Gestor/Especialista/Implantador"
+                                       name="idparametrolugar"> 
+                              <md-option ng-value="0">Sin Gestor</md-option>
+                             <md-option ng-repeat="item in listainternoMsusuarios" ng-value="item.idusuario" >
+                                 {{item.idUsuinternoTxt}}
+                             </md-option>
+                            </md-select>
+                            
+                            <div ng-messages="dtVisitasForm.idparametrolugar.$error">
+                              <div ng-message="required">Se requiere seleccione el participante.</div>
+                           </div>
+                         </md-input-container>
+                         
+                        </div>
+                      
+                </div>
+                
+                <div layout="row" layout-wrap class="modal-wrapped">
+                        <div class="letraenvoltura"  flex="auto">
+                        <label class="letraLabel" flex>Sistema Administrativo:</label>    
+                   
+                            <label style="width:300px;">
+                                {{ capacitacionTemasmodelo.idSistAdmiTxt }}
+                            </label>
+                                   
+                        </div>
+                         		 
+                </div>
+                
+                </br></br>
+                
+                <div layout="row" layout-wrap class="modal-wrapped">
+                    <div class="letraenvoltura" flex="90">
+                    <label class="letraLabel" flex>Tema:</label>    
+                    <md-input-container style="width: 600px;" class="input-container-margen letraTexto">
+
+                     
+                     <md-select ng-model="capacitacionTemasmodel.idTema" ng-change="changeIdTema(capacitacionTemasmodel.idTema)"
+							required placeholder="Seleccionar Tema" name="idTema">
+						<md-option ng-repeat="item in listamstemas"
+							ng-value="item.idTema"> {{item.descripcion}} </md-option> </md-select>
+                       
+                    </md-input-container>
+                 </div>
+                </div>
+                
+                
+                <div layout="row" layout-wrap class="modal-wrapped">
+                    <div class="letraenvoltura" flex="90">
+                    <label class="letraLabel" flex>SubTema:</label>    
+                    <md-input-container style="width: 600px;" class="input-container-margen letraTexto">
+
+					<md-select  ng-model="capacitacionTemasmodelo.idSubtema" 
+								ng-change="changeIdSubtema(capacitacionTemasmodelo.idSubtema)"
+								placeholder="Seleccionar Subtema" 
+								name="idSubtema"
+								required>
+						<md-option ng-value="0">SIN SUBTEMA</md-option>				
+						<md-option ng-repeat="item in listaMsSubtemaIdSubtema"
+							ng-value="item.id"> {{item.valor}} </md-option> 
+										
+					</md-select> 
+
+                    
+                       
+                    </md-input-container>
+                 </div>
+                </div>
+              
+
+                <div layout="row" layout-wrap class="modal-wrapped">
+
+                </div>
+
+            </md-content>
+        </md-dialog-content>
+    </form>
+      <!--PURIBE 14032024 -FIN-->
+</md-dialog>

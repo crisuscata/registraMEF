@@ -432,7 +432,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 			  return dia; 
 		  }
 		  
-		
+		//INICIO CUSCATA - 18072024
 	  $scope.filtro ={
 			  fechaInicio:$scope.firstDate(new Date()),
 			  fechaFin: $scope.getLastDayOfMonth(new Date()),
@@ -449,7 +449,7 @@ myapp.controller('ctrlListadtAsistencia', ['$mdEditDialog', '$scope', '$timeout'
 			  idProgramacion: null,
 			  fechaServicio: null
 		}; 
-	
+	//FIN CUSCATA - 18072024
 	  
 	  $scope.dato ={
 			  ejecutora: null,

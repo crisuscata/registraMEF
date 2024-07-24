@@ -13,7 +13,6 @@ import pe.gob.mef.registramef.bs.dao.DtAnexoDao;
 import pe.gob.mef.registramef.bs.dao.base.AbstractJpaCRUDDao;
 import pe.gob.mef.registramef.bs.domain.DtAnexo;
 import pe.gob.mef.registramef.bs.utils.Estado;
-import pe.gob.mef.registramef.bs.utils.PropertiesMg;//CUSCATA - 10072024
 
 /**
  * DT_ANEXO REPOSITORIO: LISTA DE LOS DOCUMENTOS ANEXADOS EN EL SISTEMA
@@ -31,13 +30,8 @@ public class DtAnexoDaoImp extends
 		DtAnexoDao {
 
 	private static final Logger log = Logger.getLogger(DtAnexoDaoImp.class.getName());
-	private Long estadoNuevo = 1L;//CUSCATA - 10072024
-	private Long estadoEliminado = 0L;//CUSCATA - 10072024
 
 	public DtAnexoDaoImp() {
-		this.estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);//CUSCATA - 10072024
-		this.estadoEliminado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_ELIMINADO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_ELIMINADO);//CUSCATA - 10072024
-		log.log(Level.INFO,"INICIALIZANDO JPA TEMPLATE PARA DtAnexoDaoImp "+"Nuevo: "+estadoNuevo+" Eliminado:"+estadoEliminado);//CUSCATA - 10072024
 		log.log(Level.INFO,null,"INICIALIZANDO JPA TEMPLATE PARA DtAnexoDaoImp");
 	}
 	
@@ -238,12 +232,4 @@ public class DtAnexoDaoImp extends
 			return retorno;
 		}
 	}
-//INICIO CUSCATA - 10072024
-	@Override
-	public Long getEstadoEliminado() {
-		return estadoEliminado;
-	}
-	//FIN CUSCATA - 10072024
-	
-	
 }

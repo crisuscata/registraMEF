@@ -13,7 +13,6 @@ import pe.gob.mef.registramef.bs.dao.DtAsistenciaUsuexternosDao;
 import pe.gob.mef.registramef.bs.dao.base.AbstractJpaCRUDDao;
 import pe.gob.mef.registramef.bs.domain.DtAsistenciaUsuexternos;
 import pe.gob.mef.registramef.bs.utils.Estado;
-import pe.gob.mef.registramef.bs.utils.PropertiesMg;//CUSCATA - 10072024
 
 /**
  * DT_ASISTENCIA_USUEXTERNOS REPOSITORIO: LISTA DE LOS USUARIOS QUE BRINDAN LA ATENCION EN LA ASISTENCIA TECNICA
@@ -50,16 +49,17 @@ public class DtAsistenciaUsuexternosDaoImp extends
 	public void updateDtAsistenciaUsuexternos(DtAsistenciaUsuexternos param) {
 		super.update(param);
 	}
+	
 	//INICIO CUSCATA - 10072024
-	@Transactional
-	public void updateDtAsistenciaUsuexCorreo(Long id) {
-		
-		DtAsistenciaUsuexternos dtAsistenciaUsuexternos = this.getDtAsistenciaUsuexternos(id);
-		dtAsistenciaUsuexternos.setCtrlConfirmacion(2L);
-		
-		super.update(dtAsistenciaUsuexternos);
-	}
-    //FIN CUSCATA - 10072024
+		@Transactional
+		public void updateDtAsistenciaUsuexCorreo(Long id) {
+			
+			DtAsistenciaUsuexternos dtAsistenciaUsuexternos = this.getDtAsistenciaUsuexternos(id);
+			dtAsistenciaUsuexternos.setCtrlConfirmacion(2L);
+			
+			super.update(dtAsistenciaUsuexternos);
+		}
+	    //FIN CUSCATA - 10072024
 
 	@Transactional
 	public void deleteDtAsistenciaUsuexternos(DtAsistenciaUsuexternos param) {

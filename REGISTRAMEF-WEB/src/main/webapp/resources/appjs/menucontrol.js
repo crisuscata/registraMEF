@@ -266,7 +266,7 @@ myapp.controller('menuCtrl', ['$scope','$mdPanel','$mdDialog','$http', function 
 			      name: 'Registro',
 			      items: [
 			    	  {'name':'Asistencias técnicas','refe':'asistencia/listadtAsistenciaNoProg.html','activo':true},//MPINARES 14022024 - INICIO
-			    	  {'name':'Capacitaciones','refe':'capacitacion/listadtCapacitacionNoProg.html','activo':true},
+			    	  {'name':'Capacitaciones','refe':'capacitacion/listadtCapacitacionNoProg.html','activo':true},//CUSCATA - 18072024
 			    	  {'name':'Reuniones de trabajo','refe':'visitas/listadtVisitasNoProg.html','activo':true},//PURIBE 04042024 - INICIO
 			    	  {'name':'Consultas','refe':'consultas/listadtConsultas.html','activo':true}	//MPINARES 24012023 - INICIO
 			      ]

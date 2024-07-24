@@ -1,3 +1,4 @@
+//NUEVO ARCHIVO CUSCATA - 18072024
 var contexto = window.location.pathname.substring(0,window.location.pathname.indexOf('/',2));
 var pglogoff = window.location.origin+contexto+'/logoff.htm';
 var principalUrl = window.location.origin+contexto+'/index.htm';
@@ -15,8 +16,10 @@ var listaPrtParametrosidparametroIdOrigenUrl = contexto+"/rs/ctrldtCapacitacion/
 var listaPrtParametrosidparametroIdPrestacionUrl = contexto+"/rs/ctrldtCapacitacion/listaPrtParametrosIdparametroIdPrestacion";
 var listaPrtParametrosidparametroIdTipoUrl = contexto+"/rs/ctrldtCapacitacion/listaPrtParametrosIdparametroIdTipo";
 var listaPrtParametrosidparametroIdFinanciaUrl = contexto+"/rs/ctrldtCapacitacion/listaPrtParametrosIdparametroIdFinancia";
+var listaMsUsuarios = contexto+"/rs/ctrldtVisitas/listausuarios";
 var descargarUrl = contexto+"/rs/ctrldtCapacitacion/descargar/";
 var valorcrearlUrl = contexto+"/rs/ctrldtCapacitacion/loadvalorcrear";// PURIBE 15042024 - INICIO -->
+
 
 ///URLs CARGA DE ARCHIVOS
 var insertDocUrl = contexto+"/rs/ctrldtCapacitacion/insertarchivo";
@@ -47,6 +50,7 @@ var anulardtCapacitacionListUrl = contexto+"/rs/ctrldtCapacitacion/anulardtCapac
 var validacmularCapacitacionListUrl = contexto+"/rs/ctrldtCapacitacion/validacmularCapacitacionList";
 var insertdtCapacitacionAcumulaUrl = contexto+"/rs/ctrldtCapacitacion/salvardtCapacitacionAcumula";
 var reactivardtCapacitacionUrl = contexto+"/rs/ctrldtCapacitacion/reactivardtCapacitacion";
+var listaMStema  = contexto+"/rs/ctrldtVisitas/listamstemas/";//PURIBE
 //MPINARES 14022024 - FIN
 
 /**
@@ -370,6 +374,29 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 			}
 		}
 		
+		
+		
+		
+		/*
+		$scope.listamstemas=[];
+		$scope.loadlistamstema=function(idSistAdm){
+			var sUrl = listaMStema  + idSistAdm;
+
+			 return $http.get(sUrl).then(function(res){
+				$scope.listamstemas = res.data; 
+				
+				console.log("$scope.listamstemas:" + JSON.stringify($scope.listamstemas));
+				
+				$scope.determinateValue = 100;
+				return res;
+			})
+			.catch(function(errResponse) {
+			
+				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+				throw errResponse; 
+			 });
+		};*/
+		
 	    //$scope.promise = $timeout(function () {
 	    	var surl = $scope.getURL();	    
 	    	$scope.promise = $http.get(surl).then(function(res){
@@ -527,7 +554,9 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 	                $scope.loadListaPrtParametrosIdPublico();//SELECT
 	                $scope.loadListaProcedeEjecucion();//SELECT
 	                $scope.loadListaPrtParametrosIdOrigen();//SELECT
-			    $scope.loadListaMsTemaIdTema();
+			   // $scope.loadListaMsTemaIdTema();
+			    $scope.loadlistamstema();
+			    $scope.loadlistamsusuarios();
 			    $scope.rangeYearIni();
 			  //MPINARES 14022024 - FIN
 		  };
@@ -984,12 +1013,167 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 					ev.target.disabled = false;
 				};
 				
+			// DIALOG PARTICIPANTE
+				
+				$scope.hideParticipante = function () {
+					
+					
+					if ($scope.datoCapasTema.some(e => e.idSubtema === $scope.capacitacionTemasmodelo.idSubtema)) {
+						 
+						$mdDialog.show(
+								$mdDialog.alert()
+								.parent(angular.element(document.body))
+								.clickOutsideToClose(true)
+								.title('Agregar Tema')
+								.textContent("El subtema seleccionado ya existe")
+								.ariaLabel('Lucky day')
+								.ok('OK')
+						);
+						ev.target.disabled = false;
+						return;
+						}
+					
+					
+					$mdDialog.hide($scope.capacitacionTemasmodelo);
+
+					var datoactual = Object.assign({}, $scope.capacitacionTemasmodelo);
+					
+					//datoactual.idUsuinterno = 
+					
+					
+					if($scope.isNull(datoactual.idCapaTemAgen) || $scope.isUndefined(datoactual.idCapaTemAgen)){
+						datoactual.idCapaTemAgen = $scope.generateRandomInteger(1000)*-1;
+					}
+					
+					$scope.datoCapasTema.push(datoactual);	
+					$scope.cancel();
+				};
+				
+			    
+			    $scope.listainternoMsusuarios=[];
+				
+				$scope.loadlistamsusuarios=function(){
+					$http.get(listaMsUsuarios).then(function(res){
+						$scope.listainternoMsusuarios = res.data; 
+						
+						console.log($scope.listainternoMsusuarios);
+						console.log("loadlistamsusuarios:" + JSON.stringify($scope.listainternoMsusuarios));
+						
+					},
+					function error(errResponse) {
+						console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+					});
+				};
+				
+				$scope.listamstemas=[];
+				$scope.loadlistamstema=function(idusuario){
+					
+					if(idusuario!=null && idusuario!=0){
+						console.log("idusuario:" + idusuario);
+						
+						var usuario = $scope.listainternoMsusuarios.find(c=>c.idusuario === idusuario);
+						
+						var idSistAdm=  usuario.idSistAdmi;
+						
+						$scope.capacitacionTemasmodelo.idSistAdmiTxt = usuario.idSistAdmiTxt;
+						$scope.capacitacionTemasmodelo.idUsuinternoTxt = usuario.idUsuinternoTxt;
+						$scope.capacitacionTemasmodelo.idUsuinterno = usuario.idusuario;
+						
+						var sUrl = listaMStema  + idSistAdm;
+
+						 return $http.get(sUrl).then(function(res){
+							$scope.listamstemas = res.data; 
+							
+							console.log("$scope.listamstemas: " + JSON.stringify($scope.listamstemas) );
+							
+							$scope.determinateValue = 100;
+							return res;
+						})
+						.catch(function(errResponse) {
+						
+							console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+							throw errResponse; 
+						 });
+					}
+					
+				};
+				
+				$scope.changeIdTema=function(idTema){
+					console.log("idTema:" + idTema);
+					
+		        	$scope.loadListaMsSubtemaIdSubtema(idTema);
+		        	
+		        	var temaFound = $scope.listamstemas.find(c => c.idTema === idTema );
+		        	
+		        	$scope.capacitacionTemasmodelo.idTema = idTema;
+		        	$scope.capacitacionTemasmodelo.idTemaTxt=temaFound.descripcion;
+			    }
+				
+				$scope.listaMsSubtemaIdSubtema=[];
+				 
+				$scope.loadListaMsSubtemaIdSubtema=function(idTema){
+					
+					console.log("sub tema idTema to find: " + idTema);
+					
+					$scope.listaMsSubtemaIdSubtema=[];
+					
+					if(!$scope.isNumber(idTema))
+						return;
+					
+					var surl = listaMsSubtemaidSubtemaIdSubtemaUrl+idTema;
+					$http.get(surl).then(function(res){
+						$scope.listaMsSubtemaIdSubtema = res.data; 
+						
+						console.log("$scope.listaMsSubtemaIdSubtema: " + JSON.stringify($scope.listaMsSubtemaIdSubtema) );
+						
+					},
+					function error(errResponse) {
+						console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+					});
+				};
+				
+				$scope.changeIdSubtema=function(idSubtema){
+					console.log("idSubtema:"+idSubtema);
+					
+					var subTemaFound = $scope.listaMsSubtemaIdSubtema.find(c => c.id === idSubtema );
+					$scope.capacitacionTemasmodelo.idSubtemaTxt=subTemaFound.valor;
+					
+					$scope.activar = 1;
+				}
+				
+				$scope.activar = 0;
+				
+				$scope.capacitacionTemasmodelo = {
+						idCapaTemAgen: null,
+			    		idUsuinterno: null,
+			    		idUsuinternoTxt: null,
+						idTema: null,
+						idTemaTxt: null,
+						idSistAdmiTxt:null,
+						idSubtema: null,
+						idSubtemaTxt: null,
+					};
+				
+				 $scope.clearcapacitacionTemasmodelo= function(){
+						$scope.capacitacionTemasmodelo.idUsuinterno= null;
+						$scope.capacitacionTemasmodelo.idTema= null;
+						$scope.capacitacionTemasmodelo.idTemaTxt= null;
+						$scope.capacitacionTemasmodelo.idSistAdmiTxt= null;
+						$scope.capacitacionTemasmodelo.idSubtema= null;
+						$scope.capacitacionTemasmodelo.idSubtemaTxt= null;
+						$scope.listamstemas=[];
+						$scope.listaMsSubtemaIdSubtema=[];
+					};
+				
 				//*************************************************************************************
-				$scope.addCapaTemas = function(ev) {
+				$scope.showCapaTemas = function(ev) {
 					ev.target.disabled = true;
-					$scope.clearCapaTemasmodelo();		
+					
+					$scope.loadlistamsusuarios();
+					$scope.clearcapacitacionTemasmodelo();
+					
 					$mdDialog.show({
-						templateUrl: contexto+"/dialogos/editarCapaTemas.html",
+						templateUrl: contexto+"/dialogos/editarCapaTemasNoProg.html",
 						scope: $scope,
 						preserveScope: true,
 						//controller: mdDialogInstitucionCtrl,                	
@@ -1020,7 +1204,7 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 					$scope.capaTemasmodelo.idUsuinternoTxt= capaTemasm.idUsuinternoTxt;
 				};
 				
-				$scope.clearCapaTemasmodelo= function(){
+				/*$scope.clearCapaTemasmodelo= function(){
 					$scope.capaTemasmodelo.idCapaTemAgen= null;
 					$scope.capaTemasmodelo.idCapacitacion= null;
 					$scope.capaTemasmodelo.idTema= null;
@@ -1028,7 +1212,7 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 					$scope.capaTemasmodelo.idSubtema= null;
 					$scope.capaTemasmodelo.idSubtemaTxt= null;
 					$scope.capaTemasmodelo.idUsuinternoTxt= null;
-				};
+				};*/
 				
 				$scope.nuevoCapaTemasmodelo = function (ev) {
 					ev.target.disabled = true;
@@ -2121,6 +2305,12 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 	  
 	  $scope.nuevoDtCapacitacion = function() {
 		    $scope.cleardtCapacitacion();
+
+		   // $scope.loadlistamstema();
+		  //  $scope.loadlistamsusuarios();
+		    $scope.rangeYearIni();
+		    
+		    
 			$location.url('/nuevo');
 			$scope.nuevo = true;
 	  }
@@ -2187,11 +2377,36 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 				}}
 	  }	
 	  
+	  $scope.removePropertiesFromList = function(list, properties) {
+          return list.map(function(item) {
+              properties.forEach(function(property) {
+                  delete item[property];
+              });
+              return item;
+          });
+};
+	  
+	  $scope.addTema= function(){	
+		  var propertiesToRemove = ['contador', 'add'];
+		  
+		  if($scope.isArray($scope.datoCapasTema)){
+				if($scope.datoCapasTema.length>0) {
+					
+					$scope.dtCapacitacionModelo.dtCapaTemasBkJSss =  $scope.removePropertiesFromList(angular.copy($scope.datoCapasTema), propertiesToRemove);
+					
+					console.log("$scope.dtCapacitacionModelo.dtCapaTemasBkJSss:" + JSON.stringify($scope.dtCapacitacionModelo.dtCapaTemasBkJSss));
+					
+				}
+			}
+		  
+		  
+	  }
+	  
 	  $scope.salvarDtCapacitacion = function(ev){	
 		  
 		  $scope.uploadFileTotdAnexoJsModel();
 		  
-			//MPINARES 14022024 - INICIO
+		
 		  if($scope.isArray($scope.datoCapaPublico)){
 				if($scope.datoCapaPublico.length>0){
 					$scope.dtCapacitacionModelo.dtCapaPublicoBkJSss = $scope.datoCapaPublico;
@@ -2200,11 +2415,9 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 				if($scope.datoCapaEntidades.length>0){
 					$scope.dtCapacitacionModelo.dtCapaEntidadesBkJSss = $scope.datoCapaEntidades;
 				}};
-		  if($scope.isArray($scope.datoCapasTema)){
-				if($scope.datoCapasTema.length>0){
-					$scope.dtCapacitacionModelo.dtCapaTemasBkJSss = $scope.datoCapasTema;
-				}};
-		//MPINARES 14022024 - FIN
+				
+				$scope.addTema();
+				
 				    ev.target.disabled = true;
 				    var datainsert = angular.toJson($scope.dtCapacitacionModelo);
 		 			console.log("datainsert = "+datainsert);	
@@ -2608,11 +2821,6 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 					
 					$scope.removeCapasTema = function (ev,dato) {
 						$scope.showConfirmDeleteCapaTemas(ev, dato);
-//				    	if(dato.idCapaTemAgen!=null && dato.idCapaTemAgen>0){
-//				    		$scope.showConfirmDeleteAsistenciaTema(ev, dato);
-//				    	}else{
-//				    		$scope.datoCapasTema = $scope.datoCapasTema.filter(val => val.idCapaTemAgen !== dato.idCapaTemAgen);
-//				    	} 
 				    }
 					
 					$scope.showConfirmDeleteCapaTemas = function(ev, dtCapaTemasBk) {
@@ -2625,15 +2833,19 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 					      .cancel('No');
 
 					    $mdDialog.show(confirm).then(function () {
-					    	if(dtCapaTemasBk.idCapaTemAgen!=null && dtCapaTemasBk.idCapaTemAgen>0){
-//					    		$scope.showConfirmDeleteCapaEntidades(ev, dato);
-					    		 $scope.status = 'SI';
+					    	
+					    	if(dtCapaTemasBk.idCapaTemAgen!=null && dtCapaTemasBk.idCapaTemAgen>0) {
+					    		
+					    		  $scope.status = 'SI';
 							      $scope.clearCapaTemasmodelo();
 							      $scope.setCapaTemasmodelo(dtCapaTemasBk);
 							      $scope.eliminardtCapaTemas(ev, $scope.capaTemasmodelo);
-					    	}else{
+							      
+					    	} else { 
 					    		$scope.datoCapasTema = $scope.datoCapasTema.filter(val => val.idCapaTemAgen !== dtCapaTemasBk.idCapaTemAgen);
+					    		//$scope.datoAsistenciaTema = $scope.datoAsistenciaTema.filter(val => val.idAsistTema !== dato.idAsistTema);
 					    	} 
+					    	
 					    }, function () {
 					      $scope.status = 'NO';
 					    });
@@ -2908,41 +3120,9 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 							console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
 						});
 					};
-				        $scope.changeIdTema=function(idTema){
-				          ///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
-				        	$scope.loadListaMsSubtemaIdSubtema(idTema);
-				        	var temaText = $scope.listaMsTemaIdTema.find(temaText => temaText.id === idTema );
-//				        	var objEncontrado = $scope.listaMsTemaIdTema.find(o => o.id === idTema);
-				        	$scope.capaTemasmodelo.idTemaTxt=temaText.valor;
-				        }
+				       
 				        $scope.$watch('dtCapacitacionModelo.idTema', function (newValue, oldValue) {
 						console.log('dtCapacitacionModelo.idTema ' + newValue+' -- '+oldValue);
-						//CARGAR DATOS DEL SIGUIENTE SELECT
-					});
-				//SELECT FIN 
-				        
-				      //SELECT INI 
-				        $scope.listaMsSubtemaIdSubtema=[];
-					$scope.loadListaMsSubtemaIdSubtema=function(idTema){
-						$scope.listaMsSubtemaIdSubtema=[];
-						if(!$scope.isNumber(idTema))
-							return;
-						
-						var surl = listaMsSubtemaidSubtemaIdSubtemaUrl+idTema;
-						$http.get(surl).then(function(res){
-							$scope.listaMsSubtemaIdSubtema = res.data; 
-						},
-						function error(errResponse) {
-							console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
-						});
-					};
-				        $scope.changeIdSubtema=function(idSubtema){
-				          ///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
-				        	var subtemaText = $scope.listaMsSubtemaIdSubtema.find(subtemaText => subtemaText.id === idSubtema );
-				        	$scope.capaTemasmodelo.idSubtemaTxt=subtemaText.valor;
-				        }
-				        $scope.$watch('dtCapacitacionModelo.idSubtema', function (newValue, oldValue) {
-						console.log('dtCapacitacionModelo.idSubtema ' + newValue+' -- '+oldValue);
 						//CARGAR DATOS DEL SIGUIENTE SELECT
 					});
 				//SELECT FIN 
@@ -3120,16 +3300,8 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
         }
         $scope.$watch('dtCapacitacionModelo.idLocal', function (newValue, oldValue) {
 		console.log('dtCapacitacionModelo.idLocal ' + newValue+' -- '+oldValue);
-		//CARGAR DATOS DEL SIGUIENTE SELECT
-//	if($scope.isArray($scope.listaMsLocalIdLocal)){
-//		var obj = $scope.listaMsLocalIdLocal.find(o => o.id === newValue);
-//		if($scope.isObject(obj)){
-//			$scope.msLocalModelo.idLocalTxt = obj.valor;
-//		}
-//	}
 	});
-//SELECT FIN                
-//SELECT INI
+
         $scope.listaPrtParametrosIdModo=[];
 	$scope.loadListaPrtParametrosIdModo=function(){
 		$http.get(listaPrtParametrosidparametroIdModoUrl).then(function(res){
@@ -3162,13 +3334,6 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
         
         $scope.$watch('dtCapacitacionModelo.idModo', function (newValue, oldValue) {
 		console.log('dtCapacitacionModelo.idModo ' + newValue+' -- '+oldValue);
-		//CARGAR DATOS DEL SIGUIENTE SELECT
-//	if($scope.isArray($scope.listaPrtParametrosIdModo)){
-//		var obj = $scope.listaPrtParametrosIdModo.find(o => o.id === newValue);
-//		if($scope.isObject(obj)){
-//			$scope.prtParametrosModelo.idparametroTxt = obj.valor;
-//		}
-//	}
 	});
 //SELECT FIN                
 //SELECT INI
@@ -3194,13 +3359,6 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
         }
         $scope.$watch('dtCapacitacionModelo.idNivel', function (newValue, oldValue) {
 		console.log('dtCapacitacionModelo.idNivel ' + newValue+' -- '+oldValue);
-		//CARGAR DATOS DEL SIGUIENTE SELECT
-//	if($scope.isArray($scope.listaPrtParametrosIdNivel)){
-//		var obj = $scope.listaPrtParametrosIdNivel.find(o => o.id === newValue);
-//		if($scope.isObject(obj)){
-//			$scope.prtParametrosModelo.idparametroTxt = obj.valor;
-//		}
-//	}
 	});
 //SELECT FIN                
 //SELECT INI
@@ -3226,13 +3384,6 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
         }
         $scope.$watch('dtCapacitacionModelo.idOrigen', function (newValue, oldValue) {
 		console.log('dtCapacitacionModelo.idOrigen ' + newValue+' -- '+oldValue);
-		//CARGAR DATOS DEL SIGUIENTE SELECT
-//	if($scope.isArray($scope.listaPrtParametrosIdOrigen)){
-//		var obj = $scope.listaPrtParametrosIdOrigen.find(o => o.id === newValue);
-//		if($scope.isObject(obj)){
-//			$scope.prtParametrosModelo.idparametroTxt = obj.valor;
-//		}
-//	}
 	});
 //SELECT FIN                
 //SELECT INI
@@ -3258,13 +3409,6 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
         }
         $scope.$watch('dtCapacitacionModelo.idPrestacion', function (newValue, oldValue) {
 		console.log('dtCapacitacionModelo.idPrestacion ' + newValue+' -- '+oldValue);
-		//CARGAR DATOS DEL SIGUIENTE SELECT
-//	if($scope.isArray($scope.listaPrtParametrosIdPrestacion)){
-//		var obj = $scope.listaPrtParametrosIdPrestacion.find(o => o.id === newValue);
-//		if($scope.isObject(obj)){
-//			$scope.prtParametrosModelo.idparametroTxt = obj.valor;
-//		}
-//	}
 	});
 //SELECT FIN                
 //SELECT INI
@@ -3290,13 +3434,6 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
         }
         $scope.$watch('dtCapacitacionModelo.idTipo', function (newValue, oldValue) {
 		console.log('dtCapacitacionModelo.idTipo ' + newValue+' -- '+oldValue);
-		//CARGAR DATOS DEL SIGUIENTE SELECT
-//	if($scope.isArray($scope.listaPrtParametrosIdTipo)){
-//		var obj = $scope.listaPrtParametrosIdTipo.find(o => o.id === newValue);
-//		if($scope.isObject(obj)){
-//			$scope.prtParametrosModelo.idparametroTxt = obj.valor;
-//		}
-//	}
 	});
 //SELECT FIN                
 //SELECT INI
@@ -3322,13 +3459,6 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
         }
         $scope.$watch('dtCapacitacionModelo.idFinancia', function (newValue, oldValue) {
 		console.log('dtCapacitacionModelo.idFinancia ' + newValue+' -- '+oldValue);
-		//CARGAR DATOS DEL SIGUIENTE SELECT
-//	if($scope.isArray($scope.listaPrtParametrosIdFinancia)){
-//		var obj = $scope.listaPrtParametrosIdFinancia.find(o => o.id === newValue);
-//		if($scope.isObject(obj)){
-//			$scope.prtParametrosModelo.idparametroTxt = obj.valor;
-//		}
-//	}
 	});
 //SELECT FIN                
 

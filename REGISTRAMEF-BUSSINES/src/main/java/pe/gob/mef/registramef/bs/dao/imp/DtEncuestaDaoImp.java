@@ -35,7 +35,7 @@ public class DtEncuestaDaoImp extends
 		DtEncuestaDao {
 
 	private static final Logger log = Logger.getLogger(DtEncuestaDaoImp.class.getName());
-	
+
 	public DtEncuestaDaoImp() {
 		log.log(Level.INFO,null,"INICIALIZANDO JPA TEMPLATE PARA DtEncuestaDaoImp");
 	}

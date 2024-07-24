@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
+import java.util.Base64;//INICIO CUSCATA - 18072024
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
+import javax.ws.rs.Consumes;//INICIO CUSCATA - 18072024
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -55,7 +55,7 @@ import pe.gob.mef.registramef.bs.service.Servicio;
 import pe.gob.mef.registramef.bs.transfer.DtEntidadesDto;
 import pe.gob.mef.registramef.bs.transfer.IDValorDto;
 import pe.gob.mef.registramef.bs.transfer.IIDValorDto;
-import pe.gob.mef.registramef.bs.transfer.bk.DtAnexoBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtAnexoBk;//INICIO CUSCATA - 18072024
 import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaTemasBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapaEntidadesBk;
@@ -64,10 +64,10 @@ import pe.gob.mef.registramef.bs.transfer.bk.DtCapacitacionBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtEntidadesBk;
 import pe.gob.mef.registramef.bs.transfer.bk.MsUsuariosBk;
 import pe.gob.mef.registramef.bs.utils.FuncionesStaticas;
-import pe.gob.mef.registramef.bs.utils.PropertiesMg;
+import pe.gob.mef.registramef.bs.utils.PropertiesMg;//INICIO CUSCATA - 18072024
 import pe.gob.mef.registramef.web.controller.DtAsistenciaData;
 import pe.gob.mef.registramef.web.controller.DtCapacitacionData;
-import pe.gob.mef.registramef.web.controller.rs.data.DtAnexosJS;
+import pe.gob.mef.registramef.web.controller.rs.data.DtAnexosJS;//INICIO CUSCATA - 18072024
 import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaTemasJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtCapaEntidadesJS;
@@ -430,7 +430,7 @@ public class DtCapacitacionRsCtrl {
 					}).build();
 		}
 	}
-	
+	//INICIO CUSCATA - 18072024
     @POST
 	@Path("/insertarchivo")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -569,7 +569,7 @@ public class DtCapacitacionRsCtrl {
 					}).build();
 		}
 	}
-
+//FIN CUSCATA - 18072024
 	@POST
 	@Path("/eliminardtCapacitacion")
 	@Produces(MediaType.APPLICATION_JSON)
