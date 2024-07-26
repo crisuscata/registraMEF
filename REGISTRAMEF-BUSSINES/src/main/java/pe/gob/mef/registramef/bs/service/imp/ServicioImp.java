@@ -21069,6 +21069,7 @@ public class ServicioImp implements Servicio, Serializable {
 						.getDtCargosUsuexterXFiltro(dtEntidadesUsuexternos.getIdUsuextEnti(), null, kyUsuarioMod);
 				if (dtCargosUsuexterList != null && !dtCargosUsuexterList.isEmpty()) {
 					dtUsuarioExternoBk.setUsucargos(dtCargosUsuexterList);
+					dtUsuarioExternoBk.setIdEntidad(dtEntidadesUsuexternos.getIdEntidad());
 				}
 
 			}
@@ -21078,6 +21079,18 @@ public class ServicioImp implements Servicio, Serializable {
 		long finalMethod = System.currentTimeMillis() - startMethod;
 		log.log(Level.INFO, "finalMethod getUsuarioPorDNI:: " + finalMethod);
 
+		return dtUsuarioExternoBk;
+	}
+	
+	@Override
+	public DtUsuarioExternoBk getUsuarioCapacitacionPorDNI(Long numDocum, Long kyUsuarioMod) {
+		DtUsuarioExternoBk dtUsuarioExternoBk = this.getUsuarioPorDNI(numDocum, kyUsuarioMod);
+		DtEntidades dtEntidades = dtEntidadesDao.getDtEntidades(dtUsuarioExternoBk.getIdEntidad());
+		if (dtEntidades != null) {
+			dtUsuarioExternoBk.setIdEntidad(dtEntidades.getIdEntidad());
+			dtUsuarioExternoBk.setIdEntidadTxt(dtEntidades.getRazSocial());
+			dtUsuarioExternoBk.setCodEjecutora(dtEntidades.getCodEjec());
+		}
 		return dtUsuarioExternoBk;
 	}
 

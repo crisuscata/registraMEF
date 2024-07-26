@@ -56,20 +56,17 @@ import pe.gob.mef.registramef.bs.transfer.DtEntidadesDto;
 import pe.gob.mef.registramef.bs.transfer.IDValorDto;
 import pe.gob.mef.registramef.bs.transfer.IIDValorDto;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAnexoBk;//INICIO CUSCATA - 18072024
-import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaBk;
-import pe.gob.mef.registramef.bs.transfer.bk.DtAsistenciaTemasBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapaEntidadesBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapaTemasBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapacitacionBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtEntidadesBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtUsuarioExternoBk;
 import pe.gob.mef.registramef.bs.transfer.bk.MsUsuariosBk;
 import pe.gob.mef.registramef.bs.utils.FuncionesStaticas;
 import pe.gob.mef.registramef.bs.utils.PropertiesMg;//INICIO CUSCATA - 18072024
 import pe.gob.mef.registramef.web.controller.DtAsistenciaData;
 import pe.gob.mef.registramef.web.controller.DtCapacitacionData;
 import pe.gob.mef.registramef.web.controller.rs.data.DtAnexosJS;//INICIO CUSCATA - 18072024
-import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaJS;
-import pe.gob.mef.registramef.web.controller.rs.data.DtAsistenciaTemasJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtCapaEntidadesJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtCapaTemasJS;
 import pe.gob.mef.registramef.web.controller.rs.data.DtCapacitacionJS;
@@ -2674,5 +2671,47 @@ public class DtCapacitacionRsCtrl {
      	    					}).build();
      	    		}
      	    	}
+     			
+
+@GET
+    				@Path("/buscarPorNumDoc/{numDoc}")
+    				@Produces(MediaType.APPLICATION_JSON)
+    				public Response buscarPorNumDoc(@Context HttpServletRequest req, @Context HttpServletResponse res,
+    						@HeaderParam("authorization") String authString, @PathParam("numDoc") Long numDocum) {
+
+    					SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    					Principal usuario = req.getUserPrincipal();
+    					MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+    					if (msUsuariosBk == null)
+    						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+    								.entity(new GenericEntity<RespuestaError>(
+    										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.",
+    												HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    								}).build();
+
+    					if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTVISITAS_CREA)
+    							&& !req.isUserInRole(Roles.DTVISITAS_VE))
+    						return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
+    								.entity(new GenericEntity<RespuestaError>(
+    										new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.",
+    												HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    								}).build();
+
+    					try {
+
+    						DtUsuarioExternoBk usuarioExterno = servicio.getUsuarioCapacitacionPorDNI(numDocum, msUsuariosBk.getIdusuario());
+
+    						GenericEntity<DtUsuarioExternoBk> registrosx = new GenericEntity<DtUsuarioExternoBk>(usuarioExterno) {
+    						};
+
+    						return Response.status(200).entity(registrosx).build();
+    					} catch (Exception e) {
+    						String mensaje = e.getMessage();
+    						return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+    								new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+    								}).build();
+    					}
+    				}
 
 }

@@ -1661,6 +1661,7 @@ public interface Servicio {
 		DtEncuestaBk getIdEncuesta (Long idTipoServicio, Long fechaServicio, Long idServicio) throws Validador;
 		//PURIBE 22042024 - FIN
 		DtUsuarioExternoBk getUsuarioPorDNI(Long numDocum, Long kyUsuarioMod);//CUSCATA - 18062024
+		DtUsuarioExternoBk getUsuarioCapacitacionPorDNI(Long numDocum, Long kyUsuarioMod);//CUSCATA - 18062024
 		
 		List<MsUsuariosDto> getMsUsuariosFilter(Long idSede);//JPUYEN 14052024
 		DtUsuarioExternoBk getMsUsuariosExternoBkXDni(String dni) throws Validador ;//JPUYEN 14052024

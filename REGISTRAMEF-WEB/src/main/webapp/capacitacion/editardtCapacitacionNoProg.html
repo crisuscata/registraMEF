@@ -776,7 +776,12 @@ data-ng-init="editdtCapacitacion()">
 					md-order="query.order" ng-if="!options.decapitate">
 
 					<tr class="md-table-head-label" md-row>
-						<th class="md-title ttamnumero" md-column flex="13"><span>&nbsp;</span></th>
+						
+						<th class="md-title ttamnumero" md-column flex="13">
+			                <span>&nbsp;</span>
+			                <input type="checkbox" ng-model="selectAll" ng-change="toggleAll(selectAll)">
+			            </th>
+						
 						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>DNI</span></th>
 						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Usuario Externo</span></th>
 						<th class="md-title " md-column md-order-by="tipoTxt" flex="90"><span>Entidad</span></th>
@@ -794,6 +799,8 @@ data-ng-init="editdtCapacitacion()">
 
 						<td md-cell flex="20">{{$index + 1}}</td>
 						
+						<td style="padding-right: 0;"><input type="checkbox" ng-model="dato.checked" ng-change="selection(dato)"></td>
+						
 						<td class="tdaa1 md-table-cuerpo" data-title="numDocu" md-cell>
 								<div class="letraTexto">{{dato.numDocu}}</div>								
 						</td>
@@ -802,12 +809,12 @@ data-ng-init="editdtCapacitacion()">
 								<div class="letraTexto">{{dato.nombresApellidos}}</div>								
 						</td>
 						
-						<td class="tdaa1 md-table-cuerpo" data-title="idCargoUsuextTxt" md-cell>
-								<div class="letraTexto">{{dato.idCargoUsuextTxt}}</div>								
+						<td class="tdaa1 md-table-cuerpo" data-title="idEntidadTxt" md-cell>
+								<div class="letraTexto">{{dato.idEntidadTxt}}</div>								
 						</td>
 							
-						<td class="tdaa1 md-table-cuerpo" data-title="idCargoUsuextTxt" md-cell>
-								<div class="letraTexto">{{dato.idCargoUsuextTxt}}</div>								
+						<td class="tdaa1 md-table-cuerpo" data-title="idCargoTxt" md-cell>
+								<div class="letraTexto">{{dato.idCargoTxt}}</div>								
 						</td>
 						
 						<td class="tdaa1 md-table-cuerpo" data-title="correoUsuext" md-cell>

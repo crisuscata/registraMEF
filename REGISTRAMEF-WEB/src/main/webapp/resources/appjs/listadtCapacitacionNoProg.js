@@ -20,7 +20,7 @@ var listaDtUsuarioXNombreapellidoUrl = contexto+"/rs/ctrldtAsistencia/buscarDtUs
 var listaMsUsuarios = contexto+"/rs/ctrldtVisitas/listausuarios";
 var descargarUrl = contexto+"/rs/ctrldtCapacitacion/descargar/";
 var valorcrearlUrl = contexto+"/rs/ctrldtCapacitacion/loadvalorcrear";// PURIBE 15042024 - INICIO -->
-var buscarPorNumDocUrl = contexto+"/rs/ctrldtAsistencia/buscarPorNumDoc/";
+var buscarPorNumDocUrl = contexto+"/rs/ctrldtCapacitacion/buscarPorNumDoc/";
 
 
 ///URLs CARGA DE ARCHIVOS
@@ -1299,7 +1299,9 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 						celularUsuext: null,
 						codEjecutora: null,
 						idEntidadTxt: null,
-						idEntidad: null
+						idEntidad: null,
+						idCargo:null,
+						idCargoTxt:null
 				};
 				
 				$scope.hideDialogParticipantes = function () {
@@ -1323,6 +1325,8 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 		        	$scope.usuarioModelo.codEjecutora= null;
 		        	$scope.usuarioModelo.idEntidadTxt= null;
 		        	$scope.usuarioModelo.idEntidad = null;
+		        	$scope.usuarioModelo.idCargo= null;
+		        	$scope.usuarioModelo.idCargoTxt = null;
 		        	
 		        	$scope.selectedItem = null;
 		        	
@@ -1367,7 +1371,12 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 				            $scope.usuarioModelo.correoUsuext = resData.correo;
 				            $scope.usuarioModelo.celularUsuext = (resData.telefCell!=null && resData.telefCell!=0)?resData.telefCell:resData.otroCelular;
 				            $scope.usuarioModelo.fijoUsuext =  (resData.telefFijo!=null && resData.telefFijo!=0)?resData.telefFijo:resData.otroCelular;
-				            $scope.listaCargos = resData.usucargos;
+				            
+				            $scope.usuarioModelo.codEjecutora = resData.codEjecutora; 
+			                $scope.usuarioModelo.idEntidadTxt = resData.idEntidadTxt;
+			                $scope.usuarioModelo.idEntidad = resData.idEntidad;
+			                
+			                $scope.listaCargos = resData.usucargos;
 				            
 				            $scope.activar=1;
 				            console.log("resData:" + JSON.stringify(resData));
@@ -3332,15 +3341,17 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 				       
 				        $scope.$watch('dtCapacitacionModelo.idTema', function (newValue, oldValue) {
 						console.log('dtCapacitacionModelo.idTema ' + newValue+' -- '+oldValue);
-						//CARGAR DATOS DEL SIGUIENTE SELECT
 					});
-				//SELECT FIN 
 				        
-				        $scope.changeIdCargo=function(ev,dato){
-				        	///BLANQUEAR LOS CAMPOS QUE DEPENDEN DE ESTE SELECT
-				        	if($scope.datoCapaPublico.length > 1){
+				        $scope.changeIdCargo=function(idCargo){
+				        	
+				        	var cargo = $scope.listaCargos.find(c=>c.idCargo === idCargo);
+				        	
+				        	$scope.usuarioModelo.idCargoTxt = cargo.idCargoTxt;
+				        	
+				        	
+				        	/*if($scope.datoCapaPublico.length > 1){
 				        		if ($scope.datoCapaPublico.filter(e => e.idCargo === dato.idCargo).length > 1) {
-									  /* vendors contains the element we're looking for */
 				        			dato.idCargo="";
 									$mdDialog.show(
 											$mdDialog.alert()
@@ -3355,7 +3366,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 									return;
 									}
 				        	
-					        }
+					        }*/
 				        }
 				        	
      
@@ -3676,6 +3687,57 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
     	$scope.descargar = function(){
     		return descargarUrl+$scope.getURLParametros();
     	}
+    	
+    	// CHECKBOX - PARTICIPANTES
+    	
+    	$scope.selectAll = false;
+
+    	$scope.toggleAll = function(selectAll) {
+    	    angular.forEach($scope.datoUsuario, function(dato) {
+    	        dato.checked = selectAll;
+    	        $scope.selection(dato);
+    	    });
+    	};
+    	
+    	 $scope.selectedParticipantes = [];
+    	 
+		  $scope.selection = function(participante){
+			  
+			    if(participante.checked){
+			    	$scope.selectedParticipantes.push({
+			    		/*idAsistencia: asistencia.idAsistencia,
+			    		estado: asistencia.estado*/
+			    	 })
+			    	
+			    	console.log('$scope.selectedParticipantes checked: '+ JSON.stringify($scope.selectedParticipantes) );
+			    	
+			    }else{
+			    	//$scope.selectedAsist = $scope.selectedAsist.filter(val => val.idAsistencia !== asistencia.idAsistencia);
+			    	
+			    	//console.log('$scope.selectedAsist no checked: '+ JSON.stringify($scope.selectedAsist) );
+			    }
+		};
+		
+		
+		/**
+$scope.selection = function(dato) {
+    if (dato.checked) {
+        // Add the item to the selected array
+        if ($scope.selected.indexOf(dato) === -1) {
+            $scope.selected.push(dato);
+        }
+    } else {
+        // Remove the item from the selected array
+        var index = $scope.selected.indexOf(dato);
+        if (index !== -1) {
+            $scope.selected.splice(index, 1);
+        }
+    }
+};
+		 * */
+		
+    	
+    	
 ///FIN ADICIONALES			 			 
 	// ////////////////////////////////////////////////////////////////
 	
