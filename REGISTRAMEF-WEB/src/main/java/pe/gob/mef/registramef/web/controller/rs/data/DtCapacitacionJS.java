@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapaEntidadesBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapaPublicoBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapaTemasBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtCapaUsuexternosBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapacitacionBk;
 
 /**
@@ -88,6 +89,8 @@ public class DtCapacitacionJS implements java.io.Serializable {
 		private List<DtCapaEntidadesBk> dtCapaEntidadesBkJSss = null;
 		private List<DtCapaPublicoBk> dtCapaPublicoBkJSss = null;
 		private List<DtCapacitacionBk> dtCapaAcumulaListBkJSss = null;
+		
+		private List<DtCapaUsuexternosBk> dtCapacitacionUsuariosBkJSss = null;////CUSCATA - 25072024
 		//MPINARES 14022024 - FIN
         private List<DtAnexosJS> tdAnexosJSss = null;//CUSCATA - 18072024
 		private boolean addEntidad = false;
@@ -567,6 +570,14 @@ public class DtCapacitacionJS implements java.io.Serializable {
 
 		public void setTdAnexosJSss(List<DtAnexosJS> tdAnexosJSss) {
 			this.tdAnexosJSss = tdAnexosJSss;
+		}
+
+		public List<DtCapaUsuexternosBk> getDtCapacitacionUsuariosBkJSss() {
+			return dtCapacitacionUsuariosBkJSss;
+		}
+
+		public void setDtCapacitacionUsuariosBkJSss(List<DtCapaUsuexternosBk> dtCapacitacionUsuariosBkJSss) {
+			this.dtCapacitacionUsuariosBkJSss = dtCapacitacionUsuariosBkJSss;
 		}
 		
 		

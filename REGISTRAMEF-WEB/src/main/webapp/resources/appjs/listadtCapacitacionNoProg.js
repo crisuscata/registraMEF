@@ -1,4 +1,4 @@
-//NUEVO ARCHIVO CUSCATA - 18072024
+//INICIO CUSCATA - 25072024
 var contexto = window.location.pathname.substring(0,window.location.pathname.indexOf('/',2));
 var pglogoff = window.location.origin+contexto+'/logoff.htm';
 var principalUrl = window.location.origin+contexto+'/index.htm';
@@ -16,9 +16,11 @@ var listaPrtParametrosidparametroIdOrigenUrl = contexto+"/rs/ctrldtCapacitacion/
 var listaPrtParametrosidparametroIdPrestacionUrl = contexto+"/rs/ctrldtCapacitacion/listaPrtParametrosIdparametroIdPrestacion";
 var listaPrtParametrosidparametroIdTipoUrl = contexto+"/rs/ctrldtCapacitacion/listaPrtParametrosIdparametroIdTipo";
 var listaPrtParametrosidparametroIdFinanciaUrl = contexto+"/rs/ctrldtCapacitacion/listaPrtParametrosIdparametroIdFinancia";
+var listaDtUsuarioXNombreapellidoUrl = contexto+"/rs/ctrldtAsistencia/buscarDtUsuarioXnombre/";
 var listaMsUsuarios = contexto+"/rs/ctrldtVisitas/listausuarios";
 var descargarUrl = contexto+"/rs/ctrldtCapacitacion/descargar/";
 var valorcrearlUrl = contexto+"/rs/ctrldtCapacitacion/loadvalorcrear";// PURIBE 15042024 - INICIO -->
+var buscarPorNumDocUrl = contexto+"/rs/ctrldtAsistencia/buscarPorNumDoc/";
 
 
 ///URLs CARGA DE ARCHIVOS
@@ -1279,6 +1281,255 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 					$scope.cancel();
 					ev.target.disabled = false;
 				};
+				
+				//DIALOG PARTICIPANTES
+				
+				$scope.usuarioModelo = {
+		        		idCapaUsuext:null,
+		        		idUsuexterno: null,
+		        		numDocu: null,
+						aPaterno: null,
+						aMaterno: null,
+						nombre: null,
+						nombresApellidos: null,
+						idCargoUsuext: null,
+						idCargoUsuextTxt: null,
+						correoUsuext: null,
+						fijoUsuext: null,
+						celularUsuext: null
+				};
+				
+				$scope.hideDialogParticipantes = function () {
+					$mdDialog.hide($scope.usuarioModelo);
+					$scope.agregarUsuario();
+				};
+				
+				$scope.clearUsuarioModelDialog= function(){
+		        	$scope.usuarioModelo.idCapaUsuext= null;
+		        	$scope.usuarioModelo.idUsuexterno= null;
+		        	$scope.usuarioModelo.numDocu= null;
+		        	$scope.usuarioModelo.aPaterno= null;
+		        	$scope.usuarioModelo.aMaterno= null;
+		        	$scope.usuarioModelo.nombre= null;
+		        	$scope.usuarioModelo.idCargoUsuext= null;
+		        	$scope.usuarioModelo.idCargoUsuextTxt= null;
+		        	$scope.usuarioModelo.correoUsuext= null;
+		        	$scope.usuarioModelo.fijoUsuext= null;
+		        	$scope.usuarioModelo.celularUsuext= null;
+		        	$scope.usuarioModelo.nombresApellidos= null;
+		        	$scope.listaCargos=[];
+		        }
+				
+				$scope.showDialogParticipante = function(ev) {
+					ev.target.disabled = true;
+					$scope.clearUsuarioModelDialog();		
+					$mdDialog.show({
+						templateUrl: contexto+"/dialogos/editarCapaParticipantes.html",
+						scope: $scope,
+						preserveScope: true,
+						parent: angular.element(document.body),
+						targetEvent: ev,
+						clickOutsideToClose: true
+					}).then($scope.closeDialog, $scope.cancelDialod);	
+					ev.target.disabled = false;
+				};
+				$scope.listaCargos=[];
+				$scope.activar = 0;
+				$scope.showPanelDocumentos = 0;
+				$scope.showButtonsFinalizar = 0;
+				$scope.showButtonsFormato = 0;
+				$scope.archivos = [];
+				$scope.guardadoExitoso = 0;
+				
+				
+				$scope.buscarxdni = function(dato){
+			        console.log('dni: '+ dato.numDocu);
+			        var surl = buscarPorNumDocUrl + dato.numDocu; 
+			        console.log('surl: '+ surl);
+			        $scope.dlgInstpromise = $http.get(surl).then(function(res){
+			            var resData = res.data;
+			            
+			            if(resData.idUsuexterno!=null && resData.idUsuexterno!=0){
+			            	$scope.usuarioModelo.idUsuexterno = resData.idUsuexterno;
+				            $scope.usuarioModelo.nombresApellidos = resData.apaterno + ' '+ resData.amaterno + ' ' + resData.nombre;
+				            $scope.usuarioModelo.aPaterno = resData.apaterno;
+				            $scope.usuarioModelo.aMaterno = resData.amaterno;
+				            $scope.usuarioModelo.nombre = resData.nombre;
+				            $scope.usuarioModelo.correoUsuext = resData.correo;
+				            $scope.usuarioModelo.celularUsuext = (resData.telefCell!=null && resData.telefCell!=0)?resData.telefCell:resData.otroCelular;
+				            $scope.usuarioModelo.fijoUsuext =  (resData.telefFijo!=null && resData.telefFijo!=0)?resData.telefFijo:resData.otroCelular;
+				            $scope.listaCargos = resData.usucargos;
+				            
+				            $scope.activar=1;
+				            console.log("resData:" + JSON.stringify(resData));
+				            console.log("$scope.listaCargos:" + JSON.stringify($scope.listaCargos));
+			            } else {
+			            	alert('Nos se encontró información del DNI...');
+							return;
+			            }
+			            
+			           
+			        }, function error(errResponse) {
+			            console.log("Buscar x dni data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse.statusText + " xhrStat " + errResponse.xhrStatus);
+			            var errData = errResponse.data;
+			            if(errData && typeof(errData.message) != 'undefined'){
+			                $mdDialog.show(
+			                    $mdDialog.alert()
+			                    .parent(angular.element(document.body))
+			                    .clickOutsideToClose(true)
+			                    .title('Buscar por dni - Registramef')
+			                    .textContent(errData.message)
+			                    .ariaLabel('ERROR')
+			                    .ok('OK')
+			                    .targetEvent(errData)
+			                );
+			                dato.idEntidadTxt = null;
+			                dato.idEntidad = null;
+			            }
+			        });
+			        
+			    };
+				
+			    $scope.ctrlMsUSuariosExterxNombApe={
+						simulateQuery: false,
+						isDisabled: false,
+						selectedItem: null
+				};
+			    
+			    $scope.datoUsuario = [];
+			    
+			    $scope.agregarUsuario = function () {
+					
+					if ($scope.datoUsuario.filter(e => e.idUsuexterno === $scope.usuarioModelo.idUsuexterno).length > 0) {
+						$mdDialog.show(
+								$mdDialog.alert()
+								.parent(angular.element(document.body))
+								.clickOutsideToClose(true)
+								.title('Guardar usuario')
+								.textContent("El usuario seleccionado ya existe")
+								.ok('OK')
+						);
+						ev.target.disabled = false;
+						return;
+					}
+					
+					
+					var datoactual = Object.assign({}, $scope.usuarioModelo);
+					$scope.datoUsuario.push(datoactual);	
+					$scope.cancel();
+				};
+				
+				$scope.selectedPerson = function(resData) {
+		    		if($scope.isObject(resData)){
+		    			console.log("persona seleccionada:" + JSON.stringify(resData));
+		    			
+		    			$scope.usuarioModelo.idUsuexterno = resData.idUsuexterno;
+			            $scope.usuarioModelo.nombresApellidos = resData.apaterno + ' '+ resData.amaterno + ' ' + resData.nombre;
+			            $scope.usuarioModelo.aPaterno = resData.apaterno;
+			            $scope.usuarioModelo.aMaterno = resData.amaterno;
+			            $scope.usuarioModelo.nombre = resData.nombre;
+			            $scope.usuarioModelo.correoUsuext = resData.correo;
+			            $scope.usuarioModelo.celularUsuext = (resData.telefCell!=null && resData.telefCell!=0)?resData.telefCell:resData.otroCelular;
+			            $scope.usuarioModelo.fijoUsuext =  (resData.telefFijo!=null && resData.telefFijo!=0)?resData.telefFijo:'';
+			            $scope.usuarioModelo.numDocu =    resData.numDocum;
+			            
+			            $scope.promise = $http.get(listaCargoPorIdUsuarioExtUrl+ resData.idUsuexterno)
+			            .then(function(response) {
+			            	console.log("persona seleccionada cargos:" + JSON.stringify(response.data));
+			            	$scope.listaCargos = response.data;
+			            	return response.data;
+			            })
+			            .catch(function (errResponse) {
+			            	console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+			                return [];
+			            });
+			            
+		    			
+		    		}
+		    	}
+				
+				//BUSCAR POR APELLIDO Y NOMBRE
+				$scope.searchTextChange = function(text) {
+			        console.log('Texto de búsqueda cambiado a: ' + text);
+			    };
+			    
+			    $scope.querySearch = function(valor) {
+			    	console.log('nombreapellido to find: '+valor);
+			    	
+			        return $http.get(listaDtUsuarioXNombreapellidoUrl+ valor)
+			            .then(function(response) {
+			            	//console.log(response.data);
+			            	
+			            	console.log("response.data:" + JSON.stringify(response.data));
+			            	
+			            	$scope.activar=1;
+			            	
+			            	return response.data;
+			            	
+			            })
+			            .catch(function (errResponse) {
+			            	console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+			              
+			                return [];
+			            });
+			        
+			    };
+				
+			    
+			    
+			    
+			    
+				  $scope.buscarxcodEjec = function(dato){
+				        console.log('codigoEjecutora: '+ dato.codEjecutora);
+				        $scope.dlgInstmsInstitucionesDtoss=[];
+				        $scope.selectedItem = null;
+				        $scope.searchText = null;
+				        var surl = buscarCodEjecUrl + dato.codEjecutora; 
+				        console.log('surl: '+ surl);
+				        $scope.dlgInstpromise = $http.get(surl).then(function(res){
+				            var resData = res.data;
+				            if(resData.length==1){
+				                var institucion = resData[0];
+				                console.log(JSON.stringify(institucion));
+				                
+				              /*  dato.codEjecutora = institucion.codEjec; 
+				                dato.idEntidadTxt = institucion.razSocialUbigeo;
+				                dato.idEntidad = institucion.idEntidad;
+				                console.log('modelo', dato);
+
+				                $scope.selectedItem = institucion; */
+				                
+				            } else if(resData.length>1){
+				                $scope.dlgInstmsInstitucionesDtoss = resData;
+				                $scope.dlgInsttotal = resData.length;
+				                $scope.showdlgInstDialog(resData);  
+				            }
+				        }, function error(errResponse) {
+				            console.log("Buscar x CodEjec data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse.statusText + " xhrStat " + errResponse.xhrStatus);
+				            var errData = errResponse.data;
+				            if(errData && typeof(errData.message) != 'undefined'){
+				                $mdDialog.show(
+				                    $mdDialog.alert().multiple(true)
+				                    .parent(angular.element(document.body))
+				                    .clickOutsideToClose(true)
+				                    .title('Buscar por ejecutora - Registramef')
+				                    .textContent(errData.message)
+				                    .ariaLabel('ERROR')
+				                    .ok('ACEPTAR')
+				                    .targetEvent(errData)
+				                );
+				                dato.idEntidadTxt = null;
+				                dato.idEntidad = null;
+				            }
+				        });
+				    };
+			    
+			    
+			    
+			    
+			    
+				//FIN DIALOG PARTICIPANTES
+				
 				
 				//**********************************************************************************************************
 				$scope.situaciondemitramite = function(ev){		
@@ -2666,61 +2917,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 				  
 //MPINARES 14022024 - INICIO
 				  
-				  $scope.buscarxcodEjec = function(dato){
-				        console.log('codigoEjecutora: '+ dato.codEjecutora);
-//				        $mdDialog.show(
-//								$mdDialog.alert()
-//								.parent(angular.element(document.body))
-//								.clickOutsideToClose(true)
-//								.title('Dialogo prueba')
-//								.textContent("Probandoooooooo...")
-//								.ariaLabel('ERROR')
-//								.ok('OK')
-//								.targetEvent(ev)
-//						);
-				        $scope.dlgInstmsInstitucionesDtoss=[];
-				        $scope.selectedItem = null;
-				        $scope.searchText = null;
-				        var surl = buscarCodEjecUrl + dato.codEjecutora; 
-				        console.log('surl: '+ surl);
-				        $scope.dlgInstpromise = $http.get(surl).then(function(res){
-				            var resData = res.data;
-				            if(resData.length==1){
-				                var institucion = resData[0];
-				                console.log(JSON.stringify(institucion));
-				                dato.codEjecutora = institucion.codEjec; 
-//				                dato.ruc = institucion.ruc;
-				                dato.idEntidadTxt = institucion.razSocialUbigeo;
-				                dato.idEntidad = institucion.idEntidad;
-				                console.log('modelo', dato);
 
-				                $scope.selectedItem = institucion;
-//				                $scope.ctrlViaticosId.selectedItem = institucion;
-				            } else if(resData.length>1){
-				                $scope.dlgInstmsInstitucionesDtoss = resData;
-				                $scope.dlgInsttotal = resData.length;
-//				                $scope.showdlgPersonasDialog(resData);
-				                $scope.showdlgInstDialog(resData);  
-				            }
-				        }, function error(errResponse) {
-				            console.log("Buscar x CodEjec data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse.statusText + " xhrStat " + errResponse.xhrStatus);
-				            var errData = errResponse.data;
-				            if(errData && typeof(errData.message) != 'undefined'){
-				                $mdDialog.show(
-				                    $mdDialog.alert().multiple(true)
-				                    .parent(angular.element(document.body))
-				                    .clickOutsideToClose(true)
-				                    .title('Buscar por ejecutora - Registramef')
-				                    .textContent(errData.message)
-				                    .ariaLabel('ERROR')
-				                    .ok('ACEPTAR')
-				                    .targetEvent(errData)
-				                );
-				                dato.idEntidadTxt = null;
-				                dato.idEntidad = null;
-				            }
-				        });
-				    };
 				    
 				    //***********************************************************************************************
 				    $scope.datoCapaPublico = [];
@@ -4080,4 +4277,4 @@ $scope.loadlistaMsSedes=function(){
         };
 };
 
-//MPINARES 14022024 - FIN
+//FIN CUSCATA - 25072024

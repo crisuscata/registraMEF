@@ -714,14 +714,13 @@ data-ng-init="editdtCapacitacion()">
 			
 			<div layout="row" layout-align="center center" flex="100">
 				  <div>
-					  <md-button class="md-raised"
-					 			 aria-label="Agregar Participante"
-								 ng-click="showDialogUsuario($event)">
-								 
-					 		 <md-icon md-font-set="material-icons" style="color: grey;">work_outline</md-icon>
-					  <span>Agregar Participante</span>
 					  
-					  </md-button>
+					  <md-button class="md-raised"
+						  aria-label="Show Participante"
+							ng-click="showDialogParticipante($event)">
+						  <md-icon md-font-set="material-icons" style="color: grey;">work_outline</md-icon>
+						  <span>Agregar Participante</span>
+				  	  </md-button>
 					  
 					  <md-button class="md-raised"
 					 			 aria-label="Agregar Participante"
@@ -831,13 +830,6 @@ data-ng-init="editdtCapacitacion()">
 								<md-icon md-font-set="material-icons">mail</md-icon>
 							 </md-button>
 						
-							<md-button  class="md-icon-button md-primary"
-										ng-click="removeUsuario($event,dato)" 
-										>
-								<md-icon md-font-set="material-icons">remove</md-icon>
-							 </md-button> 
-							 
-							 
 						</td>
 
 					</tr>
