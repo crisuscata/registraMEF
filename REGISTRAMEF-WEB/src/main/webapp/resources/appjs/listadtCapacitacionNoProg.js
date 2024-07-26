@@ -33,8 +33,8 @@ var descargarvistaUrl = contexto+"/rs/ctrldtCapacitacion/descargarvista";
 var listaMsSedesUrl = contexto+"/rs/ctrldtCapacitacion/listamsSedes";
 var listaMsTemaidTemaIdTemaUrl = contexto+"/rs/ctrldtCapacitacion/listaMsTemaIdTemaIdTema";
 var listaMsSubtemaidSubtemaIdSubtemaUrl = contexto+"/rs/ctrldtCapacitacion/listaMsSubtemaIdSubtemaIdSubtema/";
-var buscarCodEjecUrl = contexto+"/rs/ctrldtCapacitacion/buscarcodejec/";
-var listaMsInstitucionesidproveeUrl = contexto+"/rs/ctrldtCapacitacion/listaMsInstitucionesIdprovee/";
+var buscarCodEjecUrl = contexto+"/rs/ctrldtAsistencia/buscarcodejec/";
+var listaMsInstitucionesidproveeUrl = contexto+"/rs/ctrldtAsistencia/listaMsInstitucionesIdprovee/";
 var listaPrtParametrosidparametroIdPublicoUrl = contexto+"/rs/ctrldtCapacitacion/listaPrtParametrosIdparametroIdPublico";
 var situacionSTDUrl = contexto+"/rs/ctrldtCapacitacion/situaciontramite/";
 var listaProcedeEjecucionUrl = contexto+"/rs/ctrldtCapacitacion/listaProcedeEjecucion";
@@ -1296,7 +1296,10 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 						idCargoUsuextTxt: null,
 						correoUsuext: null,
 						fijoUsuext: null,
-						celularUsuext: null
+						celularUsuext: null,
+						codEjecutora: null,
+						idEntidadTxt: null,
+						idEntidad: null
 				};
 				
 				$scope.hideDialogParticipantes = function () {
@@ -1317,6 +1320,12 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 		        	$scope.usuarioModelo.fijoUsuext= null;
 		        	$scope.usuarioModelo.celularUsuext= null;
 		        	$scope.usuarioModelo.nombresApellidos= null;
+		        	$scope.usuarioModelo.codEjecutora= null;
+		        	$scope.usuarioModelo.idEntidadTxt= null;
+		        	$scope.usuarioModelo.idEntidad = null;
+		        	
+		        	$scope.selectedItem = null;
+		        	
 		        	$scope.listaCargos=[];
 		        }
 				
@@ -1490,7 +1499,11 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 				            var resData = res.data;
 				            if(resData.length==1){
 				                var institucion = resData[0];
-				                console.log(JSON.stringify(institucion));
+				                console.log("JSON.stringify(institucion): "+JSON.stringify(institucion));
+				                
+				                $scope.usuarioModelo.codEjecutora = institucion.codEjec; 
+				                $scope.usuarioModelo.idEntidadTxt = institucion.razSocialUbigeo;
+				                $scope.usuarioModelo.idEntidad = institucion.idEntidad;
 				                
 				              /*  dato.codEjecutora = institucion.codEjec; 
 				                dato.idEntidadTxt = institucion.razSocialUbigeo;
@@ -1498,6 +1511,7 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 				                console.log('modelo', dato);
 
 				                $scope.selectedItem = institucion; */
+				                $scope.selectedItem = institucion;
 				                
 				            } else if(resData.length>1){
 				                $scope.dlgInstmsInstitucionesDtoss = resData;
@@ -3197,10 +3211,6 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 
 			    	$scope.listaMsInstitucionesIdprovee=[];
 			    	$scope.querySearchMsInstitucionesIdprovee = function(query) {
-//			    		var results = query ?
-//			    		$scope.listaMsInstitucionesIdprovee.filter($scope.createFilterForMsInstitucionesIdprovee(query))
-//			    		: $scope.listaMsInstitucionesIdprovee,
-//			    		return results;
 			    		var sUrl = listaMsInstitucionesidproveeUrl+query;
 			    		return $http.get(sUrl).then(function(res){
 			    			$scope.listaMsInstitucionesIdprovee = res.data;
@@ -3223,11 +3233,13 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 			    	}
 
 			    	$scope.selectedItemChangeMsInstitucionesIdprovee = function(item) {
-			    		if($scope.isObject(item)){
+			    		if($scope.isObject(item)) {
 			    			console.log('Item changed to ' + JSON.stringify(item));
-			    			$scope.capaEntidadmodelo.idEntidad = item.idEntidad;
-			    			$scope.capaEntidadmodelo.idEntidadTxt = item.razSocialUbigeo;
-			    			$scope.capaEntidadmodelo.codEjecutora  = item.codEjec;
+			    			
+			    			$scope.usuarioModelo.codEjecutora = item.codEjec; 
+			                $scope.usuarioModelo.idEntidadTxt = item.razSocialUbigeo;
+			                $scope.usuarioModelo.idEntidad = item.idEntidad;
+			    			
 			    		}
 			    	}
 //			    	AUTOCOMPLETE FIN
@@ -3241,7 +3253,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 			    			idCargo: null,
 			    			idCargoTxt: null,
 			    			add: null
-						};
+					};
 			    	
 			    	$scope.clearCapaPublicomodelo= function(){
 						$scope.capaPublicomodelo.contador= null;
