@@ -3773,6 +3773,10 @@ $scope.selection = function(dato) {
 			$scope.isAsistencia = false;
 			$scope.showDialogGenericConfirmar(ev);
 		};
+		
+		
+		
+		
     	
 ///FIN ADICIONALES			 			 
 	// ////////////////////////////////////////////////////////////////
