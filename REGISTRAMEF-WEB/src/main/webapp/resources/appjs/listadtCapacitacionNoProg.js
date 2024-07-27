@@ -3736,7 +3736,43 @@ $scope.selection = function(dato) {
 };
 		 * */
 		
-    	
+		$scope.showDialogGenericConfirmar = function(ev) {
+			ev.target.disabled = true;
+			$mdDialog.show({
+				templateUrl: contexto+"/dialogos/editarCapaConfirmar.html",
+				scope: $scope,
+				preserveScope: true,
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				clickOutsideToClose: true
+			}).then($scope.closeDialog, $scope.cancelDialod);	
+			ev.target.disabled = false;
+		}
+		
+		//DIALOG CONFIRMATION
+		$scope.isConfirmation = false;
+		$scope.showDialogConfirmar = function(ev) {
+			$scope.isConfirmation = true;
+			$scope.isAsistencia = false;
+			$scope.isNoAsistencia = false;
+			$scope.showDialogGenericConfirmar(ev);
+		};
+		
+		$scope.isAsistencia = false;
+		$scope.showDialogAsistencia = function(ev) {
+			$scope.isAsistencia = true;
+			$scope.isConfirmation = false;
+			$scope.isNoAsistencia = false;
+			$scope.showDialogGenericConfirmar(ev);
+		};
+		
+		$scope.isNoAsistencia = false;
+		$scope.showDialogNoAsistencia = function(ev) {
+			$scope.isNoAsistencia = true;
+			$scope.isConfirmation = false;
+			$scope.isAsistencia = false;
+			$scope.showDialogGenericConfirmar(ev);
+		};
     	
 ///FIN ADICIONALES			 			 
 	// ////////////////////////////////////////////////////////////////

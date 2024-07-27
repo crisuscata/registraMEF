@@ -1,0 +1,62 @@
+<md-dialog layout-padding>
+<!-- //MPINARES 14022024 - INICIO - NUEVO HTML-->
+<md-dialog-content md-whiteframe="1" class="overflowEsconder" md-colors="{background: 'background-A100'}">
+ <form name="dtCapacitacionForm3">
+ 
+ <md-toolbar ng-if="isConfirmation">
+    <div class="md-toolbar-tools">
+      <h2>Confirmaci&oacute;n de Inscripci&oacute;n</h2>
+    </div>
+  </md-toolbar>
+  
+   <md-toolbar ng-if="isAsistencia">
+    <div class="md-toolbar-tools">
+      <h2>Confirmaci&oacute;n de Asistencia</h2>
+    </div>
+  </md-toolbar>
+  
+  <md-toolbar ng-if="isNoAsistencia">
+    <div class="md-toolbar-tools">
+      <h2>Confirmaci&oacute;n de Asistencia</h2>
+    </div>
+  </md-toolbar>
+ 
+ <div layout="row" layout-aling="center start" 
+				style="font-size: 14px;" ng-if="isConfirmation">     
+       		 &#191;Esta seguro de confirmar la inscripci&oacute;n a el(los) participante(s) seleccionado(s)? El sistema enviar&aacute; correo de confirmaci&oacute;n.
+ </div>
+ 
+  <div layout="row" layout-aling="center start" 
+				style="font-size: 14px;" ng-if="isAsistencia">     
+       		 &#191;Est&aacute; seguro de confirmar la asistencia a el(los) participante(s) seleccionado(s)?
+ </div>
+ 
+   <div layout="row" layout-aling="center start" 
+				style="font-size: 14px;" ng-if="isNoAsistencia">     
+       		 &#191;Est&aacute; seguro de confirmar la inasistencia a el(los) participante(s) seleccionado(s)?
+ </div>
+ 
+ </form>
+</md-dialog-content>
+<md-dialog-actions layout="row" layout-align="center end">
+
+
+	<md-button class="md-raised md-primary alargarBoton" ng-click="nuevoCapaTemasmodelo" ng-if="isConfirmation">
+      Aceptar
+    </md-button>
+    
+    <md-button class="md-raised md-primary alargarBoton" ng-click="nuevoCapaTemasmodelo" ng-if="isAsistencia">
+      Aceptar
+    </md-button>
+    
+    <md-button class="md-raised md-primary alargarBoton" ng-click="nuevoCapaTemasmodelo" ng-if="isNoAsistencia">
+      Aceptar
+    </md-button>
+
+    <md-button class="md-raised md-primary alargarBoton" ng-click="cancel()">
+      Cancelar
+    </md-button>
+    
+    
+</md-dialog-actions>   
+</md-dialog>
