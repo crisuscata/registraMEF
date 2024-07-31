@@ -220,4 +220,15 @@ public class DtCapaUsuexternosDaoImp extends
 			return retorno;
 		}
 	}
+
+	@Override
+	public List<DtCapaUsuexternos> getByIdCapacDtCapaUsuariosExt(Long idCapacitacion) {
+		StringBuffer sb = new StringBuffer(100);
+		sb.append("select t from " + getDomainClass().getName()
+				+ " t where t.idCapacitacion = ? and t.estado >= "+Estado.ACTIVO.getValor()+" order by t.idCapaUsuext asc ");
+		Object param[] = new Object[1];
+		param[0] = idCapacitacion;
+		List<DtCapaUsuexternos> lista = super.find(sb.toString(), param);
+		return lista;
+	}
 }

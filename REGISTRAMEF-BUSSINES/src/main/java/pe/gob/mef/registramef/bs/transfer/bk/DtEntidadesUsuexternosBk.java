@@ -35,6 +35,7 @@ public class DtEntidadesUsuexternosBk implements java.io.Serializable {
 	private String idEntidadTxt = null;
 	private String idUsuexternoTxt = null;
 	private String estadoTxt = null;
+	private String codEjecutora = null;
 	
 	private DtEntidadesUsuexternosACL dtEntidadesUsuexternosACL = null;		
 		
@@ -196,5 +197,13 @@ public String getNombre() {
 	}
 
 	public void setEsEliminado(boolean esEliminado) {		
+	}
+
+	public String getCodEjecutora() {
+		return codEjecutora;
+	}
+
+	public void setCodEjecutora(String codEjecutora) {
+		this.codEjecutora = codEjecutora;
 	}
 }

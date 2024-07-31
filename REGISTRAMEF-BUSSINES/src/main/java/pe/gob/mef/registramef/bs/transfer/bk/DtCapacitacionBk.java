@@ -98,6 +98,8 @@ public class DtCapacitacionBk implements java.io.Serializable {
 		private List<DtCapacitacionBk> dtCapaAcumulaListBkJSss = null;
 		//MPINARES 14022024 - FIN
 		
+	private List<DtCapaUsuexternosBk> dtCapacitacionUsuariosBkJSss = null;
+		
 	public DtCapacitacionBk() {
 	}
 	
@@ -763,6 +765,14 @@ public class DtCapacitacionBk implements java.io.Serializable {
 			}
 		}
 		return sb.toString();
+	}
+
+	public List<DtCapaUsuexternosBk> getDtCapacitacionUsuariosBkJSss() {
+		return dtCapacitacionUsuariosBkJSss;
+	}
+
+	public void setDtCapacitacionUsuariosBkJSss(List<DtCapaUsuexternosBk> dtCapacitacionUsuariosBkJSss) {
+		this.dtCapacitacionUsuariosBkJSss = dtCapacitacionUsuariosBkJSss;
 	}
 	
 	

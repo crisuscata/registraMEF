@@ -13,6 +13,7 @@ import pe.gob.mef.registramef.bs.dao.DtEntidadesUsuexternosDao;
 import pe.gob.mef.registramef.bs.dao.base.AbstractJpaCRUDDao;
 import pe.gob.mef.registramef.bs.domain.DtEntidadesUsuexternos;
 import pe.gob.mef.registramef.bs.utils.Estado;
+import pe.gob.mef.registramef.bs.utils.PropertiesMg;
 
 /**
  * DT_ENTIDADES_USUEXTERNOS REPOSITORIO: LISTA DE LAS ENTIDADES A LA QUE PERTENECE EL USUARIO EXTERNO
@@ -30,8 +31,15 @@ public class DtEntidadesUsuexternosDaoImp extends
 		DtEntidadesUsuexternosDao {
 
 	private static final Logger log = Logger.getLogger(DtEntidadesUsuexternosDaoImp.class.getName());
+	
+	private Long estadoNuevo = 1L;
+	private Long estadoEliminado = 0L;
 
 	public DtEntidadesUsuexternosDaoImp() {
+		
+		this.estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);
+		this.estadoEliminado = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_ELIMINADO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_ELIMINADO);
+		
 		log.log(Level.INFO,null,"INICIALIZANDO JPA TEMPLATE PARA DtEntidadesUsuexternosDaoImp");
 	}
 	
@@ -218,4 +226,31 @@ public class DtEntidadesUsuexternosDaoImp extends
 				return lista;
 			}
 			//PURIBE 14032024 - FIN-->
+
+			@Override
+			public List<DtEntidadesUsuexternos> getDtEntidadUsuarioByUser(Long idUsuexterno) {
+				List<DtEntidadesUsuexternos> lista = new ArrayList<DtEntidadesUsuexternos>();
+				try {
+					StringBuffer sb = new StringBuffer(100);			
+					sb.append("select t from " + getDomainClass().getName()	+ " t ");
+
+					if (idUsuexterno != null && idUsuexterno.intValue() >= 0) {
+						sb.append(" where t.estado = "+Estado.ACTIVO.getValor()+" and t.idUsuexterno = ? ");	
+						//sb.append(" order by t.id_sede asc ");
+					}			
+					Object param[] = new Object[1];
+					param[0] = idUsuexterno;
+					lista = super.find(sb.toString(), param);						
+					
+
+				} catch (Exception e) {
+					log.info(e.getMessage());
+				}		
+				return lista;		
+			}
+
+			@Override
+			public Long getEstadoEliminado() {
+				return estadoEliminado;
+			}
 }

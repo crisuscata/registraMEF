@@ -28,7 +28,8 @@ public class DtCapaUsuexternosBk implements java.io.Serializable {
 	private Long estado = null;
 	private String rtmaddress = null;
 	private String rtmaddressrst = null;
-	private Long idUsuexterno = null;private String nombre = null;
+	private Long idUsuexterno = null;
+	private String nombre = null;
 	private Long idCargoUsuext = null;
 	private Long idEntidad = null;
 	private String correoUsuext = null;
@@ -47,6 +48,15 @@ public class DtCapaUsuexternosBk implements java.io.Serializable {
 	private String idUsuexternoTxt = null;
 	private String idCargoUsuextTxt = null;
 	private String idEntidadTxt = null;
+	
+	private String numDocu = null;
+	private String aPaterno = null;
+	private String aMaterno = null;
+	private String nombresApellidos = null;
+	private String codEjecutora = null;
+	private Long idCargo = null;
+	private String idCargoTxt = null;
+	
 	
 	private DtCapaUsuexternosACL dtCapaUsuexternosACL = null;		
 		
@@ -317,4 +327,61 @@ public String getNombre() {
 
 	public void setEsEliminado(boolean esEliminado) {		
 	}
+
+	public String getNumDocu() {
+		return numDocu;
+	}
+
+	public void setNumDocu(String numDocu) {
+		this.numDocu = numDocu;
+	}
+
+	public String getaPaterno() {
+		return aPaterno;
+	}
+
+	public void setaPaterno(String aPaterno) {
+		this.aPaterno = aPaterno;
+	}
+
+	public String getaMaterno() {
+		return aMaterno;
+	}
+
+	public void setaMaterno(String aMaterno) {
+		this.aMaterno = aMaterno;
+	}
+
+	public String getNombresApellidos() {
+		return nombresApellidos;
+	}
+
+	public void setNombresApellidos(String nombresApellidos) {
+		this.nombresApellidos = nombresApellidos;
+	}
+
+	public String getCodEjecutora() {
+		return codEjecutora;
+	}
+
+	public void setCodEjecutora(String codEjecutora) {
+		this.codEjecutora = codEjecutora;
+	}
+
+	public Long getIdCargo() {
+		return idCargo;
+	}
+
+	public void setIdCargo(Long idCargo) {
+		this.idCargo = idCargo;
+	}
+
+	public String getIdCargoTxt() {
+		return idCargoTxt;
+	}
+
+	public void setIdCargoTxt(String idCargoTxt) {
+		this.idCargoTxt = idCargoTxt;
+	}
+	
 }

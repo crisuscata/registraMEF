@@ -4850,12 +4850,225 @@ public class ServicioImp implements Servicio, Serializable {
 		Long idTiposervicio=PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA, PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA);
 		
 		this.cargarAnexos(tdAnexosBkss, dtCapacitacion.getIdCapacitacion(), user, kyUsuarioMod, kyAreaMod, rmtaddress, idTiposervicio);
+		
+		this.cargarCapaUsuexternos(dtCapacitacionBk, dtCapacitacion.getIdCapacitacion(), user, kyUsuarioMod, kyAreaMod, rmtaddress);
 
 		dtCapacitacionBk = getDtCapacitacionBkXid(dtCapacitacion.getIdCapacitacion(), kyUsuarioMod);
 		
 		return dtCapacitacionBk;
 	}
 //FIN CUSCATA - 18072024
+	
+	
+	private void cargarCapaUsuexternos(DtCapacitacionBk dtCapacitacionBk, Long idCapacitacion, String user, Long kyUsuarioMod,
+			Long kyAreaMod, String rmtaddress) throws Validador {
+		
+		List<DtCapaUsuexternosBk> dtCapaUsuexternosBkList =  dtCapacitacionBk.getDtCapacitacionUsuariosBkJSss();
+		
+		
+		if(dtCapaUsuexternosBkList!=null){
+			//********************************************************************************************
+			//TRAE LISTA DE usuarios DE BD Y VERIFICA QUE EXISTAN EN LISTA ACTUAL
+			List<DtCapaUsuexternosBk> listausuarios = getDtCapaUsuarioExtByIdDCapa(idCapacitacion);
+			if(listausuarios!=null && listausuarios.size()>0){
+				for (DtCapaUsuexternosBk object : listausuarios) {
+					if(!dtCapaUsuexternosBkList.contains(object)){
+						deleteDtCapaUsuexternos(object,user,kyUsuarioMod,kyAreaMod,rmtaddress);
+					}
+				}
+			}
+			
+			//********************************************************************************************
+			// para dtcapaUsuario
+			if (dtCapaUsuexternosBkList != null
+					&& dtCapaUsuexternosBkList.size() > 0) {
+				for (DtCapaUsuexternosBk dtCapaUsuexternosBkka : dtCapaUsuexternosBkList) {
+					
+					if(dtCapaUsuexternosBkka.getIdCapaUsuext()==null){
+						dtCapaUsuexternosBkka.setIdCapacitacion(idCapacitacion);
+						
+						saveorupdateDtCapaUsuexternosBk(dtCapaUsuexternosBkka,user,kyUsuarioMod, kyAreaMod, rmtaddress);
+						
+						//BUSCAR Y ACTUALIZAR DTUSEREXT CON ENTIDAD VINCULADA
+						if(dtCapaUsuexternosBkka.getIdEntidad()!=null && dtCapaUsuexternosBkka.getIdEntidad().longValue()>0){
+							if(dtCapaUsuexternosBkka.getIdUsuexterno()!=null && dtCapaUsuexternosBkka.getIdUsuexterno().longValue()>0){
+									List<DtEntidadesUsuexternosBk> dtEntidadesUsuexternosBkList=getDtEntidadUsuarioByUser(dtCapaUsuexternosBkka.getIdUsuexterno());
+									if (dtEntidadesUsuexternosBkList!=null && dtEntidadesUsuexternosBkList.size()>0){
+										DtEntidadesUsuexternosBk dtEntidadesUsuexternosBka=dtEntidadesUsuexternosBkList.get(0);
+										if(dtCapaUsuexternosBkka.getIdEntidad().longValue()!=dtEntidadesUsuexternosBka.getIdEntidad().longValue()){
+											dtEntidadesUsuexternosBka.setIdEntidad(dtCapaUsuexternosBkka.getIdEntidad());
+											saveOrUpdateDtEntidadUsuario(dtEntidadesUsuexternosBka, rmtaddress,kyUsuarioMod);
+										}
+									}else{
+										DtEntidadesUsuexternosBk dtEntidadesUsuexternosBkNew=new DtEntidadesUsuexternosBk();
+										dtEntidadesUsuexternosBkNew.setIdUsuexterno(dtCapaUsuexternosBkka.getIdUsuexterno());
+										dtEntidadesUsuexternosBkNew.setIdEntidad(dtCapaUsuexternosBkka.getIdEntidad());
+										saveOrUpdateDtEntidadUsuario(dtEntidadesUsuexternosBkNew, rmtaddress,kyUsuarioMod);
+									}
+							}
+						}
+						
+						
+						//ACTUALIZAR DATOS DE CORREO Y TELEFONO EN TABLA DTUSUARIOS
+						if(dtCapaUsuexternosBkka.getIdUsuexterno()!=null && dtCapaUsuexternosBkka.getIdUsuexterno().longValue()>0){
+							DtUsuarioExternoBk dtUsuarioExternoBka=new DtUsuarioExternoBk();
+							dtUsuarioExternoBka=getDtUsuarioExternoBkXid(dtCapaUsuexternosBkka.getIdUsuexterno());
+							if(dtUsuarioExternoBka!=null){
+								dtUsuarioExternoBka.setCorreo(dtCapaUsuexternosBkka.getCorreoUsuext());
+								dtUsuarioExternoBka.setOtroTelefono(dtCapaUsuexternosBkka.getFijoUsuext());
+								dtUsuarioExternoBka.setOtroCelular(dtCapaUsuexternosBkka.getCelularUsuext());
+								saveorupdateDtUsuarioExternoBk(dtUsuarioExternoBka, user,kyUsuarioMod, kyAreaMod, rmtaddress);
+							}
+						}
+					}
+
+					
+				}
+			}
+		}
+		
+		
+	}
+	
+	private DtUsuarioExternoBk getDtUsuarioExternoBkXid(Long id) {
+		if (id == null)
+			return null;
+		DtUsuarioExterno dtUsuarioExterno = dtUsuarioExternoDao.getDtUsuarioExterno(id);
+		DtUsuarioExternoBk dtUsuarioExternoBk = null;
+		if (dtUsuarioExterno != null) {
+			dtUsuarioExternoBk = new DtUsuarioExternoBk();
+			FuncionesStaticas.copyPropertiesObject(dtUsuarioExternoBk, dtUsuarioExterno);
+			completarDtUsuarioExterno(dtUsuarioExternoBk);
+		} else { 
+			return null;
+		} 
+
+		return dtUsuarioExternoBk;
+	}
+	
+	public DtEntidadesUsuexternosBk saveOrUpdateDtEntidadUsuario(DtEntidadesUsuexternosBk dtEntidadesUsuexternosBk,
+			String rmtaddress, Long kyUsuarioMod) throws Validador {
+
+		ValidacionDtEntidadesUsuexternosMng.validarDtEntidadesUsuexternosBk(dtEntidadesUsuexternosBk);
+
+		DtEntidadesUsuexternos dtEntidadesUsuexternos = null;
+		// Date hoy = new Date(System.currentTimeMillis());
+		Timestamp hoy = new Timestamp(System.currentTimeMillis());
+
+		int nivel = 1;
+
+		try {
+			if (dtEntidadesUsuexternosBk.getIdUsuextEnti() != null
+					&& dtEntidadesUsuexternosBk.getIdUsuextEnti().longValue() > 0) {
+
+				dtEntidadesUsuexternos = dtEntidadesUsuexternosDao
+						.getDtEntidadesUsuexternos(dtEntidadesUsuexternosBk.getIdUsuextEnti());
+
+				boolean cambios = AuditoriaDtEntidadesUsuexternosMng.auditarCambiosDtEntidadesUsuexternos(
+						dtEntidadesUsuexternosBk, dtEntidadesUsuexternos, dtEntidadesUsuexternos.getIdusserCrea(),
+						dtEntidadesUsuexternos.getIdusserCrea().toString(), dtEntidadesUsuexternos.getRtmaddress(),
+						nivel);
+
+				if (cambios) {
+					FuncionesStaticas.copyPropertiesObject(dtEntidadesUsuexternos, dtEntidadesUsuexternosBk);
+					dtEntidadesUsuexternos.setIdusserModif(kyUsuarioMod);
+					dtEntidadesUsuexternos.setFechaModif(hoy);
+					dtEntidadesUsuexternos.setRtmaddressrst(rmtaddress);
+					dtEntidadesUsuexternosDao.updateDtEntidadesUsuexternos(dtEntidadesUsuexternos);
+				}
+			} else {
+
+				dtEntidadesUsuexternosBk.setFechaCrea(hoy);
+				dtEntidadesUsuexternosBk.setFechaModif(hoy);
+				dtEntidadesUsuexternosBk.setIdusserCrea(kyUsuarioMod);
+				dtEntidadesUsuexternosBk.setIdusserModif(kyUsuarioMod);
+				dtEntidadesUsuexternosBk.setRtmaddress(rmtaddress);
+				dtEntidadesUsuexternosBk.setRtmaddressrst(rmtaddress);
+				dtEntidadesUsuexternosBk.setEstado(Estado.ACTIVO.getValor());
+
+				dtEntidadesUsuexternos = new DtEntidadesUsuexternos();
+
+				FuncionesStaticas.copyPropertiesObject(dtEntidadesUsuexternos, dtEntidadesUsuexternosBk);
+				dtEntidadesUsuexternosDao.saveDtEntidadesUsuexternos(dtEntidadesUsuexternos);
+
+				log.log(Level.INFO,
+						"CAMBIO :: " + dtEntidadesUsuexternos.getIdusserModif() + " :: " + " :: "
+								+ dtEntidadesUsuexternos.getRtmaddress() + " :: " + " CREADO " + " :: "
+								+ dtEntidadesUsuexternos.getIdUsuextEnti().toString() + " :: " + "0" + " :: " + "1");
+
+			}
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw new Validador(e.getMessage());
+		}
+
+		dtEntidadesUsuexternosBk = getDtEntidadUsuarioById(dtEntidadesUsuexternos.getIdUsuextEnti());
+		return dtEntidadesUsuexternosBk;
+	}
+	
+	public DtEntidadesUsuexternosBk getDtEntidadUsuarioById(Long id) {
+		if (id == null)
+			return null;
+		DtEntidadesUsuexternos msObject = dtEntidadesUsuexternosDao.getDtEntidadesUsuexternos(id);
+		DtEntidadesUsuexternosBk msObjectBk = null;
+		if (msObject != null) {
+			msObjectBk = new DtEntidadesUsuexternosBk();
+			FuncionesStaticas.copyPropertiesObject(msObjectBk, msObject);
+			completarDtEntidadUsuario(msObjectBk);
+		}
+		return msObjectBk;
+	}
+	
+	
+	private List<DtEntidadesUsuexternosBk> getDtEntidadUsuarioByUser(Long idUsuexterno) {
+		List<DtEntidadesUsuexternosBk> msObjectBks = new ArrayList<DtEntidadesUsuexternosBk>();
+		try {
+			// List<DtEntidadesUsuexternos> msObjectDoms =
+			// dtEntidadSedeDao.getDtEntidadSedeByEntity(idUsuexterno);
+			List<DtEntidadesUsuexternos> msObjectDom = dtEntidadesUsuexternosDao
+					.getDtEntidadUsuarioByUser(idUsuexterno);
+			for (DtEntidadesUsuexternos msObject : msObjectDom) {
+				DtEntidadesUsuexternosBk oObjectBk = new DtEntidadesUsuexternosBk();
+				FuncionesStaticas.copyPropertiesObject(oObjectBk, msObject);
+				completarDtEntidadUsuario(oObjectBk);
+				msObjectBks.add(oObjectBk);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return msObjectBks;
+	}
+	
+	private void completarDtEntidadUsuario(DtEntidadesUsuexternosBk msObjectBks) {
+		try {
+			if (msObjectBks.getEstado() != null && msObjectBks.getEstado().intValue() > 0) {
+				PrtParametros prtParametros = prtParametrosDao.getPrtParametros(msObjectBks.getEstado());
+				if (prtParametros != null)
+					msObjectBks.setEstadoTxt(prtParametros.getDescripcion());
+			}
+
+			if (msObjectBks.getIdEntidad() != null && msObjectBks.getIdEntidad().intValue() > 0) {
+				DtEntidades objectEntidad = dtEntidadesDao.getDtEntidades(msObjectBks.getIdEntidad());
+				if (objectEntidad != null) {
+					msObjectBks.setIdEntidadTxt(objectEntidad.getRazSocial());
+					msObjectBks.setCodEjecutora(objectEntidad.getCodEjec());
+				}
+			}
+
+			if (msObjectBks.getIdUsuexterno() != null && msObjectBks.getIdUsuexterno().intValue() > 0) {
+				DtUsuarioExterno objectUsuario = dtUsuarioExternoDao.getDtUsuarioExterno(msObjectBks.getIdUsuexterno());
+				if (objectUsuario != null) {
+					DtUsuarioExternoBk msObjectBk = new DtUsuarioExternoBk();
+					FuncionesStaticas.copyPropertiesObject(msObjectBk, objectUsuario);
+					msObjectBks.setIdUsuexternoTxt(msObjectBk.getNombreCompleto());
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void deleteDtCapacitacion(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador {
@@ -21536,6 +21749,310 @@ public class ServicioImp implements Servicio, Serializable {
 			} else {
 				return encuestaBk;
 			}
+		}
+
+		@Override
+		public List<DtCapaUsuexternosBk> getDtCapaUsuarioExtByIdDCapa(Long idCapacitacion) {
+			List<DtCapaUsuexternosBk> msObjectBks = new ArrayList<DtCapaUsuexternosBk>();
+			try {
+				List<DtCapaUsuexternos> msObjectDom = dtCapaUsuexternosDao.getByIdCapacDtCapaUsuariosExt(idCapacitacion);
+				for (DtCapaUsuexternos msObject : msObjectDom) {
+					DtCapaUsuexternosBk oObjectBk = new DtCapaUsuexternosBk();
+					FuncionesStaticas.copyPropertiesObject(oObjectBk, msObject);
+					completarDtCapaUsuexternos(oObjectBk);
+					msObjectBks.add(oObjectBk);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return msObjectBks;
+		}
+		
+		public DtCapacitacionBk getDtCapacitacionBkXid(Long id) {
+			if (id == null)
+				return null;
+			DtCapacitacion dtCapacitacion = dtCapacitacionDao.getDtCapacitacion(id);
+			DtCapacitacionBk dtCapacitacionBk = null;
+			if (dtCapacitacion != null) {
+				dtCapacitacionBk = new DtCapacitacionBk();
+				FuncionesStaticas.copyPropertiesObject(dtCapacitacionBk, dtCapacitacion);
+				completarDtCapacitacion(dtCapacitacionBk);
+			}
+			return dtCapacitacionBk;
+		}
+		
+		public void deleteDtEntidadUsuarioExterno(DtEntidadesUsuexternosBk dtEntidadesUsuexternosBk) throws Validador {
+			try {
+				DtEntidadesUsuexternos msObject = null;
+				if (dtEntidadesUsuexternosBk.getIdUsuexterno() != null
+						&& dtEntidadesUsuexternosBk.getIdUsuexterno().longValue() > 0) {
+
+					msObject = dtEntidadesUsuexternosDao
+							.getDtEntidadesUsuexternos(dtEntidadesUsuexternosBk.getIdUsuextEnti());
+
+					// Date hoy = new Date(System.currentTimeMillis());
+					Timestamp hoy = new Timestamp(System.currentTimeMillis());
+
+					msObject.setFechaModif(hoy);
+					msObject.setEstado(dtEntidadesUsuexternosDao.getEstadoEliminado());
+					Long estadoanterior = msObject.getEstado();
+
+					dtEntidadesUsuexternosDao.updateDtEntidadesUsuexternos(msObject);
+
+					log.log(Level.INFO,
+							"CAMBIO :: " + msObject.getIdusserModif() + " :: " + " :: " + msObject.getRtmaddress() + " :: "
+									+ "ELIMINADO DtEntidadSede" + " :: " + msObject.getIdUsuextEnti().toString() + " :: "
+									+ estadoanterior + " :: " + "0");
+				}
+			} catch (Exception e) {
+				log.info(e.getMessage());
+				throw new Validador(e.getMessage());
+			}
+
+		}
+		
+		private List<DtCargosUsuexterBk> getDtCargosUsuexterBks(Long idEntidadUsuext) {
+			List<DtCargosUsuexterBk> msObjectBks = new ArrayList<DtCargosUsuexterBk>();
+			try {
+				List<DtCargosUsuexter> dtCargosUsuexterList = dtCargosUsuexterDao.getByIdDtCargosUsuexter(idEntidadUsuext);
+				for (DtCargosUsuexter msObject : dtCargosUsuexterList) {
+					DtCargosUsuexterBk oObjectBk = new DtCargosUsuexterBk();
+					FuncionesStaticas.copyPropertiesObject(oObjectBk, msObject);
+					// completarMsPaises(oObjectBk);
+					msObjectBks.add(oObjectBk);
+				}
+			} catch (Exception e) {
+				log.info(e.getMessage());
+			}
+			return msObjectBks;
+		}
+		
+		public void enviarNotificacionConfirmacionPorCorreo(final List<DtCapaUsuexternosBk> participantes,
+				final DtCapacitacionBk dtCapacitacionBk, final String url) throws Validador { // VBALDEONH
+
+			Thread myThread = new Thread() {
+				public void run() {
+					try {
+						List<String> recipients = new ArrayList<String>();
+						DtUsuarioExterno usuarioExterno;
+						String nombre = "";
+						// VBALDEONH SPRINT5 INICIO
+						for (DtCapaUsuexternosBk participante : participantes) {
+							recipients = new ArrayList<String>();
+							recipients.add(participante.getCorreoUsuext());
+							usuarioExterno = dtUsuarioExternoDao.getDtUsuarioExterno(participante.getIdUsuexterno());
+							if (usuarioExterno != null)
+								nombre = StringUtils.capitalize(usuarioExterno.getNombre().toLowerCase()) + " "
+										+ StringUtils.capitalize(usuarioExterno.getApaterno().toLowerCase()) + " "
+										+ StringUtils.capitalize(usuarioExterno.getAmaterno().toLowerCase());
+
+							// SPRINT11 INICIO
+							StringBuilder msg = new StringBuilder();
+							msg.append("<table align='center' width='100%'>");
+							msg.append("<tr><td width='50%' align='left'><img src='" + url + "/images/u2.png'></td>");
+							msg.append("<td width='50%' align='right'><img src='" + url + "/images/u0.png'></td></tr>");
+							msg.append("</table>");
+							msg.append(
+									"<div style='padding:11px;line-height:50px;background:#FFFFFF;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-ms-border-radius:5px; width:100%'>");
+							msg.append(
+									"<div align='center' valign='middle' height='33px' style='background:#FFFFFF !important; line-height:28px;align:center !important;valign:middle;background:#C8000E;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;-ms-border-radius:5px; width:100%' ><h1><b style='color:white;'>Estimado(a), "
+											+ nombre + "</b></h1></div>"); 
+
+							Long idVirtual = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_VIRTUAL,
+									PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_VIRTUAL);
+
+							msg.append(
+									"<div valign='middle' height='28px' style='background:#FFFFFF !important; line-height:28px;font-size:20px;'>Un gusto saludarte. A través de este correo, confirmamos tu inscripción a la capacitación \"<b style='font-size:20px;'>"
+											+ (dtCapacitacionBk.getNomEvento() == null ? " "
+													: dtCapacitacionBk.getNomEvento().trim().toUpperCase())
+											+ "\"</b> programada para el "
+											+ (dtCapacitacionBk.getFechaInic() == null ? " "
+													: FuncionesStaticas.getfechaLargaFormateadaConEstilo(
+															dtCapacitacionBk.getFechaInic()))); 
+
+							if (dtCapacitacionBk.getIdModalidad() != null
+									&& dtCapacitacionBk.getIdModalidad().longValue() == idVirtual.longValue()) {
+								msg.append("</div>");
+								msg.append(
+										"<br/><div valign='middle' height='28px' style='background:#FFFFFF !important; line-height:28px;font-size:20px;'>Recuerda unirte a la videollamada, ingresando al siguiente enlace en la fecha y hora antes indicada: ");// SPRINT_3
+								msg.append("<a style='text-decoration:none;' target='_blank' href='"
+										+ dtCapacitacionBk.getDetalleCapaVirtual() + "'><font color='blue'><b>"
+										+ dtCapacitacionBk.getDetalleCapaVirtual() + "</b></font></a> </div>");
+							} else {
+								msg.append(" En " + dtCapacitacionBk.getIdLocalTxt() + ".</div>");
+							}
+							msg.append(
+									"<div valign='middle' height='28px' style='background:#FFFFFF !important; line-height:28px;font-size:20px;'> <br/>  Si tienes alguna consulta, puedes comunicarte con nuestro equipo a través de los datos de contacto que se encuentran en el siguiente directorio virtual: ");
+							msg.append(
+									"<a style='text-decoration:none;' target='_blank' href='http://bit.ly/directorioconectamef'><font color='blue'><b>http://bit.ly/directorioconectamef</b></font></a> </div>");// SPRINT17
+							msg.append(
+									"<br/><div valign='middle' height='28px' style='background:#FFFFFF !important; line-height:28px; font-size:19px;'>¡Contamos con tu participación!</div>");// SPRINT19
+							msg.append(
+									"<div valign='middle' height='50px' style='background:#FFFFFF !important; line-height:50px;font-size:19px;'><p  style='color: red; font-weight:bold'>Equipo CONECTAMEF</p></div>");// SPRINT19
+							msg.append("</div>");
+
+							EmailUtil email = new EmailUtil();
+							email.sendEmail(recipients, null, null,
+									"CONFIRMACIÓN DE INSCRIPCIÓN DE CAPACITACIÓN ─ REGISTRAMEF  ", msg.toString());
+
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			};
+			myThread.start();
+
+		}
+
+		@Override
+		public DtCapacitacionBk confirmardtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, 
+																String user,
+																Long kyUsuarioMod, 
+																Long kyAreaMod, 
+																String rmtaddress) throws Validador {
+			
+			
+			List<DtCapaUsuexternosBk> dtCapaUsuexternosBksss =	dtCapacitacionBk.getDtCapacitacionUsuariosBkJSss();
+			
+			if (dtCapaUsuexternosBksss != null && dtCapaUsuexternosBksss.size() > 0) {
+				
+				List<DtCapaUsuexternosBk> participantes= new ArrayList<DtCapaUsuexternosBk>();
+				dtCapacitacionBk= this.getDtCapacitacionBkXid(dtCapaUsuexternosBksss.get(0).getIdCapacitacion());
+				
+				if(dtCapacitacionBk.getEstado()!=null && dtCapacitacionBk.getEstado().longValue()==PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_FINALIZADO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_FINALIZADO).longValue()) {
+    				//JSFUtil.showError("registro.participante.externo.error.servicio.finalizado");
+    				//return; 
+    			}    
+				
+				try{        				
+					for (DtCapaUsuexternosBk dtCapaUsuexternosBk : dtCapaUsuexternosBksss) {
+						System.out.println(dtCapaUsuexternosBk.getIdCargoUsuext()+"idcapauserext");
+						if(dtCapaUsuexternosBk.getFlagMedioreg()!=null && dtCapaUsuexternosBk.getFlagMedioreg().intValue()==2){
+							
+							dtCapaUsuexternosBk.setFlagConfirReg(Long.valueOf(PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_CONFIRMAR_REGISTRO_SI, PropertiesMg.DEFAULT_PRTPARAMETROS_CONFIRMAR_REGISTRO_SI)));
+		        			dtCapaUsuexternosBk.setFechaFlagConfirReg(new Timestamp(System.currentTimeMillis()));
+		        			
+		        			this.saveorupdateDtCapaUsuexternosBk(dtCapaUsuexternosBk,
+										        					user,
+										        					kyUsuarioMod, 
+										        					kyAreaMod, 
+										        					rmtaddress);	
+		        			
+							participantes.add(dtCapaUsuexternosBk);
+							
+							//ACTUALIZAR PERSONA
+							if(dtCapaUsuexternosBk.getIdUsuexterno()!=null && dtCapaUsuexternosBk.getIdUsuexterno().longValue()>0){
+								
+								DtUsuarioExternoBk userOrig = this.getDtUsuarioExternoBkXid(dtCapaUsuexternosBk.getIdUsuexterno());
+								
+								if(userOrig!=null){
+									
+									userOrig.setCorreo(dtCapaUsuexternosBk.getCorreoUsuext());
+									userOrig.setOtroCelular(dtCapaUsuexternosBk.getCelularUsuext());
+									userOrig.setOtroTelefono(dtCapaUsuexternosBk.getFijoUsuext());
+									this.saveorupdateDtUsuarioExternoBk(userOrig, user, kyUsuarioMod, kyAreaMod, rmtaddress);
+								
+								}
+								//ACTUALIZAR ENTIDAD}
+								if(dtCapaUsuexternosBk.getIdEntidad()!=null && dtCapaUsuexternosBk.getIdEntidad().longValue()>0){
+									
+									DtEntidadesUsuexternosBk entidadUsuorig=new DtEntidadesUsuexternosBk();
+									List<DtEntidadesUsuexternosBk> entidadOrig=this.getDtEntidadUsuarioByUser(userOrig.getIdUsuexterno());
+									
+									if(entidadOrig!=null && entidadOrig.size()>0){
+										//VERIFICAMOS SI EXISTE ENTIDAD IGUAL
+										boolean existentidad=false;
+										for(DtEntidadesUsuexternosBk dtEntidadesUsuexternosBka : entidadOrig){
+											if(dtEntidadesUsuexternosBka.getIdEntidad().longValue()==dtCapaUsuexternosBk.getIdEntidad().longValue()){
+												existentidad=true;
+												entidadUsuorig=dtEntidadesUsuexternosBka;
+												break;
+											}
+										}
+										if(existentidad==false){
+											//SE DESACTIVAN TODAS 
+											for(DtEntidadesUsuexternosBk dtEntidadesUsuexternosBka : entidadOrig){
+												DtEntidadesUsuexternosBk obj=dtEntidadesUsuexternosBka;
+												this.deleteDtEntidadUsuarioExterno(obj);
+											}
+											//SE CREA LA NUEVA
+											DtEntidadesUsuexternosBk dtEntidadesUsuexternosBka=new DtEntidadesUsuexternosBk();
+											dtEntidadesUsuexternosBka.setIdEntidad(dtCapaUsuexternosBk.getIdEntidad());
+											dtEntidadesUsuexternosBka.setIdUsuexterno(dtCapaUsuexternosBk.getIdUsuexterno());
+											entidadUsuorig=this.saveOrUpdateDtEntidadUsuario(dtEntidadesUsuexternosBka, rmtaddress, kyAreaMod);
+										}
+									}else{
+										DtEntidadesUsuexternosBk dtEntidadesUsuexternosBka=new DtEntidadesUsuexternosBk();
+										dtEntidadesUsuexternosBka.setIdEntidad(dtCapaUsuexternosBk.getIdEntidad());
+										dtEntidadesUsuexternosBka.setIdUsuexterno(dtCapaUsuexternosBk.getIdUsuexterno());
+										entidadUsuorig=this.saveOrUpdateDtEntidadUsuario(dtEntidadesUsuexternosBka, rmtaddress, kyAreaMod);
+									}
+									
+									//ACTUALIZAR CARGOS
+									if(dtCapaUsuexternosBk.getIdCargoUsuext()!=null && dtCapaUsuexternosBk.getIdCargoUsuext().longValue()>0){
+										List<DtCargosUsuexterBk> cargodOrig=this.getDtCargosUsuexterBks(entidadUsuorig.getIdUsuextEnti());
+										if(cargodOrig!=null && cargodOrig.size()>0){
+											//VERIFICAMOS SI EXISTE ENTIDAD IGUAL
+											boolean existeCargo=false;
+											for(DtCargosUsuexterBk DtCargosUsuexterBka : cargodOrig){
+												if(DtCargosUsuexterBka.getIdCargo()!=null && DtCargosUsuexterBka.getIdCargo().longValue()==dtCapaUsuexternosBk.getIdCargoUsuext().longValue()){//SPRINT39
+													existeCargo=true;
+													break;
+												}
+											}
+											if(existeCargo==false){
+												DtCargosUsuexterBk dtCargosUsuexterBka=new DtCargosUsuexterBk();
+												dtCargosUsuexterBka.setIdUsuextEnti(entidadUsuorig.getIdUsuextEnti());
+												dtCargosUsuexterBka.setIdCargo(dtCapaUsuexternosBk.getIdCargoUsuext());
+												
+												this.saveorupdateDtCargosUsuexterBk(dtCargosUsuexterBka, user, 
+																					kyUsuarioMod, kyAreaMod,  rmtaddress);
+											}
+										}else{
+											DtCargosUsuexterBk dtCargosUsuexterBka=new DtCargosUsuexterBk();
+											dtCargosUsuexterBka.setIdUsuextEnti(entidadUsuorig.getIdUsuextEnti());
+											dtCargosUsuexterBka.setIdCargo(dtCapaUsuexternosBk.getIdCargoUsuext());
+											this.saveorupdateDtCargosUsuexterBk(dtCargosUsuexterBka, user, 
+																				kyUsuarioMod, kyAreaMod,  rmtaddress);
+										}
+									}
+								}
+
+								
+							}
+
+							
+						}else{
+							//JSFUtil.addWarn("EL PARTICIPANTE CON DNI "+dtCapaUsuexternosBk.getDniUser()+" NO HA SIDO INSCRITO VIRTUALMENTE", "INFORMACIÃN");
+        					//continue; 
+						}
+						
+					}
+					if(participantes!=null && participantes.size()>0)
+						this.enviarNotificacionConfirmacionPorCorreo(participantes,dtCapacitacionBk,  "JSFUtil.getBaseURL()");
+					else{
+						//JSFUtil.addError(Messages.getStringToKey("registro.participante.externo.no.se.notifico"), "ERROR");
+    					//return; 
+					}
+					//JSFUtil.addInfo(Messages.getStringToKey("registro.participante.externo.confirmacion.inscripcion.correcto"), Messages.getStringToKey("registro.participante.externo.confirmacion.inscripcion.titulo"));
+					//return;
+    			} catch (Validador e) {
+    				//JSFUtil.addError(e.getMessage(), "");
+    			} catch (Exception e) {
+    				//log.error("ERROR: " + e.getMessage());
+    			}finally{
+    			//	getDtCapaUsuexternosBkList().setSelectedItems(null);
+				//	dtCapaUsuexternosBkList = null;
+    			//	dtCapaUsuexternosBk=null;
+    			}
+				
+				
+			}
+			
+			
+			return null;
 		}
 		
 		

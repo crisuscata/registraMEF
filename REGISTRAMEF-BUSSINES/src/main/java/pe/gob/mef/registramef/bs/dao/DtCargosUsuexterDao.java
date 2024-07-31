@@ -30,5 +30,6 @@ public interface DtCargosUsuexterDao {
 	List<DtCargosUsuexter> getXFiltro(Long idUsuextEnti,Long idCargo, int iniciar, int max);
 	List<DtCargosUsuexter> getXFiltro(Long idUsuextEnti,Long idCargo);
 	long getTotalXFiltro(Long idUsuextEnti,Long idCargo);
+	List<DtCargosUsuexter> getByIdDtCargosUsuexter(Long id);
 	
 }

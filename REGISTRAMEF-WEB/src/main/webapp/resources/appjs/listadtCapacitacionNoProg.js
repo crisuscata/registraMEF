@@ -21,6 +21,7 @@ var listaMsUsuarios = contexto+"/rs/ctrldtVisitas/listausuarios";
 var descargarUrl = contexto+"/rs/ctrldtCapacitacion/descargar/";
 var valorcrearlUrl = contexto+"/rs/ctrldtCapacitacion/loadvalorcrear";// PURIBE 15042024 - INICIO -->
 var buscarPorNumDocUrl = contexto+"/rs/ctrldtCapacitacion/buscarPorNumDoc/";
+var listaCapaUsuarioExtByIdDCapaUrl = contexto+"/rs/ctrldtCapacitacion/listaCapaUsuarioExtByIdDCapa/";
 
 
 ///URLs CARGA DE ARCHIVOS
@@ -2434,16 +2435,22 @@ $scope.dtCapacitacionModelo.dtCapaPublicoBkJSss= [];
 	 } 
 	 
 	  $scope.setDtCapacitacionModelo = function(dtCapacitacionBk) {
-		  $scope.dtCapacitacionModelo.idCapacitacion = dtCapacitacionBk.idCapacitacion;
+		  
+		    $scope.dtCapacitacionModelo.idCapacitacion = dtCapacitacionBk.idCapacitacion;
+		  
 			$scope.dtCapacitacionModelo.fechaInic = dtCapacitacionBk.fechaInic;
-                        if(!$scope.isNull($scope.dtCapacitacionModelo.fechaInic) && !isNaN($scope.dtCapacitacionModelo.fechaInic)){
+			
+            if(!$scope.isNull($scope.dtCapacitacionModelo.fechaInic) && !isNaN($scope.dtCapacitacionModelo.fechaInic)){
 			    $scope.dtCapacitacionModelo.fechaInic = new Date($scope.dtCapacitacionModelo.fechaInic);
-		        }
-$scope.dtCapacitacionModelo.fechaFin = dtCapacitacionBk.fechaFin;
-                        if(!$scope.isNull($scope.dtCapacitacionModelo.fechaFin) && !isNaN($scope.dtCapacitacionModelo.fechaFin)){
+		    }
+                        
+            $scope.dtCapacitacionModelo.fechaFin = dtCapacitacionBk.fechaFin;
+
+            if(!$scope.isNull($scope.dtCapacitacionModelo.fechaFin) && !isNaN($scope.dtCapacitacionModelo.fechaFin)){
 			    $scope.dtCapacitacionModelo.fechaFin = new Date($scope.dtCapacitacionModelo.fechaFin);
-		        }
-$scope.dtCapacitacionModelo.nomEvento = dtCapacitacionBk.nomEvento;
+		    }
+                        
+            $scope.dtCapacitacionModelo.nomEvento = dtCapacitacionBk.nomEvento;
 			$scope.dtCapacitacionModelo.idSistAdm = dtCapacitacionBk.idSistAdm;
 			$scope.dtCapacitacionModelo.idUsuinterno = dtCapacitacionBk.idUsuinterno;
 			$scope.dtCapacitacionModelo.flagPubli = dtCapacitacionBk.flagPubli;
@@ -2464,95 +2471,144 @@ $scope.dtCapacitacionModelo.nomEvento = dtCapacitacionBk.nomEvento;
 			$scope.dtCapacitacionModelo.idSede = dtCapacitacionBk.idSede;
 			$scope.dtCapacitacionModelo.idFinancia = dtCapacitacionBk.idFinancia;
 			$scope.dtCapacitacionModelo.fechaFinalizacion = dtCapacitacionBk.fechaFinalizacion;
-                        if(!$scope.isNull($scope.dtCapacitacionModelo.fechaFinalizacion) && !isNaN($scope.dtCapacitacionModelo.fechaFinalizacion)){
+			
+           if(!$scope.isNull($scope.dtCapacitacionModelo.fechaFinalizacion) && !isNaN($scope.dtCapacitacionModelo.fechaFinalizacion)){
 			    $scope.dtCapacitacionModelo.fechaFinalizacion = new Date($scope.dtCapacitacionModelo.fechaFinalizacion);
-		        }
-$scope.dtCapacitacionModelo.detalleCapaVirtual = dtCapacitacionBk.detalleCapaVirtual;
+		   }
+                        
+           $scope.dtCapacitacionModelo.detalleCapaVirtual = dtCapacitacionBk.detalleCapaVirtual;
+
 			$scope.dtCapacitacionModelo.fechaIniProgramada = dtCapacitacionBk.fechaIniProgramada;
-                        if(!$scope.isNull($scope.dtCapacitacionModelo.fechaIniProgramada) && !isNaN($scope.dtCapacitacionModelo.fechaIniProgramada)){
+			
+            if(!$scope.isNull($scope.dtCapacitacionModelo.fechaIniProgramada) && !isNaN($scope.dtCapacitacionModelo.fechaIniProgramada)){
 			    $scope.dtCapacitacionModelo.fechaIniProgramada = new Date($scope.dtCapacitacionModelo.fechaIniProgramada);
-		        }
-$scope.dtCapacitacionModelo.fechaFinProgramada = dtCapacitacionBk.fechaFinProgramada;
-                        if(!$scope.isNull($scope.dtCapacitacionModelo.fechaFinProgramada) && !isNaN($scope.dtCapacitacionModelo.fechaFinProgramada)){
+		     }
+                        
+            $scope.dtCapacitacionModelo.fechaFinProgramada = dtCapacitacionBk.fechaFinProgramada;
+
+            if(!$scope.isNull($scope.dtCapacitacionModelo.fechaFinProgramada) && !isNaN($scope.dtCapacitacionModelo.fechaFinProgramada)){
 			    $scope.dtCapacitacionModelo.fechaFinProgramada = new Date($scope.dtCapacitacionModelo.fechaFinProgramada);
-		        }
-$scope.dtCapacitacionModelo.fechaSoli = dtCapacitacionBk.fechaSoli;
-                        if(!$scope.isNull($scope.dtCapacitacionModelo.fechaSoli) && !isNaN($scope.dtCapacitacionModelo.fechaSoli)){
+		    }
+                        
+            $scope.dtCapacitacionModelo.fechaSoli = dtCapacitacionBk.fechaSoli;
+
+            if(!$scope.isNull($scope.dtCapacitacionModelo.fechaSoli) && !isNaN($scope.dtCapacitacionModelo.fechaSoli)){
 			    $scope.dtCapacitacionModelo.fechaSoli = new Date($scope.dtCapacitacionModelo.fechaSoli);
-		        }
+		    }
                         
                       //MPINARES 14022024 - INICIO       
-                        $scope.dtCapacitacionModelo.fechaSoliJUD = dtCapacitacionBk.fechaSoliJUD;
-                               if(!$scope.isNull($scope.dtCapacitacionModelo.fechaSoliJUD) && !isNaN($scope.dtCapacitacionModelo.fechaSoliJUD)){
+             $scope.dtCapacitacionModelo.fechaSoliJUD = dtCapacitacionBk.fechaSoliJUD;
+             
+            if(!$scope.isNull($scope.dtCapacitacionModelo.fechaSoliJUD) && !isNaN($scope.dtCapacitacionModelo.fechaSoliJUD)){
        			    $scope.dtCapacitacionModelo.fechaSoliJUD = new Date($scope.dtCapacitacionModelo.fechaSoliJUD);
-       		        }
-                               $scope.dtCapacitacionModelo.fechaInicJUD = dtCapacitacionBk.fechaInicJUD;
-                               if(!$scope.isNull($scope.dtCapacitacionModelo.fechaInicJUD) && !isNaN($scope.dtCapacitacionModelo.fechaInicJUD)){
+       		}
+             $scope.dtCapacitacionModelo.fechaInicJUD = dtCapacitacionBk.fechaInicJUD;
+                               
+            if(!$scope.isNull($scope.dtCapacitacionModelo.fechaInicJUD) && !isNaN($scope.dtCapacitacionModelo.fechaInicJUD)){
        			    $scope.dtCapacitacionModelo.fechaInicJUD = new Date($scope.dtCapacitacionModelo.fechaInicJUD);
-       		        }
-                               $scope.dtCapacitacionModelo.fechaFinJUD = dtCapacitacionBk.fechaFinJUD;
+       	    }
+                               
+            $scope.dtCapacitacionModelo.fechaFinJUD = dtCapacitacionBk.fechaFinJUD;
+                               
                                if(!$scope.isNull($scope.dtCapacitacionModelo.fechaFinJUD) && !isNaN($scope.dtCapacitacionModelo.fechaFinJUD)){
        			    $scope.dtCapacitacionModelo.fechaFinJUD = new Date($scope.dtCapacitacionModelo.fechaFinJUD);
        		        }
                              //MPINARES 14022024 - FIN  
-$scope.dtCapacitacionModelo.stdIddoc = dtCapacitacionBk.stdIddoc;
+            $scope.dtCapacitacionModelo.stdIddoc = dtCapacitacionBk.stdIddoc;
+
 			$scope.dtCapacitacionModelo.stdNumeroSid = dtCapacitacionBk.stdNumeroSid;
 			$scope.dtCapacitacionModelo.stdNumeroAnio = dtCapacitacionBk.stdNumeroAnio;
 			$scope.dtCapacitacionModelo.stdNumeroDoc = dtCapacitacionBk.stdNumeroDoc;
 			$scope.dtCapacitacionModelo.stdAsunto = dtCapacitacionBk.stdAsunto;
 			$scope.dtCapacitacionModelo.stdTipoDoc = dtCapacitacionBk.stdTipoDoc;
+			
 			$scope.dtCapacitacionModelo.stdFechaRecepcion = dtCapacitacionBk.stdFechaRecepcion;
+			
                         if(!$scope.isNull($scope.dtCapacitacionModelo.stdFechaRecepcion) && !isNaN($scope.dtCapacitacionModelo.stdFechaRecepcion)){
 			    $scope.dtCapacitacionModelo.stdFechaRecepcion = new Date($scope.dtCapacitacionModelo.stdFechaRecepcion);
 		        }
-$scope.dtCapacitacionModelo.stdModalidadIng = dtCapacitacionBk.stdModalidadIng;
+                        
+            $scope.dtCapacitacionModelo.stdModalidadIng = dtCapacitacionBk.stdModalidadIng;
 			$scope.dtCapacitacionModelo.flagEjec = dtCapacitacionBk.flagEjec;
 			$scope.dtCapacitacionModelo.motivoEjec = dtCapacitacionBk.motivoEjec;
 			
                         // ADICIONALES
-	                $scope.dtCapacitacionModelo.idSistAdmTxt = dtCapacitacionBk.idSistAdmTxt;
-$scope.dtCapacitacionModelo.idUsuinternoTxt = dtCapacitacionBk.idUsuinternoTxt;
-$scope.dtCapacitacionModelo.idModalidadTxt = dtCapacitacionBk.idModalidadTxt;
-$scope.dtCapacitacionModelo.idProgramacionTxt = dtCapacitacionBk.idProgramacionTxt;
-$scope.dtCapacitacionModelo.estadoTxt = dtCapacitacionBk.estadoTxt;
-$scope.dtCapacitacionModelo.idLocalTxt = dtCapacitacionBk.idLocalTxt;
-$scope.dtCapacitacionModelo.idModoTxt = dtCapacitacionBk.idModoTxt;
-$scope.dtCapacitacionModelo.idNivelTxt = dtCapacitacionBk.idNivelTxt;
-$scope.dtCapacitacionModelo.idOrigenTxt = dtCapacitacionBk.idOrigenTxt;
-$scope.dtCapacitacionModelo.idPrestacionTxt = dtCapacitacionBk.idPrestacionTxt;
-$scope.dtCapacitacionModelo.idTipoTxt = dtCapacitacionBk.idTipoTxt;
-$scope.dtCapacitacionModelo.idSedeTxt = dtCapacitacionBk.idSedeTxt;
-$scope.dtCapacitacionModelo.idFinanciaTxt = dtCapacitacionBk.idFinanciaTxt;
+	        $scope.dtCapacitacionModelo.idSistAdmTxt = dtCapacitacionBk.idSistAdmTxt;
+			$scope.dtCapacitacionModelo.idUsuinternoTxt = dtCapacitacionBk.idUsuinternoTxt;
+			$scope.dtCapacitacionModelo.idModalidadTxt = dtCapacitacionBk.idModalidadTxt;
+			$scope.dtCapacitacionModelo.idProgramacionTxt = dtCapacitacionBk.idProgramacionTxt;
+			$scope.dtCapacitacionModelo.estadoTxt = dtCapacitacionBk.estadoTxt;
+			$scope.dtCapacitacionModelo.idLocalTxt = dtCapacitacionBk.idLocalTxt;
+			$scope.dtCapacitacionModelo.idModoTxt = dtCapacitacionBk.idModoTxt;
+			$scope.dtCapacitacionModelo.idNivelTxt = dtCapacitacionBk.idNivelTxt;
+			$scope.dtCapacitacionModelo.idOrigenTxt = dtCapacitacionBk.idOrigenTxt;
+			$scope.dtCapacitacionModelo.idPrestacionTxt = dtCapacitacionBk.idPrestacionTxt;
+			$scope.dtCapacitacionModelo.idTipoTxt = dtCapacitacionBk.idTipoTxt;
+			$scope.dtCapacitacionModelo.idSedeTxt = dtCapacitacionBk.idSedeTxt;
+			$scope.dtCapacitacionModelo.idFinanciaTxt = dtCapacitacionBk.idFinanciaTxt;
 
-//MPINARES 14022024 - INICIO
-$scope.dtCapacitacionModelo.dtCapaTemasBkJSss = dtCapacitacionBk.dtCapaTemasBkJSss;
-if(dtCapacitacionBk.dtCapaTemasBkJSss!=null && dtCapacitacionBk.dtCapaTemasBkJSss.length>0){
-	$scope.datoCapasTema = $scope.dtCapacitacionModelo.dtCapaTemasBkJSss;
-}else{
-	$scope.datoCapasTema = [];
-}
-$scope.dtCapacitacionModelo.dtCapaEntidadesBkJSss = dtCapacitacionBk.dtCapaEntidadesBkJSss;
-if(dtCapacitacionBk.dtCapaEntidadesBkJSss!=null && dtCapacitacionBk.dtCapaEntidadesBkJSss.length>0){
-	$scope.datoCapaEntidades = $scope.dtCapacitacionModelo.dtCapaEntidadesBkJSss;
-}else{
-	$scope.datoCapaEntidades = [];
-}
-$scope.dtCapacitacionModelo.dtCapaPublicoBkJSss = dtCapacitacionBk.dtCapaPublicoBkJSss;
-if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoBkJSss.length>0){
-	$scope.datoCapaPublico = [];
-	for(var i = 0; i < dtCapacitacionBk.dtCapaPublicoBkJSss.length; i++)
-	{
-		var capaPublico = dtCapacitacionBk.dtCapaPublicoBkJSss[i];
-		$scope.addCapaPublico(capaPublico, i, dtCapacitacionBk.dtCapaPublicoBkJSss.length);
-	}
-}
-//MPINARES 14022024 - FIN
+			//MPINARES 14022024 - INICIO
+			$scope.dtCapacitacionModelo.dtCapaTemasBkJSss = dtCapacitacionBk.dtCapaTemasBkJSss;
+			if(dtCapacitacionBk.dtCapaTemasBkJSss!=null && dtCapacitacionBk.dtCapaTemasBkJSss.length>0){
+				$scope.datoCapasTema = $scope.dtCapacitacionModelo.dtCapaTemasBkJSss;
+			}else{
+				$scope.datoCapasTema = [];
+			}
+			
+			$scope.dtCapacitacionModelo.dtCapaEntidadesBkJSss = dtCapacitacionBk.dtCapaEntidadesBkJSss;
+			
+			if(dtCapacitacionBk.dtCapaEntidadesBkJSss!=null && dtCapacitacionBk.dtCapaEntidadesBkJSss.length>0){
+				$scope.datoCapaEntidades = $scope.dtCapacitacionModelo.dtCapaEntidadesBkJSss;
+			}else{
+				$scope.datoCapaEntidades = [];
+			}
+			
+			$scope.dtCapacitacionModelo.dtCapaPublicoBkJSss = dtCapacitacionBk.dtCapaPublicoBkJSss;
+			
+			if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoBkJSss.length>0){
+				$scope.datoCapaPublico = [];
+				for(var i = 0; i < dtCapacitacionBk.dtCapaPublicoBkJSss.length; i++)
+				{
+					var capaPublico = dtCapacitacionBk.dtCapaPublicoBkJSss[i];
+					$scope.addCapaPublico(capaPublico, i, dtCapacitacionBk.dtCapaPublicoBkJSss.length);
+				}
+			}
 
 			$scope.dtCapacitacionModelo.editopcion = dtCapacitacionBk.dtCapacitacionACL.editopcion;
 			$scope.dtCapacitacionModelo.addEntidad = dtCapacitacionBk.dtCapacitacionACL.addEntidad;
+			
+			
+			$scope.loadlistaCapaUsuarioExt(dtCapacitacionBk.idCapacitacion);
+			
 		}
 	  
-	//MPINARES 14022024 - INICIO
+	  
+	//  $scope.listaCapaUsuarioExt=[];
+	  
+	  $scope.loadlistaCapaUsuarioExt=function(idCapa){
+			$http.get(listaCapaUsuarioExtByIdDCapaUrl+idCapa).then(function(res){
+				//$scope.listaCapaUsuarioExt = res.data; 
+				
+				
+				$scope.datoUsuario = res.data;
+				
+				console.log("$scope.datoUsuario: " + JSON.stringify( $scope.datoUsuario ));
+				
+			},
+			function error(errResponse) {
+				var dato;
+				if(errResponse && errResponse.data){
+				   console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+				   dato = errResponse.data;
+				}
+				if(errResponse.message){ 
+					console.log("Message " + errResponse.message);
+					dato = errResponse.message;
+				}
+			});
+		};
+	  
+	  
 		$scope.addCapaPublico = function (capaPublico, i, size) {
 			var addx=false;
 			if(i+1==size){
@@ -2569,7 +2625,6 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 			})
 
 		};
-	//MPINARES 14022024 - FIN
 	  // ////////////////////////////////////////////////
 	  $scope.editarDtCapacitacion = function(ev, dtCapacitacionBk) {		  
 		    $scope.setDtCapacitacionModelo(dtCapacitacionBk);		  
@@ -2660,7 +2715,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
           });
 };
 	  
-	  $scope.addTema= function(){	
+	  $scope.addTemaAndUsers= function(){	
 		  var propertiesToRemove = ['contador', 'add'];
 		  
 		  if($scope.isArray($scope.datoCapasTema)){
@@ -2669,6 +2724,15 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 					$scope.dtCapacitacionModelo.dtCapaTemasBkJSss =  $scope.removePropertiesFromList(angular.copy($scope.datoCapasTema), propertiesToRemove);
 					
 					console.log("$scope.dtCapacitacionModelo.dtCapaTemasBkJSss:" + JSON.stringify($scope.dtCapacitacionModelo.dtCapaTemasBkJSss));
+					
+				}
+			}
+		  
+		  if($scope.isArray($scope.datoUsuario)) {
+				if($scope.datoUsuario.length>0) {
+					$scope.dtCapacitacionModelo.dtCapacitacionUsuariosBkJSss = $scope.removePropertiesFromList(angular.copy($scope.datoUsuario), propertiesToRemove);
+					
+					console.log("$scope.dtCapacitacionModelo.dtCapacitacionUsuariosBkJSss:" + JSON.stringify($scope.dtCapacitacionModelo.dtCapacitacionUsuariosBkJSss));
 					
 				}
 			}
@@ -2690,7 +2754,7 @@ if(dtCapacitacionBk.dtCapaPublicoBkJSss!=null && dtCapacitacionBk.dtCapaPublicoB
 					$scope.dtCapacitacionModelo.dtCapaEntidadesBkJSss = $scope.datoCapaEntidades;
 				}};
 				
-				$scope.addTema();
+				$scope.addTemaAndUsers();
 				
 				    ev.target.disabled = true;
 				    var datainsert = angular.toJson($scope.dtCapacitacionModelo);

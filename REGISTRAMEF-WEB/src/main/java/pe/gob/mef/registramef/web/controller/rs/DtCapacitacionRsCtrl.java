@@ -58,6 +58,7 @@ import pe.gob.mef.registramef.bs.transfer.IIDValorDto;
 import pe.gob.mef.registramef.bs.transfer.bk.DtAnexoBk;//INICIO CUSCATA - 18072024
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapaEntidadesBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapaTemasBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtCapaUsuexternosBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapacitacionBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtEntidadesBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtUsuarioExternoBk;
@@ -567,6 +568,57 @@ public class DtCapacitacionRsCtrl {
 		}
 	}
 //FIN CUSCATA - 18072024
+	
+	@POST
+	@Path("/confirmardtCapacitacionNoProg")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response confirmardtCapacitacionNoProg(@Context HttpServletRequest req, @Context HttpServletResponse res,
+			@HeaderParam("authorization") String authString, DtCapacitacionJS dtCapacitacionJS) {
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+		Principal usuario = req.getUserPrincipal();
+		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+		if (msUsuariosBk == null)
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			}).build();
+		
+		if(!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTCAPACITACION_CREA))
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			}).build();
+		
+		String adressRemoto = getRemoteAdress(req);
+
+		DtCapacitacionBk dtCapacitacionC = new DtCapacitacionBk();
+		FuncionesStaticas.copyPropertiesObject(dtCapacitacionC, dtCapacitacionJS);
+		dtCapacitacionC.setIdUsuinterno(msUsuariosBk.getIdusuario());
+		dtCapacitacionC.setIdSede(msUsuariosBk.getIdSede());
+		dtCapacitacionC.setIdSistAdm(msUsuariosBk.getIdSistAdmi());
+
+		try {
+			
+			dtCapacitacionC = servicio.confirmardtCapacitacionNoProg(dtCapacitacionC, msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto);
+			
+			DtCapacitacionData dtCapacitacionData = (DtCapacitacionData) req.getSession().getAttribute("DtCapacitacionData");
+			if(dtCapacitacionData==null){
+				dtCapacitacionData = new DtCapacitacionData();
+				req.getSession().setAttribute("DtCapacitacionData",dtCapacitacionData);
+			}
+			
+			GenericEntity<DtCapacitacionBk> registrors = new GenericEntity<DtCapacitacionBk>(dtCapacitacionC) {
+			};
+			return Response.status(HttpURLConnection.HTTP_OK).entity(registrors).build();
+		} catch (Validador e) {
+			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
+			System.out.println("ERROR: " + mensaje);
+			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+					}).build();
+		}
+	}
+	
+	
 	@POST
 	@Path("/eliminardtCapacitacion")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -1797,6 +1849,39 @@ public class DtCapacitacionRsCtrl {
     			return Response.status(200).entity(registrosx).build();
     		} catch (Exception e) {
 //    			String mensaje = e.getMessage().toUpperCase();
+    			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
+    			System.out.println("ERROR: " + mensaje);
+    			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+    					new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+    					}).build();
+    		}
+    	}
+        
+        @GET
+    	@Path("/listaCapaUsuarioExtByIdDCapa/{idCapa}")
+    	@Produces(MediaType.APPLICATION_JSON)
+    	public Response listaCapaUsuarioExtByIdDCapa(@Context HttpServletRequest req, @Context HttpServletResponse res,
+    			@HeaderParam("authorization") String authString, @PathParam("idCapa") Long idCapa) {
+        	SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    		Principal usuario = req.getUserPrincipal();
+    		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+    		if (msUsuariosBk == null)
+    			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+    					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    			}).build();
+
+    		if(!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTCAPACITACION_CREA))
+    			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+    					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    			}).build();
+
+    		try {
+    			List<DtCapaUsuexternosBk> datos = servicio.getDtCapaUsuarioExtByIdDCapa(idCapa);  
+    			GenericEntity<List<DtCapaUsuexternosBk>> registrosx = new GenericEntity<List<DtCapaUsuexternosBk>>(datos) {
+    			};
+    			return Response.status(200).entity(registrosx).build();
+    		} catch (Exception e) {
     			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
     			System.out.println("ERROR: " + mensaje);
     			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
