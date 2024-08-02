@@ -25,7 +25,7 @@ var descargarUrl = contexto+"/rs/ctrldtCapacitacion/descargar/";
 var valorcrearlUrl = contexto+"/rs/ctrldtCapacitacion/loadvalorcrear";// PURIBE 15042024 - INICIO -->
 var buscarPorNumDocUrl = contexto+"/rs/ctrldtCapacitacion/buscarPorNumDoc/";
 var listaCapaUsuarioExtByIdDCapaUrl = contexto+"/rs/ctrldtCapacitacion/listaCapaUsuarioExtByIdDCapa/";
-
+var listaAnexosByIdDCapaUrl = contexto+"/rs/ctrldtCapacitacion/listaAnexosByIdDCapa/";
 
 ///URLs CARGA DE ARCHIVOS
 var insertDocUrl = contexto+"/rs/ctrldtCapacitacion/insertarchivo";
@@ -2585,21 +2585,28 @@ $scope.dtCapacitacionModelo.dtCapaPublicoBkJSss= [];
 				$scope.dtCapacitacionModelo.addEntidad = dtCapacitacionBk.dtCapacitacionACL.addEntidad;
 			}
 			
-			$scope.loadlistaCapaUsuarioExt(dtCapacitacionBk.idCapacitacion);
+			
+			if(dtCapacitacionBk.dtCapacitacionUsuariosBkJSss!=null && dtCapacitacionBk.dtCapacitacionUsuariosBkJSss.length>0){
+				$scope.datoUsuario = dtCapacitacionBk.dtCapacitacionUsuariosBkJSss;
+			} else{
+				$scope.loadlistaCapaUsuarioExt(dtCapacitacionBk.idCapacitacion);
+			}
+			
+			if(dtCapacitacionBk.dtAnexosBKJSss!=null && dtCapacitacionBk.dtAnexosBKJSss.length>0){
+				//$scope.dtCapacitacionModelo.tdAnexosJSss =  dtCapacitacionBk.dtAnexosBKJSss;
+				$scope.archivos = dtCapacitacionBk.dtAnexosBKJSss;
+			} else{
+				$scope.loadAnexosByIdCapa(dtCapacitacionBk.idCapacitacion);
+			}
+			
+			console.log("$scope.dtCapacitacionModelo.tdAnexosJSss:" + JSON.stringify($scope.dtCapacitacionModelo.tdAnexosJSss));
 			
 		}
 	  
-	  
-	//  $scope.listaCapaUsuarioExt=[];
-	  
 	  $scope.loadlistaCapaUsuarioExt=function(idCapa){
 			$http.get(listaCapaUsuarioExtByIdDCapaUrl+idCapa).then(function(res){
-				//$scope.listaCapaUsuarioExt = res.data; 
-				
 				$scope.datoUsuario = res.data;
-				
 				console.log("$scope.datoUsuario: " + JSON.stringify( $scope.datoUsuario ));
-				
 			},
 			function error(errResponse) {
 				var dato;
@@ -2614,6 +2621,24 @@ $scope.dtCapacitacionModelo.dtCapaPublicoBkJSss= [];
 			});
 		};
 	  
+		
+		$scope.loadAnexosByIdCapa=function(idCapa){
+			$http.get(listaAnexosByIdDCapaUrl+idCapa).then(function(res){
+				//$scope.dtCapacitacionModelo.tdAnexosJSss =  res.data;
+				$scope.archivos = res.data;
+			},
+			function error(errResponse) {
+				var dato;
+				if(errResponse && errResponse.data){
+				   console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+				   dato = errResponse.data;
+				}
+				if(errResponse.message){ 
+					console.log("Message " + errResponse.message);
+					dato = errResponse.message;
+				}
+			});
+		};
 	  
 		$scope.addCapaPublico = function (capaPublico, i, size) {
 			var addx=false;
@@ -3817,13 +3842,34 @@ $scope.dtCapacitacionModelo.dtCapaPublicoBkJSss= [];
 			ev.target.disabled = false;
 		}
 		
+		$scope.isParticipanteNuevo = function(){
+			return $scope.selectedParticipantes.some(c => c.idCapaUsuext == null);
+		}
+		
 		//DIALOG CONFIRMATION
 		$scope.isConfirmation = false;
 		$scope.showDialogConfirmar = function(ev) {
-			$scope.isConfirmation = true;
-			$scope.isAsistencia = false;
-			$scope.isNoAsistencia = false;
-			$scope.showDialogGenericConfirmar(ev);
+			
+			if($scope.isParticipanteNuevo()){
+				
+				$mdDialog.show(
+				         $mdDialog.alert()
+				        .parent(angular.element(document.body))
+				        .clickOutsideToClose(true)
+				        .title('Error en Capacitación')
+				        .textContent("Existen participantes sin guardar, guarde la capacitación")
+				        .ariaLabel('ERROR')
+				        .ok('ACEPTAR')
+				        .targetEvent(ev)
+				    );
+				
+			} else{
+				$scope.isConfirmation = true;
+				$scope.isAsistencia = false;
+				$scope.isNoAsistencia = false;
+				$scope.showDialogGenericConfirmar(ev);
+			}
+			
 		};
 		
 		$scope.isAsistencia = false;
@@ -3871,7 +3917,7 @@ $scope.dtCapacitacionModelo.dtCapaPublicoBkJSss= [];
 				         $mdDialog.alert()
 				        .parent(angular.element(document.body))
 				        .clickOutsideToClose(true)
-				        .title('Confirmar Asistencia')
+				        .title('Confirmar Capacitación')
 				        .textContent("La asistencia de el(los) participante(s) ha sido registrada.")
 				        .ariaLabel('ERROR')
 				        .ok('ACEPTAR')
@@ -3926,7 +3972,7 @@ $scope.dtCapacitacionModelo.dtCapaPublicoBkJSss= [];
 				         $mdDialog.alert()
 				        .parent(angular.element(document.body))
 				        .clickOutsideToClose(true)
-				        .title('Confirmar Asistencia')
+				        .title('Confirmar Capacitación')
 				        .textContent("La asistencia de el(los) participante(s) ha sido registrada.")
 				        .ariaLabel('ERROR')
 				        .ok('ACEPTAR')

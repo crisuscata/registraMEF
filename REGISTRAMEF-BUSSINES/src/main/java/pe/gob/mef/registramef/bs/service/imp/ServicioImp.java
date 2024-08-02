@@ -4269,6 +4269,15 @@ public class ServicioImp implements Servicio, Serializable {
 			e.printStackTrace();
 		}
 		// MPINARES 14022024 - FIN
+		
+		if (dtCapacitacionBk.getIdCapacitacion() != null && dtCapacitacionBk.getIdCapacitacion().longValue() > 0) {
+			Long idTiposervicio=PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA, PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA);
+			List<DtAnexoBk> lstAnexos = this.getDtAnexoXFiltro(null, null, idTiposervicio, null,
+					dtCapacitacionBk.getIdCapacitacion(), null);
+			if (lstAnexos != null && !lstAnexos.isEmpty()) {
+				dtCapacitacionBk.setDtAnexosBKJSss(lstAnexos);
+			}
+		}
 
 	}
 

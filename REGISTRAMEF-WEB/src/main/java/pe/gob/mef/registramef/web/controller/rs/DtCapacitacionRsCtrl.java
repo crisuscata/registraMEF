@@ -1990,6 +1990,41 @@ public class DtCapacitacionRsCtrl {
     		}
     	}
         
+        @GET
+    	@Path("/listaAnexosByIdDCapa/{idCapa}")
+    	@Produces(MediaType.APPLICATION_JSON)
+    	public Response listaAnexosByIdDCapa(@Context HttpServletRequest req, @Context HttpServletResponse res,
+    			@HeaderParam("authorization") String authString, @PathParam("idCapa") Long idCapa) {
+        	SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    		Principal usuario = req.getUserPrincipal();
+    		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+    		if (msUsuariosBk == null)
+    			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+    					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    			}).build();
+
+    		if(!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTCAPACITACION_CREA))
+    			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+    					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+    			}).build();
+
+    		try {
+    			Long idTiposervicio=PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA, PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA);
+    			
+    			List<DtAnexoBk> datos = servicio.getDtAnexoXFiltro(null, null, idTiposervicio, null,idCapa, null);
+    			GenericEntity<List<DtAnexoBk>> registrosx = new GenericEntity<List<DtAnexoBk>>(datos) {
+    			};
+    			return Response.status(200).entity(registrosx).build();
+    		} catch (Exception e) {
+    			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
+    			System.out.println("ERROR: " + mensaje);
+    			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity(
+    					new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+    					}).build();
+    		}
+    	}
+        
         
         @GET
     	@Path("/listaPrtParametrosIdparametroIdPublico")
