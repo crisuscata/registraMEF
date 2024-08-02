@@ -238,6 +238,12 @@ public interface Servicio {
 	DtCapacitacionBk confirmardtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
 	
+	DtCapacitacionBk confirmarAsistenciaCapaNoProg(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
+			Long kyAreaMod, String rmtaddress) throws Validador;
+	
+	DtCapacitacionBk confirmarNOAsistenciaCapaNoProg(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
+			Long kyAreaMod, String rmtaddress) throws Validador;
+	
 	
 	void deleteDtCapacitacion(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador;

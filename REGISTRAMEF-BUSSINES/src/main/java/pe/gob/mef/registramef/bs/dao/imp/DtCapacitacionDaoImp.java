@@ -336,9 +336,9 @@ public class DtCapacitacionDaoImp extends
 			List<Object> hs = new ArrayList<Object>();
 			sb.append("select t from " + getDomainClass().getName() 
 //					+ " t where t.estado >= 0 ");
-					+ " t where (t.estado="+Estado.ACTIVO.getValor()+ " or t.estado="+Estado.ELIMINADO.getValor()+" or t.estado="+Estado.FINALIZADO.getValor()+") ");
+					+ " t where idCapacitacion >=11305");
 			
-			if(idProgramacion!=null){
+			/*if(idProgramacion!=null){
 				sb.append("and t.idProgramacion = ? ");
 				hs.add(idProgramacion);			
 			}
@@ -364,7 +364,7 @@ public class DtCapacitacionDaoImp extends
 			if (idUsuario != null) {
 				sb.append("and t.idusserCrea = ? ");
 				hs.add(idUsuario);
-			}	
+			}	*/
 				
 			 sb.append("order by t.idCapacitacion desc ");
 

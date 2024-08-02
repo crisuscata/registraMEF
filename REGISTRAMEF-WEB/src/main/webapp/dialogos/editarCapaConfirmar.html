@@ -41,15 +41,15 @@
 <md-dialog-actions layout="row" layout-align="center end">
 
 
-	<md-button class="md-raised md-primary alargarBoton" ng-click="nuevoCapaTemasmodelo" ng-if="isConfirmation">
+	<md-button class="md-raised md-primary alargarBoton" ng-click="confirmarParticipante($event)" ng-if="isConfirmation">
       Aceptar
     </md-button>
     
-    <md-button class="md-raised md-primary alargarBoton" ng-click="nuevoCapaTemasmodelo" ng-if="isAsistencia">
+    <md-button class="md-raised md-primary alargarBoton" ng-click="confirmarAsistenciaParticipante($event)" ng-if="isAsistencia">
       Aceptar
     </md-button>
     
-    <md-button class="md-raised md-primary alargarBoton" ng-click="nuevoCapaTemasmodelo" ng-if="isNoAsistencia">
+    <md-button class="md-raised md-primary alargarBoton" ng-click="confirmarNOAsistenciaParticipante($event)" ng-if="isNoAsistencia">
       Aceptar
     </md-button>
 

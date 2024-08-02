@@ -4,6 +4,9 @@ var pglogoff = window.location.origin+contexto+'/logoff.htm';
 var principalUrl = window.location.origin+contexto+'/index.htm';
 var listadtCapacitacionUrl = contexto+"/rs/ctrldtCapacitacion/listadtCapacitacion";
 var insertdtCapacitacionNoProgUrl = contexto+"/rs/ctrldtCapacitacion/salvardtCapacitacionNoProg";
+var confirmardtCapacitacionNoProgUrl = contexto+"/rs/ctrldtCapacitacion/confirmardtCapacitacionNoProg";
+var confirmarAsistenciaCapaNoProgUrl = contexto+"/rs/ctrldtCapacitacion/confirmarAsistenciaCapaNoProg";
+var confirmarNOAsistenciaCapaNoProgUrl = contexto+"/rs/ctrldtCapacitacion/confirmarNOAsistenciaCapaNoProg";
 var eliminardtCapacitacionUrl = contexto+"/rs/ctrldtCapacitacion/eliminardtCapacitacion";
 var activardtCapacitacionUrl = contexto+"/rs/ctrldtCapacitacion/activardtCapacitacion";
 var eliminarListadtCapacitacionUrl = contexto+"/rs/ctrldtCapacitacion/eliminarListadtCapacitacion";
@@ -2574,9 +2577,13 @@ $scope.dtCapacitacionModelo.dtCapaPublicoBkJSss= [];
 				}
 			}
 
-			$scope.dtCapacitacionModelo.editopcion = dtCapacitacionBk.dtCapacitacionACL.editopcion;
-			$scope.dtCapacitacionModelo.addEntidad = dtCapacitacionBk.dtCapacitacionACL.addEntidad;
+			if(dtCapacitacionBk.dtCapacitacionACL!= null && dtCapacitacionBk.dtCapacitacionACL.editopcion!=null){
+				$scope.dtCapacitacionModelo.editopcion = dtCapacitacionBk.dtCapacitacionACL.editopcion;
+			}
 			
+			if(dtCapacitacionBk.dtCapacitacionACL!= null && dtCapacitacionBk.dtCapacitacionACL.addEntidad!=null){
+				$scope.dtCapacitacionModelo.addEntidad = dtCapacitacionBk.dtCapacitacionACL.addEntidad;
+			}
 			
 			$scope.loadlistaCapaUsuarioExt(dtCapacitacionBk.idCapacitacion);
 			
@@ -2588,7 +2595,6 @@ $scope.dtCapacitacionModelo.dtCapaPublicoBkJSss= [];
 	  $scope.loadlistaCapaUsuarioExt=function(idCapa){
 			$http.get(listaCapaUsuarioExtByIdDCapaUrl+idCapa).then(function(res){
 				//$scope.listaCapaUsuarioExt = res.data; 
-				
 				
 				$scope.datoUsuario = res.data;
 				
@@ -3411,8 +3417,8 @@ $scope.dtCapacitacionModelo.dtCapaPublicoBkJSss= [];
 				        	
 				        	var cargo = $scope.listaCargos.find(c=>c.idCargo === idCargo);
 				        	
-				        	$scope.usuarioModelo.idCargoTxt = cargo.idCargoTxt;
-				        	
+				        	$scope.usuarioModelo.idCargoUsuextTxt = cargo.idCargoTxt;
+				        	$scope.usuarioModelo.idCargoUsuext = idCargo;
 				        	
 				        	/*if($scope.datoCapaPublico.length > 1){
 				        		if ($scope.datoCapaPublico.filter(e => e.idCargo === dato.idCargo).length > 1) {
@@ -3757,48 +3763,46 @@ $scope.dtCapacitacionModelo.dtCapaPublicoBkJSss= [];
     	$scope.selectAll = false;
 
     	$scope.toggleAll = function(selectAll) {
+    		$scope.selectedParticipantes = [];
+    		
     	    angular.forEach($scope.datoUsuario, function(dato) {
     	        dato.checked = selectAll;
+    	        
     	        $scope.selection(dato);
+    	        
     	    });
+    	    
     	};
     	
     	 $scope.selectedParticipantes = [];
     	 
 		  $scope.selection = function(participante){
-			  
+			  console.log("participante:" + JSON.stringify(participante));
 			    if(participante.checked){
-			    	$scope.selectedParticipantes.push({
-			    		/*idAsistencia: asistencia.idAsistencia,
-			    		estado: asistencia.estado*/
-			    	 })
 			    	
-			    	console.log('$scope.selectedParticipantes checked: '+ JSON.stringify($scope.selectedParticipantes) );
+			    /*	$scope.selectedParticipantes.push({
+			    		idCapaUsuext: participante.idCapaUsuext,
+			    		idCapacitacion: participante.idCapacitacion,
+			    		estado:  participante.estado,
+		    			flagMedioreg: participante.flagMedioreg,
+		    			flagAsistencia: participante.flagAsistencia,
+		    			flagConfirReg: participante.flagConfirReg,
+		    			correoUsuext: participante.correoUsuext,
+		    			nombre:participante.nombre,
+		    			idCargoUsuext: participante.idCargoUsuext
+		    			
+		    			
+			    	 })  */
+			    	
+			    	$scope.selectedParticipantes.push(participante);
 			    	
 			    }else{
-			    	//$scope.selectedAsist = $scope.selectedAsist.filter(val => val.idAsistencia !== asistencia.idAsistencia);
+			    	$scope.selectedParticipantes = $scope.selectedParticipantes.filter(function(item) {
+			            return item.idCapaUsuext !== participante.idCapaUsuext;
+			        });
 			    	
-			    	//console.log('$scope.selectedAsist no checked: '+ JSON.stringify($scope.selectedAsist) );
 			    }
 		};
-		
-		
-		/**
-$scope.selection = function(dato) {
-    if (dato.checked) {
-        // Add the item to the selected array
-        if ($scope.selected.indexOf(dato) === -1) {
-            $scope.selected.push(dato);
-        }
-    } else {
-        // Remove the item from the selected array
-        var index = $scope.selected.indexOf(dato);
-        if (index !== -1) {
-            $scope.selected.splice(index, 1);
-        }
-    }
-};
-		 * */
 		
 		$scope.showDialogGenericConfirmar = function(ev) {
 			ev.target.disabled = true;
@@ -3839,8 +3843,179 @@ $scope.selection = function(dato) {
 		};
 		
 		
+		$scope.addParticipantesSelected= function(){
+			$scope.selectAll = false;
+			var propertiesToRemove = ['fechaFlagConfirRegJUD', 'fechaFlagAsistenciaJUD', '$$hashKey', 'checked', 'cclase', 'cestado', 'dtCapaUsuexternosACL' ,'idCargo', 'idCargoTxt'];
+			
+			$scope.dtCapacitacionModelo.dtCapacitacionUsuariosBkJSss =  $scope.removePropertiesFromList(angular.copy($scope.selectedParticipantes), propertiesToRemove);
+			
+		}
+		
+		$scope.confirmarParticipante = function(ev) {
+			
+			$scope.addParticipantesSelected();
+			
+			var datainsertToConfirm = angular.toJson($scope.dtCapacitacionModelo);
+			
+			console.log("datainsertToConfirm = "+datainsertToConfirm);
+			
+			$mdDialog.cancel();
+			
+			$http.post(confirmardtCapacitacionNoProgUrl,datainsertToConfirm,{headers: {'Content-Type': 'application/json'}}).then(function(res){
+				
+				var dato = res.data;
+				$scope.total = $scope.datos.length;
+				$scope.setDtCapacitacionModelo(dato);
+				
+				$mdDialog.show(
+				         $mdDialog.alert()
+				        .parent(angular.element(document.body))
+				        .clickOutsideToClose(true)
+				        .title('Confirmar Asistencia')
+				        .textContent("La asistencia de el(los) participante(s) ha sido registrada.")
+				        .ariaLabel('ERROR')
+				        .ok('ACEPTAR')
+				        .targetEvent(ev)
+				    );
+				
+				$scope.nuevo = false;
+			},
+			function error(errResponse) {
+	            var dato;
+				if(errResponse && errResponse.data){
+				   console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+				   dato = errResponse.data;
+				}
+				if(errResponse.message){ 
+					console.log("Message " + errResponse.message);
+					dato = errResponse.message;
+				}			
+				if(typeof(dato) != 'undefined'){
+					            	$mdDialog.show(
+									         $mdDialog.alert()
+									        .parent(angular.element(document.body))
+									        .clickOutsideToClose(true)
+									        .title('Guardar capacitaciones')
+									        .textContent(dato.message)
+									        .ariaLabel('ERROR')
+									        .ok('ACEPTAR')
+									        .targetEvent(ev)
+									    );
+					            }
+			});		
+			
+		}
+		
+		$scope.confirmarAsistenciaParticipante = function(ev) {
+			
+			$scope.addParticipantesSelected();
+			
+			var datainsertToConfirm = angular.toJson($scope.dtCapacitacionModelo);
+			
+			console.log("datainsertToAsistConfirm = "+datainsertToConfirm);
+			
+			$mdDialog.cancel();
+			
+			$http.post(confirmarAsistenciaCapaNoProgUrl,datainsertToConfirm,{headers: {'Content-Type': 'application/json'}}).then(function(res){
+				
+				var dato = res.data;
+				$scope.total = $scope.datos.length;
+				$scope.setDtCapacitacionModelo(dato);
+				
+				$mdDialog.show(
+				         $mdDialog.alert()
+				        .parent(angular.element(document.body))
+				        .clickOutsideToClose(true)
+				        .title('Confirmar Asistencia')
+				        .textContent("La asistencia de el(los) participante(s) ha sido registrada.")
+				        .ariaLabel('ERROR')
+				        .ok('ACEPTAR')
+				        .targetEvent(ev)
+				    );
+				
+				$scope.nuevo = false;
+			},
+			function error(errResponse) {
+	            var dato;
+				if(errResponse && errResponse.data){
+				   console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+				   dato = errResponse.data;
+				}
+				if(errResponse.message){ 
+					console.log("Message " + errResponse.message);
+					dato = errResponse.message;
+				}			
+				if(typeof(dato) != 'undefined'){
+					            	$mdDialog.show(
+									         $mdDialog.alert()
+									        .parent(angular.element(document.body))
+									        .clickOutsideToClose(true)
+									        .title('Guardar capacitaciones')
+									        .textContent(dato.message)
+									        .ariaLabel('ERROR')
+									        .ok('ACEPTAR')
+									        .targetEvent(ev)
+									    );
+					            }
+			});		
+			
+		}
 		
 		
+		$scope.confirmarNOAsistenciaParticipante = function(ev) {
+			
+			$scope.addParticipantesSelected();
+			
+			var datainsertToConfirm = angular.toJson($scope.dtCapacitacionModelo);
+			
+			console.log("datainsertToNOAsistConfirm = "+datainsertToConfirm);
+			
+			$mdDialog.cancel();
+			
+			$http.post(confirmarNOAsistenciaCapaNoProgUrl,datainsertToConfirm,{headers: {'Content-Type': 'application/json'}}).then(function(res){
+				
+				var dato = res.data;
+				$scope.total = $scope.datos.length;
+				$scope.setDtCapacitacionModelo(dato);
+				
+				$mdDialog.show(
+				         $mdDialog.alert()
+				        .parent(angular.element(document.body))
+				        .clickOutsideToClose(true)
+				        .title('Confirmar Inasistencia')
+				        .textContent("La inasistencia de el(los) participante(s) ha sido registrada.")
+				        .ariaLabel('ERROR')
+				        .ok('ACEPTAR')
+				        .targetEvent(ev)
+				    );
+				
+				$scope.nuevo = false;
+			},
+			function error(errResponse) {
+	            var dato;
+				if(errResponse && errResponse.data){
+				   console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+				   dato = errResponse.data;
+				}
+				if(errResponse.message){ 
+					console.log("Message " + errResponse.message);
+					dato = errResponse.message;
+				}			
+				if(typeof(dato) != 'undefined'){
+					            	$mdDialog.show(
+									         $mdDialog.alert()
+									        .parent(angular.element(document.body))
+									        .clickOutsideToClose(true)
+									        .title('Guardar capacitaciones')
+									        .textContent(dato.message)
+									        .ariaLabel('ERROR')
+									        .ok('ACEPTAR')
+									        .targetEvent(ev)
+									    );
+					            }
+			});	
+			
+		}
     	
 ///FIN ADICIONALES			 			 
 	// ////////////////////////////////////////////////////////////////

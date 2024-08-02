@@ -14051,6 +14051,9 @@ public class ServicioImp implements Servicio, Serializable {
 				if (dtUsuarioExterno != null) {
 					dtCapaUsuexternosBk.setIdUsuexternoTxt(dtUsuarioExterno.getNombre());
 					dtCapaUsuexternosBk.setNombre(dtUsuarioExterno.getNombre());
+					dtCapaUsuexternosBk.setaPaterno(dtUsuarioExterno.getApaterno());
+					dtCapaUsuexternosBk.setaMaterno(dtUsuarioExterno.getAmaterno());
+					dtCapaUsuexternosBk.setNumDocu(dtUsuarioExterno.getNumDocum());
 				}
 			}
 		} catch (Exception e) {
@@ -19137,9 +19140,14 @@ public class ServicioImp implements Servicio, Serializable {
 		List<DtCapacitacionBk> dtCapacitacionBkss = new ArrayList<DtCapacitacionBk>();
 		try {
 			List<DtCapacitacion> dtCapacitacionssss = new ArrayList<>();
+			
 			Long idProgram = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
 					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
-			if (rol == 0) {
+			
+			dtCapacitacionssss = dtCapacitacionDao.getXFiltroV2(null, null, idProgramacion, null,
+					null, kyUsuarioMod);
+			
+			/*if (rol == 0) {
 				if (idProgram == idProgramacion)
 
 				{
@@ -19172,7 +19180,7 @@ public class ServicioImp implements Servicio, Serializable {
 							sistemaadmi, kyUsuarioMod);
 				}
 
-			}
+			}*/
 
 			// List<DtCapacitacion> dtCapacitacionssss =
 			// dtCapacitacionDao.getXFiltroV(fechaInicio,
@@ -21922,8 +21930,8 @@ public class ServicioImp implements Servicio, Serializable {
 				dtCapacitacionBk= this.getDtCapacitacionBkXid(dtCapaUsuexternosBksss.get(0).getIdCapacitacion());
 				
 				if(dtCapacitacionBk.getEstado()!=null && dtCapacitacionBk.getEstado().longValue()==PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_FINALIZADO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_FINALIZADO).longValue()) {
-    				//JSFUtil.showError("registro.participante.externo.error.servicio.finalizado");
-    				//return; 
+					throw new Validador(MessageFormat.format("CAPACITACION",
+							Messages.getStringToKey("registro.participante.externo.error.servicio.finalizado")));
     			}    
 				
 				try{        				
@@ -22024,35 +22032,150 @@ public class ServicioImp implements Servicio, Serializable {
 							}
 
 							
-						}else{
-							//JSFUtil.addWarn("EL PARTICIPANTE CON DNI "+dtCapaUsuexternosBk.getDniUser()+" NO HA SIDO INSCRITO VIRTUALMENTE", "INFORMACIÃN");
-        					//continue; 
+						} else{
+							log.info("EL PARTICIPANTE "+dtCapaUsuexternosBk.getNombre()+", CON DNI "+dtCapaUsuexternosBk.getNumDocu()+" NO HA SIDO INSCRITO VIRTUALMENTE");
 						}
 						
 					}
 					if(participantes!=null && participantes.size()>0)
 						this.enviarNotificacionConfirmacionPorCorreo(participantes,dtCapacitacionBk,  "JSFUtil.getBaseURL()");
 					else{
-						//JSFUtil.addError(Messages.getStringToKey("registro.participante.externo.no.se.notifico"), "ERROR");
-    					//return; 
+						throw new Validador(MessageFormat.format("CAPACITACION",
+								Messages.getStringToKey("registro.participante.externo.no.se.notifico")));
 					}
-					//JSFUtil.addInfo(Messages.getStringToKey("registro.participante.externo.confirmacion.inscripcion.correcto"), Messages.getStringToKey("registro.participante.externo.confirmacion.inscripcion.titulo"));
-					//return;
     			} catch (Validador e) {
-    				//JSFUtil.addError(e.getMessage(), "");
+    				throw new Validador(MessageFormat.format("CAPACITACION",
+							Messages.getStringToKey("registro.participante.externo.no.se.notifico.asistencia")));
     			} catch (Exception e) {
-    				//log.error("ERROR: " + e.getMessage());
-    			}finally{
-    			//	getDtCapaUsuexternosBkList().setSelectedItems(null);
-				//	dtCapaUsuexternosBkList = null;
-    			//	dtCapaUsuexternosBk=null;
+    				throw new Validador(MessageFormat.format("CAPACITACION",
+							Messages.getStringToKey("registro.participante.externo.no.se.notifico.asistencia")));
     			}
 				
 				
 			}
 			
 			
-			return null;
+			return dtCapacitacionBk;
+		}
+		
+		private boolean isCapacitacionFinalizada(Long idCapacitacion){
+			DtCapacitacionBk dtCapacitacionBk;				
+			dtCapacitacionBk= this.getDtCapacitacionBkXid(idCapacitacion);
+			if(dtCapacitacionBk==null){
+				return true;
+			}else if(dtCapacitacionBk.getEstado()!=null && dtCapacitacionBk.getEstado().longValue()==PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_FINALIZADO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_FINALIZADO).longValue()) {
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		public DtCapacitacionBk confirmarAsistenciaCapaNoProg(DtCapacitacionBk dtCapacitacionBk, 
+															  String user,
+															  Long kyUsuarioMod, 
+															  Long kyAreaMod, 
+															  String rmtaddress) throws Validador {
+			
+			List<DtCapaUsuexternosBk> dtCapaUsuexternosBksss =	dtCapacitacionBk.getDtCapacitacionUsuariosBkJSss();
+			
+				if (dtCapaUsuexternosBksss != null && dtCapaUsuexternosBksss.size() > 0) {
+					List<DtCapaUsuexternosBk> participantesx= new ArrayList<DtCapaUsuexternosBk>();
+	        			try{  
+	        				if (isCapacitacionFinalizada(dtCapaUsuexternosBksss.get(0).getIdCapacitacion())) {
+	        					throw new Validador(MessageFormat.format("CAPACITACION",
+	    								Messages.getStringToKey("registro.participante.externo.error.servicio.finalizado")));
+	        				}
+	        				
+							for (DtCapaUsuexternosBk dtCapaUsuexternosBk : dtCapaUsuexternosBksss) {
+								if(dtCapaUsuexternosBk.getFlagMedioreg() !=null && dtCapaUsuexternosBk.getFlagMedioreg().intValue()==2){
+									
+									dtCapaUsuexternosBk.setFlagAsistencia(Long.valueOf(PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_ASISTENCIA_SI, PropertiesMg.DEFAULT_PRTPARAMETROS_ASISTENCIA_SI)));
+									
+									dtCapaUsuexternosBk.setFechaFlagAsistencia(new Timestamp(System.currentTimeMillis()));
+									
+										this.saveorupdateDtCapaUsuexternosBk(dtCapaUsuexternosBk,
+												user,
+												kyUsuarioMod, 
+												kyAreaMod, 
+												rmtaddress);	
+									
+									participantesx.add(dtCapaUsuexternosBk);
+								} else {
+									log.info("EL PARTICIPANTE "+dtCapaUsuexternosBk.getNombre()+", CON DNI "+dtCapaUsuexternosBk.getNumDocu()+" NO HA SIDO INSCRITO VIRTUALMENTE");
+								}
+							}
+							
+							if(participantesx!=null && participantesx.size()>0) {
+								log.info( Messages.getStringToKey("registro.participante.externo.confirmacion.asistencia.correctoo") );
+							}
+							
+	        			} catch (Validador e) {
+	        				throw new Validador(MessageFormat.format("CAPACITACION",
+	    							Messages.getStringToKey("registro.participante.externo.no.se.notifico.asistencia")));
+	        			} catch (Exception e) {
+	        				throw new Validador(MessageFormat.format("CAPACITACION",
+	    							Messages.getStringToKey("registro.participante.externo.no.se.notifico.asistencia")));
+	        			}				
+					
+				}
+			
+			
+			return dtCapacitacionBk;
+		}
+
+		@Override
+		public DtCapacitacionBk confirmarNOAsistenciaCapaNoProg(DtCapacitacionBk dtCapacitacionBk, 
+																String user,
+																Long kyUsuarioMod, Long kyAreaMod, 
+																String rmtaddress) throws Validador {
+			
+			List<DtCapaUsuexternosBk> dtCapaUsuexternosBksss =	dtCapacitacionBk.getDtCapacitacionUsuariosBkJSss();
+			
+				if (dtCapaUsuexternosBksss != null && dtCapaUsuexternosBksss.size() > 0) {
+					List<DtCapaUsuexternosBk> participantesx= new ArrayList<DtCapaUsuexternosBk>();
+	        			try{  
+	        				if (isCapacitacionFinalizada(dtCapaUsuexternosBksss.get(0).getIdCapacitacion())) {
+	        					throw new Validador(MessageFormat.format("CAPACITACION",
+	    								Messages.getStringToKey("registro.participante.externo.error.servicio.finalizado")));
+	        				}
+							for (DtCapaUsuexternosBk dtCapaUsuexternosBk : dtCapaUsuexternosBksss) {
+								if(dtCapaUsuexternosBk.getFlagMedioreg()!=null && dtCapaUsuexternosBk.getFlagMedioreg().intValue()==2){
+									
+									dtCapaUsuexternosBk.setFlagAsistencia(Long.valueOf(PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_ASISTENCIA_NO, PropertiesMg.DEFAULT_PRTPARAMETROS_ASISTENCIA_NO)));
+									dtCapaUsuexternosBk.setFechaFlagAsistencia(new Timestamp(System.currentTimeMillis()));
+									
+									this.saveorupdateDtCapaUsuexternosBk(dtCapaUsuexternosBk,
+											user,
+											kyUsuarioMod, 
+											kyAreaMod, 
+											rmtaddress);	
+									
+									participantesx.add(dtCapaUsuexternosBk);
+									
+								} else {
+									log.info("EL PARTICIPANTE "+dtCapaUsuexternosBk.getNombre()+", CON DNI "+dtCapaUsuexternosBk.getNumDocu()+" NO HA SIDO INSCRITO VIRTUALMENTE");
+								}
+
+							}
+							
+							if(participantesx!=null && participantesx.size()>0) {
+								log.info( Messages.getStringToKey("registro.participante.externo.confirmacion.no.asistencia.correcto") );
+							}
+																	
+
+	        			} catch (Validador e) {
+	        				throw new Validador(MessageFormat.format("CAPACITACION",
+	    							Messages.getStringToKey("registro.participante.externo.no.se.notifico.no.asistencia")));
+	        			} catch (Exception e) {
+	        				log.warning("ERROR: " + e.getMessage());
+	        				throw new Validador(MessageFormat.format("CAPACITACION",
+	    							Messages.getStringToKey("registro.participante.externo.no.se.notifico.no.asistencia")));
+	        			}			
+					
+				}
+			
+			
+			return dtCapacitacionBk;
 		}
 		
 		
