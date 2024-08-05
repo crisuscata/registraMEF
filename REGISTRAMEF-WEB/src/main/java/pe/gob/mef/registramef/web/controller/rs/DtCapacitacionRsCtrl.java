@@ -572,6 +572,85 @@ public class DtCapacitacionRsCtrl {
 //FIN CUSCATA - 18072024
 	
 	@POST
+	@Path("/finalizardtCapacitacionNoProg")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response finalizardtCapacitacionNoProg(@Context HttpServletRequest req, 
+												  @Context HttpServletResponse res,
+												  @HeaderParam("authorization") String authString,
+												  DtCapacitacionJS dtCapacitacionJS) {
+		
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+		Principal usuario = req.getUserPrincipal();
+		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+		if (msUsuariosBk == null)
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			}).build();
+		
+		if(!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTCAPACITACION_CREA))
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			}).build();
+		
+		String adressRemoto = getRemoteAdress(req);
+
+		DtCapacitacionBk dtCapacitacionC = new DtCapacitacionBk();
+		FuncionesStaticas.copyPropertiesObject(dtCapacitacionC, dtCapacitacionJS);
+		dtCapacitacionC.setIdUsuinterno(msUsuariosBk.getIdusuario());
+		dtCapacitacionC.setIdSede(msUsuariosBk.getIdSede());
+		dtCapacitacionC.setIdSistAdm(msUsuariosBk.getIdSistAdmi());
+
+		try {
+			
+			/*Long idProgramacion = PropertiesMg.getSistemLong(
+					PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_NOPROGRAMADA,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_NOPROGRAMADA);
+			
+			
+			dtCapacitacionC.setIdProgramacion(idProgramacion);*/
+			
+			
+			List<DtAnexosJS> tdAnexosJSsss = dtCapacitacionJS.getTdAnexosJSss();
+			List<DtAnexoBk> tdAnexosBkss = null;
+			if (tdAnexosJSsss != null && !tdAnexosJSsss.isEmpty()) {
+				tdAnexosBkss = new ArrayList<DtAnexoBk>();
+				for (DtAnexosJS tdAnexosJS : tdAnexosJSsss) {
+					DtAnexoBk tdAnexosBk = new DtAnexoBk();
+					
+					FuncionesStaticas.copyPropertiesObject(tdAnexosBk, tdAnexosJS);
+					
+					if(tdAnexosJS.isMaterialCapa()){
+						tdAnexosBk.setFlagMaterialCapa(1L);
+					}else{
+						tdAnexosBk.setFlagMaterialCapa(0L);
+					}
+					
+					tdAnexosBkss.add(tdAnexosBk);
+				}
+			}
+			
+			dtCapacitacionC = servicio.finalizarDtCapacitacionNoProg(dtCapacitacionC, msUsuariosBk.getUsername(),msUsuariosBk.getIdusuario(), null,adressRemoto,tdAnexosBkss);
+			
+			DtCapacitacionData dtCapacitacionData = (DtCapacitacionData) req.getSession().getAttribute("DtCapacitacionData");
+			if(dtCapacitacionData==null){
+				dtCapacitacionData = new DtCapacitacionData();
+				req.getSession().setAttribute("DtCapacitacionData",dtCapacitacionData);
+			}
+			
+			GenericEntity<DtCapacitacionBk> registrors = new GenericEntity<DtCapacitacionBk>(dtCapacitacionC) {
+			};
+			return Response.status(HttpURLConnection.HTTP_OK).entity(registrors).build();
+		} catch (Validador e) {
+			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
+			System.out.println("ERROR: " + mensaje);
+			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+					}).build();
+		}
+	}
+	
+	@POST
 	@Path("/confirmardtCapacitacionNoProg")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response confirmardtCapacitacionNoProg(@Context HttpServletRequest req, @Context HttpServletResponse res,

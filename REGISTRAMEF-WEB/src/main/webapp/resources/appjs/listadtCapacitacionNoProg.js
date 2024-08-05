@@ -4,6 +4,7 @@ var pglogoff = window.location.origin+contexto+'/logoff.htm';
 var principalUrl = window.location.origin+contexto+'/index.htm';
 var listadtCapacitacionUrl = contexto+"/rs/ctrldtCapacitacion/listadtCapacitacion";
 var insertdtCapacitacionNoProgUrl = contexto+"/rs/ctrldtCapacitacion/salvardtCapacitacionNoProg";
+var finalizardtCapacitacionNoProgUrl = contexto+"/rs/ctrldtCapacitacion/finalizardtCapacitacionNoProg";
 var confirmardtCapacitacionNoProgUrl = contexto+"/rs/ctrldtCapacitacion/confirmardtCapacitacionNoProg";
 var confirmarAsistenciaCapaNoProgUrl = contexto+"/rs/ctrldtCapacitacion/confirmarAsistenciaCapaNoProg";
 var confirmarNOAsistenciaCapaNoProgUrl = contexto+"/rs/ctrldtCapacitacion/confirmarNOAsistenciaCapaNoProg";
@@ -1035,7 +1036,7 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 								.ariaLabel('Lucky day')
 								.ok('OK')
 						);
-						ev.target.disabled = false;
+						//ev.target.disabled = false;
 						return;
 						}
 					
@@ -1869,6 +1870,37 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 			        			        	
 			        	ev.target.disabled = false;
 				 };
+		
+		 $scope.urlInvitarEnlace = null;
+		 $scope.invitarCapacitacion = function(ev){
+			 
+			ev.target.disabled = true;
+				
+			$scope.urlInvitarEnlace = "http://10.5.112.43:8180/registramef/servicioInscripcion/dtCapacitacionExtView.htm?idCapa="+$scope.dtCapacitacionModelo.idCapacitacion;
+			
+			$mdDialog.show({
+				templateUrl: contexto+"/dialogos/editarCapaNoProgInvitar.html",
+				scope: $scope,
+				preserveScope: true,
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				clickOutsideToClose: true
+			}).then($scope.closeDialog, $scope.cancelDialod);	
+			ev.target.disabled = false;
+			 
+		 }
+		 
+		 $scope.copiarEnlace = function() {
+				 
+			 navigator.clipboard.writeText($scope.urlInvitarEnlace).then(function() {
+		          console.log('Text copied to clipboard');
+		        }).catch(function(error) {
+		          console.error('Failed to copy text: ', error);
+		        });
+			 
+			 $mdDialog.cancel();
+				 
+		 }		 
 				 
 	    $scope.dtCapacitacionAnular = {
 	    		idCapacitacion : null,

@@ -471,6 +471,9 @@ public class ServicioImp implements Servicio, Serializable {
 
 	@Autowired
 	private MsMetaDao msMetaDao = null;
+	
+	@Autowired
+	private DtAmpliacionFechaDao ampliacionFechaDao = null;
 
 	/// ADICIONALES
 	private List<IDValorDto> prtParametrosIdparametroIdGrupoListaCache = null;
@@ -22182,6 +22185,140 @@ public class ServicioImp implements Servicio, Serializable {
 	        			}			
 					
 				}
+			
+			
+			return dtCapacitacionBk;
+		}
+		
+		private void validarfinalizarDtCapacitaciones(DtCapacitacionBk dtCapacitacionBk) throws Validador {
+
+			Long idTipoFechaCorteEjecucion = PropertiesMg.getSistemLong(
+					PropertiesMg.KEY_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_EJEC,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDPARAMTIPO_FECHA_CORTE_EJEC);
+
+			Integer mesServicio = dtCapacitacionBk.getFechaInic().getMonth() + 1;
+
+			if (mesServicio.intValue() == 12) {
+				mesServicio = 0;
+			}
+			DtAmpliacionFecha autorizacionEjecucion = ampliacionFechaDao.find(idTipoFechaCorteEjecucion,
+					dtCapacitacionBk.getIdSede(), dtCapacitacionBk.getIdSistAdm(), mesServicio + 1);// Ahora
+																									// Mes
+																									// Actual,
+																									// por
+																									// confirmar
+
+			if (autorizacionEjecucion == null) {
+				autorizacionEjecucion = ampliacionFechaDao.find(idTipoFechaCorteEjecucion, idSedeTodas,
+						dtCapacitacionBk.getIdSistAdm(), mesServicio + 1);// Ahora
+																			// Mes
+																			// Actual,
+																			// por
+																			// confirmar
+				if (autorizacionEjecucion == null) {
+					autorizacionEjecucion = ampliacionFechaDao.find(idTipoFechaCorteEjecucion, dtCapacitacionBk.getIdSede(),
+							idSisAdmTodos, mesServicio + 1);// Ahora Mes Actual, por
+															// confirmar
+					if (autorizacionEjecucion == null) {
+						autorizacionEjecucion = ampliacionFechaDao.find(idTipoFechaCorteEjecucion, idSedeTodas,
+								idSisAdmTodos, mesServicio + 1);// Ahora Mes Actual,
+																// por confirmar
+					}
+				}
+			}
+
+			ValidacionDtCapacitacionMng.validarFechaFinaliza(dtCapacitacionBk, autorizacionEjecucion);
+
+		}
+		
+		private Integer getParticipanteAsistente(Long idCapacitacion) throws Validador {
+
+			return dtCapaUsuexternosDao.getParticipanteAsistente(idCapacitacion);
+
+		}
+		
+		private DtCapacitacionBk finalizarDtCapacitacion(DtCapacitacionBk dtCapacitacionBk, 
+														 Long idUsuario) throws Validador {
+
+			DtCapacitacion dtCapacitacion = null;
+			Timestamp hoy = new Timestamp(System.currentTimeMillis());
+
+			int nivel = 1;
+
+			try {
+				// SPRINT5
+				if (dtCapacitacionBk.getIdCapacitacion() != null && dtCapacitacionBk.getIdCapacitacion().longValue() > 0) {
+
+					dtCapacitacion = dtCapacitacionDao.getDtCapacitacion(dtCapacitacionBk.getIdCapacitacion());
+					boolean cambios = AuditoriaDtCapacitacionMng.auditarCambiosDtCapacitacion(dtCapacitacionBk,
+							dtCapacitacion, dtCapacitacion.getIdusserCrea(), dtCapacitacion.getIdusserCrea().toString(),
+							dtCapacitacion.getRtmaddress(), nivel);
+
+					if (cambios) {
+
+						dtCapacitacion.setIdusserModif(idUsuario);
+						dtCapacitacion.setFechaModif(hoy);
+						dtCapacitacionDao.updateDtCapacitacion(dtCapacitacion);
+
+					}
+				}
+			} catch (Exception e) {
+				log.info(e.getMessage());
+				throw new Validador(e.getMessage());
+			}
+			dtCapacitacionBk = getDtCapacitacionBkXid(dtCapacitacion.getIdCapacitacion());
+			return dtCapacitacionBk;
+
+		}
+		
+		
+
+		@Override
+		public DtCapacitacionBk finalizarDtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, 
+															  String user,
+															  Long kyUsuarioMod, Long kyAreaMod, String rmtaddress, 
+															  List<DtAnexoBk> tdAnexosBkss) throws Validador {
+			
+			
+			this.validarfinalizarDtCapacitaciones(dtCapacitacionBk);
+			
+			if (dtCapacitacionBk.getIdCapacitacion() != null) {
+				
+				this.saveorupdateDtCapacitacionNoProg(dtCapacitacionBk, user, kyUsuarioMod, kyAreaMod, rmtaddress, tdAnexosBkss);
+				
+				dtCapacitacionBk.setCantParticAsist(this.getParticipanteAsistente(dtCapacitacionBk.getIdCapacitacion()));
+				
+				Long estadoFinalizado = PropertiesMg.getSistemLong(
+						PropertiesMg.KEY_ESTADOS_REGISTROS_FINALIZADO,
+						PropertiesMg.DEFOULT_ESTADOS_REGISTROS_FINALIZADO);
+				
+				Timestamp hoy = new Timestamp(System.currentTimeMillis());
+				dtCapacitacionBk.setFechaFinalizacion(hoy);
+				
+				dtCapacitacionBk.setEstado(estadoFinalizado);
+				
+				this.finalizarDtCapacitacion(dtCapacitacionBk, kyUsuarioMod);
+				
+				Long idTipoServicioCapacitacion = this.getParametro(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA, PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA);
+				
+				
+				this.enviarEncuestaPorCorreo((dtCapacitacionBk.getNomEvento()!=null?dtCapacitacionBk.getNomEvento():""),
+						dtCapacitacionBk.getDtCapacitacionUsuariosBkJSss(), idTipoServicioCapacitacion, 
+						dtCapacitacionBk.getIdCapacitacion(), 
+						FuncionesStaticas.timestampToDate(dtCapacitacionBk.getFechaInic()), "HTTP://URL",hoy);
+				
+				DtEncuestaBk encuesta= this.getIdEncuesta(idTipoServicioCapacitacion, FuncionesStaticas.timestampToDate(dtCapacitacionBk.getFechaInic()).getTime(),dtCapacitacionBk.getIdCapacitacion());//SPRINT_6
+				encuesta.setIdusserModif(kyUsuarioMod);
+				
+				if(encuesta==null || encuesta.getIdEncuesta()==null || encuesta.getIdEncuesta().longValue()<1){				
+					log.info(Messages.getStringToKey("dtEncuesta.valida.no.enviar.correo")+ " IdTipoServicio="+idTipoServicioCapacitacion +" idServicio="+dtCapacitacionBk.getIdCapacitacion()+" fechaServicio="+FuncionesStaticas.timestampToDate(dtCapacitacionBk.getFechaInic()));				
+				}
+				
+				if(encuesta!=null) {					
+					this.updateBloqueoEncuesta(encuesta);
+				}
+				
+			}
 			
 			
 			return dtCapacitacionBk;

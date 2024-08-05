@@ -31,5 +31,6 @@ public interface DtCapaUsuexternosDao {
 	List<DtCapaUsuexternos> getXFiltro(Long idCapacitacion,Long idUsuexterno,Long idCargoUsuext,Long idEntidad);
 	long getTotalXFiltro(Long idCapacitacion,Long idUsuexterno,Long idCargoUsuext,Long idEntidad);
 	List<DtCapaUsuexternos> getByIdCapacDtCapaUsuariosExt(Long idCapacitacion);
+	Integer getParticipanteAsistente(Long idCapacitacion);
 	
 }

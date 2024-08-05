@@ -1613,5 +1613,9 @@ public class FuncionesStaticas implements Serializable {
 						String filename = "TEMP_"+df.format(idVisita) + df.format(idusuario) + sdf.format(diahoy) + UUID.randomUUID() + "." + extension;
 						return filename;
 					}
+				 
+				 public static Date timestampToDate(Timestamp timeStamp) {
+						return new Date(timeStamp.getTime());
+					}
 
 }

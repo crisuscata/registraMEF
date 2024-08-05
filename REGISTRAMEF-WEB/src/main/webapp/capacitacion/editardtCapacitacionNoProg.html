@@ -37,11 +37,26 @@ data-ng-init="editdtCapacitacion()">
 				style="font-size: 17px;width: max-content;background-color: rgba(121, 121, 121, 1);">
 				<div style="font-size: 14px;">{{dtCapacitacionModelo.estadoTxt}}</div></h2>
 		</div>
+		
       <md-button class="md-button-borde md-sm"
 			ng-click="salvarDtCapacitacion($event)" style="margin-bottom: 8px;"
 			ng-if="dtCapacitacionModelo.editopcion==1" aria-label="Guardar">
-		<!--          <md-icon md-font-set="material-icons">save</md-icon>  -->
-		<span>Guardar</span> </md-button>
+		<span>Guardar</span> 
+	  </md-button>
+	  
+	  <md-button class="md-button-borde md-sm"
+			ng-click="finalizarDtCapacitacion($event)" style="margin-bottom: 8px;"
+			ng-if="dtCapacitacionModelo.idCapacitacion != null &&  dtCapacitacionModelo.idCapacitacion != 0" aria-label="Guardar">
+		<span>Finalizar</span> 
+	  </md-button>
+	  
+	  <md-button class="md-button-borde md-sm"
+			ng-click="invitarCapacitacion($event)" style="margin-bottom: 8px;"
+			ng-if="dtCapacitacionModelo.idCapacitacion != null &&  dtCapacitacionModelo.idCapacitacion != 0 && dtCapacitacionModelo.flagPubli==1" aria-label="Guardar">
+		<span>Invitar a capacitaci&oacute;n</span> 
+	  </md-button>
+		
+		
       </div>
 </md-toolbar>  
   

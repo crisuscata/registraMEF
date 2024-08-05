@@ -1,5 +1,8 @@
 package pe.gob.mef.registramef.web.srvlt;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -13,6 +16,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import pe.gob.mef.registramef.bs.service.Servicio;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapacitacionBk;
 import pe.gob.mef.registramef.bs.utils.PropertiesMg;
+import pe.gob.mef.registramef.web.utils.Util;
 
 public class AsisExtParticipanteServlet extends HttpServlet {
 	
@@ -40,6 +44,42 @@ public class AsisExtParticipanteServlet extends HttpServlet {
         return finalString.toString();
     }
 	
+	private String fechaFinTexto(Timestamp fechaInicio, Timestamp fechaFin) {
+		String formatFecha="";
+		Date fechaI=null;
+		Date fechaF=null;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		SimpleDateFormat sdh = new SimpleDateFormat("HH:mm");
+		if(fechaFin!=null && fechaInicio!=null){
+			fechaI=Util.getSoloFecha(fechaInicio);
+			fechaF=Util.getSoloFecha(fechaFin);
+			if(fechaI.compareTo(fechaF)==0)
+				formatFecha=sdh.format(fechaFin);
+			else 
+				formatFecha=sdf.format(fechaFin);
+			
+			
+		}
+		return formatFecha ;
+	}
+	
+	private String lugar(DtCapacitacionBk dtCapacitacionBk) {
+		
+		Long idVirtual = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_VIRTUAL,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_VIRTUAL);
+		
+		if (dtCapacitacionBk.getIdModalidad() != null
+				&& dtCapacitacionBk.getIdModalidad().compareTo(
+						idVirtual) == 0)
+			return "CAPACITACION VIRTUAL";
+		else
+			
+			return (dtCapacitacionBk.getIdSedeTxt()
+					+ (dtCapacitacionBk.getIdLocalTxt() == null ? ""
+							: "-" + dtCapacitacionBk.getIdLocalTxt()));
+			
+		
+	}
 	
 	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,7 +92,21 @@ public class AsisExtParticipanteServlet extends HttpServlet {
 		Long idCapa = Long.parseLong(request.getParameter("idCapa"));
         Long est = Long.parseLong(request.getParameter("est"));
 		
-        System.out.println("captcha: "  + captcha);
+        DtCapacitacionBk dtCapacitacionBk = servicio.getDtCapacitacionBkXid(idCapa, null);
+        
+        request.setAttribute("idCapacitacion", dtCapacitacionBk.getIdCapacitacion());
+        request.setAttribute("descripcionEvento", dtCapacitacionBk.getNomEvento());
+        
+        Timestamp fecInicio= (dtCapacitacionBk.getFechaInic() == null ? dtCapacitacionBk.getFechaIniProgramada() : dtCapacitacionBk
+				.getFechaInic());
+        
+        String fechaInicio = Util.formatToStringTimestamp(fecInicio, "dd/MM/yyyy HH:mm");
+        
+        
+        request.setAttribute("fechaInicio", fechaInicio);
+        request.setAttribute("fechaFin", this.fechaFinTexto(dtCapacitacionBk.getFechaInic(), dtCapacitacionBk.getFechaFin()));
+        request.setAttribute("lugar", this.lugar(dtCapacitacionBk));
+        
         
         request.setAttribute("actionForm", "servicio-inscripcion-page?idCapa="+idCapa+"&est="+est);
 		

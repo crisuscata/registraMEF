@@ -79,8 +79,8 @@
 						<div class="barSede" style="padding: 2%;">
 							<div align="left"
 								style="width: 85%; text-align: center !important; float: center;">
-								11274 - aaaaaaaaaaaaaa <br /> <br />23/07/2024 05:00<label>
-									a </label>31/07/2024 06:00<label> - </label>LAMBAYEQUE-AUDITORIO DE LA
+								${idCapacitacion} - ${descripcionEvento} <br /> <br /> ${fechaInicio} <label>
+									a </label>${fechaFin}<label> - </label>LAMBAYEQUE-AUDITORIO DE LA
 								GERENCIA SUB REGIONAL JAEN
 							</div>
 						</div>
@@ -98,7 +98,7 @@
 							<span id="idformasis-idConsulta"><div class="divTablaRow">
 									<div id="idformasis-idEditNumDocuL" class="divTablaCol">
 										<span style="color: red;"> *</span><span style="color: black;">Ingrese
-											su nÚmero de documento de identidad</span>
+											su n&uacute;mero de documento de identidad</span>
 									</div>
 									<br />
 									<div id="idformasis-idEditNumDocuI" class="divTablaCol">
@@ -114,12 +114,16 @@
 							<div align="left" style="width: 100%">
 								<span id="idformasis-idcaptcha" style="width: 100%"><span
 									style="color: red;"> *</span><span style="color: black;">Ingrese
-										el cÓdigo captcha</span> <br /> <br />
+										el c&oacute;digo captcha</span> <br /> <br />
 
 									<p class="capcha" style="width: 100%;">
-
+										
+										<!--  
 										<label style="color:red"> <%= session.getAttribute("info_captcha") %> </label>
-											
+											 -->
+											 
+											 <img src="captchaImage" alt="Captcha Image"/>
+											 
 										<input
 											id="j_captcha" 
 											name="j_captcha" 
@@ -130,13 +134,14 @@
 											
 										
 										<button id="idformasis-j_idt43" name="idformasis-j_idt43"
-											class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
-											onclick="/"
-											style="background: rgba(153, 153, 153, 1); color: white; font-family: 'Arial Normal', 'Arial'; margin-bottom: 2px; font-size: 14px;"
-											type="submit">
-											<span class="ui-button-icon-left ui-icon ui-c ui-icon-search"></span><span
-												class="ui-button-text ui-c">Refrescar cÓdigo</span>
+										    class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
+										     onclick="location.reload();"
+										    style="background: rgba(153, 153, 153, 1); color: white; font-family: 'Arial Normal', 'Arial'; margin-bottom: 2px; font-size: 14px;"
+										    type="button">
+										    <span class="ui-button-icon-left ui-icon ui-c ui-icon-search"></span>
+										    <span class="ui-button-text ui-c">Refrescar c&oacute;digo</span>
 										</button>
+										
 									</p></span>
 
 							</div>
@@ -153,7 +158,6 @@
 								title="BUSCAR" type="submit">
 								<span class="ui-button-text ui-c">BUSCAR</span>
 							</button>
-							<script id="idformasis-j_idt64_s" type="text/javascript">PrimeFaces.cw("CommandButton","widget_idformasis_j_idt64",{id:"idformasis-j_idt64",widgetVar:"widget_idformasis_j_idt64"});</script>
 						</div>
 						
 					</form>

@@ -1,0 +1,59 @@
+<!-- INICIO CUSCATA - 25072024 CLASE NUEVA-->
+<md-dialog aria-label="Lista de Participantes" style="width: 800px;"><!-- JPUYEN 14052024 - SE AGREGO style y se quito class-->
+   <!--PURIBE 14032024 -INICIO-->
+    <md-progress-linear md-mode="determinate" value="{{determinateValue}}"></md-progress-linear>
+    <form ng-cloak name="dtVisitasForm" novalidate>
+        <md-toolbar style="background-color: rgb(255,255,255);">
+            <div class="md-toolbar-tools">
+                <h2 style="color: #1E82AD; font-weight: bold;">Invitar a Capacitaci&oacute;n</h2>
+                <span flex></span>
+                <md-button ng-click="cancel()" style="color: rgb(255,87,34);"  >
+                    Salir
+                </md-button>    
+                <md-button style="color: rgb(255,87,34);" type="submit"  ng-click="copiarEnlace()" >
+                    Copiar enlace
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}"
+                        style="margin: 0px 30px;">
+                <div layout="row" layout-wrap class="modal-wrapped">
+                    <div class="letraenvoltura"  >
+                    
+                        <label class="letraLabel" flex>Para inscribirte, puedes ingresar al formulario virtual dando clic aqu&iacute;</label>   
+                        <br />
+                    
+                    	<input id="idLink"
+						    type="text" 
+						    style="
+						    color: white !important;
+						    outline: none !important;  
+						    border: none !important;
+						    opacity: 0;
+						    position: absolute;"   
+						    value="{{urlInvitarEnlace}}" 
+						/>
+
+                    
+                    <a style="color: rgb(0, 0, 255) !important;text-decoration: underline !important;"
+							href="{{urlInvitarEnlace}}" target="_blank">{{urlInvitarEnlace}}
+						</a> 
+                    	     
+                    </div>
+                      
+                </div>
+                
+                
+                </br></br>
+                
+
+                <div layout="row" layout-wrap class="modal-wrapped">
+
+                </div>
+
+            </md-content>
+        </md-dialog-content>
+    </form>
+</md-dialog>

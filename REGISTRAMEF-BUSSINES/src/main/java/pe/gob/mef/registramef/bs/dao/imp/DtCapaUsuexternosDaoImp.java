@@ -231,4 +231,16 @@ public class DtCapaUsuexternosDaoImp extends
 		List<DtCapaUsuexternos> lista = super.find(sb.toString(), param);
 		return lista;
 	}
+
+	@Override
+	public Integer getParticipanteAsistente(Long idCapacitacion) {
+		String queryString = "select count(*) as cantidad from "+getDomainClass().getName()+" t where t.estado="+Estado.ACTIVO.getValor()+" and (t.flagAsistencia=1 or t.flagMedioRegistro is null ) and t.idCapacitacion=?  "; 
+		Object param[] = new Object[1];
+		param[0] = idCapacitacion;	
+
+		Integer cantRegistro = Integer.valueOf( (super.findUniqueResultObject(queryString,param)).toString());
+		
+		
+		return cantRegistro;
+	}
 }

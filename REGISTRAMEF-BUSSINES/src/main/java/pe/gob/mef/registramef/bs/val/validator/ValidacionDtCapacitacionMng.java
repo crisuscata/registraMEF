@@ -335,6 +335,46 @@ public class ValidacionDtCapacitacionMng implements Serializable{
 
 				
 	}
+	
+	public static void validarFechaFinaliza(DtCapacitacionBk dtCapacitacionBk, DtAmpliacionFecha autorizacionEjecucion) throws Validador{
+
+		Date fechaHoy=new Date();
+		GregorianCalendar fechaLimitIniMesActual = new GregorianCalendar();
+		GregorianCalendar fechaLimitFinMesActual = new GregorianCalendar();
+		GregorianCalendar fechaServicioini = new GregorianCalendar();
+		GregorianCalendar fechaHOy = new GregorianCalendar();
+		fechaHOy.setTimeInMillis(fechaHoy.getTime());
+		
+		
+		
+		fechaServicioini.setTimeInMillis(dtCapacitacionBk.getFechaInic().getTime());
+		
+		
+		fechaLimitIniMesActual=ValidacionDtAsistenciaMng.VerfechaLimitIniMes(fechaServicioini.getTime(), 0);
+		Long diasHabEjec = PropertiesMg.getSistemLong(PropertiesMg.KEY_DIASHAB_EJECUCION,PropertiesMg.DEFOULT_DIASHAB_EJECUCION);
+		fechaLimitFinMesActual=VerfechaLimitFinMesMasXdiasHabiles(fechaServicioini.getTime(), 0, diasHabEjec);//EN REALIDAD ESTE NO TRAE EL FIN DE MES ... SINO 0X DIAS HABILES POSTERIORES AL FIN DE MES
+		
+		
+		if(autorizacionEjecucion!=null && autorizacionEjecucion.getFechaFin()!=null){
+			GregorianCalendar fechaParamEjec= new GregorianCalendar();
+			fechaParamEjec=ValidacionDtAsistenciaMng.VerfechaLimitFinDay(autorizacionEjecucion.getFechaFin(), 0);
+			if(fechaHOy.before(fechaParamEjec)){
+				fechaLimitFinMesActual=ValidacionDtAsistenciaMng.VerfechaLimitFinDay(autorizacionEjecucion.getFechaFin(), 0);
+			}
+		}
+		
+		if(fechaHOy.after(fechaLimitFinMesActual) || fechaHOy.before(fechaLimitIniMesActual)){
+			SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM-yyyy");
+		    fmt.setCalendar(fechaLimitIniMesActual);
+		    String dateFormatteIni = fmt.format(fechaLimitIniMesActual.getTime());
+		    fmt.setCalendar(fechaLimitFinMesActual);
+		    String dateFormatteFin = fmt.format(fechaLimitFinMesActual.getTime());
+			throw new Validador(MessageFormat.format("SOLO PUEDE FINALIZAR EL SERVICIO DESDE EL "+dateFormatteIni.toUpperCase()+" HASTA EL "+dateFormatteFin.toUpperCase() ,
+					Messages.getStringToKey("dtAsistencias.fecha"),
+					Messages.getStringToKey("dtAsistencias.titulotabla")));
+		}
+		
+	}
 
 	public static void validarFechaInic(Timestamp fechaInic)
 	 throws Validador

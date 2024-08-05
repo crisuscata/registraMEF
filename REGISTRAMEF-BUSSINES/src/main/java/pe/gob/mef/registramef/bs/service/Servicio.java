@@ -235,6 +235,9 @@ public interface Servicio {
 			Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador;
 //FIN CUSCATA - 18072024
 	
+	DtCapacitacionBk finalizarDtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
+			Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador;
+	
 	DtCapacitacionBk confirmardtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
 	
