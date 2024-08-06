@@ -76,6 +76,10 @@
 						enctype="application/x-www-form-urlencoded"
 						style="text-align: left;">
 						<input type="hidden" name="idformasis" value="idformasis" />
+						
+						<input type="hidden" name="idUsuexterno" value="${idUsuexterno}" />
+						<input type="hidden" name="numDocum" value="${numDocum}" />
+						<input type="hidden" name="nombreCompleto" value="${nombreCompleto}" />
 
 						<div class="barSede" style="padding: 2%;">
 							<div align="left"
@@ -134,11 +138,11 @@
 											 <img src="captchaImage" alt="Captcha Image"/>
 											 
 										<input
-    id="j_captcha" 
-    name="j_captcha" 
-    type="text"
-    style="min-width: 30px; height: 30px; font-size: 14px; border-width: 1px; border: 2px solid gray; background-color: white; margin-left: 2px; text-transform: uppercase;"
-    class="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all" />
+											    id="j_captcha" 
+											    name="j_captcha" 
+											    type="text"
+											    style="min-width: 30px; height: 30px; font-size: 14px; border-width: 1px; border: 2px solid gray; background-color: white; margin-left: 2px; text-transform: uppercase;"
+											    class="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all" />
 
 											
 										<button id="idformasis-j_idt43" name="idformasis-j_idt43"
@@ -173,7 +177,9 @@
 						
 						<c:if test="${not empty flagResultado}">
 						
-						<div style="background: white !important; border-color: rgba(215, 215, 215, 1) !important; border: 0px solid #ccc !important;"><span id="idformasis-idResult"><div class="divTablaRow"><div class="divTablaCol"><span style="color:black; font-weight: bold;">  ${msnUno}</span></div></div>
+						<div style="background: white !important; border-color: rgba(215, 215, 215, 1) !important; border: 0px solid #ccc !important;">
+						<span id="idformasis-idResult"><div class="divTablaRow">
+						<div class="divTablaCol"><span style="color:black; font-weight: bold;">  ${msnUno}</span></div></div>
 								<br>
 								<br><div class="divTablaRow"><div class="divTablaCol"><span style="color:black; font-weight: bold;"> ${msnDos}  </span></div></div>
 								<br>
@@ -199,7 +205,7 @@
 					<c:if test="${not empty flagBuscar}">
 						<div align="center"
 							style="border-color: rgba(215, 215, 215, 1) !important; border: 1px solid #ccc !important;">
-							<button id="idformasis-j_idt64" name="idformasis-j_idt64"
+							<button name="action" value="buscar"
 								class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
 								onclick="PrimeFaces.ab({s:&quot;idformasis-j_idt64&quot;,u:&quot;idformasis&quot;});return false;"
 								style="height: 40px; width: 100%; text-align: center !important; padding: 1px !important; background: rgba(80, 199, 80, 1); color: white; font-family: 'Arial Normal', 'Arial'; margin-bottom: 2px; font-size: 14px;"
@@ -212,9 +218,8 @@
 					<c:if test="${not empty flagRegistrar}">
 						<div align="center"
 							style="border-color: rgba(215, 215, 215, 1) !important; border: 1px solid #ccc !important;">
-							<button id="idformasis-j_idt64" name="idformasis-j_idt64"
+							<button name="action" value="register"
 								class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-								onclick="PrimeFaces.ab({s:&quot;idformasis-j_idt64&quot;,u:&quot;idformasis&quot;});return false;"
 								style="height: 40px; width: 100%; text-align: center !important; padding: 1px !important; background: rgba(80, 199, 80, 1); color: white; font-family: 'Arial Normal', 'Arial'; margin-bottom: 2px; font-size: 14px;"
 								title="REGISTRAR ASISTENCIA" type="submit">
 								<span class="ui-button-text ui-c">REGISTRAR ASISTENCIA</span>
@@ -225,7 +230,7 @@
 					<c:if test="${not empty flagNuevaConsulta}">
 						<div align="center"
 							style="border-color: rgba(215, 215, 215, 1) !important; border: 1px solid #ccc !important;">
-							<button id="idformasis-j_idt64" name="idformasis-j_idt64"
+							<button name="action" value="nuevaConsulta"
 								class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
 								style="height: 40px;
 							    width: 100%; text-align:center !important; padding:1px !important;

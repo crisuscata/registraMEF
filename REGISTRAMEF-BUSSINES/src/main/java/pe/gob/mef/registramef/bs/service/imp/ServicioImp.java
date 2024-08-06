@@ -14150,6 +14150,33 @@ public class ServicioImp implements Servicio, Serializable {
 	}
 
 	@Override
+	public DtCapaUsuexternosBk updateDtCapaUsuexternosBkExt(DtCapaUsuexternosBk dtCapaUsuexternosBk) throws Validador {
+
+
+		DtCapaUsuexternos dtCapaUsuexternos = null;
+		Timestamp hoy = new Timestamp(System.currentTimeMillis());
+
+
+		try {
+			if (dtCapaUsuexternosBk.getIdCapaUsuext() != null
+					&& dtCapaUsuexternosBk.getIdCapaUsuext().longValue() > 0) {
+
+					dtCapaUsuexternos = dtCapaUsuexternosDao.getDtCapaUsuexternos(dtCapaUsuexternosBk.getIdCapaUsuext());
+
+					dtCapaUsuexternos.setFechaModif(hoy);
+					dtCapaUsuexternos.setFlagAsistencia(dtCapaUsuexternosBk.getFlagAsistencia());
+					dtCapaUsuexternos.setFechaFlagAsistencia(hoy);
+					dtCapaUsuexternosDao.updateDtCapaUsuexternos(dtCapaUsuexternos);
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Validador(e.getMessage());
+		}
+
+		return dtCapaUsuexternosBk;
+	}
+	
+	@Override
 	public void deleteDtCapaUsuexternos(DtCapaUsuexternosBk dtCapaUsuexternosBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador {
 		try {
@@ -22326,21 +22353,17 @@ public class ServicioImp implements Servicio, Serializable {
 
 		@Override
 		public DtUsuarioExternoBk getDtUsuarioExtByDni(String dni) throws Validador {
-			DtUsuarioExternoBk msObjectBks = new DtUsuarioExternoBk();
 			List<DtUsuarioExterno> msObjectDom = dtUsuarioExternoDao.getDtUsuarioExtByDni(dni);
 			if (msObjectDom.size() > 1) {
 				throw new Validador("SE ENCONTRÓ MAS DE UNA PERSONA CON EL DNI INGRESADO");
 			} else if (msObjectDom.size() < 1) {
 				throw new Validador(
-						// "El DNI ingresado no se encuentra registrado, por favor
-						// complete los datos."); //SPRINT5
-						"EL DNI INGRESADO NO SE ENCUENTRA REGISTRADO, POR FAVOR COMPLETE LOS DATOS"); // SPRINT11
+						"EL DNI INGRESADO NO SE ENCUENTRA REGISTRADO, POR FAVOR COMPLETE LOS DATOS"); 
 			}
 			DtUsuarioExterno msObject = msObjectDom.get(0);
-			FuncionesStaticas.copyPropertiesObject(msObjectBks, msObject);
-			completarDtUsuarioExterno(msObjectBks);
-
-			return msObjectBks;
+			DtUsuarioExternoBk dtUsuarioExternoBk= new DtUsuarioExternoBk();
+			FuncionesStaticas.copyPropertiesObject(dtUsuarioExternoBk, msObject);
+			return dtUsuarioExternoBk;
 		}
 
 		@Override
@@ -22352,7 +22375,6 @@ public class ServicioImp implements Servicio, Serializable {
 			if (dtCapaUsuexternos != null) {
 				oObjectBk = new DtCapaUsuexternosBk();
 				FuncionesStaticas.copyPropertiesObject(oObjectBk, dtCapaUsuexternos);
-				completarDtCapaUsuexternos(oObjectBk);
 			}
 			return oObjectBk;
 		}

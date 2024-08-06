@@ -976,6 +976,8 @@ public interface Servicio {
 	DtCapaUsuexternosBk saveorupdateDtCapaUsuexternosBk(DtCapaUsuexternosBk dtCapaUsuexternosBk, String user,
 			Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador;
 	
+	DtCapaUsuexternosBk updateDtCapaUsuexternosBkExt(DtCapaUsuexternosBk dtCapaUsuexternosBk) throws Validador;
+	
 	List<DtCapaUsuexternosBk> getDtCapaUsuarioExtByIdDCapa(Long idCapacitacion);
 
 	void deleteDtCapaUsuexternos(DtCapaUsuexternosBk dtCapaUsuexternosBk, String user, Long kyUsuarioMod,

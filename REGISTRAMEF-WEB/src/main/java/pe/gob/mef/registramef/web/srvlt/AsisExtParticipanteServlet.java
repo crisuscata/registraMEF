@@ -3,6 +3,7 @@ package pe.gob.mef.registramef.web.srvlt;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -159,6 +160,24 @@ public class AsisExtParticipanteServlet extends HttpServlet {
 		System.out.println("txtInputCaptcha:"+txtInputCaptcha);
 		System.out.println("captchaGenerado:"+captchaGenerado);
 		
+		
+		String action = request.getParameter("action");
+		
+		if ("buscar".equals(action)) {
+			this.handleBuscar(request, response, txtInputCaptcha, captchaGenerado, txtDni, idCapa, est);
+		} else if("register".equals(action)) {
+			this.handleRegister(request, response, txtDni, idCapa, est);
+		} else {
+			this.loadValues(request, Long.parseLong(idCapa), Long.parseLong(est));
+	        request.setAttribute("flagBuscar", "flagBuscar");
+		}
+		
+		
+		request.getRequestDispatcher("/servicio-inscripcion-page.htm").forward(request, response);
+
+	}
+
+	private void handleBuscar(HttpServletRequest request, HttpServletResponse response, String txtInputCaptcha, String captchaGenerado, String txtDni, String idCapa, String est) {
 		if(txtInputCaptcha.equalsIgnoreCase(captchaGenerado)) {
 
 			if(txtDni!=null && !txtDni.isEmpty()) {
@@ -192,6 +211,11 @@ public class AsisExtParticipanteServlet extends HttpServlet {
 							
 							if(dtUsuarioExternoBk!=null && dtUsuarioExternoBk.getIdUsuexterno()!=null){
 								
+								request.setAttribute("idUsuexterno", dtUsuarioExternoBk.getIdUsuexterno());
+								request.setAttribute("numDocum", dtUsuarioExternoBk.getNumDocum());
+								request.setAttribute("nombreCompleto", dtUsuarioExternoBk.getNombreCompleto().toUpperCase());
+								
+								
 								DtCapaUsuexternosBk dtCapaUsuexternosBk=servicio.getDtCapaUsuexternos(Long.parseLong(idCapa), dtUsuarioExternoBk.getIdUsuexterno());
 								
 								if(dtCapaUsuexternosBk!=null && dtCapaUsuexternosBk.getIdCapaUsuext()!=null){
@@ -211,15 +235,22 @@ public class AsisExtParticipanteServlet extends HttpServlet {
 										this.loadValues(request, Long.parseLong(idCapa), Long.parseLong(est));
 									} else {
 										
-										msnUno=dtUsuarioExternoBk.getNombreCompleto().toUpperCase();
-										msnDos="DNI: "+dtUsuarioExternoBk.getNumDocum();
-										
-										request.setAttribute("msnUno", msnUno);
-										request.setAttribute("msnDos", msnDos);
-										
-										request.setAttribute("flagNuevaConsulta", "flagNuevaConsulta");
-										request.setAttribute("flagResultado", "flagResultado");
-										request.setAttribute("flagRegistrar", "flagRegistrar");
+										if(this.isFechaTolerancia(dtCapacitacionBk.getFechaFin())) {
+											msnUno=dtUsuarioExternoBk.getNombreCompleto().toUpperCase();
+											msnDos="DNI: "+dtUsuarioExternoBk.getNumDocum();
+											
+											request.setAttribute("msnUno", msnUno);
+											request.setAttribute("msnDos", msnDos);
+											
+											request.setAttribute("flagNuevaConsulta", "flagNuevaConsulta");
+											request.setAttribute("flagResultado", "flagResultado");
+											request.setAttribute("flagRegistrar", "flagRegistrar");
+										} else {
+											msnUno= Messages.getStringToKey("registro.participante.capac.no.disponible");
+											request.setAttribute("msnUno", msnUno);
+											request.setAttribute("flagResultado", "flagResultado");
+											request.setAttribute("flagNuevaConsulta", "flagNuevaConsulta");
+										}
 										this.loadValues(request, Long.parseLong(idCapa), Long.parseLong(est));
 									}
 									
@@ -246,9 +277,59 @@ public class AsisExtParticipanteServlet extends HttpServlet {
 			request.setAttribute("mensajeConfirmacion", Messages.getStringToKey("registro.participante.capa.captcha.invalido"));
 			this.loadValues(request, Long.parseLong(idCapa), Long.parseLong(est));
 		}
+	}
+	
+	private void handleRegister(HttpServletRequest request, HttpServletResponse response, String txtDni, String idCapa, String est) {
+		String msnUno="";
+		String msnDos="";
+		String msnTres="";
+		try {
+			
+			String idUsuexterno = request.getParameter("idUsuexterno");
+			String numDocum = request.getParameter("numDocum");
+			String nombreCompleto = request.getParameter("nombreCompleto");
+			
+			if(!idUsuexterno.isEmpty()){
+				DtCapaUsuexternosBk dtCapaUsuexternosBk=servicio.getDtCapaUsuexternos(Long.parseLong(idCapa), Long.parseLong(idUsuexterno));
+				
+				dtCapaUsuexternosBk.setFlagAsistencia(PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_ASISTENCIA_SI, PropertiesMg.DEFAULT_PRTPARAMETROS_ASISTENCIA_SI));
+				dtCapaUsuexternosBk.setFechaFlagAsistencia(new Timestamp(System.currentTimeMillis()));				
+				
+				servicio.updateDtCapaUsuexternosBkExt(dtCapaUsuexternosBk);	
+				
+				msnUno=nombreCompleto;
+				msnDos="DNI: "+numDocum;
+				msnTres=Messages.getStringToKey("registro.participante.exito.asistio");
+				
+				request.setAttribute("msnUno", msnUno);
+				request.setAttribute("msnDos", msnDos);
+				request.setAttribute("msnTres", msnTres);
+				
+				request.setAttribute("flagResultado", "flagResultado");
+				request.setAttribute("flagNuevaConsulta", "flagNuevaConsulta");
+				
+				this.loadValues(request, Long.parseLong(idCapa), Long.parseLong(est));
+				
+			}
 		
-		request.getRequestDispatcher("/servicio-inscripcion-page.htm").forward(request, response);
+		} catch (Validador e) {
+			this.notExitUser(request, idCapa, est);
+		}
+	}
+	
+	private boolean isFechaTolerancia(Timestamp specificTimestamp) {
+		Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
 
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(specificTimestamp.getTime());
+        cal.add(Calendar.MINUTE, 30);
+        Timestamp specificTimestampPlus30Minutes = new Timestamp(cal.getTimeInMillis());
+
+        if (currentTimestamp.before(specificTimestampPlus30Minutes)) {
+        	return true;
+        } else {
+        	return false;
+        }
 	}
 
 }
