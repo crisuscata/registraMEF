@@ -223,6 +223,7 @@ public interface Servicio {
 	 * CAPACITACION "CAPACITACIONES"
 	 */
 	DtCapacitacionBk getDtCapacitacionBkXid(Long id, Long kyUsuarioMod);
+	DtCapacitacionBk getOnlyDtCapacitacionBkById(Long id);
 
 	List<DtCapacitacionBk> getAllDtCapacitacionActivos(Long kyUsuarioMod);
 
@@ -1705,4 +1706,6 @@ public interface Servicio {
 		DtEncuestaBk getIdEncuesta(Long idTipoServicio, Long fechaServicio) throws Validador;
 		Long getParametro(String key, Long defaultValue) throws Validador;
 		// JPUYEN 17062024 - FIN
+		DtUsuarioExternoBk getDtUsuarioExtByDni(String dni) throws Validador;
+		DtCapaUsuexternosBk getDtCapaUsuexternos(Long idCapacitacion, Long idUsuexterno) throws Validador;
 }

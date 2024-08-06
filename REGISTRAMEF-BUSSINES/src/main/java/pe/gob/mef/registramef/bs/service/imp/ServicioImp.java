@@ -22323,6 +22323,52 @@ public class ServicioImp implements Servicio, Serializable {
 			
 			return dtCapacitacionBk;
 		}
+
+		@Override
+		public DtUsuarioExternoBk getDtUsuarioExtByDni(String dni) throws Validador {
+			DtUsuarioExternoBk msObjectBks = new DtUsuarioExternoBk();
+			List<DtUsuarioExterno> msObjectDom = dtUsuarioExternoDao.getDtUsuarioExtByDni(dni);
+			if (msObjectDom.size() > 1) {
+				throw new Validador("SE ENCONTRÓ MAS DE UNA PERSONA CON EL DNI INGRESADO");
+			} else if (msObjectDom.size() < 1) {
+				throw new Validador(
+						// "El DNI ingresado no se encuentra registrado, por favor
+						// complete los datos."); //SPRINT5
+						"EL DNI INGRESADO NO SE ENCUENTRA REGISTRADO, POR FAVOR COMPLETE LOS DATOS"); // SPRINT11
+			}
+			DtUsuarioExterno msObject = msObjectDom.get(0);
+			FuncionesStaticas.copyPropertiesObject(msObjectBks, msObject);
+			completarDtUsuarioExterno(msObjectBks);
+
+			return msObjectBks;
+		}
+
+		@Override
+		public DtCapaUsuexternosBk getDtCapaUsuexternos(Long idCapacitacion, Long idUsuexterno) throws Validador {
+			DtCapaUsuexternos dtCapaUsuexternos = this.dtCapaUsuexternosDao.getDtCapaUsuexternos(idCapacitacion,
+					idUsuexterno);
+
+			DtCapaUsuexternosBk oObjectBk = null;
+			if (dtCapaUsuexternos != null) {
+				oObjectBk = new DtCapaUsuexternosBk();
+				FuncionesStaticas.copyPropertiesObject(oObjectBk, dtCapaUsuexternos);
+				completarDtCapaUsuexternos(oObjectBk);
+			}
+			return oObjectBk;
+		}
+
+		@Override
+		public DtCapacitacionBk getOnlyDtCapacitacionBkById(Long id) {
+			if (id == null)
+				return null;
+			DtCapacitacion dtCapacitacion = dtCapacitacionDao.getDtCapacitacion(id);
+			DtCapacitacionBk dtCapacitacionBk = null;
+			if (dtCapacitacion != null) {
+				dtCapacitacionBk = new DtCapacitacionBk();
+				FuncionesStaticas.copyPropertiesObject(dtCapacitacionBk, dtCapacitacion);
+			}
+			return dtCapacitacionBk;
+		}
 		
 		
 

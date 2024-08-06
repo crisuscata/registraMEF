@@ -243,4 +243,23 @@ public class DtCapaUsuexternosDaoImp extends
 		
 		return cantRegistro;
 	}
+
+	@Override
+	public DtCapaUsuexternos getDtCapaUsuexternos(Long idCapacitacion, Long idUsuexterno) {
+		DtCapaUsuexternos dtCapaUsuexternos =null;
+		if(idCapacitacion!=null && idUsuexterno!=null ){
+			String queryString = "select t from "+getDomainClass().getName()+" t where t.estado="+Estado.ACTIVO.getValor()+
+								" and t.idCapacitacion=? and t.idUsuexterno=? "; 
+			Object param[] = new Object[2];
+			param[0] = idCapacitacion;
+			param[1] = idUsuexterno;
+			
+			
+			List<DtCapaUsuexternos> lista = super.find(queryString.toString(), param);
+				
+			if(lista.size()>0)
+				dtCapaUsuexternos=lista.get(0);
+		}
+		return dtCapaUsuexternos;
+	}
 }

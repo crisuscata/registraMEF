@@ -1,6 +1,7 @@
 <!-- NUEVO ARCHIVO INICIO CUSCATA - 18072024-->
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.Date, java.text.SimpleDateFormat" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -80,8 +81,7 @@
 							<div align="left"
 								style="width: 85%; text-align: center !important; float: center;">
 								${idCapacitacion} - ${descripcionEvento} <br /> <br /> ${fechaInicio} <label>
-									a </label>${fechaFin}<label> - </label>LAMBAYEQUE-AUDITORIO DE LA
-								GERENCIA SUB REGIONAL JAEN
+									a </label>${fechaFin}<label> - </label>${lugar}
 							</div>
 						</div>
 						<br />
@@ -89,13 +89,23 @@
 						<div class="subTitulo">
 							<div style="width: 100%; float: left;">CONFIRMAR ASISTENCIA DE CAPACITACIÓN</div>
 						</div>
+						
 						<span id="idformasis-growl"></span>
+						
 						<div id="idformasis-messages" class="ui-messages ui-widget"
-							aria-live="polite"></div>
+							aria-live="polite">
+						</div>
+						
 						<br /> <br /> <br />
+						
+						
+						<c:if test="${not empty flagBuscar}">
 						<div
 							style="background: white !important; border-color: rgba(215, 215, 215, 1) !important; border: 1px solid #ccc !important;">
-							<span id="idformasis-idConsulta"><div class="divTablaRow">
+							
+							<span id="idformasis-idConsulta">
+							
+							<div class="divTablaRow">
 									<div id="idformasis-idEditNumDocuL" class="divTablaCol">
 										<span style="color: red;"> *</span><span style="color: black;">Ingrese
 											su n&uacute;mero de documento de identidad</span>
@@ -103,14 +113,17 @@
 									<br />
 									<div id="idformasis-idEditNumDocuI" class="divTablaCol">
 										<span id="idformasis-idItemNumDocu">
+										
 										<input
 											id="txtDni" name="txtDni" type="text"
 											onkeyup="this.value=formateaNumero(this.value,8);"
 											style="min-width: 30px; width: 30%;"
 											class="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all" />
-										<script id="idformasis-j_idt33_s" type="text/javascript">PrimeFaces.cw("InputText","widget_idformasis_j_idt33",{id:"idformasis-j_idt33",widgetVar:"widget_idformasis_j_idt33"});</script></span>
+										
+										</span>
 									</div>
 								</div></span> <br />
+								
 							<div align="left" style="width: 100%">
 								<span id="idformasis-idcaptcha" style="width: 100%"><span
 									style="color: red;"> *</span><span style="color: black;">Ingrese
@@ -118,21 +131,16 @@
 
 									<p class="capcha" style="width: 100%;">
 										
-										<!--  
-										<label style="color:red"> <%= session.getAttribute("info_captcha") %> </label>
-											 -->
-											 
 											 <img src="captchaImage" alt="Captcha Image"/>
 											 
 										<input
-											id="j_captcha" 
-											name="j_captcha" 
-											type="text"
-											style="min-width: 30px; height: 30px; font-size: 14px; border-width: 1px; border: 2px solid gray; background-color: white; margin-left: 2px;"
-											class="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all" />
+    id="j_captcha" 
+    name="j_captcha" 
+    type="text"
+    style="min-width: 30px; height: 30px; font-size: 14px; border-width: 1px; border: 2px solid gray; background-color: white; margin-left: 2px; text-transform: uppercase;"
+    class="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all" />
+
 											
-											
-										
 										<button id="idformasis-j_idt43" name="idformasis-j_idt43"
 										    class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"
 										     onclick="location.reload();"
@@ -145,10 +153,50 @@
 									</p></span>
 
 							</div>
+							
 							<br /> <br /> <br /> <br /> <br /> <br />
+							
+							<c:if test="${not empty mensajeConfirmacion}">
+							    <div style="color: red;">
+							        ${mensajeConfirmacion}
+							    </div>
+							</c:if>
+							
+							<c:if test="${not empty mensajeErrorDNI}">
+							    <div style="color: red;">
+							        ${mensajeErrorDNI}
+							    </div>
+							</c:if>
 
 						</div>
-
+						</c:if>
+						
+						<c:if test="${not empty flagResultado}">
+						
+						<div style="background: white !important; border-color: rgba(215, 215, 215, 1) !important; border: 0px solid #ccc !important;"><span id="idformasis-idResult"><div class="divTablaRow"><div class="divTablaCol"><span style="color:black; font-weight: bold;">  ${msnUno}</span></div></div>
+								<br>
+								<br><div class="divTablaRow"><div class="divTablaCol"><span style="color:black; font-weight: bold;"> ${msnDos}  </span></div></div>
+								<br>
+								<br>
+								
+								<div class="divTablaRow">
+									<div class="divTablaCol"><span style="color:green; font-weight: bold;"> ${msnTres}  </span>
+									
+											 <a style="color: rgb(0, 0, 255) !important;text-decoration: underline !important;" target="_blank">
+											 	${urlCapaExt}
+											</a>
+									</div>
+							
+							</div>	
+								 <br> <br></span>
+		
+							<br> <br>
+						</div>
+						
+						</c:if>
+						
+						
+					<c:if test="${not empty flagBuscar}">
 						<div align="center"
 							style="border-color: rgba(215, 215, 215, 1) !important; border: 1px solid #ccc !important;">
 							<button id="idformasis-j_idt64" name="idformasis-j_idt64"
@@ -159,6 +207,41 @@
 								<span class="ui-button-text ui-c">BUSCAR</span>
 							</button>
 						</div>
+					</c:if>
+					
+					<c:if test="${not empty flagRegistrar}">
+						<div align="center"
+							style="border-color: rgba(215, 215, 215, 1) !important; border: 1px solid #ccc !important;">
+							<button id="idformasis-j_idt64" name="idformasis-j_idt64"
+								class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+								onclick="PrimeFaces.ab({s:&quot;idformasis-j_idt64&quot;,u:&quot;idformasis&quot;});return false;"
+								style="height: 40px; width: 100%; text-align: center !important; padding: 1px !important; background: rgba(80, 199, 80, 1); color: white; font-family: 'Arial Normal', 'Arial'; margin-bottom: 2px; font-size: 14px;"
+								title="REGISTRAR ASISTENCIA" type="submit">
+								<span class="ui-button-text ui-c">REGISTRAR ASISTENCIA</span>
+							</button>
+						</div>
+					</c:if>
+					
+					<c:if test="${not empty flagNuevaConsulta}">
+						<div align="center"
+							style="border-color: rgba(215, 215, 215, 1) !important; border: 1px solid #ccc !important;">
+							<button id="idformasis-j_idt64" name="idformasis-j_idt64"
+								class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+								style="height: 40px;
+							    width: 100%; text-align:center !important; padding:1px !important;
+							    background: rgba(153, 153, 153, 1);
+							    color: white;
+							    font-family: 'Arial Normal', 'Arial';
+							    margin-bottom: 2px;
+							    font-size: 14px;"
+								title="NUEVA CONSULTA" type="submit">
+								<span class="ui-button-text ui-c">NUEVA CONSULTA</span>
+							</button>
+						</div>
+					</c:if>
+					
+					
+											
 						
 					</form>
 				</div>

@@ -21,6 +21,7 @@ public interface DtCapaUsuexternosDao {
 	void deleteDtCapaUsuexternos(DtCapaUsuexternos param);
 	List<DtCapaUsuexternos> getAllDtCapaUsuexternos();
 	DtCapaUsuexternos getDtCapaUsuexternos(Long idCapaUsuext);
+	DtCapaUsuexternos  getDtCapaUsuexternos(Long idCapacitacion, Long idUsuexterno);
 	List<DtCapaUsuexternos> getNativeSQLDtCapaUsuexternos(String queryString, Object[] params);
 	List<DtCapaUsuexternos> getActivasDtCapaUsuexternos();
 	List<DtCapaUsuexternos> getActivasDtCapaUsuexternosCero();
