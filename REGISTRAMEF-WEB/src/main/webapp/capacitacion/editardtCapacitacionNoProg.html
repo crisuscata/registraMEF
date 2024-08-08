@@ -1,4 +1,4 @@
-<!-- NUEVO ARCHIVO CUSCATA - 18072024-->
+<!-- NUEVO ARCHIVO CUSCATA - 07082024-->
 <style type="text/css">
 table.md-table td.md-cell {
     color: rgba(0, 0, 0, 0.87);
@@ -765,7 +765,8 @@ data-ng-init="editdtCapacitacion()">
 					  
 					  <md-button class="md-raised"
 					 			 aria-label="Agregar Participante"
-								 ng-click="showDialogUsuario($event)">
+					 			 ng-if="dtCapacitacionModelo.idCapacitacion != null &&  dtCapacitacionModelo.idCapacitacion != 0"
+								 ng-click="showRegistrarAsistencia($event)">
 								 
 					 		 <md-icon md-font-set="material-icons" style="color: grey;">close</md-icon>
 					  <span>Registrar Participante</span>

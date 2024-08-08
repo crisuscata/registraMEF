@@ -32,6 +32,6 @@ public interface DtEntidadesUsuexternosDao {
 	List<DtEntidadesUsuexternos> getXFiltro(Long idEntidad,Long idUsuexterno, int iniciar, int max);
 	List<DtEntidadesUsuexternos> getXFiltro(Long idEntidad,Long idUsuexterno);
 	long getTotalXFiltro(Long idEntidad,Long idUsuexterno);
-	List<DtEntidadesUsuexternos> getDtEntidadUsuarioByUser(Long idUsuexterno);
-	Long getEstadoEliminado();
+	List<DtEntidadesUsuexternos> getDtEntidadUsuarioByUser(Long idUsuexterno);//CUSCATA - 07082024
+	Long getEstadoEliminado();//CUSCATA - 07082024
 }

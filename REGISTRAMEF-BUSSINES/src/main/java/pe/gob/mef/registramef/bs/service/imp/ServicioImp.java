@@ -471,9 +471,10 @@ public class ServicioImp implements Servicio, Serializable {
 
 	@Autowired
 	private MsMetaDao msMetaDao = null;
-	
+	//INICIO CUSCATA - 07082024
 	@Autowired
 	private DtAmpliacionFechaDao ampliacionFechaDao = null;
+    //FIN CUSCATA - 07082024
 
 	/// ADICIONALES
 	private List<IDValorDto> prtParametrosIdparametroIdGrupoListaCache = null;
@@ -4272,7 +4273,7 @@ public class ServicioImp implements Servicio, Serializable {
 			e.printStackTrace();
 		}
 		// MPINARES 14022024 - FIN
-		
+		//INICIO CUSCATA - 07082024
 		if (dtCapacitacionBk.getIdCapacitacion() != null && dtCapacitacionBk.getIdCapacitacion().longValue() > 0) {
 			Long idTiposervicio=PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA, PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA);
 			List<DtAnexoBk> lstAnexos = this.getDtAnexoXFiltro(null, null, idTiposervicio, null,
@@ -4281,7 +4282,7 @@ public class ServicioImp implements Servicio, Serializable {
 				dtCapacitacionBk.setDtAnexosBKJSss(lstAnexos);
 			}
 		}
-
+//FIN CUSCATA - 07082024
 	}
 
 	@Override
@@ -4576,7 +4577,7 @@ public class ServicioImp implements Servicio, Serializable {
 		return dtCapacitacionBk;
 	}
 
-//INICIO CUSCATA - 18072024
+//INICIO CUSCATA - 07082024
 	@Override
 	public DtCapacitacionBk saveorupdateDtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, String user,
 			Long kyUsuarioMod, Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador {
@@ -5080,7 +5081,7 @@ public class ServicioImp implements Servicio, Serializable {
 			e.printStackTrace();
 		}
 	}
-	
+	//FIN CUSCATA - 07082024
 	@Override
 	public void deleteDtCapacitacion(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador {
@@ -14063,9 +14064,11 @@ public class ServicioImp implements Servicio, Serializable {
 				if (dtUsuarioExterno != null) {
 					dtCapaUsuexternosBk.setIdUsuexternoTxt(dtUsuarioExterno.getNombre());
 					dtCapaUsuexternosBk.setNombre(dtUsuarioExterno.getNombre());
+                    //INICIO CUSCATA - 07082024
 					dtCapaUsuexternosBk.setaPaterno(dtUsuarioExterno.getApaterno());
 					dtCapaUsuexternosBk.setaMaterno(dtUsuarioExterno.getAmaterno());
 					dtCapaUsuexternosBk.setNumDocu(dtUsuarioExterno.getNumDocum());
+                    //FIN CUSCATA - 07082024
 				}
 			}
 		} catch (Exception e) {
@@ -14148,7 +14151,7 @@ public class ServicioImp implements Servicio, Serializable {
 		dtCapaUsuexternosBk = getDtCapaUsuexternosBkXid(dtCapaUsuexternos.getIdCapaUsuext(), kyUsuarioMod);
 		return dtCapaUsuexternosBk;
 	}
-
+//INICIO CUSCATA - 07082024
 	@Override
 	public DtCapaUsuexternosBk updateDtCapaUsuexternosBkExt(DtCapaUsuexternosBk dtCapaUsuexternosBk) throws Validador {
 
@@ -14175,7 +14178,7 @@ public class ServicioImp implements Servicio, Serializable {
 
 		return dtCapaUsuexternosBk;
 	}
-	
+	//FIN CUSCATA - 07082024
 	@Override
 	public void deleteDtCapaUsuexternos(DtCapaUsuexternosBk dtCapaUsuexternosBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador {
@@ -19179,14 +19182,9 @@ public class ServicioImp implements Servicio, Serializable {
 		List<DtCapacitacionBk> dtCapacitacionBkss = new ArrayList<DtCapacitacionBk>();
 		try {
 			List<DtCapacitacion> dtCapacitacionssss = new ArrayList<>();
-			
 			Long idProgram = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_PROGRAMADA,
 					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_PROGRAMADA);
-			
-			dtCapacitacionssss = dtCapacitacionDao.getXFiltroV2(null, null, idProgramacion, null,
-					null, kyUsuarioMod);
-			
-			/*if (rol == 0) {
+			if (rol == 0) {
 				if (idProgram == idProgramacion)
 
 				{
@@ -19219,7 +19217,7 @@ public class ServicioImp implements Servicio, Serializable {
 							sistemaadmi, kyUsuarioMod);
 				}
 
-			}*/
+			}
 
 			// List<DtCapacitacion> dtCapacitacionssss =
 			// dtCapacitacionDao.getXFiltroV(fechaInicio,
@@ -21329,7 +21327,7 @@ public class ServicioImp implements Servicio, Serializable {
 						.getDtCargosUsuexterXFiltro(dtEntidadesUsuexternos.getIdUsuextEnti(), null, kyUsuarioMod);
 				if (dtCargosUsuexterList != null && !dtCargosUsuexterList.isEmpty()) {
 					dtUsuarioExternoBk.setUsucargos(dtCargosUsuexterList);
-					dtUsuarioExternoBk.setIdEntidad(dtEntidadesUsuexternos.getIdEntidad());
+					dtUsuarioExternoBk.setIdEntidad(dtEntidadesUsuexternos.getIdEntidad());//CUSCATA - 07082024
 				}
 
 			}
@@ -21341,7 +21339,7 @@ public class ServicioImp implements Servicio, Serializable {
 
 		return dtUsuarioExternoBk;
 	}
-	
+	//INICIO CUSCATA - 07082024
 	@Override
 	public DtUsuarioExternoBk getUsuarioCapacitacionPorDNI(Long numDocum, Long kyUsuarioMod) {
 		DtUsuarioExternoBk dtUsuarioExternoBk = this.getUsuarioPorDNI(numDocum, kyUsuarioMod);
@@ -21353,7 +21351,7 @@ public class ServicioImp implements Servicio, Serializable {
 		}
 		return dtUsuarioExternoBk;
 	}
-
+//FIN CUSCATA - 07082024
 	// @Override
 	// public List<DtUsuarioExternoBk>
 	// getMsUsuariosExternoBkXnombreapellido(String nombreapellido) throws
@@ -21797,7 +21795,7 @@ public class ServicioImp implements Servicio, Serializable {
 				return encuestaBk;
 			}
 		}
-
+//INICIO CUSCATA - 07082024
 		@Override
 		public List<DtCapaUsuexternosBk> getDtCapaUsuarioExtByIdDCapa(Long idCapacitacion) {
 			List<DtCapaUsuexternosBk> msObjectBks = new ArrayList<DtCapaUsuexternosBk>();
@@ -22392,7 +22390,7 @@ public class ServicioImp implements Servicio, Serializable {
 			return dtCapacitacionBk;
 		}
 		
-		
+		//FIN CUSCATA - 07082024
 
 		// JPUYEN 17062024 - FIN
 }

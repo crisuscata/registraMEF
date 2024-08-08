@@ -62,10 +62,11 @@ public class DtUsuarioExternoBk implements java.io.Serializable {
 	private String idpaisTxt = null;
 	private List<DtCargosUsuexterBk> usucargos;//PURIBE 14032024 - INICIO-->
 	//PURIBE 14032024 - INICIO-->
-	
+	//INICIO CUSCATA - 07082024
 	private Long idEntidad = null;
 	private String idEntidadTxt = null;
 	private String codEjecutora = null;
+    //FIN CUSCATA - 07082024
 	
 	public List<DtCargosUsuexterBk> getUsucargos() {
 		return usucargos;
@@ -421,7 +422,7 @@ public class DtUsuarioExternoBk implements java.io.Serializable {
 			this.apaterno = apaterno;
 		}
 	//FIN CUSCATA - 18062024
-
+//INICIO CUSCATA - 07082024
 		public Long getIdEntidad() {
 			return idEntidad;
 		}
@@ -445,4 +446,5 @@ public class DtUsuarioExternoBk implements java.io.Serializable {
 		public void setCodEjecutora(String codEjecutora) {
 			this.codEjecutora = codEjecutora;
 		}
+//FIN CUSCATA - 07082024
 }

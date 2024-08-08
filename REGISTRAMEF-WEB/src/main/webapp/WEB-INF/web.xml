@@ -442,11 +442,11 @@
       <url-pattern>/adminis/listadtCapacitacion.html</url-pattern>
       <url-pattern>/adminis/editardtCapacitacion.html</url-pattern>
       <url-pattern>/adminis/verdtCapacitacion.html</url-pattern>
-      
+      <!-- INICIO CUSCATA - 07082024-->
       <url-pattern>/adminis/listadtCapacitacionNoProg.html</url-pattern>
       <url-pattern>/adminis/editardtCapacitacionNoProg.html</url-pattern>
       <url-pattern>/adminis/verdtCapacitacionNoProg.html</url-pattern>
-      
+      <!-- FIN CUSCATA - 07082024-->
       <http-method>HEAD</http-method>
       <http-method>GET</http-method>
       <http-method>POST</http-method>

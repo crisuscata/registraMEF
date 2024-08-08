@@ -335,7 +335,7 @@ public class ValidacionDtCapacitacionMng implements Serializable{
 
 				
 	}
-	
+	//INICIO CUSCATA - 07082024
 	public static void validarFechaFinaliza(DtCapacitacionBk dtCapacitacionBk, DtAmpliacionFecha autorizacionEjecucion) throws Validador{
 
 		Date fechaHoy=new Date();
@@ -375,7 +375,7 @@ public class ValidacionDtCapacitacionMng implements Serializable{
 		}
 		
 	}
-
+//FIN CUSCATA - 07082024
 	public static void validarFechaInic(Timestamp fechaInic)
 	 throws Validador
 	{				

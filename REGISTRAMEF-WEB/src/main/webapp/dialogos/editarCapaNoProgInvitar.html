@@ -1,4 +1,4 @@
-<!-- INICIO CUSCATA - 25072024 CLASE NUEVA-->
+<!-- NUEVO ARCHIVO CUSCATA - 07082024-->
 <md-dialog aria-label="Lista de Participantes" style="width: 800px;"><!-- JPUYEN 14052024 - SE AGREGO style y se quito class-->
    <!--PURIBE 14032024 -INICIO-->
     <md-progress-linear md-mode="determinate" value="{{determinateValue}}"></md-progress-linear>
@@ -17,12 +17,15 @@
         </md-toolbar>
 
         <md-dialog-content>
+        
             <md-content md-whiteframe="1" class="overflowEsconder noshadow" md-colors="{background: 'background-A100'}"
-                        style="margin: 0px 30px;">
+                        style="margin: 0px 30px;"
+            			>
+            			
                 <div layout="row" layout-wrap class="modal-wrapped">
                     <div class="letraenvoltura"  >
                     
-                        <label class="letraLabel" flex>Para inscribirte, puedes ingresar al formulario virtual dando clic aqu&iacute;</label>   
+                        <label class="letraLabel" flex>{{msgInvitarEnlace}}</label>   
                         <br />
                     
                     	<input id="idLink"
@@ -54,6 +57,10 @@
                 </div>
 
             </md-content>
+            
+            
+            
+            
         </md-dialog-content>
     </form>
 </md-dialog>

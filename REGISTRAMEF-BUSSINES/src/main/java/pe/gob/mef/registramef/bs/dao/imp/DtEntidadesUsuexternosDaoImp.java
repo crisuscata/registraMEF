@@ -13,7 +13,7 @@ import pe.gob.mef.registramef.bs.dao.DtEntidadesUsuexternosDao;
 import pe.gob.mef.registramef.bs.dao.base.AbstractJpaCRUDDao;
 import pe.gob.mef.registramef.bs.domain.DtEntidadesUsuexternos;
 import pe.gob.mef.registramef.bs.utils.Estado;
-import pe.gob.mef.registramef.bs.utils.PropertiesMg;
+import pe.gob.mef.registramef.bs.utils.PropertiesMg;//CUSCATA - 07082024
 
 /**
  * DT_ENTIDADES_USUEXTERNOS REPOSITORIO: LISTA DE LAS ENTIDADES A LA QUE PERTENECE EL USUARIO EXTERNO
@@ -31,7 +31,7 @@ public class DtEntidadesUsuexternosDaoImp extends
 		DtEntidadesUsuexternosDao {
 
 	private static final Logger log = Logger.getLogger(DtEntidadesUsuexternosDaoImp.class.getName());
-	
+	//INICIO CUSCATA - 07082024
 	private Long estadoNuevo = 1L;
 	private Long estadoEliminado = 0L;
 
@@ -42,7 +42,7 @@ public class DtEntidadesUsuexternosDaoImp extends
 		
 		log.log(Level.INFO,null,"INICIALIZANDO JPA TEMPLATE PARA DtEntidadesUsuexternosDaoImp");
 	}
-	
+	//FIN CUSCATA - 07082024
 	public DtEntidadesUsuexternosDaoImp(EntityManager entityManager) {
 		super.setEntityManager(entityManager);
 		log.log(Level.INFO,null,"INICIALIZANDO JPA TEMPLATE PARA DtEntidadesUsuexternosDaoImp");
@@ -226,7 +226,7 @@ public class DtEntidadesUsuexternosDaoImp extends
 				return lista;
 			}
 			//PURIBE 14032024 - FIN-->
-
+//INICIO CUSCATA - 07082024
 			@Override
 			public List<DtEntidadesUsuexternos> getDtEntidadUsuarioByUser(Long idUsuexterno) {
 				List<DtEntidadesUsuexternos> lista = new ArrayList<DtEntidadesUsuexternos>();
@@ -253,4 +253,5 @@ public class DtEntidadesUsuexternosDaoImp extends
 			public Long getEstadoEliminado() {
 				return estadoEliminado;
 			}
+//FIN CUSCATA - 07082024
 }

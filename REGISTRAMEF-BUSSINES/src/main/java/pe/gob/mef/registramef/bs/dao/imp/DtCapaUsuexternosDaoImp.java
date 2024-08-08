@@ -220,7 +220,7 @@ public class DtCapaUsuexternosDaoImp extends
 			return retorno;
 		}
 	}
-
+//INICIO CUSCATA - 07082024
 	@Override
 	public List<DtCapaUsuexternos> getByIdCapacDtCapaUsuariosExt(Long idCapacitacion) {
 		StringBuffer sb = new StringBuffer(100);
@@ -262,4 +262,5 @@ public class DtCapaUsuexternosDaoImp extends
 		}
 		return dtCapaUsuexternos;
 	}
+//FIN CUSCATA - 07082024
 }

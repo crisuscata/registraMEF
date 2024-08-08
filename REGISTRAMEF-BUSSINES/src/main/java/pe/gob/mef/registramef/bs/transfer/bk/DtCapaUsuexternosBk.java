@@ -48,7 +48,7 @@ public class DtCapaUsuexternosBk implements java.io.Serializable {
 	private String idUsuexternoTxt = null;
 	private String idCargoUsuextTxt = null;
 	private String idEntidadTxt = null;
-	
+	//INICIO CUSCATA - 07082024
 	private String numDocu = null;
 	private String aPaterno = null;
 	private String aMaterno = null;
@@ -56,7 +56,7 @@ public class DtCapaUsuexternosBk implements java.io.Serializable {
 	private String codEjecutora = null;
 	private Long idCargo = null;
 	private String idCargoTxt = null;
-	
+	//FIN CUSCATA - 07082024
 	
 	private DtCapaUsuexternosACL dtCapaUsuexternosACL = null;		
 		
@@ -327,7 +327,7 @@ public String getNombre() {
 
 	public void setEsEliminado(boolean esEliminado) {		
 	}
-
+//INICIO CUSCATA - 07082024
 	public String getNumDocu() {
 		return numDocu;
 	}
@@ -383,5 +383,5 @@ public String getNombre() {
 	public void setIdCargoTxt(String idCargoTxt) {
 		this.idCargoTxt = idCargoTxt;
 	}
-	
+//FIN CUSCATA - 07082024	
 }

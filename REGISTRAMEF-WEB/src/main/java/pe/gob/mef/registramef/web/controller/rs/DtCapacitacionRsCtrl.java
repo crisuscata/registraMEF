@@ -357,8 +357,6 @@ public class DtCapacitacionRsCtrl {
 	        }
 	        lfinal =System.currentTimeMillis()-inicio;
 			 System.out.println("EJECUCIÓN EN: "+(lfinal)+" MILISEGUNDOS.");
-			 
-			 dtCapacitacionLC.setData(dtCapacitacionsss);
 			 dtCapacitacionLC.setTiempoenproceso(lfinal);
 			/////			
 			
@@ -430,7 +428,7 @@ public class DtCapacitacionRsCtrl {
 					}).build();
 		}
 	}
-	//INICIO CUSCATA - 18072024
+	//INICIO CUSCATA - 07082024
     @POST
 	@Path("/insertarchivo")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -569,7 +567,7 @@ public class DtCapacitacionRsCtrl {
 					}).build();
 		}
 	}
-//FIN CUSCATA - 18072024
+
 	
 	@POST
 	@Path("/finalizardtCapacitacionNoProg")
@@ -797,7 +795,7 @@ public class DtCapacitacionRsCtrl {
 		}
 	}	
 	
-	
+	//FIN CUSCATA - 07082024
 	@POST
 	@Path("/eliminardtCapacitacion")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -2035,7 +2033,7 @@ public class DtCapacitacionRsCtrl {
     					}).build();
     		}
     	}
-        
+        //INICIO CUSCATA - 07082024
         @GET
     	@Path("/listaCapaUsuarioExtByIdDCapa/{idCapa}")
     	@Produces(MediaType.APPLICATION_JSON)
@@ -2103,7 +2101,7 @@ public class DtCapacitacionRsCtrl {
     					}).build();
     		}
     	}
-        
+        //FIN CUSCATA - 07082024
         
         @GET
     	@Path("/listaPrtParametrosIdparametroIdPublico")
@@ -2970,7 +2968,7 @@ public class DtCapacitacionRsCtrl {
      	    					}).build();
      	    		}
      	    	}
-     			
+     			//INICIO CUSCATA - 07082024
 
 @GET
     				@Path("/buscarPorNumDoc/{numDoc}")
@@ -3012,5 +3010,5 @@ public class DtCapacitacionRsCtrl {
     								}).build();
     					}
     				}
-
+//FIN CUSCATA - 07082024
 }

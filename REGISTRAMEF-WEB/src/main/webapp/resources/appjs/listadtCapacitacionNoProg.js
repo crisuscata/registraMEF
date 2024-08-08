@@ -1,4 +1,4 @@
-//INICIO CUSCATA - 25072024
+//INICIO CUSCATA - 07082024
 var contexto = window.location.pathname.substring(0,window.location.pathname.indexOf('/',2));
 var pglogoff = window.location.origin+contexto+'/logoff.htm';
 var principalUrl = window.location.origin+contexto+'/index.htm';
@@ -1872,11 +1872,36 @@ myapp.controller('ctrlListadtCapacitacionNoProg', ['$mdEditDialog', '$scope', '$
 				 };
 		
 		 $scope.urlInvitarEnlace = null;
+		 $scope.msgInvitarEnlace = null;
 		 $scope.invitarCapacitacion = function(ev){
 			 
 			ev.target.disabled = true;
 				
-			$scope.urlInvitarEnlace = "http://10.5.112.43:8180/registramef/servicioInscripcion/dtCapacitacionExtView.htm?idCapa="+$scope.dtCapacitacionModelo.idCapacitacion;
+			$scope.urlInvitarEnlace = "http://host:8180/registramef/servicioInscripcion/dtCapacitacionExtView.htm?idCapa="+$scope.dtCapacitacionModelo.idCapacitacion;
+			$scope.msgInvitarEnlace = "Para inscribirte, puedes ingresar al formulario virtual dando clic aquí:";
+			
+			$mdDialog.show({
+				templateUrl: contexto+"/dialogos/editarCapaNoProgInvitar.html",
+				scope: $scope,
+				preserveScope: true,
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				clickOutsideToClose: true
+			}).then($scope.closeDialog, $scope.cancelDialod);	
+			ev.target.disabled = false;
+			 
+		 }
+		 
+		 $scope.showRegistrarAsistencia = function(ev){
+			 
+			ev.target.disabled = true;
+				
+			$scope.urlInvitarEnlace = window.location.protocol + "//" + window.location.hostname + 
+		    (window.location.port ? ":" + window.location.port : "") +
+		    "/registramef/servicio-inscripcion-page?idCapa=" + 
+		    $scope.dtCapacitacionModelo.idCapacitacion + "&est=3";
+			
+			$scope.msgInvitarEnlace = "Para registrar asistencia, puedes ingresar al formulario virtual dando clic aquí:";
 			
 			$mdDialog.show({
 				templateUrl: contexto+"/dialogos/editarCapaNoProgInvitar.html",
@@ -4708,4 +4733,4 @@ $scope.loadlistaMsSedes=function(){
         };
 };
 
-//FIN CUSCATA - 25072024
+//FIN CUSCATA - 07082024

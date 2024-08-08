@@ -1,10 +1,10 @@
 package pe.gob.mef.registramef.web.utils;
-
+//INICIO CUSCATA - 07082024
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
+//FIN CUSCATA - 07082024
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,7 +25,7 @@ public class Util {
 	
 	//JPUYEN 17062024 - FIN NUEVA CLASE
 	
-	
+	//INICIO CUSCATA - 07082024
 	public static String formatToStringTimestamp(Timestamp timestamp,String formato) {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat(formato);
@@ -45,6 +45,6 @@ public class Util {
 
 		return calendar1.getTime();
 	}
-	
+	//FIN CUSCATA - 07082024
 	
 }

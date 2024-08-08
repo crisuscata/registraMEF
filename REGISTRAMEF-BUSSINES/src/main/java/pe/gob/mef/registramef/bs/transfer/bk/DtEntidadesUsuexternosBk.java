@@ -35,7 +35,7 @@ public class DtEntidadesUsuexternosBk implements java.io.Serializable {
 	private String idEntidadTxt = null;
 	private String idUsuexternoTxt = null;
 	private String estadoTxt = null;
-	private String codEjecutora = null;
+	private String codEjecutora = null;//CUSCATA - 07082024
 	
 	private DtEntidadesUsuexternosACL dtEntidadesUsuexternosACL = null;		
 		
@@ -198,7 +198,7 @@ public String getNombre() {
 
 	public void setEsEliminado(boolean esEliminado) {		
 	}
-
+//INICIO CUSCATA - 07082024
 	public String getCodEjecutora() {
 		return codEjecutora;
 	}
@@ -206,4 +206,5 @@ public String getNombre() {
 	public void setCodEjecutora(String codEjecutora) {
 		this.codEjecutora = codEjecutora;
 	}
+//FIN CUSCATA - 07082024
 }

@@ -223,7 +223,7 @@ public interface Servicio {
 	 * CAPACITACION "CAPACITACIONES"
 	 */
 	DtCapacitacionBk getDtCapacitacionBkXid(Long id, Long kyUsuarioMod);
-	DtCapacitacionBk getOnlyDtCapacitacionBkById(Long id);
+	DtCapacitacionBk getOnlyDtCapacitacionBkById(Long id);//INICIO CUSCATA - 07082024
 
 	List<DtCapacitacionBk> getAllDtCapacitacionActivos(Long kyUsuarioMod);
 
@@ -231,10 +231,10 @@ public interface Servicio {
 
 	DtCapacitacionBk saveorupdateDtCapacitacionBk(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
-	//INICIO CUSCATA - 18072024
+	//INICIO CUSCATA - 07082024
 	DtCapacitacionBk saveorupdateDtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador;
-//FIN CUSCATA - 18072024
+
 	
 	DtCapacitacionBk finalizarDtCapacitacionNoProg(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress, List<DtAnexoBk> tdAnexosBkss) throws Validador;
@@ -248,7 +248,7 @@ public interface Servicio {
 	DtCapacitacionBk confirmarNOAsistenciaCapaNoProg(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
 	
-	
+	//FIN CUSCATA - 07082024
 	void deleteDtCapacitacion(DtCapacitacionBk dtCapacitacionBk, String user, Long kyUsuarioMod, Long kyAreaMod,
 			String rmtaddress) throws Validador;
 
@@ -975,11 +975,11 @@ public interface Servicio {
 
 	DtCapaUsuexternosBk saveorupdateDtCapaUsuexternosBk(DtCapaUsuexternosBk dtCapaUsuexternosBk, String user,
 			Long kyUsuarioMod, Long kyAreaMod, String rmtaddress) throws Validador;
-	
+	//INICIO CUSCATA - 07082024
 	DtCapaUsuexternosBk updateDtCapaUsuexternosBkExt(DtCapaUsuexternosBk dtCapaUsuexternosBk) throws Validador;
 	
 	List<DtCapaUsuexternosBk> getDtCapaUsuarioExtByIdDCapa(Long idCapacitacion);
-
+//FIN CUSCATA - 07082024
 	void deleteDtCapaUsuexternos(DtCapaUsuexternosBk dtCapaUsuexternosBk, String user, Long kyUsuarioMod,
 			Long kyAreaMod, String rmtaddress) throws Validador;
 
@@ -1680,7 +1680,7 @@ public interface Servicio {
 		DtEncuestaBk getIdEncuesta (Long idTipoServicio, Long fechaServicio, Long idServicio) throws Validador;
 		//PURIBE 22042024 - FIN
 		DtUsuarioExternoBk getUsuarioPorDNI(Long numDocum, Long kyUsuarioMod);//CUSCATA - 18062024
-		DtUsuarioExternoBk getUsuarioCapacitacionPorDNI(Long numDocum, Long kyUsuarioMod);//CUSCATA - 18062024
+		DtUsuarioExternoBk getUsuarioCapacitacionPorDNI(Long numDocum, Long kyUsuarioMod);//CUSCATA - 07082024
 		
 		List<MsUsuariosDto> getMsUsuariosFilter(Long idSede);//JPUYEN 14052024
 		DtUsuarioExternoBk getMsUsuariosExternoBkXDni(String dni) throws Validador ;//JPUYEN 14052024
@@ -1708,6 +1708,8 @@ public interface Servicio {
 		DtEncuestaBk getIdEncuesta(Long idTipoServicio, Long fechaServicio) throws Validador;
 		Long getParametro(String key, Long defaultValue) throws Validador;
 		// JPUYEN 17062024 - FIN
+        //INICIO CUSCATA - 07082024
 		DtUsuarioExternoBk getDtUsuarioExtByDni(String dni) throws Validador;
 		DtCapaUsuexternosBk getDtCapaUsuexternos(Long idCapacitacion, Long idUsuexterno) throws Validador;
+        //FIN CUSCATA - 07082024
 }

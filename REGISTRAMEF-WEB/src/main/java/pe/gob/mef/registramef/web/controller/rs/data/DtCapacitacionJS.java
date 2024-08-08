@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapaEntidadesBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapaPublicoBk;
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapaTemasBk;
-import pe.gob.mef.registramef.bs.transfer.bk.DtCapaUsuexternosBk;
+import pe.gob.mef.registramef.bs.transfer.bk.DtCapaUsuexternosBk;//CUSCATA - 07082024
 import pe.gob.mef.registramef.bs.transfer.bk.DtCapacitacionBk;
 
 /**
@@ -90,9 +90,9 @@ public class DtCapacitacionJS implements java.io.Serializable {
 		private List<DtCapaPublicoBk> dtCapaPublicoBkJSss = null;
 		private List<DtCapacitacionBk> dtCapaAcumulaListBkJSss = null;
 		
-		private List<DtCapaUsuexternosBk> dtCapacitacionUsuariosBkJSss = null;////CUSCATA - 25072024
+		private List<DtCapaUsuexternosBk> dtCapacitacionUsuariosBkJSss = null;////CUSCATA - 07082024
 		//MPINARES 14022024 - FIN
-        private List<DtAnexosJS> tdAnexosJSss = null;//CUSCATA - 18072024
+        private List<DtAnexosJS> tdAnexosJSss = null;//CUSCATA - 07082024
 		private boolean addEntidad = false;
 
 	public boolean isAddEntidad() {
@@ -563,7 +563,7 @@ public class DtCapacitacionJS implements java.io.Serializable {
 		public void setEstado(Long estado) {
 			this.estado = estado;
 		}
-
+//INICIO CUSCATA - 07082024
 		public List<DtAnexosJS> getTdAnexosJSss() {
 			return tdAnexosJSss;
 		}
@@ -579,7 +579,7 @@ public class DtCapacitacionJS implements java.io.Serializable {
 		public void setDtCapacitacionUsuariosBkJSss(List<DtCapaUsuexternosBk> dtCapacitacionUsuariosBkJSss) {
 			this.dtCapacitacionUsuariosBkJSss = dtCapacitacionUsuariosBkJSss;
 		}
-		
+		//FIN CUSCATA - 07082024
 		
 		
 		//MPINARES 14022024 - FIN

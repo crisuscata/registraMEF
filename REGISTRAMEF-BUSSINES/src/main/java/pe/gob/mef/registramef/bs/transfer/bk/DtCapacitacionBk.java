@@ -97,10 +97,11 @@ public class DtCapacitacionBk implements java.io.Serializable {
 		private List<String> temasTxt = null;
 		private List<DtCapacitacionBk> dtCapaAcumulaListBkJSss = null;
 		//MPINARES 14022024 - FIN
-		
+		//INICIO CUSCATA - 07082024
 		private List<DtAnexoBk> dtAnexosBKJSss = null;
 		
 		private List<DtCapaUsuexternosBk> dtCapacitacionUsuariosBkJSss = null;
+        //FIN CUSCATA - 07082024
 		
 	public DtCapacitacionBk() {
 	}
@@ -768,7 +769,7 @@ public class DtCapacitacionBk implements java.io.Serializable {
 		}
 		return sb.toString();
 	}
-
+//INICIO CUSCATA - 07082024
 	public List<DtCapaUsuexternosBk> getDtCapacitacionUsuariosBkJSss() {
 		return dtCapacitacionUsuariosBkJSss;
 	}
@@ -784,7 +785,7 @@ public class DtCapacitacionBk implements java.io.Serializable {
 	public void setDtAnexosBKJSss(List<DtAnexoBk> dtAnexosBKJSss) {
 		this.dtAnexosBKJSss = dtAnexosBKJSss;
 	}
-	
+//FIN CUSCATA - 07082024	
 	
 	
 	

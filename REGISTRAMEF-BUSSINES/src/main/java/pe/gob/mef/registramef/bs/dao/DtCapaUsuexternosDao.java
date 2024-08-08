@@ -21,7 +21,7 @@ public interface DtCapaUsuexternosDao {
 	void deleteDtCapaUsuexternos(DtCapaUsuexternos param);
 	List<DtCapaUsuexternos> getAllDtCapaUsuexternos();
 	DtCapaUsuexternos getDtCapaUsuexternos(Long idCapaUsuext);
-	DtCapaUsuexternos  getDtCapaUsuexternos(Long idCapacitacion, Long idUsuexterno);
+	DtCapaUsuexternos  getDtCapaUsuexternos(Long idCapacitacion, Long idUsuexterno);//CUSCATA - 07082024
 	List<DtCapaUsuexternos> getNativeSQLDtCapaUsuexternos(String queryString, Object[] params);
 	List<DtCapaUsuexternos> getActivasDtCapaUsuexternos();
 	List<DtCapaUsuexternos> getActivasDtCapaUsuexternosCero();
@@ -31,7 +31,7 @@ public interface DtCapaUsuexternosDao {
 	List<DtCapaUsuexternos> getXFiltro(Long idCapacitacion,Long idUsuexterno,Long idCargoUsuext,Long idEntidad, int iniciar, int max);
 	List<DtCapaUsuexternos> getXFiltro(Long idCapacitacion,Long idUsuexterno,Long idCargoUsuext,Long idEntidad);
 	long getTotalXFiltro(Long idCapacitacion,Long idUsuexterno,Long idCargoUsuext,Long idEntidad);
-	List<DtCapaUsuexternos> getByIdCapacDtCapaUsuariosExt(Long idCapacitacion);
-	Integer getParticipanteAsistente(Long idCapacitacion);
+	List<DtCapaUsuexternos> getByIdCapacDtCapaUsuariosExt(Long idCapacitacion);//CUSCATA - 07082024
+	Integer getParticipanteAsistente(Long idCapacitacion);//CUSCATA - 07082024
 	
 }

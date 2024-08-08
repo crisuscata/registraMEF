@@ -1,3 +1,4 @@
+//CUSCATA - 07082024 NUEVA CLASE
 package pe.gob.mef.registramef.web.srvlt;
 
 import java.awt.Color;
