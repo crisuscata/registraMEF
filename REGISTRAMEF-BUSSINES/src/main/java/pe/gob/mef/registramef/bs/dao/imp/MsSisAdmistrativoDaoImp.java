@@ -15,6 +15,7 @@ import pe.gob.mef.registramef.bs.dao.MsSisAdmistrativoDao;
 import pe.gob.mef.registramef.bs.dao.base.AbstractJpaCRUDDao;
 import pe.gob.mef.registramef.bs.domain.MsSisAdmistrativo;
 import pe.gob.mef.registramef.bs.utils.Estado;
+import pe.gob.mef.registramef.bs.utils.PropertiesMg;
 
 /**
  * MS_SIS_ADMISTRATIVO REPOSITORIO: LISTA DE LOS SISTEMAS ADMINISTRATIVOS REGISTRADOS EN EL SISTEMA
@@ -32,6 +33,8 @@ public class MsSisAdmistrativoDaoImp extends
 		MsSisAdmistrativoDao {
 
 	private static final Logger log = Logger.getLogger(MsSisAdmistrativoDaoImp.class.getName());
+	
+	protected Long estadoNuevo = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);
 
 	public MsSisAdmistrativoDaoImp() {
 		log.log(Level.INFO,null,"INICIALIZANDO JPA TEMPLATE PARA MsSisAdmistrativoDaoImp");
@@ -231,4 +234,20 @@ public class MsSisAdmistrativoDaoImp extends
 		sb.append("ORDER BY tablaa.idSistAdmi asc ");
 		return super.find(sb.toString());
 	}
+	
+	public  List<MsSisAdmistrativo> getSistemaAdministrativoTemaCapa() throws Exception{
+
+		StringBuilder query = new StringBuilder();
+		query.append(" select distinct  sa ");
+		query.append(" from DtCapaTemas t, MsSisAdmistrativo sa ");
+		query.append(" where  ");
+		query.append(" t.estado = ? ");
+		query.append(" and t.idSistAdmi = sa.idSistAdmi ");
+
+		Object[] params = new Object[1];
+		params[0] = PropertiesMg.getSistemLong(PropertiesMg.KEY_ESTADOS_REGISTROS_NUEVO, PropertiesMg.DEFOULT_ESTADOS_REGISTROS_NUEVO);
+
+		return  super.find(query.toString(), params);
+	}
+	
 }

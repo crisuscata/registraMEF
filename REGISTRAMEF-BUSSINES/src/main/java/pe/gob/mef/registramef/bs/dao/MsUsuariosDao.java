@@ -41,5 +41,7 @@ public interface MsUsuariosDao {
 	Long getTotalRegistros();
 	
 	List<MsUsuarios> getMsUsuarioByIdSedexUsername(Long sede,String usuario); 	//PURIBE 22032024 - INICIO--
+	List<MsUsuarios> getMsUsuarioTemaCapaByIdSedeByIsSisAdm(Long idSede, Long idSistAdm);
+	List<MsUsuarios> getMsUsuarioByIdSedeByIsSisAdm(Long idSede, Long idSistAdm);
 	
 }

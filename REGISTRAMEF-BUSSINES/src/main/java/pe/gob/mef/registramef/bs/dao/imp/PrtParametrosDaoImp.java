@@ -232,4 +232,29 @@ public class PrtParametrosDaoImp extends
 		return super.find(sb.toString());
 	}
 	//PURIBE 25012024 - FIN
+	
+	public List<PrtParametros> getXIdPapa(Long idpapa) {
+
+		StringBuffer sb = new StringBuffer(100);
+		List<Object> hs = new ArrayList<Object>();
+		sb.append("select t from " + getDomainClass().getName() + " t where  t.estado>= " + Estado.ACTIVO.getValor() + " ");
+
+		if (idpapa != null && idpapa.longValue() > 0L) {
+			sb.append("and t.idpadre = ? ");
+			hs.add(idpapa);
+		}
+
+		sb.append("order by t.descripcion asc  ");
+
+		List<PrtParametros> lista = null;
+		if (hs.size() > 0) {
+			Object param[] = new Object[hs.size()];
+			hs.toArray(param);
+			lista = super.find(sb.toString(), param);
+			return lista;
+		} else {
+			lista = super.find(sb.toString());
+			return lista;
+		}
+	}
 }

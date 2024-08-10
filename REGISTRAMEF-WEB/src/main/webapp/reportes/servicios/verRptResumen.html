@@ -1,0 +1,135 @@
+<!-- NUEVO ARCHIVO CUSCATA - 07082024-->
+<div layout="column" layout-align="start stretch" data-ng-init="loadRptResumen()">
+<!-- //MPINARES 14022024 - INICIO - SE CAMBIA TODO -->
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size">
+	<h2 flex md-truncate md-colors="{color: 'background-A100'}" style="font-size: 17px;">Lista de capacitaciones programadas</h2>
+	
+         <md-button class="md-button-borde md-sm" ng-href="{{descargarvista()}}" target="_blank" aria-label="Exportar">
+         <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">file_download</md-icon>
+		<span style="color: rgb(255,255,255);">Exportar</span> </md-button>
+		
+	</div>
+</md-toolbar>    
+    
+<!-- Filtro -->
+<md-toolbar class="md-toolbar-filtro-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="space-between center">
+	
+     		<div class="tamaDivFiltro">
+            <md-input-container class="container_margen-top" style="margin-top: 42px;"> 
+            	<label style="font-size: 15px;">Fecha de inicio</label>
+            	<md-datepicker required ng-model="filtro.fechaInicio" 
+	                     md-placeholder="Fecha de inicio"
+	                     input-aria-describedby="datepicker-description"
+	                     input-aria-labelledby="datepicker-header ">
+	            </md-datepicker>
+            </md-input-container>
+            </div>
+            
+            <div class="tamaDivFiltro">
+            <md-input-container class="container_margen-top" style="margin-top: 42px;"> 
+            	<label style="font-size: 15px;">Fecha fin</label>
+            	<md-datepicker required ng-model="filtro.fechaFin" 
+	                     md-placeholder="Fecha fin"
+	                     input-aria-describedby="datepicker-description"
+	                     input-aria-labelledby="datepicker-header ">
+	            </md-datepicker>
+            </md-input-container>
+            </div>
+            
+            <div class="tamaDivFiltro" style="font-size: 14px;">
+			<md-input-container style="margin-right: 15px;"> 
+				<label>Tipo Servicio</label>
+				<md-select
+				ng-model="filtro.idTipoServicio" placeholder="Tipo Servicio"> 
+				<md-option ng-value="">Seleccione Tipo Servicio</md-option>
+				<md-option
+					ng-repeat="item in listarParametrosXIdPadreToIdParamTipoServicio" ng-value="item.valor">
+					{{item.valor}} 
+				</md-option>
+			
+			 </md-select> 
+			</md-input-container>
+			</div>
+			
+            <div class="tamaDivFiltro" style="font-size: 14px;">
+			<md-input-container style="margin-right: 15px;"> 
+				<label>Sede</label>
+				<md-select
+				ng-model="filtro.idSede" placeholder="Sede"> 
+				<md-option ng-value="">Todas las sedes</md-option>
+				<md-option
+					ng-repeat="item in listaMsSedes" ng-value="item.valor">
+					{{item.valor}} 
+				</md-option>
+			
+			 </md-select> 
+			</md-input-container>
+			</div>
+			
+			<div class="tamaDivFiltro" style="font-size: 14px;">
+			<md-input-container style="margin-right: 15px;"> 
+				<label>Sist Admin</label>
+				<md-select
+				ng-model="filtro.idSisAdmin" placeholder="Sist Admin"> 
+				<md-option ng-value="">Todas los Sistemas</md-option>
+				<md-option
+					ng-repeat="item in listaIDValorMsSisAdmiTemaCapa" ng-value="item.valor">
+					{{item.valor}} 
+				</md-option>
+			
+			 </md-select> 
+			</md-input-container>
+			</div>
+			
+			<div class="tamaDivFiltro" style="font-size: 14px;">
+			<md-input-container style="margin-right: 15px;"> 
+				<label>Usu Int</label>
+				<md-select
+				ng-model="filtro.idUserInt" placeholder="Usu Int"> 
+				<md-option ng-value="">Todas los usuarios</md-option>
+				<md-option
+					ng-repeat="item in listaIDValorMsUserTemaCapaBySedeBySisAdm" ng-value="item.valor">
+					{{item.valor}} 
+				</md-option>
+			
+			 </md-select> 
+			</md-input-container>
+			</div>
+			
+			<div class="tamaDivFiltro" style="font-size: 14px;">
+			<md-input-container style="margin-right: 15px;"> 
+				<label>Estado</label>
+				<md-select
+				ng-model="filtro.idEstado" placeholder="Estado"> 
+				<md-option ng-value="">Todas los estados</md-option>
+				<md-option
+					ng-repeat="item in listaMsEstado" ng-value="item.valor">
+					{{item.valor}} 
+				</md-option>
+			
+			 </md-select> 
+			</md-input-container>
+			</div>
+	
+	</div>
+</md-toolbar>
+
+<!-- FIN Filtro -->
+<md-divider style="margin-top: 20px;"></md-divider>
+
+  <md-table-container>
+  
+    
+    
+  </md-table-container>
+  
+  
+  </div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+<div id="pie" ng-include="'paginas/pie.html'"></div> 

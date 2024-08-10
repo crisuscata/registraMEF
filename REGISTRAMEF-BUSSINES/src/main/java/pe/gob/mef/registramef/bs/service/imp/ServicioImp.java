@@ -22390,7 +22390,124 @@ public class ServicioImp implements Servicio, Serializable {
 			return dtCapacitacionBk;
 		}
 		
-		//FIN CUSCATA - 07082024
+		public List<IDValorDto> getIDValorPrtParametrosXIdPadreToIdParamTipoServicio() throws Validador {
+			List<IDValorDto> retorno = new ArrayList<IDValorDto>();
+			try {
+				Long idPadre = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO,
+						PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO);
+				List<PrtParametros> mdcParametrosss = prtParametrosDao.getXIdPapa(idPadre);
+				for (PrtParametros mdcParametros : mdcParametrosss) {
+					IDValorDto iDValorDto = new IDValorDto();
+					iDValorDto.setId(mdcParametros.getIdparametro());
+					iDValorDto.setValor(mdcParametros.getDescripcion());
+					retorno.add(iDValorDto);
+				}
+			} catch (Exception e) {
+				throw new Validador(
+						"ERROR: INESPERADO: POR FAVOR ENVIE ESTE MENSAJE AL ADMINISTRADOR DEL SISTEMA, GRACIAS.\n"
+								+ e.getMessage());
+			}
+			return retorno;
+		}
+		
+		public List<IDValorDto> getIDValorMsSisAdmiTemaCapa() throws Validador {
+			List<IDValorDto> retorno = new ArrayList<IDValorDto>();
+			try {
+				List<MsSisAdmistrativo> msSisAdmistrativossss = msSisAdmistrativoDao.getSistemaAdministrativoTemaCapa();
 
-		// JPUYEN 17062024 - FIN
+				for (MsSisAdmistrativo msSisAdmistrativo : msSisAdmistrativossss) {
+					IDValorDto iDValorDto = new IDValorDto();
+					iDValorDto.setId(msSisAdmistrativo.getIdSistAdmi());
+					iDValorDto.setValor(msSisAdmistrativo.getDescripcion());
+					retorno.add(iDValorDto);
+				}
+			} catch (Exception e) {
+				throw new Validador(
+						"ERROR: INESPERADO: POR FAVOR ENVIE ESTE MENSAJE AL ADMINISTRADOR DEL SISTEMA, GRACIAS.\n"
+								+ e.getMessage());
+			}
+			return retorno;
+		}
+		
+		public List<IDValorDto> getIDValorMsSisAdmiBksss() throws Validador {
+			List<IDValorDto> retorno = new ArrayList<IDValorDto>();
+			try {
+				List<MsSisAdmistrativo> msSisAdmistrativossss = msSisAdmistrativoDao.getActivasMsSisAdmistrativo();
+
+				for (MsSisAdmistrativo msSisAdmistrativo : msSisAdmistrativossss) {
+					IDValorDto iDValorDto = new IDValorDto();
+					iDValorDto.setId(msSisAdmistrativo.getIdSistAdmi());
+					iDValorDto.setValor(msSisAdmistrativo.getDescripcion());
+					retorno.add(iDValorDto);
+				}
+			} catch (Exception e) {
+				throw new Validador(
+						"ERROR: INESPERADO: POR FAVOR ENVIE ESTE MENSAJE AL ADMINISTRADOR DEL SISTEMA, GRACIAS.\n"
+								+ e.getMessage());
+			}
+			return retorno;
+		}
+		
+		public List<IDValorDto> getIDValorMsUserTemaCapaBySedeBySisAdm(Long idSede, Long idSistAdm) throws Validador {
+			List<IDValorDto> retorno = new ArrayList<IDValorDto>();
+			try {
+				List<MsUsuarios> msUsuariosList = msUsuariosDao.getMsUsuarioTemaCapaByIdSedeByIsSisAdm(idSede, idSistAdm);
+				for (MsUsuarios msUsuarioss : msUsuariosList) {
+					IDValorDto iDValorDto = new IDValorDto();
+					iDValorDto.setId(msUsuarioss.getIdusuario());
+					iDValorDto.setValor(msUsuarioss.getApellidoPaterno() + " " + msUsuarioss.getApellidoMaterno() + " "
+							+ msUsuarioss.getNombres());
+					retorno.add(iDValorDto);
+				}
+			} catch (Exception e) {
+				throw new Validador(
+						"ERROR: INESPERADO: POR FAVOR ENVIE ESTE MENSAJE AL ADMINISTRADOR DEL SISTEMA, GRACIAS.\n"
+								+ e.getMessage());
+			}
+			return retorno;
+		}
+		
+		public List<IDValorDto> getIDValorMsUserBySedeBySisAdm(Long idSede, Long idSistAdm) throws Validador {
+			List<IDValorDto> retorno = new ArrayList<IDValorDto>();
+			try {
+				List<MsUsuarios> msUsuariosList = msUsuariosDao.getMsUsuarioByIdSedeByIsSisAdm(idSede, idSistAdm);
+				for (MsUsuarios msUsuarioss : msUsuariosList) {
+					IDValorDto iDValorDto = new IDValorDto();
+					iDValorDto.setId(msUsuarioss.getIdusuario());
+					iDValorDto.setValor(msUsuarioss.getApellidoPaterno() + " " + msUsuarioss.getApellidoMaterno() + " "
+							+ msUsuarioss.getNombres());
+					retorno.add(iDValorDto);
+				}
+			} catch (Exception e) {
+				throw new Validador(
+						"ERROR: INESPERADO: POR FAVOR ENVIE ESTE MENSAJE AL ADMINISTRADOR DEL SISTEMA, GRACIAS.\n"
+								+ e.getMessage());
+			}
+			return retorno;
+		}
+		
+		public List<IDValorDto> getParametroPorIdPadreToCombo(Long idpadre) throws Validador {
+			List<IDValorDto> retorno = new ArrayList<IDValorDto>();
+			try {
+
+				List<PrtParametros> listObject = prtParametrosDao.getXIdPapa(idpadre);
+				for (PrtParametros objectBk : listObject) {
+					IDValorDto iDValorDto = new IDValorDto();
+					iDValorDto.setId(objectBk.getIdparametro());
+					if (objectBk.getIdparametro() != null && objectBk.getIdparametro().longValue() == 3) {
+						iDValorDto.setValor("EN PROCESO");
+					} else {
+						iDValorDto.setValor(objectBk.getDescripcion());
+					}
+
+					retorno.add(iDValorDto);
+				}
+			} catch (Exception e) {
+				throw new Validador(
+						"ERROR:(getPrtParametrossss) INESPERADO: POR FAVOR ENVIE ESTE MENSAJE AL ADMINISTRADOR DEL SISTEMA, GRACIAS.\n"
+								+ e.getMessage());
+			}
+			return retorno;
+		}
+		
 }

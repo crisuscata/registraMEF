@@ -1712,4 +1712,13 @@ public interface Servicio {
 		DtUsuarioExternoBk getDtUsuarioExtByDni(String dni) throws Validador;
 		DtCapaUsuexternosBk getDtCapaUsuexternos(Long idCapacitacion, Long idUsuexterno) throws Validador;
         //FIN CUSCATA - 07082024
+		
+		List<IDValorDto> getIDValorPrtParametrosXIdPadreToIdParamTipoServicio() throws Validador;
+		List<IDValorDto> getIDValorMsSisAdmiTemaCapa() throws Validador;
+		List<IDValorDto> getIDValorMsSisAdmiBksss() throws Validador;
+		List<IDValorDto> getIDValorMsUserTemaCapaBySedeBySisAdm(Long idSede, Long idSistAdm) throws Validador;
+		List<IDValorDto> getIDValorMsUserBySedeBySisAdm(Long idSede, Long idSistAdm) throws Validador;
+		List<IDValorDto> getParametroPorIdPadreToCombo(Long idpadre) throws Validador;
+		
+		
 }

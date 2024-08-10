@@ -41,6 +41,12 @@ public class Test01 {
             //System.out.println("The current time + 30 minutes is after or equal to the specific timestamp.");
         	System.out.println("no puede registrar");
         }
+        
+        
+        Long idCapacitacion = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA,
+				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA);
+		
+		System.out.println("idCapacitacion: " +  idCapacitacion);
 		
 
 	}

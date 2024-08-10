@@ -463,5 +463,55 @@ public class MsUsuariosDaoImp extends
 					+ " r.estado >= " +Estado.ACTIVO.getValor()+" ");
 		}
 		
-		//JPUYEN 14052024 - FIN 
+		public List<MsUsuarios> getMsUsuarioTemaCapaByIdSedeByIsSisAdm(Long idSede, Long idSistAdm) {
+			StringBuffer sb = new StringBuffer(100);
+			List<Object> hs = new ArrayList<Object>();
+			sb.append("select distinct  sa from  DtCapaTemas t, MsUsuarios sa where t.idUsuinterno = sa.idusuario and t.estado >= " + Estado.ACTIVO.getValor() + " "
+					);
+
+			if (idSede != null && idSede.intValue() > 0) {
+				sb.append(" and sa.idSede = ? ");
+				hs.add(idSede);
+			}
+			
+			if (idSistAdm != null && idSistAdm.intValue() > 0) {
+				sb.append(" and sa.idSistAdmi = ? ");
+				hs.add(idSistAdm);
+			}
+
+			sb.append("order by sa.apellidoPaterno, sa.apellidoMaterno, sa.nombres ");
+
+			Object param[] = new Object[hs.size()];
+			hs.toArray(param);
+			List<MsUsuarios> lista = super.find(sb.toString(), param);
+
+			return lista;
+		}
+		
+		public List<MsUsuarios> getMsUsuarioByIdSedeByIsSisAdm(Long idSede, Long idSistAdm) {
+			StringBuffer sb = new StringBuffer(100);
+			List<Object> hs = new ArrayList<Object>();
+			sb.append("select t from " + getDomainClass().getName()
+					+ " t where t.estado >= " + Estado.ACTIVO.getValor() + " "
+					);
+
+			if (idSede != null && idSede.intValue() > 0) {
+				sb.append("and t.idSede = ? ");
+				hs.add(idSede);
+			}
+			
+			if (idSistAdm != null && idSistAdm.intValue() > 0) {
+				sb.append("and t.idSistAdmi = ? ");
+				hs.add(idSistAdm);
+			}
+
+			sb.append("order by t.apellidoPaterno, t.apellidoMaterno, t.nombres ");
+
+			Object param[] = new Object[hs.size()];
+			hs.toArray(param);
+			List<MsUsuarios> lista = super.find(sb.toString(), param);
+
+			return lista;
+		}
+		
 }

@@ -275,7 +275,7 @@ myapp.controller('menuCtrl', ['$scope','$mdPanel','$mdDialog','$http', function 
 	        $scope.reporteServicios = {
 		  		      name: 'Reporte de servicios',
 		  		      items: [
-		  		    	  {'name':'Resumen','refe':'paginas/listatConstruccion.html','activo':true},
+		  		    	  {'name':'Resumen','refe':'reportes/servicios/listarRptResumen.html','activo':true},
 		  		    	  {'name':'Por sede','refe':'paginas/listatConstruccion.html','activo':true},
 		  		    	  {'name':'Por representantes técnicos','refe':'paginas/listatConstruccion.html','activo':true}
 		  		      ]

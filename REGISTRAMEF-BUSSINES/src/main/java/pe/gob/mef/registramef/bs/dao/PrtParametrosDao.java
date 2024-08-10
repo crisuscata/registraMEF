@@ -33,4 +33,5 @@ public interface PrtParametrosDao {
 	List<PrtParametros> getListaIdparametro();
 //	List<PrtParametros> getHijosXDescripcion(String descripcionpadre);
 	List<PrtParametros> getHijosXDescripcion(String descripcionpadre);//MPINARES 24012023 - INICIO
+	List<PrtParametros> getXIdPapa(Long idpapa);
 }

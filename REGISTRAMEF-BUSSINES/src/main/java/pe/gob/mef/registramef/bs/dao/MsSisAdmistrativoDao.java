@@ -33,5 +33,6 @@ public interface MsSisAdmistrativoDao {
 	List<MsSisAdmistrativo> getXFiltro(String descripcion,Timestamp fechaCrea,Timestamp fechaModif,Long estado);
 	long getTotalXFiltro(String descripcion,Timestamp fechaCrea,Timestamp fechaModif,Long estado);
 	List<MsSisAdmistrativo> getListaIdSistAdmi();
+	List<MsSisAdmistrativo> getSistemaAdministrativoTemaCapa() throws Exception;
 	
 }
