@@ -1618,5 +1618,40 @@ public class FuncionesStaticas implements Serializable {
 						return new Date(timeStamp.getTime());
 					}
                     //FIN CUSCATA - 07082024
+				 
+				 public static String getMonthName(Date date, boolean abbreviated) {
+						if (date == null) {
+							return "";
+						} else {
+							switch (FuncionesStaticas.getMonth(date)) {
+							case 1:
+								return abbreviated ? "ENE" : "ENERO";
+							case 2:
+								return abbreviated ? "FEB" : "FEBRERO";
+							case 3:
+								return abbreviated ? "MAR" : "MARZO";
+							case 4:
+								return abbreviated ? "ABR" : "ABRIL";
+							case 5:
+								return abbreviated ? "MAY" : "MAYO";
+							case 6:
+								return abbreviated ? "JUN" : "JUNIO";
+							case 7:
+								return abbreviated ? "JUL" : "JULIO";
+							case 8:
+								return abbreviated ? "AGO" : "AGOSTO";
+							case 9:
+								return abbreviated ? "SET" : "SETIEMBRE";
+							case 10:
+								return abbreviated ? "OCT" : "OCTUBRE";
+							case 11:
+								return abbreviated ? "NOV" : "NOVIEMBRE";
+							case 12:
+								return abbreviated ? "DIC" : "DICIEMBRE";
+							default:
+								return "";
+							}
+						}
+					}
 
 }

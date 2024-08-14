@@ -277,4 +277,47 @@ public abstract class AbstractJpaCRUDDao<T, PK extends Serializable> implements 
 			}
 		}
 		//JPUYEN 17062024 - FIN
+		
+		@SuppressWarnings("unchecked")
+		public <T> List<T> findNativeQueryEntidadLimit(String queryString,
+		                                               Object[] params, 
+		                                               Class<T> entityClass, 
+		                                               int firstResult,
+		                                               int maxResults) throws Validador { 
+
+		    Query query = entityManager.createNativeQuery(queryString, entityClass);
+
+		    if (params != null) {
+		        setParameter(query, params);
+		    }
+		    query.setFirstResult(firstResult);
+		    query.setMaxResults(maxResults);
+
+		    return (List<T>) query.getResultList();
+		}
+
+		private void setParameter(Query query, Object[] params) {
+		    if (params != null && params.length > 0) {
+		        for (int i = 0; i < params.length; i++) {
+		            query.setParameter(i + 1, params[i]); // Positional parameters start from 1
+		        }
+		    }
+		}
+		
+		public Object findNaviteUniqueResultObject(String paramString,
+				Object[] paramArrayOfObject) {
+			Query query = entityManager.createNativeQuery(paramString);
+			for (int i = 0; i < paramArrayOfObject.length; ++i) {
+				query.setParameter((i + 1), paramArrayOfObject[i]);
+
+			}
+			return query.getSingleResult();
+		}
+		
+		@SuppressWarnings("hiding")
+		public <T> List<T> findNative(String select) throws Validador {
+			return findNative(select, null);
+		}
+		
+		
 }

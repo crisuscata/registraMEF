@@ -10,6 +10,7 @@ import pe.gob.mef.registramef.bs.cache.clases.CacheMsUsuariosBk;
 import pe.gob.mef.registramef.bs.domain.DtAmpliacionFecha;
 import pe.gob.mef.registramef.bs.domain.DtAsistenciaTemas;
 import pe.gob.mef.registramef.bs.domain.MsUbigeoId;
+import pe.gob.mef.registramef.bs.domain.ReporteAsistenciaDetallado;
 import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.transfer.DtEntidadSedesDto;
 import pe.gob.mef.registramef.bs.transfer.DtEntidadesDto;
@@ -1719,6 +1720,14 @@ public interface Servicio {
 		List<IDValorDto> getIDValorMsUserTemaCapaBySedeBySisAdm(Long idSede, Long idSistAdm) throws Validador;
 		List<IDValorDto> getIDValorMsUserBySedeBySisAdm(Long idSede, Long idSistAdm) throws Validador;
 		List<IDValorDto> getParametroPorIdPadreToCombo(Long idpadre) throws Validador;
+		Long getTotalReporteAsistenciaDetalleBkList(Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede,
+				Long idUserInt, Long idEstado) throws Validador;
+		
+		List<ReporteAsistenciaDetallado> getReporteAsistenciaDetalleBkList(Long idEstado, Long idUserInt, Date fechaInicio,
+				Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;// SPRINT_8.3
+		
+		MsSisAdmistrativoBk getMsSisAdmistrativoBkXid(Long id);
+		MsSedesBk getMsSedesBkXid(Long id);
 		
 		
 }

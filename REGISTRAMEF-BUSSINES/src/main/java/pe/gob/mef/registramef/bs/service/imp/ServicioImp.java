@@ -120,6 +120,7 @@ import pe.gob.mef.registramef.bs.dao.MsTemaDao;
 import pe.gob.mef.registramef.bs.dao.MsUbigeoDao;
 import pe.gob.mef.registramef.bs.dao.MsUsuariosDao;
 import pe.gob.mef.registramef.bs.dao.PrtParametrosDao;
+import pe.gob.mef.registramef.bs.dao.ReporteServicioDao;
 import pe.gob.mef.registramef.bs.dao.TaFeriadosDao;
 import pe.gob.mef.registramef.bs.domain.DtAmpliacionFecha;
 import pe.gob.mef.registramef.bs.domain.DtAnexo;
@@ -165,6 +166,7 @@ import pe.gob.mef.registramef.bs.domain.MsUbigeo;
 import pe.gob.mef.registramef.bs.domain.MsUbigeoId;
 import pe.gob.mef.registramef.bs.domain.MsUsuarios;
 import pe.gob.mef.registramef.bs.domain.PrtParametros;
+import pe.gob.mef.registramef.bs.domain.ReporteAsistenciaDetallado;
 import pe.gob.mef.registramef.bs.domain.TaFeriados;
 import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.resources.Messages;
@@ -475,6 +477,10 @@ public class ServicioImp implements Servicio, Serializable {
 	@Autowired
 	private DtAmpliacionFechaDao ampliacionFechaDao = null;
     //FIN CUSCATA - 07082024
+	
+	@Autowired
+	private ReporteServicioDao reporteServicioDao = null;
+	
 
 	/// ADICIONALES
 	private List<IDValorDto> prtParametrosIdparametroIdGrupoListaCache = null;
@@ -22509,5 +22515,87 @@ public class ServicioImp implements Servicio, Serializable {
 			}
 			return retorno;
 		}
+		
+		public Long getTotalReporteAsistenciaDetalleBkList(Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede,
+				Long idUserInt, Long idEstado) throws Validador { // SPRINT_8.3
+
+			if (fechaInicio != null && fechaFin != null) {
+				if (fechaInicio.after(fechaFin)) {
+					Date fechatmp = fechaInicio;
+					fechaInicio = fechaFin;
+					fechaFin = fechatmp;
+				}
+			} else if (fechaInicio != null) {
+				fechaFin = fechaInicio;
+			} else if (fechaFin != null) {
+				fechaInicio = fechaFin;
+				fechaFin = fechaInicio;
+			}
+
+			// Long totalRegistro=
+			// reporteServicioDao.getTotalReporteAsistenciaDetalleBkList(fechaInicio,
+			// fechaFin, idSistAdmin, idSede);
+			Long totalRegistro = reporteServicioDao.getTotalReporteAsistenciaDetalleBkList(fechaInicio, fechaFin,
+					idSistAdmin, idSede, idUserInt, idEstado);// SPRINT_8.3
+
+			return totalRegistro;
+		}
+		
+		public List<ReporteAsistenciaDetallado> getReporteAsistenciaDetalleBkList(Long idEstado, Long idUserInt,
+				Date fechaIni, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
+				throws Validador { // SPRINT_8.3
+
+			if (fechaIni != null && fechaFin != null) {
+				if (fechaIni.after(fechaFin)) {
+					Date fechatmp = fechaIni;
+					fechaIni = fechaFin;
+					fechaFin = fechatmp;
+				}
+			} else if (fechaIni != null) {
+				fechaFin = fechaIni;
+			} else if (fechaFin != null) {
+				fechaIni = fechaFin;
+				fechaFin = fechaIni;
+			}
+			List<ReporteAsistenciaDetallado> reporteAsistenciasss = new ArrayList<ReporteAsistenciaDetallado>();
+
+			// reporteAsistenciasss=
+			// reporteServicioDao.getResumenAsistenciasDetallado(fechaIni, fechaFin,
+			// idSistAdmin, idSede, maxRegistro);
+			// reporteAsistenciasss=
+			// reporteServicioDao.getResumenAsistenciasDetallado(fechaIni, fechaFin,
+			// idSistAdmin, idSede, maxRegistro, minRegistro);//SPRINT24
+			reporteAsistenciasss = reporteServicioDao.getResumenAsistenciasDetallado(idEstado, idUserInt, fechaIni,
+					fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);// SPRINT_8.3
+
+			return reporteAsistenciasss;
+		}
+		
+		public MsSisAdmistrativoBk getMsSisAdmistrativoBkXid(Long id) {
+			if (id == null)
+				return null;
+			MsSisAdmistrativo msSisAdmistrativo = msSisAdmistrativoDao.getMsSisAdmistrativo(id);
+			MsSisAdmistrativoBk msSisAdmistrativoBk = null;
+			if (msSisAdmistrativo != null) {
+				msSisAdmistrativoBk = new MsSisAdmistrativoBk();
+				FuncionesStaticas.copyPropertiesObject(msSisAdmistrativoBk, msSisAdmistrativo);
+				completarMsSisAdmistrativo(msSisAdmistrativoBk);
+			}
+			return msSisAdmistrativoBk;
+		}
+		
+		public MsSedesBk getMsSedesBkXid(Long id) {
+			if (id == null)
+				return null;
+			MsSedes msSedes = msSedesDao.getMsSedes(id);
+			MsSedesBk msSedesBk = null;
+			if (msSedes != null) {
+				msSedesBk = new MsSedesBk();
+				FuncionesStaticas.copyPropertiesObject(msSedesBk, msSedes);
+				completarMsSedes(msSedesBk);
+			}
+			return msSedesBk;
+		}
+		
 		
 }

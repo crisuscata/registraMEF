@@ -24,6 +24,7 @@ var descargarUrl = contexto+"/rs/ctrldtAsistencia/descargar/";
 ///FIN URLs CARGA DE ARCHIVOS
 
 var descargarvistaUrl = contexto+"/rs/ctrldtAsistencia/descargarvista";
+var descargarXLSUrl = contexto+"/rs/ctrlDtReportResumen/descargarXLS";
 
 /*
 var buscarCodEjecUrl = contexto+"/rs/ctrldtAsistencia/buscarcodejec/";
@@ -345,15 +346,51 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
     	$scope.loadListarParametrosXIdPadreToIdParamTipoServicio();
     	$scope.loadllistaMsEstado();
     	$scope.loadlistaIDValorMsSisAdmiTemaCapa();
-    	$scope.loadlistaIDValorMsUserTemaCapaBySedeBySisAdm();
+    	//$scope.loadlistaIDValorMsUserTemaCapaBySedeBySisAdm();
+    	$scope.loadUsuario();
 	  };
 	
 	
-	
-	
-	
-	
-	
+	  $scope.isFiltroCapa = false;
+	  
+	  $scope.onTipoServicioChange = function() {
+	        console.log('Selected Tipo Servicio:', $scope.filtro.idTipoServicio);
+	        
+	        var tipoServicioCapacitacion = 133;
+	        
+	        if( $scope.filtro.idTipoServicio == tipoServicioCapacitacion){
+	        	$scope.isFiltroCapa = true;
+	        	$scope.promise = $http.get(listaIDValorMsSisAdmiTemaCapaUrl).then(function(res){
+	        		$scope.listaIDValorMsSisAdmiTemaCapa = res.data;
+	        	});	
+	        	
+	        	
+	        } else{
+	        	$scope.isFiltroCapa = false;
+	        	$scope.promise = $http.get(listaIDValorMsSisAdmiBksssUrl).then(function(res){
+	        		$scope.listaIDValorMsSisAdmiTemaCapa = res.data;
+	        	});	
+	        }
+	        
+	 };
+	 
+	 $scope.loadUsuario = function() {
+		 var url = $scope.isFiltroCapa 
+	        ? listaIDValorMsUserTemaCapaBySedeBySisAdmUrl  + $scope.filtro.idSede + "/" + $scope.filtro.idSisAdmin
+	        : listaIDValorMsUserBySedeBySisAdmUrl + $scope.filtro.idSede + "/" + $scope.filtro.idSisAdmin;
+
+	        $scope.promise = $http.get(url).then(function(res) {
+	            $scope.listaIDValorMsUserTemaCapaBySedeBySisAdm = res.data;
+	        });
+	 }
+	 
+	 $scope.onUserChange = function() {
+	        console.log(' idSede:', $scope.filtro.idSede);
+	        console.log(' idSisAdmin:', $scope.filtro.idSisAdmin);
+	        
+	        
+	        $scope.loadUsuario();
+	 };
 	
 
 	$scope.loaddtAsistenciasNoProg = function () {
@@ -496,8 +533,8 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			  fechaInicio:$scope.firstDate(new Date()),
 			  fechaFin: $scope.getLastDayOfMonth(new Date()),
 			  idTipoServicio: null,
-			  idSede: null,
-			  idSisAdmin: null,
+			  idSede: 0,
+			  idSisAdmin: 0,
 			  idUserInt: null,
 			  idEstado: null
 		}; 
@@ -561,6 +598,49 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 //	        	  return descargarvistaUrl;
 //	        	  }
 	    };
+	    
+	    
+	    
+	    
+	    $scope.descargarXSL = function() {
+	        console.log("JSON.stringify($scope.filtro):" + JSON.stringify($scope.filtro));
+	        
+	        // Ensure fechaInicio and fechaFin are Date objects
+	        if (!($scope.filtro.fechaInicio instanceof Date)) {
+	            $scope.filtro.fechaInicio = new Date($scope.filtro.fechaInicio);
+	        }
+	        if (!($scope.filtro.fechaFin instanceof Date)) {
+	            $scope.filtro.fechaFin = new Date($scope.filtro.fechaFin);
+	        }
+
+	        // Format the dates to 'yyyy-MM-dd'
+	        var formattedFechaInicio = $scope.filtro.fechaInicio.toISOString().split('T')[0];  
+	        var formattedFechaFin = $scope.filtro.fechaFin.toISOString().split('T')[0];
+
+	        // Construct the URL
+	        var url = descargarXLSUrl 
+	            + "?fechaInicio=" + encodeURIComponent(formattedFechaInicio)
+	            + "&fechaFin=" + encodeURIComponent(formattedFechaFin)
+	            + "&idTipoServicio=" + encodeURIComponent($scope.filtro.idTipoServicio || '')
+	            + "&idSede=" + encodeURIComponent($scope.filtro.idSede || '')
+	            + "&idSisAdmin=" + encodeURIComponent($scope.filtro.idSisAdmin || '')
+	            + "&idUserInt=" + encodeURIComponent($scope.filtro.idUserInt || '')
+	            + "&idEstado=" + encodeURIComponent($scope.filtro.idEstado || '');
+
+	        console.log("Url:" + url);
+	        
+	        return url;
+	    };
+	    
+	    
+	    $scope.validateDescargarXSL = function(ev) {
+	        location.href = $scope.descargarXSL();
+	    };
+	    
+	    $scope.validateDescargarXSL2 = function(){
+	        return  descargarXLSUrl;
+	    };
+	    
 	    
 	    $scope.dtAsistenciaAnular = {
 				idAsistencia : null,
@@ -1404,7 +1484,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			});
 		};
 		
-		$scope.listaIDValorMsUserTemaCapaBySedeBySisAdm=[];
+		/*$scope.listaIDValorMsUserTemaCapaBySedeBySisAdm=[];
 		$scope.loadlistaIDValorMsUserTemaCapaBySedeBySisAdm=function(){
 			$http.get(listaIDValorMsUserTemaCapaBySedeBySisAdmUrl).then(function(res){
 				$scope.listaIDValorMsUserTemaCapaBySedeBySisAdm = res.data; 
@@ -1412,7 +1492,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			function error(errResponse) {
 				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
 			});
-		};
+		};*/
 		
 		
 		$scope.listaIDValorMsUserBySedeBySisAdm=[];

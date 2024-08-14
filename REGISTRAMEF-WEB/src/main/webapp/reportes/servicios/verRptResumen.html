@@ -5,10 +5,19 @@
 	<div class="md-toolbar-tools md-toolbar-tools-size">
 	<h2 flex md-truncate md-colors="{color: 'background-A100'}" style="font-size: 17px;">Lista de capacitaciones programadas</h2>
 	
-         <md-button class="md-button-borde md-sm" ng-href="{{descargarvista()}}" target="_blank" aria-label="Exportar">
+	
+         <md-button class="md-button-borde md-sm" ng-click="validateDescargarXSL($event)" aria-label="Exportar">
+    <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">file_download</md-icon>
+    <span style="color: rgb(255,255,255);">Exportar</span> 
+</md-button>
+
+
+<md-button class="md-button-borde md-sm" ng-href="{{validateDescargarXSL2()}}" target="_blank" aria-label="Exportar">
          <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">file_download</md-icon>
-		<span style="color: rgb(255,255,255);">Exportar</span> </md-button>
+		<span style="color: rgb(255,255,255);">Exportar2</span> </md-button>
+
 		
+		 
 	</div>
 </md-toolbar>    
     
@@ -39,28 +48,32 @@
             </div>
             
             <div class="tamaDivFiltro" style="font-size: 14px;">
+            
 			<md-input-container style="margin-right: 15px;"> 
 				<label>Tipo Servicio</label>
 				<md-select
-				ng-model="filtro.idTipoServicio" placeholder="Tipo Servicio"> 
+				ng-model="filtro.idTipoServicio" 
+				ng-change="onTipoServicioChange()"
+				placeholder="Tipo Servicio"> 
 				<md-option ng-value="">Seleccione Tipo Servicio</md-option>
-				<md-option
-					ng-repeat="item in listarParametrosXIdPadreToIdParamTipoServicio" ng-value="item.valor">
+				<md-option ng-repeat="item in listarParametrosXIdPadreToIdParamTipoServicio" ng-value="item.id">
 					{{item.valor}} 
 				</md-option>
-			
 			 </md-select> 
 			</md-input-container>
+			
 			</div>
 			
             <div class="tamaDivFiltro" style="font-size: 14px;">
 			<md-input-container style="margin-right: 15px;"> 
 				<label>Sede</label>
 				<md-select
-				ng-model="filtro.idSede" placeholder="Sede"> 
+				ng-model="filtro.idSede" 
+				ng-change="onUserChange()"
+				placeholder="Sede"> 
 				<md-option ng-value="">Todas las sedes</md-option>
 				<md-option
-					ng-repeat="item in listaMsSedes" ng-value="item.valor">
+					ng-repeat="item in listaMsSedes" ng-value="item.id">
 					{{item.valor}} 
 				</md-option>
 			
@@ -72,10 +85,12 @@
 			<md-input-container style="margin-right: 15px;"> 
 				<label>Sist Admin</label>
 				<md-select
-				ng-model="filtro.idSisAdmin" placeholder="Sist Admin"> 
+				ng-model="filtro.idSisAdmin"
+				ng-change="onUserChange()" 
+				placeholder="Sist Admin"> 
 				<md-option ng-value="">Todas los Sistemas</md-option>
 				<md-option
-					ng-repeat="item in listaIDValorMsSisAdmiTemaCapa" ng-value="item.valor">
+					ng-repeat="item in listaIDValorMsSisAdmiTemaCapa" ng-value="item.id">
 					{{item.valor}} 
 				</md-option>
 			
@@ -87,10 +102,12 @@
 			<md-input-container style="margin-right: 15px;"> 
 				<label>Usu Int</label>
 				<md-select
-				ng-model="filtro.idUserInt" placeholder="Usu Int"> 
+				ng-model="filtro.idUserInt"
+				ng-change="onUserChange()"  
+				placeholder="Usu Int"> 
 				<md-option ng-value="">Todas los usuarios</md-option>
 				<md-option
-					ng-repeat="item in listaIDValorMsUserTemaCapaBySedeBySisAdm" ng-value="item.valor">
+					ng-repeat="item in listaIDValorMsUserTemaCapaBySedeBySisAdm" ng-value="item.id">
 					{{item.valor}} 
 				</md-option>
 			
@@ -105,7 +122,7 @@
 				ng-model="filtro.idEstado" placeholder="Estado"> 
 				<md-option ng-value="">Todas los estados</md-option>
 				<md-option
-					ng-repeat="item in listaMsEstado" ng-value="item.valor">
+					ng-repeat="item in listaMsEstado" ng-value="item.id">
 					{{item.valor}} 
 				</md-option>
 			

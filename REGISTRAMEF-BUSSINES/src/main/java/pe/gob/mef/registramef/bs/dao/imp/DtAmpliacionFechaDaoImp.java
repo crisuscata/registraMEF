@@ -35,7 +35,7 @@ public class DtAmpliacionFechaDaoImp extends
 		DtAmpliacionFechaDao {
 
 	private static final Logger log = Logger.getLogger(DtAmpliacionFechaDaoImp.class.getName());
-
+//generate registramef	
 	public DtAmpliacionFechaDaoImp() {
 		log.log(Level.INFO,null,"INICIALIZANDO JPA TEMPLATE PARA DtAmpliacionFechaDaoImp");
 	}

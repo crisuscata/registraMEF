@@ -9,7 +9,7 @@ public class Test01 {
 
 	public static void main(String[] args) {
 		
-		Encriptar enc = new Encriptar();
+		//Encriptar enc = new Encriptar();
 		
 		/*String emcriptado = enc.EncriptarData("jzarate",
 				"jzarate");
@@ -45,6 +45,7 @@ public class Test01 {
         
         Long idCapacitacion = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA,
 				PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA);
+        
 		
 		System.out.println("idCapacitacion: " +  idCapacitacion);
 		
