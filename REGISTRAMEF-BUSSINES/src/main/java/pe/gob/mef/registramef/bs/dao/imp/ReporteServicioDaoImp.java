@@ -657,9 +657,37 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		/*List<ReporteAsistenciaDetallado> lista = super.findNativeQueryEntidadLimit(sb.toString(), param,
 				ReporteAsistenciaDetallado.class, minRegistro, maxRegistro);*/
 		
-		List<Object[]> results = super.findNativeQueryEntidadLimit(sb.toString(), param,Object[].class,
+		/*List<Object[]> results = super.findNativeQueryEntidadLimit(sb.toString(), param,Object[].class,
+				 minRegistro, maxRegistro);*/
+		
+		List<Object[]> results = super.findNativeQueryEntidadLimit(sb.toString(), param,
 				 minRegistro, maxRegistro);
-		// List<Object[]> results = query.getResultList();
+		
+		List<ReporteAsistenciaDetallado> reporteList = new ArrayList<>();
+		if(results!=null && !results.isEmpty()) {
+			for (Object[] result : results) {
+				ReporteAsistenciaDetallado reporte = new ReporteAsistenciaDetallado();
+				
+				BigDecimal id = (BigDecimal) result[0]; 
+			    reporte.setId(id.longValue());
+				
+			    BigDecimal idAsistencia = (BigDecimal) result[1];
+				reporte.setIdAsistencia(idAsistencia.longValue());
+				
+				
+				reporte.setFechaSoli((Date) result[2]);
+				reporte.setUsuarioInterno((String) result[3]);
+				reporte.setFechaAsistencia((Date) result[4]);
+				
+				
+				
+				
+				reporteList.add(reporte);
+			}
+		}
+		
+		
+		
 		
 		results.size();
 		

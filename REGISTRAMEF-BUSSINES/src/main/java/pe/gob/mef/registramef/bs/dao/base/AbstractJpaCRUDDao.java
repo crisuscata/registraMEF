@@ -295,6 +295,35 @@ public abstract class AbstractJpaCRUDDao<T, PK extends Serializable> implements 
 
 		    return (List<T>) query.getResultList();
 		}
+		
+		@SuppressWarnings("unchecked")
+		public <T> List<T> findNativeQueryEntidadLimit(String queryString,
+		                                               Object[] params, 
+		                                               int firstResult,
+		                                               int maxResults) throws Validador { 
+
+		    if (queryString == null || queryString.trim().isEmpty()) {
+		        throw new IllegalArgumentException("Query string cannot be null or empty");
+		    }
+
+		    try {
+		        Query query = entityManager.createNativeQuery(queryString);
+
+		        if (params != null) {
+		            setParameter(query, params);
+		        }
+
+		        query.setFirstResult(firstResult);
+		        query.setMaxResults(maxResults);
+
+		        return (List<T>) query.getResultList();
+
+		    } catch (Exception e) {
+		        // Log the exception here if needed
+		        throw new Validador("Error executing native query", e);
+		    }
+		}
+
 
 		private void setParameter(Query query, Object[] params) {
 		    if (params != null && params.length > 0) {
