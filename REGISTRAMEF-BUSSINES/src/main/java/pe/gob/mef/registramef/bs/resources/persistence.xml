@@ -50,6 +50,12 @@
 <class>pe.gob.mef.registramef.bs.domain.MsUsuarios</class>
 <class>pe.gob.mef.registramef.bs.domain.PrtParametros</class>
 <class>pe.gob.mef.registramef.bs.domain.TaFeriados</class>
+<class>pe.gob.mef.registramef.bs.domain.ReporteAsistenciaDetallado</class>
+<class>pe.gob.mef.registramef.bs.domain.ReporteCapacitacionDetallado</class>
+<class>pe.gob.mef.registramef.bs.domain.ReporteConsulta</class>
+<class>pe.gob.mef.registramef.bs.domain.ReporteVisitaDetalle</class>
+
+
 		<exclude-unlisted-classes />
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />

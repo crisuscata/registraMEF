@@ -11,6 +11,9 @@ import pe.gob.mef.registramef.bs.domain.DtAmpliacionFecha;
 import pe.gob.mef.registramef.bs.domain.DtAsistenciaTemas;
 import pe.gob.mef.registramef.bs.domain.MsUbigeoId;
 import pe.gob.mef.registramef.bs.domain.ReporteAsistenciaDetallado;
+import pe.gob.mef.registramef.bs.domain.ReporteCapacitacionDetallado;
+import pe.gob.mef.registramef.bs.domain.ReporteConsulta;
+import pe.gob.mef.registramef.bs.domain.ReporteVisitaDetalle;
 import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.transfer.DtEntidadSedesDto;
 import pe.gob.mef.registramef.bs.transfer.DtEntidadesDto;
@@ -1729,5 +1732,23 @@ public interface Servicio {
 		MsSisAdmistrativoBk getMsSisAdmistrativoBkXid(Long id);
 		MsSedesBk getMsSedesBkXid(Long id);
 		
+		Long getTotalResumenCapacitacionDetallado(Date fechaIni, Date fechaFin, Long idSistAdmin, Long idSede,
+				Long idUserInt, Long idEstado, boolean flagAsis) throws Validador; 
+		
+		List<ReporteCapacitacionDetallado> getResumenCapacitacionDetallado(Long idUserInt, Long idEstado, boolean flagAsis,
+				Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
+				throws Validador;
+		
+		Long getTotalResumenConsultas(Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Long idUserInt,
+				Long idEstado) throws Validador;
+		
+		List<ReporteConsulta> getResumenConsultas(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+				Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;
+		
+		Long getTotalResumenVisitas(Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Long idUserInt,
+				Long idEstado) throws Validador;
+		
+		List<ReporteVisitaDetalle> getResumenVisitas(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+				Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;
 		
 }

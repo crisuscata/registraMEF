@@ -5,19 +5,11 @@
 	<div class="md-toolbar-tools md-toolbar-tools-size">
 	<h2 flex md-truncate md-colors="{color: 'background-A100'}" style="font-size: 17px;">Lista de capacitaciones programadas</h2>
 	
-	
-         <md-button class="md-button-borde md-sm" ng-click="validateDescargarXSL($event)" aria-label="Exportar">
-    <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">file_download</md-icon>
-    <span style="color: rgb(255,255,255);">Exportar</span> 
-</md-button>
 
-
-<md-button class="md-button-borde md-sm" ng-href="{{validateDescargarXSL2()}}" target="_blank" aria-label="Exportar">
+		<md-button class="md-button-borde md-sm" ng-click="validateDescargaXSL($event)" aria-label="Exportar">
          <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">file_download</md-icon>
-		<span style="color: rgb(255,255,255);">Exportar2</span> </md-button>
+		<span style="color: rgb(255,255,255);">Exportar</span> </md-button>
 
-		
-		 
 	</div>
 </md-toolbar>    
     
@@ -55,7 +47,7 @@
 				ng-model="filtro.idTipoServicio" 
 				ng-change="onTipoServicioChange()"
 				placeholder="Tipo Servicio"> 
-				<md-option ng-value="">Seleccione Tipo Servicio</md-option>
+				<md-option ng-value="0">Seleccione Tipo Servicio</md-option>
 				<md-option ng-repeat="item in listarParametrosXIdPadreToIdParamTipoServicio" ng-value="item.id">
 					{{item.valor}} 
 				</md-option>
@@ -71,7 +63,7 @@
 				ng-model="filtro.idSede" 
 				ng-change="onUserChange()"
 				placeholder="Sede"> 
-				<md-option ng-value="">Todas las sedes</md-option>
+				<md-option ng-value="0">Todas las sedes</md-option>
 				<md-option
 					ng-repeat="item in listaMsSedes" ng-value="item.id">
 					{{item.valor}} 
@@ -88,7 +80,7 @@
 				ng-model="filtro.idSisAdmin"
 				ng-change="onUserChange()" 
 				placeholder="Sist Admin"> 
-				<md-option ng-value="">Todas los Sistemas</md-option>
+				<md-option ng-value="0">Todas los Sistemas</md-option>
 				<md-option
 					ng-repeat="item in listaIDValorMsSisAdmiTemaCapa" ng-value="item.id">
 					{{item.valor}} 
@@ -129,6 +121,11 @@
 			 </md-select> 
 			</md-input-container>
 			</div>
+			
+			<div class="tamaDivFiltro" style="font-size: 14px;" ng-if="filtro.idTipoServicio === 133" >
+				<label>Asisti&oacute;</label>
+				<input type="checkbox" ng-model="filtro.flagAsis">
+			</div>
 	
 	</div>
 </md-toolbar>
@@ -138,6 +135,57 @@
 
   <md-table-container>
   
+    
+ 	<md-tabs md-dynamic-height md-border-bottom>
+ 	
+		<md-tab label="Detalle">
+
+
+ 		</md-tab>
+ 		
+ 		<md-tab label="Dashboard">
+    <md-content class="md-padding">
+        <div style="display: flex;
+			    justify-content: center; 
+			    align-items: center;     
+			    height: 100%; ">
+			    
+            <md-button class="md-raised"
+                      aria-label="Show Participante"
+                      ng-click="showDialogParticipante($event)">
+                <md-icon md-font-set="material-icons" style="color: grey;">file_download</md-icon>
+                <span>Cargar reportes con filtros de b&uacute;squedas</span>
+            </md-button>
+            
+            
+                 
+            
+            
+        </div>
+        
+        
+        <md-grid-list md-cols="2" md-gutter="2px" md-row-height="3:2" style="width:90%;">
+            
+            <md-grid-tile class="gray">
+            
+		      <md-grid-tile-header>
+		        <h3>Por canal de atenci&oacute;n</h3>
+		      </md-grid-tile-header>
+		      
+		      <canvas id="canales" class="chart chart-doughnut"
+			           chart-data="canalesV" chart-labels="canalesL"
+			           chart-options="optionsCanalesChart" chart-colors="coloursCanales">
+			    </canvas>   
+			      
+		    </md-grid-tile>
+            
+            </md-grid-list> 
+        
+    </md-content>
+</md-tab>
+    
+    </md-tabs>
+    
     
     
   </md-table-container>

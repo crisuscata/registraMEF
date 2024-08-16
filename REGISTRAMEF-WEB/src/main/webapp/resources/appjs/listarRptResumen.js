@@ -61,6 +61,7 @@ var listaMsEstadoUrl = contexto+"/rs/ctrlDtReportResumen/listaMsEstado";
 
 
 
+//myapp = angular.module('MyApp', ['chart.js','ngMaterial', 'md.data.table', 'ngRoute']);
 myapp = angular.module('MyApp');
 
 myapp.config(function($routeProvider) {
@@ -78,6 +79,29 @@ myapp.config(function($routeProvider) {
 		  controller : "ctrlRptResumen"  
 	  });
 	});
+
+myapp.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
+    $mdDateLocaleProvider.formatDate = function (date) {
+    	if(date==null)
+            return "";
+    	var day = date.getDate();
+        var monthIndex = date.getMonth();
+        var year = date.getFullYear();
+
+        return (day<10?'0'+day:day) + '/' + (monthIndex<9?'0'+(monthIndex + 1):(monthIndex + 1)) + '/' + year;
+
+//        return date ? moment(date).format('DD/MM/YYYY') : '';
+    };
+    $mdDateLocaleProvider.parseDate = function (dateString) {
+//        var m = moment(dateString, 'DD/MM/YYYY', true);
+    	var parts = dateString.split("/");
+    	var dt = new Date(parseInt(parts[2], 10),
+    	                  parseInt(parts[1], 10) - 1,
+    	                  parseInt(parts[0], 10));
+    	return dt ? dt:new Date(NaN);
+//        return m.isValid() ? m.toDate() : new Date(NaN);
+    };
+}]);
 
 myapp.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
 
@@ -535,8 +559,9 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			  idTipoServicio: null,
 			  idSede: 0,
 			  idSisAdmin: 0,
-			  idUserInt: null,
-			  idEstado: null
+			  idUserInt: 0,
+			  idEstado: 0,
+			  flagAsis: false
 		}; 
 	
 	  
@@ -602,7 +627,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 	    
 	    
 	    
-	    $scope.descargarXSL = function() {
+	    /*$scope.descargarXSL = function() {
 	        console.log("JSON.stringify($scope.filtro):" + JSON.stringify($scope.filtro));
 	        
 	        // Ensure fechaInicio and fechaFin are Date objects
@@ -635,11 +660,50 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 	    
 	    $scope.validateDescargarXSL = function(ev) {
 	        location.href = $scope.descargarXSL();
+	    };*/
+	    
+	    $scope.descargarXSL = function(){
+	        return  descargarXLSUrl+$scope.getURLParametros();
 	    };
 	    
-	    $scope.validateDescargarXSL2 = function(){
-	        return  descargarXLSUrl;
+	    $scope.validateDescargaXSL = function(ev){
+	    	
+	    	if ($scope.filtro.idTipoServicio === null || $scope.filtro.idTipoServicio === undefined || $scope.filtro.idTipoServicio === 0) {
+
+    			$mdDialog.show(
+						$mdDialog.alert()
+						.parent(angular.element(document.body))
+						.clickOutsideToClose(true)
+						.title('REPORTE RESUMEN')
+						.textContent("DEBE SELECCIONAR EL TIPO DE SERVICIO PARA LA CONSULTA")
+						.ok('OK')
+				);
+    			return;
+    		}
+	    	
+	    	location.href = $scope.descargarXSL();
+	    }
+	    
+	    
+	    
+	    
+	    //DASHBOARD
+	 // Define your chart data
+	    $scope.canalesV = [10, 20, 30];
+	    $scope.canalesL = ['Red', 'Blue', 'Yellow'];
+	    $scope.coloursCanales = [
+	        {
+	            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+	        }
+	    ];
+
+	    // Define chart options
+	    $scope.optionsCanalesChart = {
+	        responsive: true,
+	        maintainAspectRatio: false
 	    };
+	    
+	    
 	    
 	    
 	    $scope.dtAsistenciaAnular = {
