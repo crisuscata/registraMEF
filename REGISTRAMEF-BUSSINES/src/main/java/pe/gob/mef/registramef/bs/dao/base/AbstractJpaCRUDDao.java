@@ -290,8 +290,13 @@ public abstract class AbstractJpaCRUDDao<T, PK extends Serializable> implements 
 		    if (params != null) {
 		        setParameter(query, params);
 		    }
-		    query.setFirstResult(firstResult);
-		    query.setMaxResults(maxResults);
+		    if(firstResult!=0) {
+		    	query.setFirstResult(firstResult);
+		    }
+		    if(maxResults!=0) {
+		    	query.setMaxResults(maxResults);
+		    }
+		    
 
 		    return (List<T>) query.getResultList();
 		}

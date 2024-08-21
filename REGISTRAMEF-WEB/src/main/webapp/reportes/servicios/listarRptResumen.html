@@ -21,6 +21,8 @@
 <link href="resources/appcss/tree.css" rel="stylesheet" type="text/css" />
 <link href="resources/appcss/strength.css" rel="stylesheet" type="text/css" />
 
+<link href="resources/css/angular-chart.css" rel="stylesheet" type="text/css" />
+
 <script src="resources/js/angular.js"></script>
 <script src="resources/js/angular-animate.js"></script>
 <script src="resources/js/angular-aria.js"></script>
@@ -37,34 +39,304 @@
 <script src="resources/appjs/listarRptResumen.js"></script>
 <script src="resources/appjs/moment-with-locales.js"></script>
 
+<script src="resources/appjs/menucontrol.js"></script>
+<script src="resources/appjs/titulo.js"></script>
+
 <style type="text/css">
 </style>
 </head>
 <body>
 <!-- Formulario -->
   <form name="dtReporteForm">
-<!-- PG1 INI -->
+
 <div layout="column" layout-align="center stretch">
- <!-- Header -->
+ 
   <div ng-include="'paginas/titulo.html'"></div>
- <!-- FIN Header --> 
- <!-- Body -->
- <!-- PG2 INI -->
+
 <div layout="row" layout-align="start stretch" flex="none"> 
-  <!-- Menu -->
-  <div ng-include="'paginas/menu.html'" layout="column" layout-align="space-between stretch" 
-  class="menu-barra" ng-cloak md-colors="{background: 'primary-700'}">
-  </div>  
-  <!-- FIN Menu -->  
-   
-  <!-- Tabla -->
-  <div ng-view flex></div>
-  <!-- FIN Tabla -->  
-  <!-- Dialogo -->
-  <!-- FIN Dialogo -->
-   
-</div><!-- FIN PG2 INI --><!-- FIN Body -->
-</div><!-- FIN PG1 INI -->
-</form><!-- FIN Formulario --> 
+ 
+  <div ng-include="'paginas/menu.html'" 
+  	   layout="column" 
+  	   layout-align="space-between stretch" 
+       class="menu-barra" 
+       ng-cloak md-colors="{background: 'primary-700'}">
+  
+  </div>
+  
+  <div layout="column" layout-align="start stretch" ng-controller="ctrlRptResumen" 
+  data-ng-init="loadRptResumen()">
+  
+  
+<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size">
+	<h2 flex md-truncate md-colors="{color: 'background-A100'}" style="font-size: 17px;">Lista de capacitaciones programadas</h2>
+	
+
+		<md-button class="md-button-borde md-sm" ng-click="validateDescargaXSL($event)" aria-label="Exportar">
+         <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">file_download</md-icon>
+		<span style="color: rgb(255,255,255);">Exportar</span> </md-button>
+
+	</div>
+</md-toolbar>    
+    
+<!-- Filtro -->
+<md-toolbar class="md-toolbar-filtro-size">
+	<div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="space-between center">
+	
+     		<div class="tamaDivFiltro">
+            <md-input-container class="container_margen-top" style="margin-top: 42px;"> 
+            	<label style="font-size: 15px;">Fecha de inicio</label>
+            	<md-datepicker required ng-model="filtro.fechaInicio" 
+	                     md-placeholder="Fecha de inicio"
+	                     input-aria-describedby="datepicker-description"
+	                     input-aria-labelledby="datepicker-header ">
+	            </md-datepicker>
+            </md-input-container>
+            </div>
+            
+            <div class="tamaDivFiltro">
+            <md-input-container class="container_margen-top" style="margin-top: 42px;"> 
+            	<label style="font-size: 15px;">Fecha fin</label>
+            	<md-datepicker required ng-model="filtro.fechaFin" 
+	                     md-placeholder="Fecha fin"
+	                     input-aria-describedby="datepicker-description"
+	                     input-aria-labelledby="datepicker-header ">
+	            </md-datepicker>
+            </md-input-container>
+            </div>
+            
+            <div class="tamaDivFiltro" style="font-size: 14px;">
+            
+			<md-input-container style="margin-right: 15px;"> 
+				<label>Tipo Servicio</label>
+				<md-select
+				ng-model="filtro.idTipoServicio" 
+				ng-change="onTipoServicioChange()"
+				placeholder="Tipo Servicio"> 
+				<md-option ng-value="0">Seleccione Tipo Servicio</md-option>
+				<md-option ng-repeat="item in listarParametrosXIdPadreToIdParamTipoServicio" ng-value="item.id">
+					{{item.valor}} 
+				</md-option>
+			 </md-select> 
+			</md-input-container>
+			
+			</div>
+			
+            <div class="tamaDivFiltro" style="font-size: 14px;">
+			<md-input-container style="margin-right: 15px;"> 
+				<label>Sede</label>
+				<md-select
+				ng-model="filtro.idSede" 
+				ng-change="onUserChange()"
+				placeholder="Sede"> 
+				<md-option ng-value="0">Todas las sedes</md-option>
+				<md-option
+					ng-repeat="item in listaMsSedes" ng-value="item.id">
+					{{item.valor}} 
+				</md-option>
+			
+			 </md-select> 
+			</md-input-container>
+			</div>
+			
+			<div class="tamaDivFiltro" style="font-size: 14px;">
+			<md-input-container style="margin-right: 15px;"> 
+				<label>Sist Admin</label>
+				<md-select
+				ng-model="filtro.idSisAdmin"
+				ng-change="onUserChange()" 
+				placeholder="Sist Admin"> 
+				<md-option ng-value="0">Todas los Sistemas</md-option>
+				<md-option
+					ng-repeat="item in listaIDValorMsSisAdmiTemaCapa" ng-value="item.id">
+					{{item.valor}} 
+				</md-option>
+			
+			 </md-select> 
+			</md-input-container>
+			</div>
+			
+			<div class="tamaDivFiltro" style="font-size: 14px;">
+			<md-input-container style="margin-right: 15px;"> 
+				<label>Usu Int</label>
+				<md-select
+				ng-model="filtro.idUserInt"
+				ng-change="onUserChange()"  
+				placeholder="Usu Int"> 
+				<md-option ng-value="">Todas los usuarios</md-option>
+				<md-option
+					ng-repeat="item in listaIDValorMsUserTemaCapaBySedeBySisAdm" ng-value="item.id">
+					{{item.valor}} 
+				</md-option>
+			
+			 </md-select> 
+			</md-input-container>
+			</div>
+			
+			<div class="tamaDivFiltro" style="font-size: 14px;">
+			<md-input-container style="margin-right: 15px;"> 
+				<label>Estado</label>
+				<md-select
+				ng-model="filtro.idEstado" placeholder="Estado"> 
+				<md-option ng-value="">Todas los estados</md-option>
+				<md-option
+					ng-repeat="item in listaMsEstado" ng-value="item.id">
+					{{item.valor}} 
+				</md-option>
+			
+			 </md-select> 
+			</md-input-container>
+			</div>
+			
+			<div class="tamaDivFiltro" style="font-size: 14px;" ng-if="filtro.idTipoServicio === 133" >
+				<label>Asisti&oacute;</label>
+				<input type="checkbox" ng-model="filtro.flagAsis">
+			</div>
+	
+	</div>
+</md-toolbar>
+
+<!-- FIN Filtro -->
+<md-divider style="margin-top: 20px;"></md-divider>
+
+  <md-table-container>
+  
+    
+ 	<md-tabs md-dynamic-height md-border-bottom>
+ 	
+		<md-tab label="Detalle">
+
+
+ 		</md-tab>
+ 		
+ 		<md-tab label="Dashboard">
+    <md-content class="md-padding">
+        <div style="display: flex;
+			    justify-content: center; 
+			    align-items: center;     
+			    height: 100%; ">
+			    
+            <md-button class="md-raised"
+                      aria-label="Show Participante"
+                      ng-click="showReportResumen()">
+                <md-icon md-font-set="material-icons" style="color: grey;">file_download</md-icon>
+                <span>Cargar reportes con filtros de b&uacute;squedas</span>
+            </md-button>
+            
+            
+                 
+            
+            
+        </div>
+        
+        
+        <md-grid-list md-cols="2" md-gutter="2px" md-row-height="3:2" style="width:90%;">
+        
+        
+        
+        
+        
+        
+            <md-grid-tile class="gray" style="padding: 16px;">
+			  <md-grid-tile-header>
+			    <h3>Evolución Mensual</h3>
+			  </md-grid-tile-header>
+			
+			    <canvas id="mixedChart" style="display: block;" width="300" height="150"></canvas>
+			
+				 <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+				  <tr>
+				    <th ng-repeat="m in mesesCapacitacion track by $index">{{m}}</th>
+				  </tr>
+				  
+				  <tr ng-repeat="row in dataCapacitacionEventoRows track by row.id">
+				    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
+				  </tr>
+				</table>
+			
+			</md-grid-tile>
+
+
+		    
+		    <md-grid-tile class="gray">
+		      <md-grid-tile-header>
+		        <h3>Usuarios capacitados seg&uacute;n tem&aacute;tica</h3>
+		       </md-grid-tile-header>
+		       
+		      <canvas id="barChart" width="400" height="200"></canvas>
+		    
+		   </md-grid-tile>
+		    
+		    
+		    
+		     
+		    
+		     <!-- Bar Chart -->
+    
+    
+    <!-- Line Chart 
+    -->
+    
+    <!-- Pie Chart 
+    <canvas class="chart chart-pie" 
+            chart-data="pieChartData"
+            chart-labels="pieChartLabels"
+            chart-options="pieChartOptions">
+    </canvas>-->
+    
+    <!-- Doughnut Chart 
+    <canvas class="chart chart-doughnut" 
+            chart-data="doughnutChartData"
+            chart-labels="doughnutChartLabels"
+            chart-options="doughnutChartOptions">
+    </canvas>-->
+    
+    <!-- Radar Chart 
+    <canvas class="chart chart-radar" 
+            chart-data="radarChartData"
+            chart-labels="radarChartLabels"
+            chart-options="radarChartOptions">
+    </canvas>-->
+    
+    <!-- Polar Area Chart 
+    <canvas class="chart chart-polar-area" 
+            chart-data="polarAreaChartData"
+            chart-labels="polarAreaChartLabels"
+            chart-options="polarAreaChartOptions">
+    </canvas>-->
+    
+    <!-- Bubble Chart 
+    <canvas class="chart chart-bubble" 
+            chart-data="bubbleChartData"
+            chart-options="bubbleChartOptions">
+    </canvas>-->
+    
+    <!-- Scatter Chart 
+    <canvas class="chart chart-scatter" 
+            chart-data="scatterChartData"
+            chart-options="scatterChartOptions">
+    </canvas>-->
+		    
+            
+            </md-grid-list> 
+        
+    </md-content>
+</md-tab>
+    
+    </md-tabs>
+    
+    
+    
+  </md-table-container>
+  
+  
+  </div>
+  
+  
+  
+  
+  
+</div>
+</form>
 </body>
 </html>

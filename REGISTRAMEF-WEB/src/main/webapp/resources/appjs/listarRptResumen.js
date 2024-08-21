@@ -57,12 +57,12 @@ var listaIDValorMsUserTemaCapaBySedeBySisAdmUrl = contexto+"/rs/ctrlDtReportResu
 var listaIDValorMsUserBySedeBySisAdmUrl = contexto+"/rs/ctrlDtReportResumen/listaIDValorMsUserBySedeBySisAdm/";
 var listaMsEstadoUrl = contexto+"/rs/ctrlDtReportResumen/listaMsEstado";
 
+var cargarReporteUrl = contexto+"/rs/ctrlDtReportResumen/cargarReporte";
 
 
 
-
-//myapp = angular.module('MyApp', ['chart.js','ngMaterial', 'md.data.table', 'ngRoute']);
-myapp = angular.module('MyApp');
+myapp = angular.module('MyApp', ['chart.js','ngMaterial', 'md.data.table', 'ngRoute']);
+//myapp = angular.module('MyApp');
 
 myapp.config(function($routeProvider) {
 	  $routeProvider
@@ -687,21 +687,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 	    
 	    
 	    
-	    //DASHBOARD
-	 // Define your chart data
-	    $scope.canalesV = [10, 20, 30];
-	    $scope.canalesL = ['Red', 'Blue', 'Yellow'];
-	    $scope.coloursCanales = [
-	        {
-	            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-	        }
-	    ];
-
-	    // Define chart options
-	    $scope.optionsCanalesChart = {
-	        responsive: true,
-	        maintainAspectRatio: false
-	    };
+	    
 	    
 	    
 	    
@@ -1580,8 +1566,381 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		};
 		
 		
+		$scope.reporteResumen=[];
+		$scope.listCapacitacion=[];
+		$scope.loadReporteResumen=function(){
+			$http.get(cargarReporteUrl+$scope.getURLParametros()).then(function(res){
+				
+				$scope.reporteResumen = res.data; 
+				
+				
+				if (res.data!=null && res.data.listCapacitacion.length > 0) {
+					$scope.listCapacitacion = res.data.listCapacitacion.filter(c => c.asitio === 'SI' && c.estado === 'FINALIZADO');
+					$scope.buildDashboardCapacitacion($scope.listCapacitacion);
+					
+					//console.log("JSON.stringify( $scope.listCapacitacion ): " + JSON.stringify( $scope.listCapacitacion ));
+					
+				}
+				//$scope.datoEntidadSisAdmin = $scope.datoEntidadSisAdmin.filter(val => val.contador !== dato.contador);
+				
+				
+				//console.log("JSON.stringify( $scope.reporteResumen ): " + JSON.stringify( $scope.reporteResumen ));
+				
+			},
+			function error(errResponse) {
+				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+			});
+		};
 		
+		$scope.getMonth = function(fecha){
+			var date = new Date(fecha);
+
+			var month = date.getMonth() + 1;
+			
+			return month; 
+		}
+		
+		$scope.getAnio = function(fecha){
+			
+			var date = new Date(fecha);
+			var year = date.getFullYear()
+			
+			return year; 
+		}
+		
+		
+		
+		$scope.showReportResumen2 = function() {
+			  $scope.meses = [" ", "Enero 2024", "Febrero 2024", "Total"];
+			  $scope.dataRows = [
+			    ["Capacitados", "7000", "8000", "15000"],
+			    ["Some Other Data", "Data1", "Data2", "Data3"]
+			  ];
+			}
+
         
+		$scope.showReportResumen =function(){
+			
+			const fechaInicio = new Date($scope.filtro.fechaInicio);
+			const fechaFin = new Date($scope.filtro.fechaFin);
+			const differenceInMilliseconds = fechaFin - fechaInicio;
+			
+			const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
+			
+			if (differenceInDays <= 31) {
+				$scope.loadReporteResumen();
+			} else{
+				$mdDialog.show(
+				         $mdDialog.alert()
+				        .parent(angular.element(document.body))
+				        .clickOutsideToClose(true)
+				        .title('Cargar Reporte')
+				        .textContent("El rango de fecha debe ser menor o igual a 31 dias")
+				        .ariaLabel('ERROR')
+				        .ok('OK')
+				    );
+			}
+			
+		}
+		
+		$scope.getNameOfMonth = function(index) {
+			var monthNames = ['ENERO', 'FEBRERO', 'MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+			return monthNames[index-1];
+		}
+		
+		$scope.buildDashboardCapacitacion =function(listCapacitacion) {
+			
+			$scope.listCapacitacion =  getUniqueCapacitacion(listCapacitacion); 
+			
+			var anioToEvaluate = $scope.getAnio($scope.filtro.fechaInicio);
+			
+			console.log("listCapacitacion: " + JSON.stringify( $scope.listCapacitacion ));
+			
+			var firstMonthToEvaluate = $scope.getMonth($scope.filtro.fechaInicio); 
+			var secondMonthToEvaluate = $scope.getMonth($scope.filtro.fechaInicio)+1; 
+			
+			
+			
+			var firstMonthValue = $scope.getNameOfMonth(firstMonthToEvaluate);
+			var secondMonthValue = $scope.getNameOfMonth(secondMonthToEvaluate);
+			
+			var sumFirstMonth = 0;
+			var sumSecondMonth = 0;
+			
+			console.log("firstMonthToEvaluate: " + firstMonthToEvaluate);
+			console.log("secondMonthToEvaluate: " + secondMonthToEvaluate);
+			
+			console.log("firstMonthValue: " + firstMonthValue);
+			console.log("secondMonthValue: " + secondMonthValue);
+			
+			var cantEvento = $scope.listCapacitacion.length;
+
+			for (var i = 0; i < $scope.listCapacitacion.length; i++) {
+			    var capacitacion = $scope.listCapacitacion[i];
+			    
+			    if (firstMonthToEvaluate === $scope.getMonth(capacitacion.fechaInic)) {
+			        sumFirstMonth += capacitacion.cantParticAsist;
+			    }
+			    
+			    if (secondMonthToEvaluate === $scope.getMonth(capacitacion.fechaInic)) {
+			        sumSecondMonth += capacitacion.cantParticAsist;
+			    }
+			}
+
+			console.log("Sum for first month:", sumFirstMonth);
+			console.log("Sum for second month:", sumSecondMonth);
+			
+			
+			//BUILD DASHBOARD Evolución Mensual
+			
+			var chartOptions = {
+			        responsive: true,
+			        scales: {
+			            y: {
+			                beginAtZero: true
+			            }
+			        }
+			    };
+
+			    var chartData = {
+			        labels: [firstMonthValue],
+			        datasets: [
+			            {
+			                type: 'bar',
+			                label: 'Participants',
+			                data: [sumFirstMonth],
+			                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+			                borderColor: 'rgba(75, 192, 192, 1)',
+			                borderWidth: 1
+			            },
+			            {
+		                    type: 'line',
+		                    label: 'Line Dataset',
+		                    data: [sumFirstMonth],
+		                    borderColor: 'rgba(255, 99, 132, 1)',
+		                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+		                    borderWidth: 2,
+		                    fill: false
+		                }
+			        ]
+			    };
+
+			    angular.element(document).ready(function () {
+			        var ctx = document.getElementById('mixedChart').getContext('2d');
+			        new Chart(ctx, {
+			            type: 'bar',
+			            data: chartData,
+			            options: chartOptions
+			        });
+			    });
+			
+			//Build Table
+			$scope.mesesCapacitacion = [" ", firstMonthValue + " " + anioToEvaluate, "Total"];
+			
+			
+			$scope.dataCapacitacionEventoRows = [
+			    { id: 1, cells: ["Capacitados", sumFirstMonth, sumFirstMonth] },
+			    { id: 2, cells: ["Eventos", cantEvento, cantEvento] }
+			  ];
+			
+			
+			$scope.buildUsuarioCapacitadoPorTematica($scope.listCapacitacion);
+		}
+		
+		function getUniqueCapacitacion(list) {
+            const map = new Map();
+            list.forEach(item => {
+                if (!map.has(item.idCapacitacion)) {
+                    map.set(item.idCapacitacion, item);
+                }
+            });
+
+            return Array.from(map.values());
+        }
+		
+		
+		$scope.buildUsuarioCapacitadoPorTematica = function(listCapacitacion){
+			
+			
+			var eventNames = listCapacitacion.map(function(event) {
+			    return event.nomEvento;
+			});
+			
+			var usersCapacitados = listCapacitacion.map(function(event) {
+		        return event.cantParticAsist;
+		    });
+			
+			
+			var labels = eventNames;
+		    var series = ['Eventos'];
+		    var data = [
+		        usersCapacitados
+		        
+		    ];
+
+		    var options = {
+		        scales: {
+		            y: {
+		                beginAtZero: true
+		            }
+		        }
+		    };
+
+		    // Initialize chart on document ready
+		    angular.element(document).ready(function () {
+		        var ctx = document.getElementById('barChart').getContext('2d');
+		        new Chart(ctx, {
+		            type: 'bar',
+		            data: {
+		                labels: labels,
+		                datasets: series.map(function(series, index) {
+		                    return {
+		                        label: series,
+		                        data: data[index],
+		                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+		                        borderColor: 'rgba(75, 192, 192, 1)',
+		                        borderWidth: 1
+		                    };
+		                })
+		            },
+		            options: options
+		        });
+		    });
+		    
+			
+		}
+		
+		
+		
+		
+		
+		 //DASHBOARD
+		 // Define your chart data REDONDO EXAMPLE
+		/* 
+		    $scope.canalesV = [10, 	  20, 		30];
+		    $scope.canalesL = ['Red', 'Blue', 'Yellow'];
+		    $scope.coloursCanales = [
+		        {
+		            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+		        }
+		    ];
+
+		    // Define chart options
+		    $scope.optionsCanalesChart = {
+		        responsive: true,
+		        maintainAspectRatio: false
+		    };
+		  */  
+		    
+		    
+		 /////  
+		    
+		    
+		    
+		    
+		    /*
+		    $scope.chartData = [
+		        [65, 59, 80, 81, 56, 55, 40], // Dataset 1
+		        [28, 48, 40, 19, 86, 27, 90]  // Dataset 2 (if needed)
+		    ];
+		    
+		 // Define chart labels
+		    $scope.chartLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+
+		    // Define chart options
+		    $scope.chartOptions = {
+		        scales: {
+		            x: {
+		                beginAtZero: true
+		            }
+		        }
+		    };
+
+		    // Define chart colors
+		    $scope.chartColors = ['#FF6384', '#36A2EB'];
+
+		    // Set up chart type
+		    $scope.chartType = 'horizontalBar'; // Use 'bar' for vertical bars
+		    */
+		    
+		    
+		    /*
+		 // Bar Chart
+		    $scope.barChartData = [65, 59, 80, 81, 56, 55, 40];
+		    $scope.barChartLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+		    $scope.barChartOptions = { scales: { x: { beginAtZero: true } } };
+		    $scope.barChartColors = ['#FF6384', '#36A2EB', '#FFCE56'];
+
+		    // Line Chart
+		    $scope.lineChartData = [
+		        { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
+		        { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' }
+		    ];
+		    $scope.lineChartLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+		    $scope.lineChartOptions = { responsive: true };
+		    
+		    // Pie Chart
+		    $scope.pieChartData = [300, 50, 100];
+		    $scope.pieChartLabels = ['Red', 'Blue', 'Yellow'];
+		    $scope.pieChartOptions = { responsive: true };
+
+		    // Doughnut Chart
+		    $scope.doughnutChartData = [300, 50, 100];
+		    $scope.doughnutChartLabels = ['Red', 'Blue', 'Yellow'];
+		    $scope.doughnutChartOptions = { responsive: true };
+		    
+		    // Radar Chart
+		    $scope.radarChartData = [
+		        { data: [65, 59, 90, 81, 56, 55], label: 'Series A' }
+		    ];
+		    $scope.radarChartLabels = ['January', 'February', 'March', 'April', 'May', 'June'];
+		    $scope.radarChartOptions = { responsive: true };
+		    
+		    // Polar Area Chart
+		    $scope.polarAreaChartData = [11, 16, 7, 25];
+		    $scope.polarAreaChartLabels = ['Red', 'Green', 'Yellow', 'Blue'];
+		    $scope.polarAreaChartOptions = { responsive: true };
+		    
+		    // Bubble Chart
+		    $scope.bubbleChartData = [
+		        {
+		            data: [
+		                { x: 10, y: 20, r: 15 },
+		                { x: 15, y: 25, r: 10 }
+		            ],
+		            label: 'Series A'
+		        }
+		    ];
+		    $scope.bubbleChartOptions = { responsive: true };
+
+		    // Scatter Chart
+		    $scope.scatterChartData = [
+		        {
+		            data: [
+		                { x: 10, y: 20 },
+		                { x: 15, y: 25 }
+		            ],
+		            label: 'Series A'
+		        }
+		    ];
+		    $scope.scatterChartOptions = { responsive: true };
+		    
+		    */
+		 //FIN DASHBOARD  
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 //DESCARGAR

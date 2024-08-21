@@ -24,7 +24,6 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
@@ -46,6 +45,7 @@ import pe.gob.mef.registramef.bs.domain.ReporteConsulta;
 import pe.gob.mef.registramef.bs.domain.ReporteVisitaDetalle;
 import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.service.Servicio;
+import pe.gob.mef.registramef.bs.transfer.DtReportResumenDto;
 import pe.gob.mef.registramef.bs.transfer.IDValorDto;
 import pe.gob.mef.registramef.bs.transfer.bk.MsSedesBk;
 import pe.gob.mef.registramef.bs.transfer.bk.MsSisAdmistrativoBk;
@@ -287,6 +287,102 @@ public class DtReportResumenRsCtrl {
 		}
 	}
 	
+	@GET
+	@Path("/cargarReporte")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response cargarReporte(@Context HttpServletRequest req, 
+																@Context HttpServletResponse res,
+																@HeaderParam("authorization") String authString) {
+		
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+		Principal usuario = req.getUserPrincipal();
+		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+		if (msUsuariosBk == null)
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			}).build();
+
+		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			}).build();
+
+		try {	
+			
+			String sfechaInicio = req.getParameter("fechaInicio");
+			String sfechaFin = req.getParameter("fechaFin");
+			//Long idTipoServicio = Long.parseLong(req.getParameter("idTipoServicio"));
+			Long idSede = Long.parseLong(req.getParameter("idSede"));
+			Long idSisAdmin = Long.parseLong(req.getParameter("idSisAdmin"));
+			Long idUserInt = Long.parseLong(req.getParameter("idUserInt"));
+			Long idEstado = Long.parseLong(req.getParameter("idEstado"));
+			boolean flagAsis = Boolean.getBoolean(req.getParameter("flagAsis"));
+			
+			
+		 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		    Date fechaInicio = null;
+		    Date fechaFin = null;
+		    
+		    if (sfechaInicio != null) {
+	            fechaInicio = formatter.parse(sfechaInicio);
+	        }
+	        if (sfechaFin != null) {
+	            fechaFin = formatter.parse(sfechaFin);
+	        }
+	        
+	        //Integer maxRegistro=30000; 
+			
+			Properties sistemaProperties = PropertiesMg.getSistemaProperties();
+			
+			/*if (sistemaProperties.getProperty("LIMITE_REGISTRO") == null || sistemaProperties.getProperty("LIMITE_REGISTRO").trim().length() < 1) {
+				sistemaProperties.put("LIMITE_REGISTRO","30000");
+				maxRegistro=30000;
+				PropertiesMg.saveSistemaProperties(sistemaProperties);
+			} else {
+				maxRegistro = Integer.valueOf( sistemaProperties.getProperty("LIMITE_REGISTRO"));
+			}*/
+			
+			Long idAsistencia = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
+			
+			Long idCapacitacion = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA);
+			
+			Long idConsulta = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CONSULTA,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CONSULTA);
+			
+			Long idVisita = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA,
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA);
+			
+			
+			DtReportResumenDto datos = new DtReportResumenDto();
+			
+			List<ReporteCapacitacionDetallado> listCapacitacion = this.getListCapacitacion(fechaInicio, fechaFin, idCapacitacion, idSede, idSisAdmin, idUserInt, idEstado, flagAsis);
+			datos.getListCapacitacion().addAll(listCapacitacion);
+			
+			/*List<ReporteAsistenciaDetallado> listAsistencia = this.getListAsistencia(fechaInicio, fechaFin, idAsistencia, idSede, idSisAdmin, idUserInt, idEstado);
+			datos.getListAsistencia().addAll(listAsistencia);
+			
+			List<ReporteConsulta> listConsulta = this.getListConsulta(fechaInicio, fechaFin, idConsulta, idSede, idSisAdmin, idUserInt, idEstado);
+			datos.getListConsulta().addAll(listConsulta);
+			
+			List<ReporteVisitaDetalle> listVisita = this.getListVisita(fechaInicio, fechaFin, idVisita, idSede, idSisAdmin, idUserInt, idEstado);
+			datos.getListVisita().addAll(listVisita);*/
+		
+			GenericEntity<DtReportResumenDto> registrosx = new GenericEntity<DtReportResumenDto>(datos){};
+			   
+			return Response.status(200).entity(registrosx).build();
+		} catch (Exception e) {
+			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
+			System.out.println("ERROR: " + mensaje);
+			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
+					}).build();
+		}
+	}
+	
 	
 	@GET
 	@Path("/descargarXLS")
@@ -463,6 +559,89 @@ public class DtReportResumenRsCtrl {
 		}
 		
 		
+	}
+	
+	private List<ReporteAsistenciaDetallado> getListAsistencia(
+			  Date fechaInicio,
+			  Date fechaFin,
+			  Long idTipoServicio,
+			  Long idSede,
+			  Long idSisAdmin,
+			  Long idUserInt,
+			  Long idEstado) {
+		
+		List<ReporteAsistenciaDetallado> reporteList=new ArrayList<ReporteAsistenciaDetallado>();
+		try {
+			
+			reporteList=servicio.getReporteAsistenciaDetalleBkList(idEstado,idUserInt,fechaInicio, fechaFin, idSisAdmin, idSede,  0, 0);
+			
+		} catch (Exception e) {
+			System.out.println("Error getListAsistencia:" + e.getMessage());
+		}
+		
+		return reporteList;
+	}
+	
+	private List<ReporteCapacitacionDetallado> getListCapacitacion(
+			  Date fechaInicio,
+			  Date fechaFin,
+			  Long idTipoServicio,
+			  Long idSede,
+			  Long idSisAdmin,
+			  Long idUserInt,
+			  Long idEstado,
+			  boolean flagAsis) {
+		
+		List<ReporteCapacitacionDetallado> reporteList=new ArrayList<ReporteCapacitacionDetallado>();
+		try {
+			reporteList=servicio.getResumenCapacitacionDetallado(idUserInt, idEstado, flagAsis, fechaInicio, fechaFin, idSisAdmin, idSede, 0, 0);
+		} catch (Exception e) {
+			System.out.println("Error getListCapacitacion:" + e.getMessage());
+		}
+		
+		return reporteList;
+	}
+	
+	private List<ReporteConsulta> getListConsulta(
+			  Date fechaInicio,
+			  Date fechaFin,
+			  Long idTipoServicio,
+			  Long idSede,
+			  Long idSisAdmin,
+			  Long idUserInt,
+			  Long idEstado) {
+		
+		List<ReporteConsulta> reporteList=new ArrayList<ReporteConsulta>();
+		try {
+			
+			reporteList=servicio.getResumenConsultas(idEstado, idUserInt, fechaInicio, fechaFin, idSisAdmin, idSede, 0, 0);
+			
+		} catch (Exception e) {
+			System.out.println("Error getListAsistencia:" + e.getMessage());
+		}
+		
+		return reporteList;
+	}
+	
+	private List<ReporteVisitaDetalle> getListVisita(
+			  Date fechaInicio,
+			  Date fechaFin,
+			  Long idTipoServicio,
+			  Long idSede,
+			  Long idSisAdmin,
+			  Long idUserInt,
+			  Long idEstado) {
+		
+		List<ReporteVisitaDetalle> reporteList=new ArrayList<ReporteVisitaDetalle>();
+		try {
+			
+			reporteList=servicio.getResumenVisitas(idEstado, idUserInt, fechaInicio, fechaFin, idSisAdmin, idSede, 0, 0);
+			
+		} catch (Exception e) {
+			System.out.println("Error getListAsistencia:" + e.getMessage());
+		}
+		
+		return reporteList;
 	}
 	
 	private void generarReporteAsistencia(FileInputStream filePlantilla, 
