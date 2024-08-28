@@ -28,6 +28,18 @@ public interface ReporteServicioDao {
 	List<ReporteCapacitacionDetallado> getResumenCapacitacionDetallado(Long idUserInt, Long idEstado, boolean flagAsis,
 			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
 			throws Validador;// SPRINT_8
+	
+	List<ReporteCapacitacionDetallado> getResumenCapacitacion(Long idUserInt, Long idEstado, boolean flagAsis,
+			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
+			throws Validador;
+	
+	List<ReporteCapacitacionDetallado> getResumenCapacitacionUsersByTematica(Long idUserInt, Long idEstado, boolean flagAsis,
+			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
+			throws Validador;
+	
+	List<ReporteCapacitacionDetallado> getResumenCapacitacionByModalidad(Long idUserInt, Long idEstado, boolean flagAsis,
+			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
+			throws Validador;
 
 	List<ReporteConsulta> getResumenConsultas(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
 			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;// SPRINT_8.3/

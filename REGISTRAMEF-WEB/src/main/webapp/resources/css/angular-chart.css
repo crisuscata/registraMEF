@@ -47,3 +47,9 @@
   height: 20px;
   border-radius: 5px;
 }
+
+/* //MPINARES 21082024 - INICIO */
+md-grid-list md-grid-tile figure {
+    display: block;
+}
+/* //MPINARES 21082024 - INICIO */

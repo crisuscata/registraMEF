@@ -59,15 +59,15 @@
   	   layout="column" 
   	   layout-align="space-between stretch" 
        class="menu-barra" 
-       ng-cloak md-colors="{background: 'primary-700'}">
+       ng-cloak style="background: rgb(0, 125, 175);"><!-- //MPINARES 20082024 - INICIO - SE CAMBIA MDCOLORS-->
   
   </div>
   
   <div layout="column" layout-align="start stretch" ng-controller="ctrlRptResumen" 
-  data-ng-init="loadRptResumen()">
+  data-ng-init="loadRptResumen()" style="width: 100%;"> <!-- //MPINARES 20082024 - INICIO - SE COLOCA WIDH-->
   
   
-<md-toolbar md-colors="{background: 'primary-700'}" class="md-toolbar-size">
+<md-toolbar style="background: rgb(0, 125, 175);" class="md-toolbar-size"><!-- //MPINARES 20082024 - INICIO - SE CAMBIA MDCOLORS -->
 	<div class="md-toolbar-tools md-toolbar-tools-size">
 	<h2 flex md-truncate md-colors="{color: 'background-A100'}" style="font-size: 17px;">Lista de capacitaciones programadas</h2>
 	
@@ -230,21 +230,18 @@
         </div>
         
         
-        <md-grid-list md-cols="2" md-gutter="2px" md-row-height="3:2" style="width:90%;">
+      <md-grid-list md-cols="3" md-gutter="2px" md-row-height="3:2" style="width:90%;">
         
         
-        
-        
-        
-        
-            <md-grid-tile class="gray" style="padding: 16px;">
+           <md-grid-tile class="gray" style="padding: 16px;" colspan="2">
 			  <md-grid-tile-header>
 			    <h3>Evolución Mensual</h3>
 			  </md-grid-tile-header>
 			
-			    <canvas id="mixedChart" style="display: block;" width="300" height="150"></canvas>
+			  <!-- Canvas for the chart -->
+			  <canvas id="mixedChartCapaEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas><!-- //MPINARES 21082024 - INICIO - SE EDITA STYLE -->
 			
-				 <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+			  <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
 				  <tr>
 				    <th ng-repeat="m in mesesCapacitacion track by $index">{{m}}</th>
 				  </tr>
@@ -252,20 +249,74 @@
 				  <tr ng-repeat="row in dataCapacitacionEventoRows track by row.id">
 				    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
 				  </tr>
-				</table>
+			  </table>
+			 
+			</md-grid-tile>
+			
+			
+			<md-grid-tile class="gray" style="padding: 16px;">
+			  <md-grid-tile-header>
+			    <h3>Usuarios capacitados seg&uacute;n tem&aacute;tica</h3>
+			    
+			    <md-select
+				    ng-model="filtrocapa.monthYear"
+				    ng-change="onDashCapaByTematica(filtrocapa.monthYear)" 
+				    placeholder="Mes"> 
+				    <md-option ng-value="0">Todos los Meses</md-option>
+				    <md-option
+				        ng-repeat="item in listaCapaByTematica" ng-value="item.monthYear">
+				        {{item.monthYear}} 
+				    </md-option>
+				</md-select>
+			    
+			  </md-grid-tile-header>
+			
+			  <canvas id="barChartCapaByTematica" width="400" height="200"></canvas>
 			
 			</md-grid-tile>
+			
+			
+			<md-grid-tile class="gray" style="padding: 16px;">
+			  <md-grid-tile-header>
+			    <h3>Usuarios capacitados seg&uacute;n modalidad</h3>
+			    
+			    <md-select
+				    ng-model="filtrocapa.monthYearMod"
+				    ng-change="onDashCapaByModalidad(filtrocapa.monthYearMod)" 
+				    placeholder="Mes"> 
+				    <md-option ng-value="0">Todos los Meses</md-option>
+				    <md-option
+				        ng-repeat="item in listaMonthCapaByModalidad" ng-value="item.monthYear">
+				        {{item.monthYear}} 
+				    </md-option>
+				</md-select>
+			    
+			  </md-grid-tile-header>
+			  
+			    <canvas id="doughnutByModalidad" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
+
+			    
+			     <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+				  <tr>
+				    <th ng-repeat="m in mesesCapaModa track by $index">{{m}}</th>
+				  </tr>
+				  
+				  <tr ng-repeat="row in dataCapacitacionModalidadRows track by row.id">
+				    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
+				  </tr>
+			 	 </table>
+
+			
+			</md-grid-tile>
+			
+        
+</md-grid-list> 
+
 
 
 		    
-		    <md-grid-tile class="gray">
-		      <md-grid-tile-header>
-		        <h3>Usuarios capacitados seg&uacute;n tem&aacute;tica</h3>
-		       </md-grid-tile-header>
-		       
-		      <canvas id="barChart" width="400" height="200"></canvas>
-		    
-		   </md-grid-tile>
+	    
+
 		    
 		    
 		    
@@ -275,7 +326,11 @@
     
     
     <!-- Line Chart 
-    -->
+    <canvas class="chart chart-line" 
+            chart-data="lineChartData"
+            chart-labels="lineChartLabels"
+            chart-options="lineChartOptions">
+    </canvas>-->
     
     <!-- Pie Chart 
     <canvas class="chart chart-pie" 
@@ -318,7 +373,7 @@
     </canvas>-->
 		    
             
-            </md-grid-list> 
+            
         
     </md-content>
 </md-tab>

@@ -224,6 +224,8 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			+ " (SELECT MU.APELLIDO_PATERNO||' '||MU.APELLIDO_MATERNO||', '||MU.NOMBRES FROM MS_USUARIOS MU WHERE MU.IDUSUARIO=A.IDUSSER_CREA) AS USUARIO_CREA,  "
 			+ " (select SED.SEDE from ms_sedes SED where SED.id_sede=A.id_sede) as SEDE, "
 			+ " (select SAD.DESCRIPCION from ms_sis_admistrativo SAD where A.id_sist_adm=SAD.id_sist_admi) as SIST_ADMIN_CREA, "
+			+ " (select SAD.abreviatura from ms_sis_admistrativo SAD where A.id_sist_adm=SAD.id_sist_admi) as SIST_ADMIN_ABREVIATURA, "
+			+ " (select SAD.id_sist_admi from ms_sis_admistrativo SAD where A.id_sist_adm=SAD.id_sist_admi) as ID_SIST_ADMI, "
 			+ " A.fecha_crea AS FECHA_CREA, "
 			+ " (select PRT.descripcion from prt_parametros PRT where PRT.IDPARAMETRO=A.ESTADO) as ESTADO, "
 			+ " A.ESTADO AS ESTADO_ID, " + " A.idcapa_padre, "
@@ -661,10 +663,9 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		return lista;
 	}
 
-//public List<ReporteCapacitacionDetallado> getResumenCapacitacionDetallado(Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)throws Validador { //SPRINT_8
 	public List<ReporteCapacitacionDetallado> getResumenCapacitacionDetallado(Long idUserInt, Long idEstado,
 			boolean flagAsis, Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro,
-			Integer minRegistro) throws Validador {// SPRINT_8
+			Integer minRegistro) throws Validador {
 
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
@@ -673,17 +674,12 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		sb.append(" WHERE A.ESTADO>0  ");
 
 		if (fechaInicio != null && fechaFin != null) {
-//	sb.append(" AND TRUNC(A.FECHA_INIC) BETWEEN TO_DATE('" + sdf.format(fechaInicio) + "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
 			sb.append(" AND TRUNC(A.FECHA_INIC) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
-					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");// SPRINT_4
-			// sb.append(" AND TRUNC(A.FECHA_INI_PROGRAMADA) BETWEEN TO_DATE('" +
-			// sdf.format(fechaInicio) + "','DD/MM/YYYY') AND TO_DATE('" +
-			// sdf.format(fechaFin) + "','DD/MM/YYYY') ");//SPRINT_4
+					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
 		}
 
 		if (idSistAdmin != null && idSistAdmin.longValue() > 0) {
-			// sb.append(" and A.ID_SIST_ADM = ? ");//SPRINT_8
-			sb.append(" and b.ID_SIST_ADMI = ? ");// SPRINT_8
+			sb.append(" and b.ID_SIST_ADMI = ? ");
 			hs.add(idSistAdmin);
 		}
 
@@ -692,35 +688,258 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			hs.add(idSede);
 		}
 
-//SPRINT_8 INICIO
 		if (idUserInt != null && idUserInt.longValue() > 0) {
 			sb.append(" and   b.ID_USUINTERNO=?  ");
 			hs.add(idUserInt);
 		}
+		
 		if (idEstado != null && idEstado.longValue() > 0) {
 			sb.append(" and A.ESTADO = ? ");
 			hs.add(idEstado);
 		}
+		
 		if (flagAsis) {
 			sb.append(" and VUEX.FLAG_ASISTENCIA = 1 ");
 
 		}
 
-//SPRINT_8 FIN 
 
-		sb.append(" ORDER BY A.ID_CAPACITACION , VUEX.id_usuexterno"); // SPRINT56
+		sb.append(" ORDER BY A.ID_CAPACITACION , VUEX.id_usuexterno"); 
 
 		Object param[] = new Object[hs.size()];
 		hs.toArray(param);
 		List<ReporteCapacitacionDetallado> lista = super.findNativeQueryEntidadLimit(sb.toString(), param,
-				ReporteCapacitacionDetallado.class, minRegistro, maxRegistro);// SPRINT24
-//if (lista!=null && lista.size()>maxRegistro) //SPRINT24
-//	throw new Validador(2,1,"EXCESO DE CANTIDAD DE REGISTRO."); //SPRINT24
+				ReporteCapacitacionDetallado.class, minRegistro, maxRegistro);
 		return lista;
 	}
+	
+	public List<ReporteCapacitacionDetallado> getResumenCapacitacion(Long idUserInt, Long idEstado,
+			boolean flagAsis, Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro,
+			Integer minRegistro) throws Validador {
+		List<ReporteCapacitacionDetallado> lstResult = new ArrayList<>();
+		StringBuffer sb = new StringBuffer(400);
+		List<Object> hs = new ArrayList<Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sb.append("SELECT  " + 
+				"    TO_CHAR(TRUNC(a.FECHA_INIC, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH') AS Month_Year,   " + 
+				"    SUM(NVL(a.Total_Participants, 0)) AS Total_Participants,  " + 
+				"    COUNT(DISTINCT a.id_capacitacion) AS Total_Events  " + 
+				"FROM (  " + 
+				"    SELECT  " + 
+				"        a.FECHA_INIC,  " + 
+				"        a.cant_partic_asist AS Total_Participants,  " + 
+				"        a.id_capacitacion  " + 
+				"    FROM registramef.dt_capacitacion a  " + 
+				"    LEFT JOIN registramef.dt_capa_usuexternos VUEX   " + 
+				"        ON A.id_capacitacion = VUEX.id_capacitacion   " + 
+				"        AND VUEX.ESTADO = 3    ");
+		sb.append(" WHERE  A.ESTADO = ").append(estadoFinalizado);
 
-//
-//public List<ReporteConsulta> getResumenConsultas(Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)throws Validador  {//SPRINT_8
+		if (fechaInicio != null && fechaFin != null) {
+			sb.append(" AND TRUNC(A.FECHA_INIC) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
+					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
+		}
+
+		if (idSede != null && idSede.longValue() > 0) {
+			sb.append(" and A.ID_SEDE =  ").append(idSede);
+		}
+
+		//if (flagAsis) {
+			sb.append(" and VUEX.FLAG_ASISTENCIA = 1 ");
+
+		//}
+
+		sb.append("  GROUP BY  " + 
+				"        a.FECHA_INIC,  " + 
+				"        a.cant_partic_asist,  " + 
+				"        a.id_capacitacion  " + 
+				"    ORDER BY a.FECHA_INIC DESC  " + 
+				") a  " + 
+				"GROUP BY  " + 
+				"    TO_CHAR(TRUNC(a.FECHA_INIC, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH') " + 
+				"ORDER BY  " + 
+				"    MIN(TRUNC(a.FECHA_INIC, 'MM'))"); 
+
+		Object param[] = new Object[hs.size()];
+		hs.toArray(param);
+		List<Object> lstObject = super.findNative(sb.toString(), param);
+		
+		if(lstObject!=null && !lstObject.isEmpty()) {
+			Long i = 0L;
+			for (Object result : lstObject) {
+				Object[] object = (Object[]) result;
+				
+				ReporteCapacitacionDetallado objResult = new ReporteCapacitacionDetallado();
+				
+				objResult.setId(i);
+				
+				objResult.setMonthYear((String) object[0]);
+				
+				BigDecimal cantidadParti = (BigDecimal) object[1];
+				objResult.setTotalParticipants(cantidadParti != null ? cantidadParti.intValue() : null);
+				
+				BigDecimal cantidadEvent = (BigDecimal) object[2];
+				objResult.setTotalEvents(cantidadEvent != null ? cantidadEvent.intValue() : null);
+				
+				lstResult.add(objResult);
+				i++;
+			}
+			
+			
+		}
+		
+		return lstResult;
+	}
+	
+	public List<ReporteCapacitacionDetallado> getResumenCapacitacionUsersByTematica(Long idUserInt, Long idEstado,
+			boolean flagAsis, Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro,
+			Integer minRegistro) throws Validador {
+		List<ReporteCapacitacionDetallado> lstResult = new ArrayList<>();
+		StringBuffer sb = new StringBuffer(400);
+		List<Object> hs = new ArrayList<Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sb.append("SELECT  " + 
+				"    TO_CHAR(TRUNC(a.FECHA_INIC, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH') AS Month_Year,  " + 
+				"    SAD.abreviatura as SIST_ADMIN_ABREVIATURA,  " + 
+				"    SUM(a.cant_partic_asist) AS Total_Participants  " + 
+				"FROM   " + 
+				"    registramef.dt_capacitacion a  " + 
+				"INNER JOIN   " + 
+				"    ms_sis_admistrativo SAD ON SAD.id_sist_admi = a.id_sist_adm  " + 
+				"LEFT JOIN   " + 
+				"    registramef.dt_capa_usuexternos VUEX ON A.id_capacitacion = VUEX.id_capacitacion    ");
+		sb.append(" WHERE  A.ESTADO = ").append(estadoFinalizado);
+
+		if (fechaInicio != null && fechaFin != null) {
+			sb.append(" AND TRUNC(A.FECHA_INIC) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
+					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
+		}
+
+		if (idSede != null && idSede.longValue() > 0) {
+			sb.append(" and A.ID_SEDE =  ").append(idSede);
+		}
+
+		
+		if (flagAsis) {
+			sb.append(" and VUEX.FLAG_ASISTENCIA = 1 ");
+
+		}
+
+		sb.append("  GROUP BY  " + 
+				"    TO_CHAR(TRUNC(a.FECHA_INIC, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH'), " + 
+				"    SAD.abreviatura  " + 
+				"ORDER BY  " + 
+				"    MIN(TRUNC(a.FECHA_INIC, 'MM'))"); 
+
+		Object param[] = new Object[hs.size()];
+		hs.toArray(param);
+		List<Object> lstObject = super.findNative(sb.toString(), param);
+		
+		if(lstObject!=null && !lstObject.isEmpty()) {
+			Long i = 0L;
+			for (Object result : lstObject) {
+				Object[] object = (Object[]) result;
+				
+				ReporteCapacitacionDetallado objResult = new ReporteCapacitacionDetallado();
+				
+				objResult.setId(i);
+				
+				objResult.setMonthYear((String) object[0]);
+				objResult.setAbreviaturaAdmin((String) object[1]);
+				
+				BigDecimal cantidadParti = (BigDecimal) object[2];
+				objResult.setTotalParticipants(cantidadParti != null ? cantidadParti.intValue() : null);
+				
+				lstResult.add(objResult);
+				i++;
+			}
+			
+			
+		}
+		
+		return lstResult;
+	}
+	
+	
+	public List<ReporteCapacitacionDetallado> getResumenCapacitacionByModalidad(Long idUserInt, Long idEstado,
+			boolean flagAsis, Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro,
+			Integer minRegistro) throws Validador {
+		List<ReporteCapacitacionDetallado> lstResult = new ArrayList<>();
+		StringBuffer sb = new StringBuffer(400);
+		List<Object> hs = new ArrayList<Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sb.append("SELECT  " + 
+				"    TO_CHAR(TRUNC(a.FECHA_INIC, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH') AS Month_Year,  " + 
+				"    SUM(CASE WHEN a.id_modalidad = 137 THEN 1 ELSE 0 END) AS total_virtual,  " + 
+				"    SUM(CASE WHEN a.id_modalidad = 138 THEN 1 ELSE 0 END) AS total_presencial  " + 
+				"FROM (  " + 
+				"    SELECT  " + 
+				"        a.FECHA_INIC,  " + 
+				"        a.id_modalidad,  " + 
+				"        a.id_capacitacion  " + 
+				"    FROM registramef.dt_capacitacion a  " + 
+				"    LEFT JOIN registramef.dt_capa_usuexternos VUEX   " + 
+				"        ON A.id_capacitacion = VUEX.id_capacitacion   " + 
+				"        AND VUEX.ESTADO = 3   ");
+		sb.append(" WHERE  A.ESTADO = ").append(estadoFinalizado);
+
+		if (fechaInicio != null && fechaFin != null) {
+			sb.append(" AND TRUNC(A.FECHA_INIC) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
+					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
+		}
+
+		if (idSede != null && idSede.longValue() > 0) {
+			sb.append(" and A.ID_SEDE =  ").append(idSede);
+		}
+
+		//if (flagAsis) {
+			sb.append(" and VUEX.FLAG_ASISTENCIA = 1 ");
+
+		//}
+
+		sb.append("  GROUP BY  " + 
+				"        a.FECHA_INIC,  " + 
+				"        a.id_modalidad,  " + 
+				"        a.id_capacitacion  " + 
+				"    ORDER BY a.FECHA_INIC DESC  " + 
+				") a  " + 
+				"GROUP BY  " + 
+				"    TO_CHAR(TRUNC(a.FECHA_INIC, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH')  " + 
+				"ORDER BY  " + 
+				"    MIN(TRUNC(a.FECHA_INIC, 'MM'))"); 
+
+		Object param[] = new Object[hs.size()];
+		hs.toArray(param);
+		List<Object> lstObject = super.findNative(sb.toString(), param);
+		
+		if(lstObject!=null && !lstObject.isEmpty()) {
+			Long i = 0L;
+			for (Object result : lstObject) {
+				Object[] object = (Object[]) result;
+				
+				ReporteCapacitacionDetallado objResult = new ReporteCapacitacionDetallado();
+				
+				objResult.setId(i);
+				
+				objResult.setMonthYear((String) object[0]);
+				
+				BigDecimal cantidadVirtual = (BigDecimal) object[1];
+				objResult.setTotalVirtual(cantidadVirtual != null ? cantidadVirtual.intValue() : null);
+				
+				BigDecimal cantidadPresencial = (BigDecimal) object[2];
+				objResult.setTotalPresencial(cantidadPresencial != null ? cantidadPresencial.intValue() : null);
+				
+				lstResult.add(objResult);
+				i++;
+			}
+			
+			
+		}
+		
+		return lstResult;
+	}
+	
+
 	public List<ReporteConsulta> getResumenConsultas(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
 			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador {// SPRINT_8.3
 

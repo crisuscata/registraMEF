@@ -334,7 +334,7 @@ public class DtReportResumenRsCtrl {
 	        
 	        //Integer maxRegistro=30000; 
 			
-			Properties sistemaProperties = PropertiesMg.getSistemaProperties();
+		//	Properties sistemaProperties = PropertiesMg.getSistemaProperties();
 			
 			/*if (sistemaProperties.getProperty("LIMITE_REGISTRO") == null || sistemaProperties.getProperty("LIMITE_REGISTRO").trim().length() < 1) {
 				sistemaProperties.put("LIMITE_REGISTRO","30000");
@@ -344,7 +344,7 @@ public class DtReportResumenRsCtrl {
 				maxRegistro = Integer.valueOf( sistemaProperties.getProperty("LIMITE_REGISTRO"));
 			}*/
 			
-			Long idAsistencia = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
+		/*	Long idAsistencia = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN,
 					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_ASISTEN);
 			
 			Long idCapacitacion = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_CAPA,
@@ -354,13 +354,18 @@ public class DtReportResumenRsCtrl {
 					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_CONSULTA);
 			
 			Long idVisita = PropertiesMg.getSistemLong(PropertiesMg.KEY_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA,
-					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA);
+					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA); */
 			
 			
-			DtReportResumenDto datos = new DtReportResumenDto();
+			DtReportResumenDto datos = servicio.getResumenCapacitacion(idUserInt, idEstado, flagAsis, fechaInicio, fechaFin, idSisAdmin, idSede, 0, 0);
+					
+					/*new DtReportResumenDto();
 			
-			List<ReporteCapacitacionDetallado> listCapacitacion = this.getListCapacitacion(fechaInicio, fechaFin, idCapacitacion, idSede, idSisAdmin, idUserInt, idEstado, flagAsis);
-			datos.getListCapacitacion().addAll(listCapacitacion);
+			List<ReporteCapacitacionDetallado> listCapacitacion = this.getListCapacitacionEvolMensual(fechaInicio, fechaFin, idCapacitacion, idSede, idSisAdmin, idUserInt, idEstado, flagAsis);
+			
+			datos.getListCapacitacionEvolMensual().addAll(listCapacitacion);*/
+			
+			//datos.getListCapacitacion().addAll(listCapacitacion);
 			
 			/*List<ReporteAsistenciaDetallado> listAsistencia = this.getListAsistencia(fechaInicio, fechaFin, idAsistencia, idSede, idSisAdmin, idUserInt, idEstado);
 			datos.getListAsistencia().addAll(listAsistencia);
@@ -582,7 +587,7 @@ public class DtReportResumenRsCtrl {
 		return reporteList;
 	}
 	
-	private List<ReporteCapacitacionDetallado> getListCapacitacion(
+	/*private List<ReporteCapacitacionDetallado> getListCapacitacionEvolMensual(
 			  Date fechaInicio,
 			  Date fechaFin,
 			  Long idTipoServicio,
@@ -594,13 +599,13 @@ public class DtReportResumenRsCtrl {
 		
 		List<ReporteCapacitacionDetallado> reporteList=new ArrayList<ReporteCapacitacionDetallado>();
 		try {
-			reporteList=servicio.getResumenCapacitacionDetallado(idUserInt, idEstado, flagAsis, fechaInicio, fechaFin, idSisAdmin, idSede, 0, 0);
+			reporteList=servicio.getResumenCapacitacion(idUserInt, idEstado, flagAsis, fechaInicio, fechaFin, idSisAdmin, idSede, 0, 0);
 		} catch (Exception e) {
 			System.out.println("Error getListCapacitacion:" + e.getMessage());
 		}
 		
 		return reporteList;
-	}
+	}*/
 	
 	private List<ReporteConsulta> getListConsulta(
 			  Date fechaInicio,

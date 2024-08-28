@@ -565,6 +565,11 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		}; 
 	
 	  
+	  $scope.filtrocapa ={
+			  monthYear:null,
+			  monthYearMod:null
+		}; 
+	  
 	  $scope.dato ={
 			  ejecutora: null,
 			  idproveeTxt: null,
@@ -1566,25 +1571,26 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		};
 		
 		
-		$scope.reporteResumen=[];
+		$scope.reportecapacitacionResumen=[];
 		$scope.listCapacitacion=[];
 		$scope.loadReporteResumen=function(){
 			$http.get(cargarReporteUrl+$scope.getURLParametros()).then(function(res){
 				
-				$scope.reporteResumen = res.data; 
+				//$scope.listCapacitacionEvolMensual = res.data.listCapacitacionEvolMensual; 
 				
+				//console.log("$scope.listCapacitacionEvolMensual: " + JSON.stringify( $scope.listCapacitacionEvolMensual ));
 				
-				if (res.data!=null && res.data.listCapacitacion.length > 0) {
+				$scope.reportecapacitacionResumen = res.data;
+				$scope.buildDashboardCapacitacion(res.data);
+				$scope.buildUsuarioCapacitadoPorTematica(res.data);
+				$scope.buildDashboardCapacitacionByModalidad(res.data);
+				
+				/*if (res.data!=null && res.data.listCapacitacion.length > 0) {
 					$scope.listCapacitacion = res.data.listCapacitacion.filter(c => c.asitio === 'SI' && c.estado === 'FINALIZADO');
 					$scope.buildDashboardCapacitacion($scope.listCapacitacion);
-					
-					//console.log("JSON.stringify( $scope.listCapacitacion ): " + JSON.stringify( $scope.listCapacitacion ));
-					
-				}
-				//$scope.datoEntidadSisAdmin = $scope.datoEntidadSisAdmin.filter(val => val.contador !== dato.contador);
+				}*/
 				
 				
-				//console.log("JSON.stringify( $scope.reporteResumen ): " + JSON.stringify( $scope.reporteResumen ));
 				
 			},
 			function error(errResponse) {
@@ -1595,7 +1601,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		$scope.getMonth = function(fecha){
 			var date = new Date(fecha);
 
-			var month = date.getMonth() + 1;
+			var month = date.getMonth();
 			
 			return month; 
 		}
@@ -1609,7 +1615,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		}
 		
 		
-		
+		/*
 		$scope.showReportResumen2 = function() {
 			  $scope.meses = [" ", "Enero 2024", "Febrero 2024", "Total"];
 			  $scope.dataRows = [
@@ -1617,19 +1623,23 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			    ["Some Other Data", "Data1", "Data2", "Data3"]
 			  ];
 			}
-
+*/
         
 		$scope.showReportResumen =function(){
 			
 			const fechaInicio = new Date($scope.filtro.fechaInicio);
 			const fechaFin = new Date($scope.filtro.fechaFin);
+			
+			console.log("fechaInicio: " + fechaInicio);
+			console.log("fechaFin: " + fechaFin);
+			
 			const differenceInMilliseconds = fechaFin - fechaInicio;
 			
 			const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
 			
-			if (differenceInDays <= 31) {
+			//if (differenceInDays <= 31) {
 				$scope.loadReporteResumen();
-			} else{
+			/*} else{
 				$mdDialog.show(
 				         $mdDialog.alert()
 				        .parent(angular.element(document.body))
@@ -1639,7 +1649,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 				        .ariaLabel('ERROR')
 				        .ok('OK')
 				    );
-			}
+			}*/
 			
 		}
 		
@@ -1648,48 +1658,83 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			return monthNames[index-1];
 		}
 		
-		$scope.buildDashboardCapacitacion =function(listCapacitacion) {
-			
-			$scope.listCapacitacion =  getUniqueCapacitacion(listCapacitacion); 
-			
-			var anioToEvaluate = $scope.getAnio($scope.filtro.fechaInicio);
-			
-			console.log("listCapacitacion: " + JSON.stringify( $scope.listCapacitacion ));
-			
-			var firstMonthToEvaluate = $scope.getMonth($scope.filtro.fechaInicio); 
-			var secondMonthToEvaluate = $scope.getMonth($scope.filtro.fechaInicio)+1; 
-			
-			
-			
-			var firstMonthValue = $scope.getNameOfMonth(firstMonthToEvaluate);
-			var secondMonthValue = $scope.getNameOfMonth(secondMonthToEvaluate);
-			
-			var sumFirstMonth = 0;
-			var sumSecondMonth = 0;
-			
-			console.log("firstMonthToEvaluate: " + firstMonthToEvaluate);
-			console.log("secondMonthToEvaluate: " + secondMonthToEvaluate);
-			
-			console.log("firstMonthValue: " + firstMonthValue);
-			console.log("secondMonthValue: " + secondMonthValue);
-			
-			var cantEvento = $scope.listCapacitacion.length;
+		$scope.buildCapacitacionSummary = function(listCapacitacion) {
+		    const monthYearData = {};
 
-			for (var i = 0; i < $scope.listCapacitacion.length; i++) {
-			    var capacitacion = $scope.listCapacitacion[i];
-			    
-			    if (firstMonthToEvaluate === $scope.getMonth(capacitacion.fechaInic)) {
-			        sumFirstMonth += capacitacion.cantParticAsist;
-			    }
-			    
-			    if (secondMonthToEvaluate === $scope.getMonth(capacitacion.fechaInic)) {
-			        sumSecondMonth += capacitacion.cantParticAsist;
-			    }
-			}
+		    listCapacitacion.forEach(function(event) {
+		        const date = new Date(event.fechaInic);  // Convert timestamp to date
+		        const month = date.getUTCMonth();  // Extract the month (0-11)
+		        const year = date.getUTCFullYear(); // Extract the year
+		        const monthYearKey = `${month + 1}-${year}`;  // Create "month-year" key
 
-			console.log("Sum for first month:", sumFirstMonth);
-			console.log("Sum for second month:", sumSecondMonth);
+		        if (!monthYearData[monthYearKey]) {
+		            monthYearData[monthYearKey] = event.cantParticAsist;
+		        } else {
+		            monthYearData[monthYearKey] += event.cantParticAsist;
+		        }
+		    });
+
+		    const monthYearArray = Object.keys(monthYearData)
+		        .map(key => {
+		            const [month, year] = key.split('-');
+		            return { month: parseInt(month), year: parseInt(year), sum: monthYearData[key] };
+		        })
+		        .sort((a, b) => (a.year - b.year) || (a.month - b.month));
+
+		    const monthYearLabels = monthYearArray.map(item => 
+		        `${new Date(Date.UTC(item.year, item.month - 1)).toLocaleString('default', { month: 'long' })} ${item.year}`
+		    );
+		    
+		    const sumsOfParticipants = monthYearArray.map(item => item.sum);
+
+		    return {
+		        labels: monthYearLabels,
+		        data: sumsOfParticipants
+		    };
+		};
+
+		$scope.showReportResumen2 = function() {
+		    var listCapacitacion = [
+		        {
+		            "fechaInic": 1721223000000, // July 2024 (timestamp for a date in July)
+		            "cantParticAsist": 100
+		        },
+		        {
+		            "fechaInic": 1721223000000, // July 2024
+		            "cantParticAsist": 300
+		        },
+		        {
+		            "fechaInic": 1721854800000, // August 2024 (timestamp for a date in August)
+		            "cantParticAsist": 300
+		        },
+		        {
+		            "fechaInic": 1721854800000, // August 2024
+		            "cantParticAsist": 700
+		        }
+		    ];
+
+		    listCapacitacion.forEach(function(event) {
+		        const date = new Date(event.fechaInic);
+		        console.log('Converted Date:', date.toUTCString()); // Print the UTC date
+		    });
+
+		    var result = $scope.buildCapacitacionSummary(listCapacitacion);
+
+		    console.log(JSON.stringify(result));
+		};
+
+
+		
+		$scope.buildDashboardCapacitacion =function(data) {
 			
+			var listCapacitacionEvolMensual = data.listCapacitacionEvolMensual; 
+			
+			
+			console.log("listCapacitacionEvolMensual :" + JSON.stringify(listCapacitacionEvolMensual));
+			
+			var labels = listCapacitacionEvolMensual.map(item => item.monthYear.trim());
+			var participantsData = listCapacitacionEvolMensual.map(item => item.totalParticipants);
+			var eventsData = listCapacitacionEvolMensual.map(item => item.totalEvents);
 			
 			//BUILD DASHBOARD Evolución Mensual
 			
@@ -1703,20 +1748,20 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			    };
 
 			    var chartData = {
-			        labels: [firstMonthValue],
+			        labels: labels,
 			        datasets: [
 			            {
 			                type: 'bar',
-			                label: 'Participants',
-			                data: [sumFirstMonth],
+			                label: 'Participantes',
+			                data: participantsData,
 			                backgroundColor: 'rgba(75, 192, 192, 0.2)',
 			                borderColor: 'rgba(75, 192, 192, 1)',
 			                borderWidth: 1
 			            },
 			            {
 		                    type: 'line',
-		                    label: 'Line Dataset',
-		                    data: [sumFirstMonth],
+		                    label: 'Total',
+		                    data: participantsData,
 		                    borderColor: 'rgba(255, 99, 132, 1)',
 		                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
 		                    borderWidth: 2,
@@ -1726,7 +1771,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			    };
 
 			    angular.element(document).ready(function () {
-			        var ctx = document.getElementById('mixedChart').getContext('2d');
+			        var ctx = document.getElementById('mixedChartCapaEvolMensual').getContext('2d');
 			        new Chart(ctx, {
 			            type: 'bar',
 			            data: chartData,
@@ -1735,16 +1780,13 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			    });
 			
 			//Build Table
-			$scope.mesesCapacitacion = [" ", firstMonthValue + " " + anioToEvaluate, "Total"];
-			
+			$scope.mesesCapacitacion = [" ", ...labels , "Total"];
 			
 			$scope.dataCapacitacionEventoRows = [
-			    { id: 1, cells: ["Capacitados", sumFirstMonth, sumFirstMonth] },
-			    { id: 2, cells: ["Eventos", cantEvento, cantEvento] }
+			    { id: 1, cells: ["Capacitados", ...participantsData, participantsData.reduce((sum, value) => sum + value, 0)] },
+			    { id: 2, cells: ["Eventos", ...eventsData, eventsData.reduce((sum, value) => sum + value, 0)] }
 			  ];
 			
-			
-			$scope.buildUsuarioCapacitadoPorTematica($scope.listCapacitacion);
 		}
 		
 		function getUniqueCapacitacion(list) {
@@ -1758,26 +1800,54 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
             return Array.from(map.values());
         }
 		
+		$scope.findMonthFechaFinal = function(){
+		    var monthFechaFinal = $scope.getMonth($scope.filtro.fechaFin);
+		    
+		    var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+		    
+		    var monthName = monthNames[monthFechaFinal];
+		    
+		    console.log("monthName:"+monthName);
+		    
+		    return monthName;
+		}
 		
-		$scope.buildUsuarioCapacitadoPorTematica = function(listCapacitacion){
-			
-			
-			var eventNames = listCapacitacion.map(function(event) {
-			    return event.nomEvento;
-			});
-			
-			var usersCapacitados = listCapacitacion.map(function(event) {
-		        return event.cantParticAsist;
-		    });
-			
-			
-			var labels = eventNames;
-		    var series = ['Eventos'];
-		    var data = [
-		        usersCapacitados
-		        
-		    ];
+	    $scope.onDashCapaByTematica = function(month) {
+	        if (month === 0) {
+	            var listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica;
+	        } else {
+	            var listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica.filter(item => item.monthYear.includes(month));
+	        }
+	        
+	        var labels = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.abreviaturaAdmin.trim());
+	        var participantsData = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.totalParticipants);
+	        
+	        $scope.showDashUsuarioCapacitadoPorTematica(labels, participantsData);
+	    };
 
+		
+		$scope.listaCapaByTematica=[];
+		$scope.listCapacitacionUsSegunTematica=[];
+		$scope.buildUsuarioCapacitadoPorTematica = function(data){
+			$scope.listCapacitacionUsSegunTematica = data.listCapacitacionUsSegunTematica; 
+			
+			$scope.listaCapaByTematica = $scope.listCapacitacionUsSegunTematica.filter((value, index, self) => 
+		    		index === self.findIndex((t) => t.monthYear === value.monthYear)
+			);
+
+			var lastMonth = $scope.findMonthFechaFinal();
+			var lastAnio = $scope.getAnio($scope.filtro.fechaFin);
+			
+			$scope.filtrocapa.monthYear = lastMonth + ' '+ lastAnio;
+			
+			$scope.onDashCapaByTematica(lastMonth);
+			
+		}
+		
+		$scope.showDashUsuarioCapacitadoPorTematica = function(labels, participantsData){
+			
+			var series = ['Eventos'];
+	        
 		    var options = {
 		        scales: {
 		            y: {
@@ -1786,9 +1856,8 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		        }
 		    };
 
-		    // Initialize chart on document ready
 		    angular.element(document).ready(function () {
-		        var ctx = document.getElementById('barChart').getContext('2d');
+		        var ctx = document.getElementById('barChartCapaByTematica').getContext('2d');
 		        new Chart(ctx, {
 		            type: 'bar',
 		            data: {
@@ -1796,7 +1865,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		                datasets: series.map(function(series, index) {
 		                    return {
 		                        label: series,
-		                        data: data[index],
+		                        data: participantsData,
 		                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
 		                        borderColor: 'rgba(75, 192, 192, 1)',
 		                        borderWidth: 1
@@ -1806,13 +1875,120 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		            options: options
 		        });
 		    });
-		    
 			
 		}
 		
+		$scope.onDashCapaByModalidad = function(month) {
+			var listCapacitacionModalidadByLastMonth = null;
+			if (month === 0) {
+				listCapacitacionModalidadByLastMonth = $scope.listaMonthCapaByModalidad;
+	        } else {
+	        	listCapacitacionModalidadByLastMonth = $scope.listaMonthCapaByModalidad.filter(item => item.monthYear.includes(month));
+	        }
+	        
+			var virtualData = listCapacitacionModalidadByLastMonth.map(item => item.totalVirtual);
+			var totalVirtual = virtualData.reduce((sum, value) => sum + value, 0)
+			
+			var presencialData = listCapacitacionModalidadByLastMonth.map(item => item.totalPresencial);
+			var totalPresencial = presencialData.reduce((sum, value) => sum + value, 0)
+			
+			$scope.showDashCapacitacionByModalidad(totalVirtual, totalPresencial);
+			
+	    };
 		
+		$scope.listaMonthCapaByModalidad=[];
+		$scope.listaCapaByModalidadGeneral=[];
+		$scope.buildDashboardCapacitacionByModalidad =function(data) {
+			
+			$scope.listaMonthCapaByModalidad = data.listCapacitacionModalidad; 
+			
+			$scope.listaMonthCapaByModalidad = $scope.listaMonthCapaByModalidad.filter((value, index, self) => 
+    		index === self.findIndex((t) => t.monthYear === value.monthYear)
+			);
+			
+			var labels = $scope.listaMonthCapaByModalidad.map(item => item.monthYear.trim());
+			
+			var virtualData = $scope.listaMonthCapaByModalidad.map(item => item.totalVirtual);
+			var totalVirtual = virtualData.reduce((sum, value) => sum + value, 0)
+			
+			console.log("virtualData:"+virtualData);
+			console.log("totalVirtual:"+totalVirtual);
+			
+			var presencialData = $scope.listaMonthCapaByModalidad.map(item => item.totalPresencial);
+			var totalPresencial = presencialData.reduce((sum, value) => sum + value, 0)
+			
+			console.log("presencialData:"+presencialData);
+			console.log("totalPresencial:"+totalPresencial);
+			
+			
+			var lastMonth = $scope.findMonthFechaFinal();
+			var lastAnio = $scope.getAnio($scope.filtro.fechaFin);
+			
+			$scope.filtrocapa.monthYearMod = lastMonth + ' '+ lastAnio;
+			
+			$scope.onDashCapaByModalidad(lastMonth);
+		    
+		    //Build Table
+			$scope.mesesCapaModa = ["Por capacitación", ...labels , "Total"];
+			
+			$scope.dataCapacitacionModalidadRows = [
+			    { id: 1, cells: ["Presencial", ...presencialData, totalPresencial] },
+			    { id: 2, cells: ["Virtual", ...virtualData, totalVirtual] }
+			  ];
+			
+		}
 		
-		
+		$scope.showDashCapacitacionByModalidad =function(totalVirtual, totalPresencial) {
+			
+		    var chartData = {
+		        labels: ['Virtual', 'Presencial'],
+		        datasets: [{
+		            data: [totalVirtual, totalPresencial],
+		            backgroundColor: ['#FF6384', '#36A2EB'], 
+		            hoverBackgroundColor: ['#FF6384', '#36A2EB']
+		        }]
+		    };
+
+		    var chartOptions = {
+		            responsive: true,
+		            maintainAspectRatio: false, 
+		            plugins: {
+		                legend: {
+		                    position: 'top',
+		                    labels: {
+		                        font: {
+		                            size: 14 
+		                        }
+		                    }
+		                },
+		                tooltip: {
+		                    callbacks: {
+		                        label: function(tooltipItem) {
+		                            return tooltipItem.label + ': ' + tooltipItem.raw;
+		                        }
+		                    }
+		                }
+		            },
+		            layout: {
+		                padding: {
+		                    top: 10,
+		                    bottom: 10,
+		                    left: 10,
+		                    right: 10
+		                }
+		            }
+		        };
+
+		    angular.element(document).ready(function () {
+		        var ctx = document.getElementById('doughnutByModalidad').getContext('2d');
+		        new Chart(ctx, {
+		            type: 'doughnut',
+		            data: chartData,
+		            options: chartOptions
+		        });
+		    });
+			
+		}
 		
 		 //DASHBOARD
 		 // Define your chart data REDONDO EXAMPLE

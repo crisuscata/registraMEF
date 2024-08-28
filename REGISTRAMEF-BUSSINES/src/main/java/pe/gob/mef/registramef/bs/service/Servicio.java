@@ -17,6 +17,7 @@ import pe.gob.mef.registramef.bs.domain.ReporteVisitaDetalle;
 import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.transfer.DtEntidadSedesDto;
 import pe.gob.mef.registramef.bs.transfer.DtEntidadesDto;
+import pe.gob.mef.registramef.bs.transfer.DtReportResumenDto;
 import pe.gob.mef.registramef.bs.transfer.IDValorDto;
 import pe.gob.mef.registramef.bs.transfer.IIDValorDto;
 import pe.gob.mef.registramef.bs.transfer.MsProyectoInversionDto;
@@ -1736,6 +1737,14 @@ public interface Servicio {
 				Long idUserInt, Long idEstado, boolean flagAsis) throws Validador; 
 		
 		List<ReporteCapacitacionDetallado> getResumenCapacitacionDetallado(Long idUserInt, Long idEstado, boolean flagAsis,
+				Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
+				throws Validador;
+		
+		/*List<ReporteCapacitacionDetallado> getResumenCapacitacion(Long idUserInt, Long idEstado, boolean flagAsis,
+				Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
+				throws Validador;*/
+		
+		DtReportResumenDto getResumenCapacitacion(Long idUserInt, Long idEstado, boolean flagAsis,
 				Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
 				throws Validador;
 		

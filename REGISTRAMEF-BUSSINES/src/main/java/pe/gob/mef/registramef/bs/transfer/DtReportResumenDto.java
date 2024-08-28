@@ -12,6 +12,9 @@ public class DtReportResumenDto {
 	
 	private List<ReporteAsistenciaDetallado> listAsistencia;
 	private List<ReporteCapacitacionDetallado> listCapacitacion;
+	private List<ReporteCapacitacionDetallado> listCapacitacionEvolMensual;
+	private List<ReporteCapacitacionDetallado> listCapacitacionUsSegunTematica;
+	private List<ReporteCapacitacionDetallado> listCapacitacionModalidad;
 	private List<ReporteConsulta> listConsulta;
 	private List<ReporteVisitaDetalle> listVisita;
 	
@@ -20,6 +23,9 @@ public class DtReportResumenDto {
 		this.listCapacitacion = new ArrayList<>();
 		this.listConsulta = new ArrayList<>();
 		this.listVisita = new ArrayList<>();
+		this.listCapacitacionEvolMensual = new ArrayList<>();
+		this.listCapacitacionUsSegunTematica = new ArrayList<>();
+		this.listCapacitacionModalidad = new ArrayList<>();
 	}
 	
 	public List<ReporteAsistenciaDetallado> getListAsistencia() {
@@ -45,5 +51,29 @@ public class DtReportResumenDto {
 	}
 	public void setListVisita(List<ReporteVisitaDetalle> listVisita) {
 		this.listVisita = listVisita;
+	}
+
+	public List<ReporteCapacitacionDetallado> getListCapacitacionEvolMensual() {
+		return listCapacitacionEvolMensual;
+	}
+
+	public void setListCapacitacionEvolMensual(List<ReporteCapacitacionDetallado> listCapacitacionEvolMensual) {
+		this.listCapacitacionEvolMensual = listCapacitacionEvolMensual;
+	}
+
+	public List<ReporteCapacitacionDetallado> getListCapacitacionUsSegunTematica() {
+		return listCapacitacionUsSegunTematica;
+	}
+
+	public void setListCapacitacionUsSegunTematica(List<ReporteCapacitacionDetallado> listCapacitacionUsSegunTematica) {
+		this.listCapacitacionUsSegunTematica = listCapacitacionUsSegunTematica;
+	}
+
+	public List<ReporteCapacitacionDetallado> getListCapacitacionModalidad() {
+		return listCapacitacionModalidad;
+	}
+
+	public void setListCapacitacionModalidad(List<ReporteCapacitacionDetallado> listCapacitacionModalidad) {
+		this.listCapacitacionModalidad = listCapacitacionModalidad;
 	}
 }

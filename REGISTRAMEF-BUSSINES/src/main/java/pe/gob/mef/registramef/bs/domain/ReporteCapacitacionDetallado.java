@@ -40,7 +40,9 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 	// private String estadoTema = null;
 	private String userCrea = null;
 	private String sede = null;
+	private Long idSistAdmin = null;
 	private String sistAdmin = null;
+	private String abreviaturaAdmin = null;
 	private Timestamp fechaCrea = null;
 	private String estado = null;
 	// private Integer idEstado = null;
@@ -81,6 +83,13 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 	private String motivoEjecucion;
 	private String flagEjecucion;
 	// SPRINT02 FIN
+	
+	private String monthYear;
+	private Integer totalParticipants;
+	private Integer totalEvents;
+	
+	private Integer totalVirtual;
+	private Integer totalPresencial;
 
 	@Column(name = "FECHA_INI_PROGRAMADA", length = 7)
 	public Timestamp getFechaInicRepro() {
@@ -596,4 +605,67 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 		this.flagEjecucion = flagEjecucion;
 	}
 	// SPRINT02 FIN
+	
+	@Column(name = "ID_SIST_ADMI", insertable = false, updatable = false)
+	public Long getIdSistAdmin() {
+		return idSistAdmin;
+	}
+
+	public void setIdSistAdmin(Long idSistAdmin) {
+		this.idSistAdmin = idSistAdmin;
+	}
+
+	@Column(name = "SIST_ADMIN_ABREVIATURA", insertable = false, updatable = false)
+	public String getAbreviaturaAdmin() {
+		return abreviaturaAdmin;
+	}
+
+	public void setAbreviaturaAdmin(String abreviaturaAdmin) {
+		this.abreviaturaAdmin = abreviaturaAdmin;
+	}
+
+	@Column(name = "MONTH_YEAR", insertable = false, updatable = false)
+	public String getMonthYear() {
+		return monthYear;
+	}
+
+	public void setMonthYear(String monthYear) {
+		this.monthYear = monthYear;
+	}
+
+	@Column(name = "TOTAL_PARTICIPANTS", insertable = false, updatable = false)
+	public Integer getTotalParticipants() {
+		return totalParticipants;
+	}
+
+	public void setTotalParticipants(Integer totalParticipants) {
+		this.totalParticipants = totalParticipants;
+	}
+
+	@Column(name = "TOTAL_EVENTS", insertable = false, updatable = false)
+	public Integer getTotalEvents() {
+		return totalEvents;
+	}
+
+	public void setTotalEvents(Integer totalEvents) {
+		this.totalEvents = totalEvents;
+	}
+
+	@Column(name = "TOTAL_VIRTUAL", insertable = false, updatable = false)
+	public Integer getTotalVirtual() {
+		return totalVirtual;
+	}
+
+	public void setTotalVirtual(Integer totalVirtual) {
+		this.totalVirtual = totalVirtual;
+	}
+
+	@Column(name = "TOTAL_PRESENCIAL", insertable = false, updatable = false)
+	public Integer getTotalPresencial() {
+		return totalPresencial;
+	}
+
+	public void setTotalPresencial(Integer totalPresencial) {
+		this.totalPresencial = totalPresencial;
+	}
 }

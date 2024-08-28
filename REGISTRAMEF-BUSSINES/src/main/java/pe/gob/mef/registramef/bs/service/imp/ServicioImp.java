@@ -176,6 +176,7 @@ import pe.gob.mef.registramef.bs.resources.Messages;
 import pe.gob.mef.registramef.bs.service.Servicio;
 import pe.gob.mef.registramef.bs.transfer.DtEntidadSedesDto;
 import pe.gob.mef.registramef.bs.transfer.DtEntidadesDto;
+import pe.gob.mef.registramef.bs.transfer.DtReportResumenDto;
 import pe.gob.mef.registramef.bs.transfer.IDValorDto;
 import pe.gob.mef.registramef.bs.transfer.IIDValorDto;
 import pe.gob.mef.registramef.bs.transfer.MsProyectoInversionDto;
@@ -22645,6 +22646,69 @@ public class ServicioImp implements Servicio, Serializable {
 
 			return lstReporte;
 		}
+		
+		/*public List<ReporteCapacitacionDetallado> getResumenCapacitacion(Long idUserInt, Long idEstado,
+				boolean flagAsis, Date fechaIni, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro,
+				Integer minRegistro) throws Validador {
+
+			if (fechaIni != null && fechaFin != null) {
+				if (fechaIni.after(fechaFin)) {
+					Date fechatmp = fechaIni;
+					fechaIni = fechaFin;
+					fechaFin = fechatmp;
+				}
+			} else if (fechaIni != null) {
+				fechaFin = fechaIni;
+			} else if (fechaFin != null) {
+				fechaIni = fechaFin;
+				fechaFin = fechaIni;
+			}
+			List<ReporteCapacitacionDetallado> lstReporte = new ArrayList<ReporteCapacitacionDetallado>();
+
+			lstReporte = reporteServicioDao.getResumenCapacitacion(idUserInt, idEstado, flagAsis, fechaIni,
+					fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+
+			return lstReporte;
+		}*/
+		
+		
+		public DtReportResumenDto getResumenCapacitacion(Long idUserInt, Long idEstado,
+				boolean flagAsis, Date fechaIni, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro,
+				Integer minRegistro) throws Validador {
+			DtReportResumenDto result = new DtReportResumenDto();
+			if (fechaIni != null && fechaFin != null) {
+				if (fechaIni.after(fechaFin)) {
+					Date fechatmp = fechaIni;
+					fechaIni = fechaFin;
+					fechaFin = fechatmp;
+				}
+			} else if (fechaIni != null) {
+				fechaFin = fechaIni;
+			} else if (fechaFin != null) {
+				fechaIni = fechaFin;
+				fechaFin = fechaIni;
+			}
+			
+			List<ReporteCapacitacionDetallado> lstCapaEvolMensual = reporteServicioDao.getResumenCapacitacion(idUserInt, idEstado, flagAsis, fechaIni,
+					fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			
+			result.getListCapacitacionEvolMensual().addAll(lstCapaEvolMensual);
+			
+			List<ReporteCapacitacionDetallado> lstCapaUserByTematica = reporteServicioDao.getResumenCapacitacionUsersByTematica(idUserInt, idEstado, flagAsis, fechaIni,
+					fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			
+			result.getListCapacitacionUsSegunTematica().addAll(lstCapaUserByTematica);
+			
+			
+			List<ReporteCapacitacionDetallado> lstCapaByModalidad = reporteServicioDao.getResumenCapacitacionByModalidad(idUserInt, idEstado, flagAsis, fechaIni,
+					fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			
+			result.getListCapacitacionModalidad().addAll(lstCapaByModalidad);
+			
+			
+			return result;
+		}
+		
 		
 		public Long getTotalResumenConsultas(Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Long idUserInt,
 				Long idEstado) throws Validador {// SPRINT_8.3
