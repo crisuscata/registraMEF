@@ -22672,7 +22672,7 @@ public class ServicioImp implements Servicio, Serializable {
 		}*/
 		
 		
-		public DtReportResumenDto getResumenCapacitacion(Long idUserInt, Long idEstado,
+		public DtReportResumenDto getResumenReport(Long idUserInt, Long idEstado,
 				boolean flagAsis, Date fechaIni, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro,
 				Integer minRegistro) throws Validador {
 			DtReportResumenDto result = new DtReportResumenDto();
@@ -22704,6 +22704,14 @@ public class ServicioImp implements Servicio, Serializable {
 					fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			
 			result.getListCapacitacionModalidad().addAll(lstCapaByModalidad);
+			
+			List<ReporteVisitaDetalle> lstReunionTrabajoByEvolMensual = reporteServicioDao.getResumenReunionTrabajoEvolMensual(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			
+			result.getListReunionTrabajoEvolMensual().addAll(lstReunionTrabajoByEvolMensual);
+			
+			List<ReporteVisitaDetalle> lstReunionTrabajoByTematica = reporteServicioDao.getResumenReunionTrabajoUsersByTematica(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			
+			result.getListReunionTrabajoUsSegunTematica().addAll(lstReunionTrabajoByTematica);
 			
 			
 			return result;

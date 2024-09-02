@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Query;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -1047,9 +1045,140 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		return lista;
 	}
 
-//SPRINT22 FIN
+	public List<ReporteVisitaDetalle> getResumenReunionTrabajoEvolMensual(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador {
+		List<ReporteVisitaDetalle> lstResult = new ArrayList<>();
+		StringBuffer sb = new StringBuffer(500);
+		List<Object> hs = new ArrayList<Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sb.append("SELECT " + 
+				"    TO_CHAR(TRUNC(a.FECHA_VISITA, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH') AS Month_Year, " + 
+				"    COUNT(DISTINCT a.id_visita) AS total " + 
+				"FROM ( " + 
+				"select  " + 
+				"        a.FECHA_VISITA, " + 
+				"        a.id_visita " + 
+				"FROM REGISTRAMEF.DT_VISITAS A " + 
+				"LEFT JOIN DT_VISITAS_USUINTERNOS UI ON A.ID_VISITA=UI.ID_VISITA AND UI.ESTADO=3  " + 
+				"LEFT JOIN DT_VISITAS_USUEXTERNOS VUEX ON A.ID_VISITA=VUEX.ID_VISITA AND VUEX.ESTADO=3 " + 
+				"where A.ESTADO =  ").append(estadoFinalizado);
 
-//SPRINT24 INICIO
+		if (fechaInicio != null && fechaFin != null) {
+			sb.append(" AND TRUNC(A.FECHA_VISITA) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
+					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
+		}
+
+		if (idSede != null && idSede.longValue() > 0) {
+			sb.append(" AND A.ID_SEDE = ? ");
+			hs.add(idSede);
+		}
+
+		sb.append(" GROUP BY " + 
+				"        a.FECHA_VISITA, " + 
+				"        a.id_visita " + 
+				"    ORDER BY a.FECHA_VISITA DESC " + 
+				") a " + 
+				"GROUP BY " + 
+				"    TO_CHAR(TRUNC(a.FECHA_VISITA, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH') " + 
+				"ORDER BY " + 
+				"    MIN(TRUNC(a.FECHA_VISITA, 'MM')) ");
+
+		Object param[] = new Object[hs.size()];
+		hs.toArray(param);
+		List<Object> lstObject = super.findNative(sb.toString(), param);
+		
+		if(lstObject!=null && !lstObject.isEmpty()) {
+			Long i = 0L;
+			for (Object result : lstObject) {
+				Object[] object = (Object[]) result;
+				
+				ReporteVisitaDetalle objResult = new ReporteVisitaDetalle();
+				
+				objResult.setId(i);
+				objResult.setMonthYear((String) object[0]);
+				
+				BigDecimal cantidaTtotal = (BigDecimal) object[1];
+				objResult.setTotal(cantidaTtotal != null ? cantidaTtotal.intValue() : null);
+				
+				
+				lstResult.add(objResult);
+				i++;
+				
+			}
+		}
+
+		return lstResult;
+	}
+	
+	public List<ReporteVisitaDetalle> getResumenReunionTrabajoUsersByTematica(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador {
+		List<ReporteVisitaDetalle> lstResult = new ArrayList<>();
+		StringBuffer sb = new StringBuffer(500);
+		List<Object> hs = new ArrayList<Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sb.append("SELECT " + 
+				"    TO_CHAR(TRUNC(K.FECHA_VISITA, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH') AS Month_Year, " + 
+				"    J.ABREVIATURA, " + 
+				"    COUNT(B.ID_USUEXTERNO) AS total " + 
+				"FROM " + 
+				"    REGISTRAMEF.Dt_Visitas_Usuinternos A " + 
+				"LEFT JOIN " + 
+				"     REGISTRAMEF.DT_VISITAS_USUEXTERNOS B ON B.ID_VISITA = A.ID_VISITA " + 
+				"LEFT JOIN " + 
+				"     REGISTRAMEF.DT_vISITAS K ON K.ID_VISITA = A.ID_VISITA " + 
+				"LEFT JOIN " + 
+				"    REGISTRAMEF.MS_SEDES G ON G.ID_SEDE = K.ID_SEDE " + 
+				"LEFT JOIN " + 
+				"     REGISTRAMEF.MS_TEMA H ON H.ID_TEMA=A.ID_TEMA " + 
+				"LEFT JOIN " + 
+				"     REGISTRAMEF.MS_SIS_ADMISTRATIVO J ON J.ID_SIST_ADMI=H.ID_SIST_ADMI " + 
+				"WHERE " + 
+				"  B.ESTADO=3 " + 
+				"  AND   A.ESTADO=3 " + 
+				"   and  K.ESTADO =  ").append(estadoFinalizado);
+
+		if (fechaInicio != null && fechaFin != null) {
+			sb.append(" AND TRUNC(K.FECHA_VISITA) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
+					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
+		}
+
+		if (idSede != null && idSede.longValue() > 0) {
+			sb.append(" AND A.ID_SEDE = ? ");
+			hs.add(idSede);
+		}
+
+		sb.append(" GROUP BY  " + 
+				"    TO_CHAR(TRUNC(K.FECHA_VISITA, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH'),  " + 
+				"    J.ABREVIATURA " + 
+				"ORDER BY  " + 
+				"    MIN(TRUNC(K.FECHA_VISITA, 'MM'))");
+
+		Object param[] = new Object[hs.size()];
+		hs.toArray(param);
+		List<Object> lstObject = super.findNative(sb.toString(), param);
+		
+		if(lstObject!=null && !lstObject.isEmpty()) {
+			Long i = 0L;
+			for (Object result : lstObject) {
+				Object[] object = (Object[]) result;
+				
+				ReporteVisitaDetalle objResult = new ReporteVisitaDetalle();
+				
+				objResult.setId(i);
+				objResult.setMonthYear((String) object[0]);
+				objResult.setAbreviatura((String) object[1]);
+				
+				BigDecimal cantidaTtotal = (BigDecimal) object[2];
+				objResult.setTotal(cantidaTtotal != null ? cantidaTtotal.intValue() : null);
+				
+				lstResult.add(objResult);
+				i++;
+				
+			}
+		}
+
+		return lstResult;
+	}
 
 //public Long getTotalResumenCapacitacionDetallado(Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede)throws Validador {//SPRINT_8
 	public Long getTotalResumenCapacitacionDetallado(Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede,

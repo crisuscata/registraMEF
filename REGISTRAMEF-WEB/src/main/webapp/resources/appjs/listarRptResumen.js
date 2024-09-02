@@ -570,6 +570,11 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			  monthYearMod:null
 		}; 
 	  
+	  $scope.filtroreutrabajo ={
+			  monthYear:null,
+			  monthYearMod:null
+		};
+	  
 	  $scope.dato ={
 			  ejecutora: null,
 			  idproveeTxt: null,
@@ -1584,6 +1589,8 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 				$scope.buildDashboardCapacitacion(res.data);
 				$scope.buildUsuarioCapacitadoPorTematica(res.data);
 				$scope.buildDashboardCapacitacionByModalidad(res.data);
+				$scope.buildDashboardReunionTrabajoEvolMensual(res.data);
+				$scope.buildDashboardReunionTrabajoPorTematica(res.data);
 				
 				/*if (res.data!=null && res.data.listCapacitacion.length > 0) {
 					$scope.listCapacitacion = res.data.listCapacitacion.filter(c => c.asitio === 'SI' && c.estado === 'FINALIZADO');
@@ -1693,7 +1700,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		    };
 		};
 
-		$scope.showReportResumen2 = function() {
+		/*$scope.showReportResumen2 = function() {
 		    var listCapacitacion = [
 		        {
 		            "fechaInic": 1721223000000, // July 2024 (timestamp for a date in July)
@@ -1721,7 +1728,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		    var result = $scope.buildCapacitacionSummary(listCapacitacion);
 
 		    console.log(JSON.stringify(result));
-		};
+		};*/
 
 
 		
@@ -1822,7 +1829,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 	        var labels = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.abreviaturaAdmin.trim());
 	        var participantsData = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.totalParticipants);
 	        
-	        $scope.showDashUsuarioCapacitadoPorTematica(labels, participantsData);
+	        $scope.showDashboardBar(labels, participantsData, 'barChartCapaByTematica', 'Eventos');
 	    };
 
 		
@@ -1844,9 +1851,9 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 		}
 		
-		$scope.showDashUsuarioCapacitadoPorTematica = function(labels, participantsData){
+		$scope.showDashboardBar = function(labels, data, idElementHTML, nameSerie){
 			
-			var series = ['Eventos'];
+			var series = [nameSerie];
 	        
 		    var options = {
 		        scales: {
@@ -1857,7 +1864,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		    };
 
 		    angular.element(document).ready(function () {
-		        var ctx = document.getElementById('barChartCapaByTematica').getContext('2d');
+		        var ctx = document.getElementById(idElementHTML).getContext('2d');
 		        new Chart(ctx, {
 		            type: 'bar',
 		            data: {
@@ -1865,7 +1872,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		                datasets: series.map(function(series, index) {
 		                    return {
 		                        label: series,
-		                        data: participantsData,
+		                        data: data,
 		                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
 		                        borderColor: 'rgba(75, 192, 192, 1)',
 		                        borderWidth: 1
@@ -1989,6 +1996,118 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		    });
 			
 		}
+		
+		$scope.buildDashboardReunionTrabajoEvolMensual =function(data) {
+			
+			var listReunionTrabajoEvolMensual = data.listReunionTrabajoEvolMensual; 
+			
+			console.log("listReunionTrabajoEvolMensual :" + JSON.stringify(listReunionTrabajoEvolMensual));
+			
+			var labels = listReunionTrabajoEvolMensual.map(item => item.monthYear.trim());
+			var totalData = listReunionTrabajoEvolMensual.map(item => item.total);
+			
+			
+			//BUILD DASHBOARD Evolución Mensual
+			
+			var chartOptions = {
+			        responsive: true,
+			        scales: {
+			            y: {
+			                beginAtZero: true
+			            }
+			        }
+			    };
+
+			    var chartData = {
+			        labels: labels,
+			        datasets: [
+			            {
+			                type: 'bar',
+			                label: 'Total',
+			                data: totalData,
+			                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+			                borderColor: 'rgba(75, 192, 192, 1)',
+			                borderWidth: 1
+			            },
+			            {
+		                    type: 'line',
+		                    label: 'Total',
+		                    data: totalData,
+		                    borderColor: 'rgba(255, 99, 132, 1)',
+		                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+		                    borderWidth: 2,
+		                    fill: false
+		                }
+			        ]
+			    };
+
+			    angular.element(document).ready(function () {
+			        var ctx = document.getElementById('mixedChartReunionTraEvolMensual').getContext('2d');
+			        new Chart(ctx, {
+			            type: 'bar',
+			            data: chartData,
+			            options: chartOptions
+			        });
+			    });
+			
+			//Build Table
+			$scope.mesesReunionTra = [" ", ...labels , "Total"];
+			
+			$scope.dataReunTrabajRows = [
+			    { id: 1, cells: ["Reuniones de Trabajo", ...totalData, totalData.reduce((sum, value) => sum + value, 0)] }
+			  ];
+			
+		}
+		
+		/*$scope.onDashReuTrabajByTematica = function(month) {
+	        if (month === 0) {
+	            var listReunionTrabajoUsSegunTematicaByLastMonth = $scope.listReunionTrabajoUsSegunTematica;
+	        } else {
+	            var listReunionTrabajoUsSegunTematicaByLastMonth = $scope.listReunionTrabajoUsSegunTematica.filter(item => item.monthYear.includes(month));
+	        }
+	        
+	        var labels = listReunionTrabajoUsSegunTematica.map(item => item.abreviatura.trim());
+	        var data = listReunionTrabajoUsSegunTematicaByLastMonth.map(item => item.total);
+	        
+	        $scope.showDashboardBar(labels, data, 'barChartReuTrabajoByTematica', 'Usuarios');
+	    };*/
+	    
+	    $scope.onDashReuTrabajByTematica = function(month) {
+	        let listReunionTrabajoUsSegunTematicaByLastMonth;
+	        
+	        if (month === 0) {
+	            listReunionTrabajoUsSegunTematicaByLastMonth = $scope.listReunionTrabajoUsSegunTematica;
+	        } else {
+	            listReunionTrabajoUsSegunTematicaByLastMonth = $scope.listReunionTrabajoUsSegunTematica.filter(item => item.monthYear.includes(month));
+	        }
+	        
+	        var labels = listReunionTrabajoUsSegunTematicaByLastMonth.map(item => item.abreviatura.trim());
+	        var data = listReunionTrabajoUsSegunTematicaByLastMonth.map(item => item.total);
+	        
+	        $scope.showDashboardBar(labels, data, 'barChartReuTrabajoByTematica', 'Usuarios');
+	    };
+
+	    
+		
+		$scope.listReunionTrabajoUsSegunTematica=[];
+		$scope.listaReuTrabByTematica=[];
+		$scope.buildDashboardReunionTrabajoPorTematica = function(data){
+			$scope.listReunionTrabajoUsSegunTematica = data.listReunionTrabajoUsSegunTematica; 
+			
+			$scope.listaReuTrabByTematica = $scope.listReunionTrabajoUsSegunTematica.filter((value, index, self) => 
+		    		index === self.findIndex((t) => t.monthYear === value.monthYear)
+			);
+
+			var lastMonth = $scope.findMonthFechaFinal();
+			var lastAnio = $scope.getAnio($scope.filtro.fechaFin);
+			
+			$scope.filtroreutrabajo.monthYear = lastMonth + ' '+ lastAnio;
+			
+			$scope.onDashReuTrabajByTematica(lastMonth);
+			
+		}
+		
+		
 		
 		 //DASHBOARD
 		 // Define your chart data REDONDO EXAMPLE

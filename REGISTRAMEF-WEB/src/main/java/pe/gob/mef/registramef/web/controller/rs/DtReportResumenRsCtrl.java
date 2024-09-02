@@ -357,7 +357,7 @@ public class DtReportResumenRsCtrl {
 					PropertiesMg.DEFOULT_PRTPARAMETROS_IDTIPO_SERVICIO_VISITA); */
 			
 			
-			DtReportResumenDto datos = servicio.getResumenCapacitacion(idUserInt, idEstado, flagAsis, fechaInicio, fechaFin, idSisAdmin, idSede, 0, 0);
+			DtReportResumenDto datos = servicio.getResumenReport(idUserInt, idEstado, flagAsis, fechaInicio, fechaFin, idSisAdmin, idSede, 0, 0);
 					
 					/*new DtReportResumenDto();
 			

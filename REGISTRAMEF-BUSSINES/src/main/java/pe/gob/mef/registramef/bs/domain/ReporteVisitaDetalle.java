@@ -55,6 +55,11 @@ public class ReporteVisitaDetalle implements java.io.Serializable {
 	
 	private Date fechaVisitaRepro = null;
 	
+	private String monthYear;
+	private Integer total;
+	private String abreviatura;
+	
+	
 	@Column(name = "FECHA_PROGRAMADA", length = 7) //SPRINT_4
 	public Date getFechaVisitaRepro() {
 		return fechaVisitaRepro;
@@ -372,6 +377,33 @@ public class ReporteVisitaDetalle implements java.io.Serializable {
 
 	public void setFechaFinalizacion(Timestamp fechaFinalizacion) {
 		this.fechaFinalizacion = fechaFinalizacion;
+	}
+
+	@Column(name = "MONTH_YEAR", insertable = false, updatable = false)
+	public String getMonthYear() {
+		return monthYear;
+	}
+
+	public void setMonthYear(String monthYear) {
+		this.monthYear = monthYear;
+	}
+
+	@Column(name = "TOTAL", insertable = false, updatable = false)
+	public Integer getTotal() {
+		return total;
+	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
+
+	@Column(name = "ABREVIATURA", insertable = false, updatable = false)
+	public String getAbreviatura() {
+		return abreviatura;
+	}
+
+	public void setAbreviatura(String abreviatura) {
+		this.abreviatura = abreviatura;
 	}
 
 //	@Column(name = "ESTADO_PARTI", insertable = false, updatable = false)

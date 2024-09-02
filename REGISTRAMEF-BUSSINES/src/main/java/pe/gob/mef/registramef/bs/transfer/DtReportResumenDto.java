@@ -15,17 +15,19 @@ public class DtReportResumenDto {
 	private List<ReporteCapacitacionDetallado> listCapacitacionEvolMensual;
 	private List<ReporteCapacitacionDetallado> listCapacitacionUsSegunTematica;
 	private List<ReporteCapacitacionDetallado> listCapacitacionModalidad;
-	private List<ReporteConsulta> listConsulta;
-	private List<ReporteVisitaDetalle> listVisita;
+	private List<ReporteVisitaDetalle> listReunionTrabajoEvolMensual;
+	private List<ReporteVisitaDetalle> listReunionTrabajoUsSegunTematica;
+	/*private List<ReporteConsulta> listConsulta;
+	private List<ReporteVisitaDetalle> listVisita;*/
 	
 	public DtReportResumenDto() {
 		this.listAsistencia = new ArrayList<>();
 		this.listCapacitacion = new ArrayList<>();
-		this.listConsulta = new ArrayList<>();
-		this.listVisita = new ArrayList<>();
 		this.listCapacitacionEvolMensual = new ArrayList<>();
 		this.listCapacitacionUsSegunTematica = new ArrayList<>();
 		this.listCapacitacionModalidad = new ArrayList<>();
+		this.listReunionTrabajoEvolMensual  = new ArrayList<>();
+		this.listReunionTrabajoUsSegunTematica  = new ArrayList<>();
 	}
 	
 	public List<ReporteAsistenciaDetallado> getListAsistencia() {
@@ -40,19 +42,6 @@ public class DtReportResumenDto {
 	public void setListCapacitacion(List<ReporteCapacitacionDetallado> listCapacitacion) {
 		this.listCapacitacion = listCapacitacion;
 	}
-	public List<ReporteConsulta> getListConsulta() {
-		return listConsulta;
-	}
-	public void setListConsulta(List<ReporteConsulta> listConsulta) {
-		this.listConsulta = listConsulta;
-	}
-	public List<ReporteVisitaDetalle> getListVisita() {
-		return listVisita;
-	}
-	public void setListVisita(List<ReporteVisitaDetalle> listVisita) {
-		this.listVisita = listVisita;
-	}
-
 	public List<ReporteCapacitacionDetallado> getListCapacitacionEvolMensual() {
 		return listCapacitacionEvolMensual;
 	}
@@ -75,5 +64,21 @@ public class DtReportResumenDto {
 
 	public void setListCapacitacionModalidad(List<ReporteCapacitacionDetallado> listCapacitacionModalidad) {
 		this.listCapacitacionModalidad = listCapacitacionModalidad;
+	}
+
+	public List<ReporteVisitaDetalle> getListReunionTrabajoEvolMensual() {
+		return listReunionTrabajoEvolMensual;
+	}
+
+	public void setListReunionTrabajoEvolMensual(List<ReporteVisitaDetalle> listReunionTrabajoEvolMensual) {
+		this.listReunionTrabajoEvolMensual = listReunionTrabajoEvolMensual;
+	}
+
+	public List<ReporteVisitaDetalle> getListReunionTrabajoUsSegunTematica() {
+		return listReunionTrabajoUsSegunTematica;
+	}
+
+	public void setListReunionTrabajoUsSegunTematica(List<ReporteVisitaDetalle> listReunionTrabajoUsSegunTematica) {
+		this.listReunionTrabajoUsSegunTematica = listReunionTrabajoUsSegunTematica;
 	}
 }

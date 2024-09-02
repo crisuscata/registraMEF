@@ -309,6 +309,51 @@
 			
 			</md-grid-tile>
 			
+			
+			<md-grid-tile class="gray" style="padding: 16px;" colspan="2">
+			  <md-grid-tile-header>
+			    <h3>Evoluci&oacute;n Mensual Reuni&oacute;n de trabajo</h3>
+			  </md-grid-tile-header>
+			
+			  <!-- Canvas for the chart -->
+			  <canvas id="mixedChartReunionTraEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
+			
+			   <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+				  <tr>
+				    <th ng-repeat="m in mesesReunionTra track by $index">{{m}}</th>
+				  </tr>
+				  
+				  <tr ng-repeat="row in dataReunTrabajRows track by row.id">
+				    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
+				  </tr>
+			  </table>
+			  
+			</md-grid-tile>
+			
+			
+			<md-grid-tile class="gray" style="padding: 16px;">
+			  <md-grid-tile-header>
+			    <h3>Usuarios externos seg&uacute;n tem&aacute;tica</h3>
+			    
+			    <md-select
+				    ng-model="filtroreutrabajo.monthYear"
+				    ng-change="onDashReuTrabajByTematica(filtroreutrabajo.monthYear)" 
+				    placeholder="Mes"> 
+				    <md-option ng-value="0">Todos los Meses</md-option>
+				    <md-option
+				        ng-repeat="item in listaReuTrabByTematica" ng-value="item.monthYear">
+				        {{item.monthYear}} 
+				    </md-option>
+				</md-select>
+			    
+			  </md-grid-tile-header>
+			
+			  <canvas id="barChartReuTrabajoByTematica" width="400" height="200"></canvas>
+			
+			</md-grid-tile>
+			
+
+			
         
 </md-grid-list> 
 

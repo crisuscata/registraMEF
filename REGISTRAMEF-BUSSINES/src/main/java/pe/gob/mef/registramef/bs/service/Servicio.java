@@ -1744,7 +1744,7 @@ public interface Servicio {
 				Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
 				throws Validador;*/
 		
-		DtReportResumenDto getResumenCapacitacion(Long idUserInt, Long idEstado, boolean flagAsis,
+		DtReportResumenDto getResumenReport(Long idUserInt, Long idEstado, boolean flagAsis,
 				Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
 				throws Validador;
 		
