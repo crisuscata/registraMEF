@@ -969,7 +969,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 				+ "where A.ESTADO =  ").append(estadoFinalizado);
 
 		if (fechaInicio != null && fechaFin != null) {
-			sb.append(" AND TRUNC(A.FECHA_INIC) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
+			sb.append(" AND TRUNC(A.FECHA_ASISTENCIA) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
 					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
 		}
 
