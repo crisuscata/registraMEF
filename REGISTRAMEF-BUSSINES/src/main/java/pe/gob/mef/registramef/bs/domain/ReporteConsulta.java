@@ -47,7 +47,7 @@ public class ReporteConsulta implements java.io.Serializable {
 	private String distritoEnt=null;
 	
 	private Date fechaSoli = null;//SPRINT01
-	
+	private Integer cantidadTotal = null;
 	
 	@Column(name = "DEPARTAMENTO_ENTIDAD", insertable=false, updatable=false)
 	public String getDepartamentoEnt() {
@@ -299,5 +299,15 @@ public class ReporteConsulta implements java.io.Serializable {
 		this.fechaSoli = fechaSoli;
 	}	
 	//SPRINT01  FIN
+
+	@Column(name = "CANTIDAD_TOTAL", insertable = false, updatable = false)
+	public Integer getCantidadTotal() {
+		return cantidadTotal;
+	}
+
+
+	public void setCantidadTotal(Integer cantidadTotal) {
+		this.cantidadTotal = cantidadTotal;
+	}
 
 }

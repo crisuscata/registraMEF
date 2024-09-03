@@ -166,6 +166,7 @@ import pe.gob.mef.registramef.bs.domain.MsUbigeo;
 import pe.gob.mef.registramef.bs.domain.MsUbigeoId;
 import pe.gob.mef.registramef.bs.domain.MsUsuarios;
 import pe.gob.mef.registramef.bs.domain.PrtParametros;
+import pe.gob.mef.registramef.bs.domain.ReporteAsistencia;
 import pe.gob.mef.registramef.bs.domain.ReporteAsistenciaDetallado;
 import pe.gob.mef.registramef.bs.domain.ReporteCapacitacionDetallado;
 import pe.gob.mef.registramef.bs.domain.ReporteConsulta;
@@ -22691,27 +22692,28 @@ public class ServicioImp implements Servicio, Serializable {
 			
 			List<ReporteCapacitacionDetallado> lstCapaEvolMensual = reporteServicioDao.getResumenCapacitacion(idUserInt, idEstado, flagAsis, fechaIni,
 					fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
-			
 			result.getListCapacitacionEvolMensual().addAll(lstCapaEvolMensual);
 			
 			List<ReporteCapacitacionDetallado> lstCapaUserByTematica = reporteServicioDao.getResumenCapacitacionUsersByTematica(idUserInt, idEstado, flagAsis, fechaIni,
 					fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
-			
 			result.getListCapacitacionUsSegunTematica().addAll(lstCapaUserByTematica);
 			
 			
 			List<ReporteCapacitacionDetallado> lstCapaByModalidad = reporteServicioDao.getResumenCapacitacionByModalidad(idUserInt, idEstado, flagAsis, fechaIni,
 					fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
-			
 			result.getListCapacitacionModalidad().addAll(lstCapaByModalidad);
 			
 			List<ReporteVisitaDetalle> lstReunionTrabajoByEvolMensual = reporteServicioDao.getResumenReunionTrabajoEvolMensual(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
-			
 			result.getListReunionTrabajoEvolMensual().addAll(lstReunionTrabajoByEvolMensual);
 			
 			List<ReporteVisitaDetalle> lstReunionTrabajoByTematica = reporteServicioDao.getResumenReunionTrabajoUsersByTematica(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
-			
 			result.getListReunionTrabajoUsSegunTematica().addAll(lstReunionTrabajoByTematica);
+			
+			List<ReporteAsistencia> lstAsistenciaTecnicaEvolMensual = reporteServicioDao.getResumenAsistenciaTecnicaEvolMensual(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			result.getListReporteAsistenciaTecnicaEvolMensual().addAll(lstAsistenciaTecnicaEvolMensual);
+			
+		/*	List<ReporteConsulta> lstEstadisticaPorTema = reporteServicioDao.getResumenEstadisticaPorTema(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			result.getListEstadisticaPorTema().addAll(lstEstadisticaPorTema); */
 			
 			
 			return result;

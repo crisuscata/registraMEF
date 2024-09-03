@@ -796,17 +796,24 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		sb.append("SELECT  " + 
-				"    TO_CHAR(TRUNC(a.FECHA_INIC, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH') AS Month_Year,  " + 
-				"    SAD.abreviatura as SIST_ADMIN_ABREVIATURA,  " + 
-				"    SUM(a.cant_partic_asist) AS Total_Participants  " + 
-				"FROM   " + 
-				"    registramef.dt_capacitacion a  " + 
-				"INNER JOIN   " + 
-				"    ms_sis_admistrativo SAD ON SAD.id_sist_admi = a.id_sist_adm  " + 
-				"LEFT JOIN   " + 
-				"    registramef.dt_capa_usuexternos VUEX ON A.id_capacitacion = VUEX.id_capacitacion    ");
-		sb.append(" WHERE  A.ESTADO = ").append(estadoFinalizado);
+		sb.append("WITH ranked_data AS ( "
+				+ "    SELECT "
+				+ "        TO_CHAR(TRUNC(A.FECHA_INIC, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH') AS Month_Year, "
+				+ "        J.ABREVIATURA, "
+				+ "        A.CANT_PARTIC_ASIST, "
+				+ "        A.ID_CAPACITACION, "
+				+ "        ROW_NUMBER() OVER (PARTITION BY A.ID_CAPACITACION, J.ABREVIATURA ORDER BY A.FECHA_INIC) AS RN "
+				+ "    FROM "
+				+ "        REGISTRAMEF.Dt_CAPACITACION A "
+				+ "    LEFT JOIN "
+				+ "        REGISTRAMEF.DT_CAPA_TEMAS K ON K.ID_CAPACITACION = A.ID_CAPACITACION "
+				+ "    LEFT JOIN "
+				+ "        REGISTRAMEF.MS_SEDES G ON G.ID_SEDE = A.ID_SEDE "
+				+ "    LEFT JOIN "
+				+ "        REGISTRAMEF.MS_SIS_ADMISTRATIVO J ON J.ID_SIST_ADMI = K.ID_SIST_ADMI "
+				+ "    WHERE "
+				+ "      K.ESTADO = 3 "
+				+ "      AND  A.ESTADO = ").append(estadoFinalizado);
 
 		if (fechaInicio != null && fechaFin != null) {
 			sb.append(" AND TRUNC(A.FECHA_INIC) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
@@ -814,20 +821,23 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		}
 
 		if (idSede != null && idSede.longValue() > 0) {
-			sb.append(" and A.ID_SEDE =  ").append(idSede);
+			sb.append(" AND A.ID_SEDE =  ").append(idSede);
 		}
 
-		
-		if (flagAsis) {
-			sb.append(" and VUEX.FLAG_ASISTENCIA = 1 ");
-
-		}
-
-		sb.append("  GROUP BY  " + 
-				"    TO_CHAR(TRUNC(a.FECHA_INIC, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH'), " + 
-				"    SAD.abreviatura  " + 
-				"ORDER BY  " + 
-				"    MIN(TRUNC(a.FECHA_INIC, 'MM'))"); 
+		sb.append(" ) "
+				+ "SELECT "
+				+ "    Month_Year, "
+				+ "    ABREVIATURA, "
+				+ "    SUM(CANT_PARTIC_ASIST) AS TOTAL_PARTICIPANTES "
+				+ "FROM "
+				+ "    ranked_data "
+				+ "WHERE "
+				+ "    RN = 1 "
+				+ "GROUP BY "
+				+ "    Month_Year, "
+				+ "    ABREVIATURA "
+				+ "ORDER BY "
+				+ "    TO_DATE(Month_Year, 'Month YYYY', 'NLS_DATE_LANGUAGE=SPANISH')"); 
 
 		Object param[] = new Object[hs.size()];
 		hs.toArray(param);
@@ -931,6 +941,216 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 				i++;
 			}
 			
+			
+		}
+		
+		return lstResult;
+	}
+	
+	@Override
+	public List<ReporteAsistencia> getResumenAsistenciaTecnicaEvolMensual(Long idEstado, Long idUserInt,
+																			Date fechaInicio, Date fechaFin, 
+																			Long idSistAdmin, Long idSede, 
+																			Integer maxRegistro, Integer minRegistro)
+																			throws Validador {
+		List<ReporteAsistencia> lstResult = new ArrayList<>();
+		
+		StringBuffer sb = new StringBuffer(400);
+		List<Object> hs = new ArrayList<Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sb.append("SELECT "
+				+ "    TO_CHAR(TRUNC(a.FECHA_ASISTENCIA, 'MM'), 'Month YYYY') AS Month_Year, "
+				+ "    COUNT(DISTINCT a.id_ASISTENCIA) AS total "
+				+ "FROM ( "
+				+ "select "
+				+ "        a.FECHA_ASISTENCIA, "
+				+ "        a.id_ASISTENCIA "
+				+ "FROM REGISTRAMEF.DT_ASISTENCIA A "
+				+ "where A.ESTADO =  ").append(estadoFinalizado);
+
+		if (fechaInicio != null && fechaFin != null) {
+			sb.append(" AND TRUNC(A.FECHA_INIC) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
+					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
+		}
+
+		if (idSede != null && idSede.longValue() > 0) {
+			sb.append(" and A.ID_SEDE =  ").append(idSede);
+		}
+
+		sb.append("GROUP BY "
+				+ "        a.FECHA_ASISTENCIA, "
+				+ "        a.id_ASISTENCIA "
+				+ "    ORDER BY a.FECHA_ASISTENCIA DESC "
+				+ ") a "
+				+ "GROUP BY "
+				+ "    TO_CHAR(TRUNC(a.FECHA_ASISTENCIA, 'MM'), 'Month YYYY') "
+				+ "ORDER BY "
+				+ "    MIN(TRUNC(a.FECHA_ASISTENCIA, 'MM'))"); 
+
+		Object param[] = new Object[hs.size()];
+		hs.toArray(param);
+		List<Object> lstObject = super.findNative(sb.toString(), param);
+		
+		if(lstObject!=null && !lstObject.isEmpty()) {
+			for (Object result : lstObject) {
+				Object[] object = (Object[]) result;
+				
+				ReporteAsistencia objResult = new ReporteAsistencia();
+				
+				objResult.setMonthYear((String) object[0]);
+				
+				BigDecimal total = (BigDecimal) object[1];
+				objResult.setTotal(total != null ? total.intValue() : null);
+				
+				
+				lstResult.add(objResult);
+			}
+			
+		}
+		
+		return lstResult;
+	}
+	
+	
+	@Override
+	public List<ReporteConsulta> getResumenEstadisticaPorTema(Long idEstado, Long idUserInt,
+																			Date fechaInicio, Date fechaFin, 
+																			Long idSistAdmin, Long idSede, 
+																			Integer maxRegistro, Integer minRegistro)
+																			throws Validador {
+		List<ReporteConsulta> lstResult = new ArrayList<>();
+		
+		StringBuffer sb = new StringBuffer(400);
+		List<Object> hs = new ArrayList<Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sb.append("WITH combined_data AS ( "
+				+ "    SELECT  "
+				+ "        B.DESCRIPCION AS SIST_ADMIN, "
+				+ "        C.DESCRIPCION AS TEMA, "
+				+ "        D.DESCRIPCION AS SUBTEMA, "
+				+ "        COUNT(D.ID_SUBTEMA) AS CANTIDAD "
+				+ "    FROM  "
+				+ "        REGISTRAMEF.DT_CAPACITACION A "
+				+ "    INNER JOIN  "
+				+ "        REGISTRAMEF.DT_CAPA_TEMAS F ON F.ID_CAPACITACION = A.ID_CAPACITACION "
+				+ "    INNER JOIN  "
+				+ "        REGISTRAMEF.MS_SUBTEMA D ON D.ID_SUBTEMA = F.ID_SUBTEMA "
+				+ "    LEFT JOIN  "
+				+ "        REGISTRAMEF.MS_TEMA C ON C.ID_TEMA = D.ID_TEMA "
+				+ "    LEFT JOIN  "
+				+ "        REGISTRAMEF.MS_SIS_ADMISTRATIVO B ON B.ID_SIST_ADMI = C.ID_SIST_ADMI "
+				+ "    WHERE  "
+				+ "        A.ESTADO =   ").append(estadoFinalizado);
+
+		if (fechaInicio != null && fechaFin != null) {
+			sb.append(" AND TRUNC(A.FECHA_INIC) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
+					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
+		}
+
+		if (idSede != null && idSede.longValue() > 0) {
+			sb.append(" and A.ID_SEDE =  ").append(idSede);
+		}
+		
+		sb.append(" AND F.ESTADO = 3 ");
+		
+
+		sb.append("GROUP BY  "
+				+ "        B.DESCRIPCION, C.DESCRIPCION, D.DESCRIPCION "
+				+ "    UNION ALL "
+				+ "    SELECT  "
+				+ "        B.DESCRIPCION AS SIST_ADMIN, "
+				+ "        C.DESCRIPCION AS TEMA, "
+				+ "        D.DESCRIPCION AS SUBTEMA, "
+				+ "        COUNT(F.ID_SUBTEMA) AS CANTIDAD "
+				+ "    FROM  "
+				+ "        REGISTRAMEF.DT_ASISTENCIA A "
+				+ "    INNER JOIN  "
+				+ "        REGISTRAMEF.DT_ASISTENCIA_TEMAS F ON F.ID_ASISTENCIA = A.ID_ASISTENCIA "
+				+ "    INNER JOIN  "
+				+ "        REGISTRAMEF.MS_SUBTEMA D ON D.ID_SUBTEMA = F.ID_SUBTEMA "
+				+ "    LEFT JOIN  "
+				+ "        REGISTRAMEF.MS_TEMA C ON C.ID_TEMA = D.ID_TEMA "
+				+ "    LEFT JOIN  "
+				+ "        REGISTRAMEF.MS_SIS_ADMISTRATIVO B ON B.ID_SIST_ADMI = C.ID_SIST_ADMI "
+				+ "    WHERE  "
+				+ "        A.ESTADO = ").append(estadoFinalizado);
+		
+		if (fechaInicio != null && fechaFin != null) {
+			sb.append(" AND TRUNC(A.FECHA_INIC) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
+					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
+		}
+
+		if (idSede != null && idSede.longValue() > 0) {
+			sb.append(" and A.ID_SEDE =  ").append(idSede);
+		}
+		
+		sb.append(" AND F.ESTADO = 3 ");
+		
+		sb.append(" GROUP BY  "
+				+ "        B.DESCRIPCION, C.DESCRIPCION, D.DESCRIPCION "
+				+ "    UNION ALL "
+				+ "    SELECT  "
+				+ "        B.DESCRIPCION AS SIST_ADMIN, "
+				+ "        C.DESCRIPCION AS TEMA, "
+				+ "        D.DESCRIPCION AS SUBTEMA, "
+				+ "        COUNT(A.ID_SUBTEMA) AS CANTIDAD "
+				+ "    FROM  "
+				+ "        REGISTRAMEF.DT_CONSULTAS A "
+				+ "    INNER JOIN  "
+				+ "        REGISTRAMEF.MS_SUBTEMA D ON D.ID_SUBTEMA = A.ID_SUBTEMA "
+				+ "    LEFT JOIN  "
+				+ "        REGISTRAMEF.MS_TEMA C ON C.ID_TEMA = D.ID_TEMA "
+				+ "    LEFT JOIN  "
+				+ "        REGISTRAMEF.MS_SIS_ADMISTRATIVO B ON B.ID_SIST_ADMI = C.ID_SIST_ADMI "
+				+ "    WHERE  "
+				+ "        A.ESTADO =  ").append(estadoFinalizado);
+		
+		if (fechaInicio != null && fechaFin != null) {
+			sb.append(" AND TRUNC(A.FECHA_INIC) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
+					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
+		}
+
+		if (idSede != null && idSede.longValue() > 0) {
+			sb.append(" and A.ID_SEDE =  ").append(idSede);
+		}
+		
+		sb.append(" GROUP BY  "
+				+ "        B.DESCRIPCION, C.DESCRIPCION, D.DESCRIPCION "
+				+ ") "
+				+ "SELECT  "
+				+ "    SIST_ADMIN, "
+				+ "    TEMA, "
+				+ "    SUBTEMA, "
+				+ "    SUM(CANTIDAD) AS CANTIDAD_TOTAL "
+				+ "FROM  "
+				+ "    combined_data "
+				+ "GROUP BY  "
+				+ "    SIST_ADMIN, "
+				+ "    TEMA, "
+				+ "    SUBTEMA "
+				+ "ORDER BY  "
+				+ "    SIST_ADMIN, "
+				+ "    TEMA, "
+				+ "    SUBTEMA ");
+		
+		Object param[] = new Object[hs.size()];
+		hs.toArray(param);
+		List<Object> lstObject = super.findNative(sb.toString(), param);
+		
+		if(lstObject!=null && !lstObject.isEmpty()) {
+			for (Object result : lstObject) {
+				Object[] object = (Object[]) result;
+				
+				ReporteConsulta objResult = new ReporteConsulta();
+				
+				/*objResult.setMonthYear((String) object[0]);
+				
+				BigDecimal total = (BigDecimal) object[1];
+				objResult.setTotal(total != null ? total.intValue() : null);*/
+				
+				
+				lstResult.add(objResult);
+			}
 			
 		}
 		
@@ -1116,26 +1336,26 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		StringBuffer sb = new StringBuffer(500);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		sb.append("SELECT " + 
-				"    TO_CHAR(TRUNC(K.FECHA_VISITA, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH') AS Month_Year, " + 
-				"    J.ABREVIATURA, " + 
-				"    COUNT(B.ID_USUEXTERNO) AS total " + 
-				"FROM " + 
-				"    REGISTRAMEF.Dt_Visitas_Usuinternos A " + 
-				"LEFT JOIN " + 
-				"     REGISTRAMEF.DT_VISITAS_USUEXTERNOS B ON B.ID_VISITA = A.ID_VISITA " + 
-				"LEFT JOIN " + 
-				"     REGISTRAMEF.DT_vISITAS K ON K.ID_VISITA = A.ID_VISITA " + 
-				"LEFT JOIN " + 
-				"    REGISTRAMEF.MS_SEDES G ON G.ID_SEDE = K.ID_SEDE " + 
-				"LEFT JOIN " + 
-				"     REGISTRAMEF.MS_TEMA H ON H.ID_TEMA=A.ID_TEMA " + 
-				"LEFT JOIN " + 
-				"     REGISTRAMEF.MS_SIS_ADMISTRATIVO J ON J.ID_SIST_ADMI=H.ID_SIST_ADMI " + 
-				"WHERE " + 
-				"  B.ESTADO=3 " + 
-				"  AND   A.ESTADO=3 " + 
-				"   and  K.ESTADO =  ").append(estadoFinalizado);
+		sb.append(" SELECT "
+				+ "    TO_CHAR(TRUNC(K.FECHA_VISITA, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH') AS Month_Year, "
+				+ "    J.ABREVIATURA, "
+				+ "    COUNT(B.ID_USUEXTERNO) AS total "
+				+ "FROM "
+				+ "    REGISTRAMEF.Dt_Visitas_Usuinternos A "
+				+ "LEFT JOIN "
+				+ "     REGISTRAMEF.DT_VISITAS_USUEXTERNOS B ON B.ID_VISITA = A.ID_VISITA "
+				+ "LEFT JOIN "
+				+ "     REGISTRAMEF.DT_VISITAS K ON K.ID_VISITA = A.ID_VISITA "
+				+ "LEFT JOIN "
+				+ "    REGISTRAMEF.MS_SEDES G ON G.ID_SEDE = K.ID_SEDE "
+				+ "LEFT JOIN "
+				+ "     REGISTRAMEF.MS_TEMA H ON H.ID_TEMA=A.ID_TEMA "
+				+ "LEFT JOIN "
+				+ "     REGISTRAMEF.MS_SIS_ADMISTRATIVO J ON J.ID_SIST_ADMI=H.ID_SIST_ADMI "
+				+ "WHERE "
+				+ " B.ESTADO=3 "
+				+ "  AND   A.ESTADO=3 "
+				+ "AND K.ESTADO = ").append(estadoFinalizado);
 
 		if (fechaInicio != null && fechaFin != null) {
 			sb.append(" AND TRUNC(K.FECHA_VISITA) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
@@ -1147,11 +1367,10 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			hs.add(idSede);
 		}
 
-		sb.append(" GROUP BY  " + 
-				"    TO_CHAR(TRUNC(K.FECHA_VISITA, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH'),  " + 
-				"    J.ABREVIATURA " + 
-				"ORDER BY  " + 
-				"    MIN(TRUNC(K.FECHA_VISITA, 'MM'))");
+		sb.append(" GROUP BY "
+				+ "    TO_CHAR(TRUNC(K.FECHA_VISITA, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH'), "
+				+ "         J.ABREVIATURA "
+				+ "ORDER BY MIN(TRUNC(K.FECHA_VISITA, 'MM'))");
 
 		Object param[] = new Object[hs.size()];
 		hs.toArray(param);
@@ -1617,4 +1836,21 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 
 	}
 //SPRINT_9.3.5 FIN
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
