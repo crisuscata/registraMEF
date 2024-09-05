@@ -353,7 +353,44 @@
 			</md-grid-tile>
 			
 
+
+			<md-grid-tile class="gray" style="padding: 16px;">
+				  <md-grid-tile-header>
+				    <h3>Estad&iacute;stica por Temas</h3>
+				    
+				    <md-select
+					    ng-model="filtroesttema.sisAdmin"
+					    ng-change="onDashEstTemaDashAndTemas(filtroesttema.sisAdmin)" 
+					    placeholder="Sist. Admin."> 
+					    <md-option ng-value="0">Todos los Sist. Admin.</md-option>
+					    <md-option
+					        ng-repeat="item in listSistAdmin" ng-value="item.sistAdmin">
+					        {{item.sistAdmin}} 
+					    </md-option>
+					</md-select>
+					
+					<md-select
+					    ng-model="filtroesttema.sisAdmin"
+					    ng-change="onDashEstTemaDashAndTemas(filtroesttema.sisAdmin)" 
+					    placeholder="Tema"> 
+					    <md-option ng-value="0">Todos los Sist. Admin.</md-option>
+					    <md-option
+					        ng-repeat="item in listTema" ng-value="item.tema">
+					        {{item.tema}} 
+					    </md-option>
+					</md-select>
+				    
+				  </md-grid-tile-header>
+				
+				  
+						
+		  </md-grid-tile>
 			
+			
+			
+			
+
+
         
 </md-grid-list> 
 

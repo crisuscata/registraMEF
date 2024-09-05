@@ -1076,7 +1076,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 				+ "        A.ESTADO = ").append(estadoFinalizado);
 		
 		if (fechaInicio != null && fechaFin != null) {
-			sb.append(" AND TRUNC(A.FECHA_INIC) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
+			sb.append(" AND TRUNC(A.FECHA_ASISTENCIA) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
 					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
 		}
 
@@ -1106,7 +1106,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 				+ "        A.ESTADO =  ").append(estadoFinalizado);
 		
 		if (fechaInicio != null && fechaFin != null) {
-			sb.append(" AND TRUNC(A.FECHA_INIC) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
+			sb.append(" AND TRUNC(A.FECHA_CONSU) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
 					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
 		}
 
@@ -1143,11 +1143,12 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 				
 				ReporteConsulta objResult = new ReporteConsulta();
 				
-				/*objResult.setMonthYear((String) object[0]);
+				objResult.setSistAdmin((String) object[0]);
+				objResult.setTema((String) object[1]);
+				objResult.setSubtema((String) object[2]);
 				
-				BigDecimal total = (BigDecimal) object[1];
-				objResult.setTotal(total != null ? total.intValue() : null);*/
-				
+				BigDecimal total = (BigDecimal) object[3];
+				objResult.setCantidadTotal(total != null ? total.intValue() : null);
 				
 				lstResult.add(objResult);
 			}

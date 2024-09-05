@@ -22712,8 +22712,8 @@ public class ServicioImp implements Servicio, Serializable {
 			List<ReporteAsistencia> lstAsistenciaTecnicaEvolMensual = reporteServicioDao.getResumenAsistenciaTecnicaEvolMensual(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListReporteAsistenciaTecnicaEvolMensual().addAll(lstAsistenciaTecnicaEvolMensual);
 			
-		/*	List<ReporteConsulta> lstEstadisticaPorTema = reporteServicioDao.getResumenEstadisticaPorTema(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
-			result.getListEstadisticaPorTema().addAll(lstEstadisticaPorTema); */
+			List<ReporteConsulta> lstEstadisticaPorTema = reporteServicioDao.getResumenEstadisticaPorTema(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			result.getListEstadisticaPorTema().addAll(lstEstadisticaPorTema); 
 			
 			
 			return result;

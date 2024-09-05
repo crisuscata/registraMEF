@@ -574,6 +574,12 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			  monthYear:null,
 			  monthYearMod:null
 		};
+		
+	  $scope.filtroesttema ={
+			  sisAdmin:null,
+			  tema:null,
+			  subtema:null
+		};	
 	  
 	  $scope.dato ={
 			  ejecutora: null,
@@ -1591,6 +1597,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 				$scope.buildDashboardCapacitacionByModalidad(res.data);
 				$scope.buildDashboardReunionTrabajoEvolMensual(res.data);
 				$scope.buildDashboardReunionTrabajoPorTematica(res.data);
+				$scope.buildDashboardEstadisticaPorTema(res.data);
 				
 				/*if (res.data!=null && res.data.listCapacitacion.length > 0) {
 					$scope.listCapacitacion = res.data.listCapacitacion.filter(c => c.asitio === 'SI' && c.estado === 'FINALIZADO');
@@ -2104,6 +2111,50 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			$scope.filtroreutrabajo.monthYear = lastMonth + ' '+ lastAnio;
 			
 			$scope.onDashReuTrabajByTematica(lastMonth);
+			
+		}
+		
+		$scope.listEstadisticaPorTema=[];
+		$scope.listSistAdmin=[];
+		$scope.buildDashboardEstadisticaPorTema = function(data){
+			$scope.listEstadisticaPorTema = data.listEstadisticaPorTema; 
+			
+			//console.log("listEstadisticaPorTema: "+JSON.stringify( $scope.listEstadisticaPorTema ));
+			
+			let uniqueSistAdmin = new Set();
+			
+			$scope.listEstadisticaPorTema.forEach(item => {
+			    if (!uniqueSistAdmin.has(item.sistAdmin)) {
+			        uniqueSistAdmin.add(item.sistAdmin);
+			        $scope.listSistAdmin.push({ "sistAdmin": item.sistAdmin });
+			    }
+			});
+			//
+			
+			//console.log("listSistAdmin: "+JSON.stringify( $scope.listSistAdmin ));
+			
+		}
+		
+		$scope.listTema=[];
+		$scope.onDashEstTemaDashAndTemas = function(sisAdmin) {
+			
+			console.log("sisAdmin: "+sisAdmin);
+			
+			let uniqueTemas = new Set();
+
+		    $scope.listTema = $scope.listEstadisticaPorTema.filter(function(item) {
+		        if (item.sistAdmin === sisAdmin && !uniqueTemas.has(item.tema)) {
+		            uniqueTemas.add(item.tema);
+		            return true;
+		        }
+		        return false;
+		    });
+    		
+    		
+    		
+    		
+    		
+    		console.log("$scope.listTema: "+JSON.stringify( $scope.listTema ));
 			
 		}
 		
