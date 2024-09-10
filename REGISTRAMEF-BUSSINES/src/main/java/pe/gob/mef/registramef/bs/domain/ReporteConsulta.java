@@ -49,6 +49,16 @@ public class ReporteConsulta implements java.io.Serializable {
 	private Date fechaSoli = null;//SPRINT01
 	private Integer cantidadTotal = null;
 	
+	
+	private String monthYear;
+	private Integer total;
+	
+	private String abreviatura  = null;
+	private Integer totalVirtual;
+	private Integer totalPresencial;
+	private Integer totalTelefonico;
+	
+	
 	@Column(name = "DEPARTAMENTO_ENTIDAD", insertable=false, updatable=false)
 	public String getDepartamentoEnt() {
 		return departamentoEnt;
@@ -308,6 +318,60 @@ public class ReporteConsulta implements java.io.Serializable {
 
 	public void setCantidadTotal(Integer cantidadTotal) {
 		this.cantidadTotal = cantidadTotal;
+	}
+	
+
+	@Column(name = "MONTH_YEAR", insertable = false, updatable = false)
+	public String getMonthYear() {
+		return monthYear;
+	}
+
+	public void setMonthYear(String monthYear) {
+		this.monthYear = monthYear;
+	}
+
+	@Column(name = "TOTAL", insertable = false, updatable = false)
+	public Integer getTotal() {
+		return total;
+	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
+
+	public String getAbreviatura() {
+		return abreviatura;
+	}
+
+	public void setAbreviatura(String abreviatura) {
+		this.abreviatura = abreviatura;
+	}
+
+	@Column(name = "TOTAL_VIRTUAL", insertable = false, updatable = false)
+	public Integer getTotalVirtual() {
+		return totalVirtual;
+	}
+
+	public void setTotalVirtual(Integer totalVirtual) {
+		this.totalVirtual = totalVirtual;
+	}
+
+	@Column(name = "TOTAL_PRESENCIAL", insertable = false, updatable = false)
+	public Integer getTotalPresencial() {
+		return totalPresencial;
+	}
+
+	public void setTotalPresencial(Integer totalPresencial) {
+		this.totalPresencial = totalPresencial;
+	}
+
+	@Column(name = "TOTAL_TELEFONICO", insertable = false, updatable = false)
+	public Integer getTotalTelefonico() {
+		return totalTelefonico;
+	}
+
+	public void setTotalTelefonico(Integer totalTelefonico) {
+		this.totalTelefonico = totalTelefonico;
 	}
 
 }

@@ -43,6 +43,7 @@ public interface ReporteServicioDao {
 
 	List<ReporteConsulta> getResumenConsultas(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
 			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;// SPRINT_8.3/
+	
 
 	List<ReporteVisitaDetalle> getResumenVisitas(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
 			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;// SPRINT_8.3
@@ -55,6 +56,25 @@ public interface ReporteServicioDao {
 	
 	List<ReporteAsistencia> getResumenAsistenciaTecnicaEvolMensual(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
 			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;
+	
+	List<ReporteAsistencia> getResumenAsistenciaTecnicaByTematica(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;
+	
+	List<ReporteAsistencia> getResumenAsistenciaTecnicaByModalidad(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;
+	
+	
+	
+	List<ReporteConsulta> getResumenConsultaEvolMensual(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;
+	
+	List<ReporteConsulta> getResumenConsultaByTematica(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;
+	
+	List<ReporteConsulta> getResumenConsultaByModalidad(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;
+	
+	
 	
 	List<ReporteConsulta> getResumenEstadisticaPorTema(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
 			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;

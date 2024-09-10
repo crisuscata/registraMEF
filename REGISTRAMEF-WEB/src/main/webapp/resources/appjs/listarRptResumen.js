@@ -575,6 +575,16 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			  monthYearMod:null
 		};
 		
+		$scope.filtroasistecnica ={
+			  monthYear:null,
+			  monthYearMod:null
+		};
+		
+		$scope.filtroconsulta ={
+			  monthYear:null,
+			  monthYearMod:null
+		};
+		
 	  $scope.filtroesttema ={
 			  sisAdmin:null,
 			  tema:null,
@@ -1597,6 +1607,15 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 				$scope.buildDashboardCapacitacionByModalidad(res.data);
 				$scope.buildDashboardReunionTrabajoEvolMensual(res.data);
 				$scope.buildDashboardReunionTrabajoPorTematica(res.data);
+				$scope.buildDashboardAsistenciaTecEvolMensual(res.data);
+				$scope.buildDashboardAsistenciaTecPorTematica(res.data);
+				$scope.buildDashboardAsistenciaTecByModalidad(res.data);
+				$scope.buildDashboardConsultaEvolMensual(res.data);
+				$scope.buildDashboardConsultaPorTematica(res.data);
+				$scope.buildDashboardConsultaByModalidad(res.data);
+				
+				
+				
 				$scope.buildDashboardEstadisticaPorTema(res.data);
 				
 				/*if (res.data!=null && res.data.listCapacitacion.length > 0) {
@@ -1751,8 +1770,8 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			var eventsData = listCapacitacionEvolMensual.map(item => item.totalEvents);
 			
 			//BUILD DASHBOARD Evolución Mensual
-			
-			var chartOptions = {
+			$scope.buildDashboardEvolMensual(eventsData, labels, 'mixedChartCapaEvolMensual', 'Capacitación');
+			/*var chartOptions = {
 			        responsive: true,
 			        scales: {
 			            y: {
@@ -1791,7 +1810,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			            data: chartData,
 			            options: chartOptions
 			        });
-			    });
+			    });*/
 			
 			//Build Table
 			$scope.mesesCapacitacion = [" ", ...labels , "Total"];
@@ -1892,6 +1911,10 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 		}
 		
+		
+		
+		//CAPACITACION POR MODALIDAD
+		
 		$scope.onDashCapaByModalidad = function(month) {
 			var listCapacitacionModalidadByLastMonth = null;
 			if (month === 0) {
@@ -1906,7 +1929,17 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			var presencialData = listCapacitacionModalidadByLastMonth.map(item => item.totalPresencial);
 			var totalPresencial = presencialData.reduce((sum, value) => sum + value, 0)
 			
-			$scope.showDashCapacitacionByModalidad(totalVirtual, totalPresencial);
+			
+			var chartData = {
+		        labels: ['Virtual', 'Presencial'],
+		        datasets: [{
+		            data: [totalVirtual, totalPresencial],
+		            backgroundColor: ['#FF6384', '#36A2EB'], 
+		            hoverBackgroundColor: ['#FF6384', '#36A2EB']
+		        }]
+		    };
+			
+			$scope.showDashByModalidad(chartData,'doughnutByModalidad');
 			
 	    };
 		
@@ -1952,16 +1985,157 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 		}
 		
-		$scope.showDashCapacitacionByModalidad =function(totalVirtual, totalPresencial) {
+		//ASISTENCIA TECNICA POR MODALIDAD
+		$scope.onDashAsistTecnicaByModalidad = function(month) {
+			var listAsisTecModalidadByLastMonth = null;
+			if (month === 0) {
+				listAsisTecModalidadByLastMonth = $scope.listaMonthAsisTecByModalidad;
+	        } else {
+	        	listAsisTecModalidadByLastMonth = $scope.listaMonthAsisTecByModalidad.filter(item => item.monthYear.includes(month));
+	        }
+	        
+			var virtualData = listAsisTecModalidadByLastMonth.map(item => item.totalVirtual);
+			var totalVirtual = virtualData.reduce((sum, value) => sum + value, 0)
 			
-		    var chartData = {
-		        labels: ['Virtual', 'Presencial'],
+			var presencialData = listAsisTecModalidadByLastMonth.map(item => item.totalPresencial);
+			var totalPresencial = presencialData.reduce((sum, value) => sum + value, 0)
+			
+			var telefonicaData = listAsisTecModalidadByLastMonth.map(item => item.totalTelefonico);
+			var totalTelefonica = telefonicaData.reduce((sum, value) => sum + value, 0)
+			
+			
+			var chartData = {
+		        labels: ['Virtual', 'Presencial', 'Telefónica'],
 		        datasets: [{
-		            data: [totalVirtual, totalPresencial],
-		            backgroundColor: ['#FF6384', '#36A2EB'], 
-		            hoverBackgroundColor: ['#FF6384', '#36A2EB']
+		            data: [totalVirtual, totalPresencial, totalTelefonica],
+		            backgroundColor: ['#FF6384', '#36A2EB', '#63ffb1'], 
+		            hoverBackgroundColor: ['#FF6384', '#36A2EB', '#63ffb1']
 		        }]
 		    };
+			
+			$scope.showDashByModalidad(chartData,'doughnutAsisTecByModalidad');
+			
+	    };
+		
+		$scope.listaMonthAsisTecByModalidad=[];
+		$scope.listaAsisTecByModalidadGeneral=[];
+		$scope.buildDashboardAsistenciaTecByModalidad =function(data) {
+			
+			$scope.listaAsisTecByModalidadGeneral = data.listReporteAsistenciaTecnicaModalidad; 
+			
+			$scope.listaMonthAsisTecByModalidad = $scope.listaAsisTecByModalidadGeneral.filter((value, index, self) => 
+    		index === self.findIndex((t) => t.monthYear === value.monthYear)
+			);
+			
+			var titleOfTable = $scope.listaMonthAsisTecByModalidad.map(item => item.monthYear.trim());
+			
+			var virtualData = $scope.listaMonthAsisTecByModalidad.map(item => item.totalVirtual);
+			var totalVirtual = virtualData.reduce((sum, value) => sum + value, 0)
+			
+			var presencialData = $scope.listaMonthAsisTecByModalidad.map(item => item.totalPresencial);
+			var totalPresencial = presencialData.reduce((sum, value) => sum + value, 0)
+			
+			var telefonicaData = $scope.listaMonthAsisTecByModalidad.map(item => item.totalTelefonico);
+			var totalTelefonica = telefonicaData.reduce((sum, value) => sum + value, 0)
+			
+			
+			var lastMonth = $scope.findMonthFechaFinal();
+			var lastAnio = $scope.getAnio($scope.filtro.fechaFin);
+			
+			$scope.filtroasistecnica.monthYearMod = lastMonth + ' '+ lastAnio;
+			
+			$scope.onDashAsistTecnicaByModalidad(lastMonth);
+		    
+		    //Build Table
+			$scope.mesesAsisTecModa = [" ", ...titleOfTable , "Total"];
+			
+			$scope.dataAsisTecModalidadRows = [
+			    { id: 1, cells: ["Presencial", ...presencialData, totalPresencial] },
+			    { id: 2, cells: ["Virtual", ...virtualData, totalVirtual] },
+			    { id: 3, cells: ["Telefónica", ...telefonicaData, totalTelefonica] }
+			  ];
+			
+		}
+		
+		//CONSULTA POR MODALIDAD
+		
+		$scope.onDashConsultaByModalidad = function(month) {
+			var listConsultaModalidadByLastMonth = null;
+			if (month === 0) {
+				listConsultaModalidadByLastMonth = $scope.listaMonthConsultaByModalidad;
+	        } else {
+	        	listConsultaModalidadByLastMonth = $scope.listaMonthConsultaByModalidad.filter(item => item.monthYear.includes(month));
+	        }
+	        
+			var virtualData = listConsultaModalidadByLastMonth.map(item => item.totalVirtual);
+			var totalVirtual = virtualData.reduce((sum, value) => sum + value, 0)
+			
+			var presencialData = listConsultaModalidadByLastMonth.map(item => item.totalPresencial);
+			var totalPresencial = presencialData.reduce((sum, value) => sum + value, 0)
+			
+			var telefonicaData = listConsultaModalidadByLastMonth.map(item => item.totalTelefonico);
+			var totalTelefonica = telefonicaData.reduce((sum, value) => sum + value, 0)
+			
+			
+			var chartData = {
+		        labels: ['Virtual', 'Presencial', 'Telefónica'],
+		        datasets: [{
+		            data: [totalVirtual, totalPresencial, totalTelefonica],
+		            backgroundColor: ['#FF6384', '#36A2EB', '#63ffb1'], 
+		            hoverBackgroundColor: ['#FF6384', '#36A2EB', '#63ffb1']
+		        }]
+		    };
+			
+			$scope.showDashByModalidad(chartData,'doughnutConsultaByModalidad');
+			
+	    };
+		
+		$scope.listaMonthConsultaByModalidad=[];
+		$scope.listaConsultaByModalidadGeneral=[];
+		$scope.buildDashboardConsultaByModalidad =function(data) {
+			
+			$scope.listaConsultaByModalidadGeneral = data.listConsultaModalidad; 
+			
+			$scope.listaMonthConsultaByModalidad = $scope.listaConsultaByModalidadGeneral.filter((value, index, self) => 
+    		index === self.findIndex((t) => t.monthYear === value.monthYear)
+			);
+			
+			var titleOfTable = $scope.listaMonthConsultaByModalidad.map(item => item.monthYear.trim());
+			
+			var virtualData = $scope.listaMonthConsultaByModalidad.map(item => item.totalVirtual);
+			var totalVirtual = virtualData.reduce((sum, value) => sum + value, 0)
+			
+			var presencialData = $scope.listaMonthConsultaByModalidad.map(item => item.totalPresencial);
+			var totalPresencial = presencialData.reduce((sum, value) => sum + value, 0)
+			
+			var telefonicaData = $scope.listaMonthConsultaByModalidad.map(item => item.totalTelefonico);
+			var totalTelefonica = telefonicaData.reduce((sum, value) => sum + value, 0)
+			
+			
+			var lastMonth = $scope.findMonthFechaFinal();
+			var lastAnio = $scope.getAnio($scope.filtro.fechaFin);
+			
+			$scope.filtroconsulta.monthYearMod = lastMonth + ' '+ lastAnio;
+			
+			$scope.onDashAsistTecnicaByModalidad(lastMonth);
+		    
+		    //Build Table
+			$scope.mesesConsultaModa = [" ", ...titleOfTable , "Total"];
+			
+			$scope.dataConsultaModalidadRows = [
+			    { id: 1, cells: ["Presencial", ...presencialData, totalPresencial] },
+			    { id: 2, cells: ["Virtual", ...virtualData, totalVirtual] },
+			    { id: 3, cells: ["Telefónica", ...telefonicaData, totalTelefonica] }
+			  ];
+			
+		}
+		
+		
+		
+		
+		
+		
+		$scope.showDashByModalidad =function(chartData, nameIdHTMLElement) {
 
 		    var chartOptions = {
 		            responsive: true,
@@ -1994,7 +2168,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		        };
 
 		    angular.element(document).ready(function () {
-		        var ctx = document.getElementById('doughnutByModalidad').getContext('2d');
+		        var ctx = document.getElementById(nameIdHTMLElement).getContext('2d');
 		        new Chart(ctx, {
 		            type: 'doughnut',
 		            data: chartData,
@@ -2015,8 +2189,8 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 			
 			//BUILD DASHBOARD Evolución Mensual
-			
-			var chartOptions = {
+			$scope.buildDashboardEvolMensual(totalData, labels, 'mixedChartReunionTraEvolMensual', 'Reu Trabajo');
+			/*var chartOptions = {
 			        responsive: true,
 			        scales: {
 			            y: {
@@ -2055,13 +2229,100 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			            data: chartData,
 			            options: chartOptions
 			        });
-			    });
+			    });*/
 			
 			//Build Table
 			$scope.mesesReunionTra = [" ", ...labels , "Total"];
 			
 			$scope.dataReunTrabajRows = [
 			    { id: 1, cells: ["Reuniones de Trabajo", ...totalData, totalData.reduce((sum, value) => sum + value, 0)] }
+			  ];
+			
+		}
+		
+		$scope.buildDashboardAsistenciaTecEvolMensual = function(data) {
+			
+			var listReporteAsistenciaTecnicaEvolMensual = data.listReporteAsistenciaTecnicaEvolMensual; 
+			
+			console.log("listReporteAsistenciaTecnicaEvolMensual :" + JSON.stringify(listReporteAsistenciaTecnicaEvolMensual));
+			
+			var labels = listReporteAsistenciaTecnicaEvolMensual.map(item => item.monthYear.trim());
+			var totalData = listReporteAsistenciaTecnicaEvolMensual.map(item => item.total);
+			
+			//BUILD DASHBOARD Evolución Mensual
+			$scope.buildDashboardEvolMensual(totalData, labels, 'mixedChartAsisTecnicaEvolMensual', 'Asistencias');
+			
+			//Build Table
+			$scope.mesesAsistenciaTec = [" ", ...labels , "Total"];
+			
+			$scope.dataAsistenciaTecRows = [
+			    { id: 1, cells: ["Asistencias", ...totalData, totalData.reduce((sum, value) => sum + value, 0)] }
+			  ];
+			
+		}
+		
+		$scope.buildDashboardEvolMensual = function(totalData, labels, idElementHTML, nameSerie) {
+			
+			var chartOptions = {
+			        responsive: true,
+			        scales: {
+			            y: {
+			                beginAtZero: true
+			            }
+			        }
+			    };
+
+			    var chartData = {
+			        labels: labels,
+			        datasets: [
+			            {
+			                type: 'bar',
+			                label: 'Total',
+			                data: totalData,
+			                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+			                borderColor: 'rgba(75, 192, 192, 1)',
+			                borderWidth: 1
+			            },
+			            {
+		                    type: 'line',
+		                    label: 'Total',
+		                    data: totalData,
+		                    borderColor: 'rgba(255, 99, 132, 1)',
+		                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+		                    borderWidth: 2,
+		                    fill: false
+		                }
+			        ]
+			    };
+
+			    angular.element(document).ready(function () {
+			        var ctx = document.getElementById(idElementHTML).getContext('2d');
+			        new Chart(ctx, {
+			            type: 'bar',
+			            data: chartData,
+			            options: chartOptions
+			        });
+			    });
+			
+		}
+		
+		//CONSULTA EVOL MENSUAL
+		
+		$scope.buildDashboardConsultaEvolMensual = function(data) {
+			
+			var lisConsultaEvolMensual = data.lisConsultaEvolMensual; 
+			
+			var labels = lisConsultaEvolMensual.map(item => item.monthYear.trim());
+			var totalData = lisConsultaEvolMensual.map(item => item.total);
+			
+			//BUILD DASHBOARD Evolución Mensual
+			$scope.buildDashboardEvolMensual(totalData, labels, 'mixedChartConsultaEvolMensual', 'Consulta');
+			
+			//Build Table
+			$scope.mesesConsultas = [" ", ...labels , "Total"];
+			
+			$scope.dataConsultasRows = [
+			    { id: 1, cells: ["Consultas", ...totalData, totalData.reduce((sum, value) => sum + value, 0)] }
 			  ];
 			
 		}
@@ -2135,6 +2396,86 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 		}
 		
+		//ASIS TECNICA POR TEMA
+		
+		$scope.onDashAsistenciaTecnicaByTematica = function(month) {
+	        let listAsisteTecnicaSegunTematicaByLastMonth;
+	        
+	        if (month === 0) {
+	            listAsisteTecnicaSegunTematicaByLastMonth = $scope.listAsistenciaTecnicaSegunTematica;
+	        } else {
+	            listAsisteTecnicaSegunTematicaByLastMonth = $scope.listAsistenciaTecnicaSegunTematica.filter(item => item.monthYear.includes(month));
+	        }
+	        
+	        var labels = listAsisteTecnicaSegunTematicaByLastMonth.map(item => item.abreviatura.trim());
+	        var data = listAsisteTecnicaSegunTematicaByLastMonth.map(item => item.total);
+	        
+	        $scope.showDashboardBar(labels, data, 'barChartAsistenciaTecnicaByTematica', 'Usuarios');
+	    };
+		
+		
+		$scope.listAsistenciaTecnicaSegunTematica=[];
+		$scope.listaAsisTecnicaByTematica=[];
+		$scope.buildDashboardAsistenciaTecPorTematica = function(data){
+			$scope.listAsistenciaTecnicaSegunTematica = data.listReporteAsistenciaTecnicaSegunTematica; 
+			
+			$scope.listaAsisTecnicaByTematica = $scope.listAsistenciaTecnicaSegunTematica.filter((value, index, self) => 
+		    		index === self.findIndex((t) => t.monthYear === value.monthYear)
+			);
+
+			var lastMonth = $scope.findMonthFechaFinal();
+			var lastAnio = $scope.getAnio($scope.filtro.fechaFin);
+			
+			$scope.filtroasistecnica.monthYear = lastMonth + ' '+ lastAnio;
+			
+			$scope.onDashAsistenciaTecnicaByTematica(lastMonth);
+			
+		}
+		
+		
+		//CONSULTA POR TEMA
+		
+		$scope.onDashConsultaByTematica = function(month) {
+	        let listConsultaByLastMonth;
+	        
+	        if (month === 0) {
+	            listConsultaByLastMonth = $scope.listConsultaSegunTematica;
+	        } else {
+	            listConsultaByLastMonth = $scope.listConsultaSegunTematica.filter(item => item.monthYear.includes(month));
+	        }
+	        
+	        var labels = listConsultaByLastMonth.map(item => item.abreviatura.trim());
+	        var data = listConsultaByLastMonth.map(item => item.total);
+	        
+	        $scope.showDashboardBar(labels, data, 'barChartConsultaByTematica', 'Consulta');
+	    };
+		
+		
+		
+		$scope.listConsultaSegunTematica=[];
+		$scope.listaConsultaByTematica=[];
+		$scope.buildDashboardConsultaPorTematica = function(data){
+			$scope.listConsultaSegunTematica = data.listConsultaSegunTematica; 
+			
+			$scope.listaConsultaByTematica = $scope.listConsultaSegunTematica.filter((value, index, self) => 
+		    		index === self.findIndex((t) => t.monthYear === value.monthYear)
+			);
+
+			var lastMonth = $scope.findMonthFechaFinal();
+			var lastAnio = $scope.getAnio($scope.filtro.fechaFin);
+			
+			$scope.filtroconsulta.monthYear = lastMonth + ' '+ lastAnio;
+			
+			$scope.onDashConsultaByTematica(lastMonth);
+			
+		}
+		
+		
+		
+		
+		
+		
+		
 		$scope.listTema=[];
 		$scope.onDashEstTemaDashAndTemas = function(sisAdmin) {
 			
@@ -2150,13 +2491,110 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		        return false;
 		    });
     		
-    		
-    		
-    		
-    		
-    		console.log("$scope.listTema: "+JSON.stringify( $scope.listTema ));
+    		//console.log("$scope.listTema: "+JSON.stringify( $scope.listTema ));
 			
 		}
+		
+		var doughnutChartInstance = null;
+		$scope.onDashEstTemaSubTema = function(sisAdmin, tema) {
+			
+			  var filteredList = $scope.listEstadisticaPorTema.filter(function(item) {
+			    return item.sistAdmin === sisAdmin && item.tema === tema;
+			  });
+			
+			  $scope.subTemas = filteredList.map(function(item) {
+			    return {
+			      subtema: item.subtema,
+			      cantidadTotal: item.cantidadTotal
+			    };
+			  });
+			
+			console.log("result:" + JSON.stringify($scope.subTemas));
+			
+			$scope.totalCantidadTotal = $scope.subTemas.reduce(function(sum, item) {
+		        return sum + item.cantidadTotal;
+		    }, 0);
+			
+			var labels = $scope.subTemas.map(function(item) {
+		        return item.subtema;
+		    });
+		
+		    var data = $scope.subTemas.map(function(item) {
+		        return item.cantidadTotal;
+		    });
+		    
+		    function generateRandomColor() {
+		        var letters = '0123456789ABCDEF';
+		        var color = '#';
+		        for (var i = 0; i < 6; i++) {
+		            color += letters[Math.floor(Math.random() * 16)];
+		        }
+		        return color;
+		    }
+		    
+		    var backgroundColors = $scope.subTemas.map(function() {
+		        return generateRandomColor();
+		    });
+		
+			var chartData = {
+		        labels: labels,
+		        datasets: [{
+		            data: data,
+		            backgroundColor: backgroundColors
+		        }]
+		    };
+
+		    var chartOptions = {
+			        responsive: true,
+			        maintainAspectRatio: false, 
+			        plugins: {
+			            legend: {
+			                position: 'top',
+			                labels: {
+			                    font: {
+			                        size: 14 
+			                    }
+			                }
+			            },
+			            tooltip: {
+			                callbacks: {
+			                    label: function(tooltipItem) {
+			                        var label = tooltipItem.label || '';
+			                        var value = tooltipItem.raw || 0;  // Get the corresponding value
+			                        return label + ': ' + value;  // Display the label and value
+			                    }
+			                }
+			            }
+			        },
+			        layout: {
+			            padding: {
+			                top: 10,
+			                bottom: 10,
+			                left: 10,
+			                right: 10
+			            }
+			        }
+			    };
+			    
+			    if (doughnutChartInstance) {
+			        doughnutChartInstance.destroy();
+			    }
+
+			    angular.element(document).ready(function () {
+			        var ctx = document.getElementById('doughnutEstaPorTema').getContext('2d');
+			        doughnutChartInstance = new Chart(ctx, {
+			            type: 'doughnut',
+			            data: chartData,
+			            options: chartOptions
+			        });
+			    });
+			    
+			
+			
+		}
+		
+		
+		
 		
 		
 		

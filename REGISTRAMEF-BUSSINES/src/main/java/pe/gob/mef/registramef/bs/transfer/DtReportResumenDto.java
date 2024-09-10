@@ -20,6 +20,14 @@ public class DtReportResumenDto {
 	private List<ReporteVisitaDetalle> listReunionTrabajoUsSegunTematica;
 	
 	private List<ReporteAsistencia> listReporteAsistenciaTecnicaEvolMensual;
+	private List<ReporteAsistencia> listReporteAsistenciaTecnicaSegunTematica;
+	private List<ReporteAsistencia> listReporteAsistenciaTecnicaModalidad;
+	
+	private List<ReporteConsulta> lisConsultaEvolMensual;
+	private List<ReporteConsulta> listConsultaSegunTematica;
+	private List<ReporteConsulta> listConsultaModalidad;
+	
+	
 	private List<ReporteConsulta> 	listEstadisticaPorTema;
 	/*private List<ReporteConsulta> listConsulta;
 	private List<ReporteVisitaDetalle> listVisita;*/
@@ -34,6 +42,12 @@ public class DtReportResumenDto {
 		this.listReunionTrabajoUsSegunTematica  = new ArrayList<>();
 		this.listReporteAsistenciaTecnicaEvolMensual = new ArrayList<>();
 		this.listEstadisticaPorTema = new ArrayList<>();	
+		this.listReporteAsistenciaTecnicaSegunTematica = new ArrayList<>();
+		this.listReporteAsistenciaTecnicaModalidad = new ArrayList<>();
+		this.lisConsultaEvolMensual = new ArrayList<>();	
+		this.listConsultaSegunTematica = new ArrayList<>();
+		this.listConsultaModalidad = new ArrayList<>();
+		
 	}
 	
 	public List<ReporteAsistenciaDetallado> getListAsistencia() {
@@ -102,5 +116,45 @@ public class DtReportResumenDto {
 
 	public void setListEstadisticaPorTema(List<ReporteConsulta> listEstadisticaPorTema) {
 		this.listEstadisticaPorTema = listEstadisticaPorTema;
+	}
+
+	public List<ReporteAsistencia> getListReporteAsistenciaTecnicaSegunTematica() {
+		return listReporteAsistenciaTecnicaSegunTematica;
+	}
+
+	public void setListReporteAsistenciaTecnicaSegunTematica(List<ReporteAsistencia> listReporteAsistenciaTecnicaSegunTematica) {
+		this.listReporteAsistenciaTecnicaSegunTematica = listReporteAsistenciaTecnicaSegunTematica;
+	}
+
+	public List<ReporteAsistencia> getListReporteAsistenciaTecnicaModalidad() {
+		return listReporteAsistenciaTecnicaModalidad;
+	}
+
+	public void setListReporteAsistenciaTecnicaModalidad(List<ReporteAsistencia> listReporteAsistenciaTecnicaModalidad) {
+		this.listReporteAsistenciaTecnicaModalidad = listReporteAsistenciaTecnicaModalidad;
+	}
+
+	public List<ReporteConsulta> getLisConsultaEvolMensual() {
+		return lisConsultaEvolMensual;
+	}
+
+	public void setLisConsultaEvolMensual(List<ReporteConsulta> lisConsultaEvolMensual) {
+		this.lisConsultaEvolMensual = lisConsultaEvolMensual;
+	}
+
+	public List<ReporteConsulta> getListConsultaSegunTematica() {
+		return listConsultaSegunTematica;
+	}
+
+	public void setListConsultaSegunTematica(List<ReporteConsulta> listConsultaSegunTematica) {
+		this.listConsultaSegunTematica = listConsultaSegunTematica;
+	}
+
+	public List<ReporteConsulta> getListConsultaModalidad() {
+		return listConsultaModalidad;
+	}
+
+	public void setListConsultaModalidad(List<ReporteConsulta> listConsultaModalidad) {
+		this.listConsultaModalidad = listConsultaModalidad;
 	}
 }

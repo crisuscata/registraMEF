@@ -352,40 +352,215 @@
 			
 			</md-grid-tile>
 			
-
-
-			<md-grid-tile class="gray" style="padding: 16px;">
+			<md-grid-tile class="gray" style="padding: 16px;"></md-grid-tile>
+			
+			
+			
+			<md-grid-tile class="gray" style="padding: 16px;" colspan="2">
 				  <md-grid-tile-header>
-				    <h3>Estad&iacute;stica por Temas</h3>
-				    
-				    <md-select
-					    ng-model="filtroesttema.sisAdmin"
-					    ng-change="onDashEstTemaDashAndTemas(filtroesttema.sisAdmin)" 
-					    placeholder="Sist. Admin."> 
-					    <md-option ng-value="0">Todos los Sist. Admin.</md-option>
-					    <md-option
-					        ng-repeat="item in listSistAdmin" ng-value="item.sistAdmin">
-					        {{item.sistAdmin}} 
-					    </md-option>
-					</md-select>
-					
-					<md-select
-					    ng-model="filtroesttema.sisAdmin"
-					    ng-change="onDashEstTemaDashAndTemas(filtroesttema.sisAdmin)" 
-					    placeholder="Tema"> 
-					    <md-option ng-value="0">Todos los Sist. Admin.</md-option>
-					    <md-option
-					        ng-repeat="item in listTema" ng-value="item.tema">
-					        {{item.tema}} 
-					    </md-option>
-					</md-select>
-				    
+				    <h3>Evolución Mensual Asis.Tec</h3>
 				  </md-grid-tile-header>
 				
-				  
-						
-		  </md-grid-tile>
+				  <!-- Canvas for the chart -->
+				  <canvas id="mixedChartAsisTecnicaEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
+				
+				  <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+					  <tr>
+					    <th ng-repeat="m in mesesAsistenciaTec track by $index">{{m}}</th>
+					  </tr>
+					  
+					  <tr ng-repeat="row in dataAsistenciaTecRows track by row.id">
+					    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
+					  </tr>
+				  </table>
+			</md-grid-tile>
 			
+			<md-grid-tile class="gray" style="padding: 16px;">
+			  <md-grid-tile-header>
+			    <h3>Asistencia T&eacute;cnica seg&uacute;n tem&aacute;tica</h3>
+			    
+			    <md-select
+				    ng-model="filtroasistecnica.monthYear"
+				    ng-change="onDashAsistenciaTecnicaByTematica(filtroasistecnica.monthYear)" 
+				    placeholder="Mes"> 
+				    <md-option ng-value="0">Todos los Meses</md-option>
+				    <md-option
+				        ng-repeat="item in listaAsisTecnicaByTematica" ng-value="item.monthYear">
+				        {{item.monthYear}} 
+				    </md-option>
+				</md-select>
+			    
+			  </md-grid-tile-header>
+			
+			  <canvas id="barChartAsistenciaTecnicaByTematica" width="400" height="200"></canvas>
+			
+			</md-grid-tile>
+			
+			
+			<md-grid-tile class="gray" style="padding: 16px;">
+						  <md-grid-tile-header>
+						    <h3>Asistencia t&eacute;cnica seg&uacute;n modalidad</h3>
+						    
+						    <md-select
+							    ng-model="filtroasistecnica.monthYearMod"
+							    ng-change="onDashAsistTecnicaByModalidad(filtroasistecnica.monthYearMod)" 
+							    placeholder="Mes"> 
+							    <md-option ng-value="0">Todos los Meses</md-option>
+							    <md-option
+							        ng-repeat="item in listaMonthAsisTecByModalidad" ng-value="item.monthYear">
+							        {{item.monthYear}} 
+							    </md-option>
+							</md-select>
+						    
+						  </md-grid-tile-header>
+						  
+						    <canvas id="doughnutAsisTecByModalidad" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
+
+						    
+						     <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+							  <tr>
+							    <th ng-repeat="m in mesesAsisTecModa track by $index">{{m}}</th>
+							  </tr>
+							  
+							  <tr ng-repeat="row in dataAsisTecModalidadRows track by row.id">
+							    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
+							  </tr>
+						 	 </table>
+						
+			</md-grid-tile>
+			
+			
+			<md-grid-tile class="gray" style="padding: 16px;" colspan="2">
+							  <md-grid-tile-header>
+							    <h3>Evolución Mensual Consultas</h3>
+							  </md-grid-tile-header>
+							
+							  <!-- Canvas for the chart -->
+							  <canvas id="mixedChartConsultaEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
+							
+							  <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+								  <tr>
+								    <th ng-repeat="m in mesesConsultas track by $index">{{m}}</th>
+								  </tr>
+								  
+								  <tr ng-repeat="row in dataConsultasRows track by row.id">
+								    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
+								  </tr>
+							  </table>
+			</md-grid-tile>
+			
+			
+			<md-grid-tile class="gray" style="padding: 16px;">
+						  <md-grid-tile-header>
+						    <h3>Consulta seg&uacute;n tem&aacute;tica</h3>
+						    
+						    <md-select
+							    ng-model="filtroconsulta.monthYear"
+							    ng-change="onDashConsultaByTematica(filtroconsulta.monthYear)" 
+							    placeholder="Mes"> 
+							    <md-option ng-value="0">Todos los Meses</md-option>
+							    <md-option
+							        ng-repeat="item in listaConsultaByTematica" ng-value="item.monthYear">
+							        {{item.monthYear}} 
+							    </md-option>
+							</md-select>
+						    
+						  </md-grid-tile-header>
+						
+						  <canvas id="barChartConsultaByTematica" width="400" height="200"></canvas>
+						
+			</md-grid-tile>
+			
+			<md-grid-tile class="gray" style="padding: 16px;">
+						  <md-grid-tile-header>
+						    <h3>Consulta seg&uacute;n modalidad</h3>
+						    
+						    <md-select
+							    ng-model="filtroconsulta.monthYearMod"
+							    ng-change="onDashConsultaByModalidad(filtroconsulta.monthYearMod)" 
+							    placeholder="Mes"> 
+							    <md-option ng-value="0">Todos los Meses</md-option>
+							    <md-option
+							        ng-repeat="item in listaMonthConsultaByModalidad" ng-value="item.monthYear">
+							        {{item.monthYear}} 
+							    </md-option>
+							</md-select>
+						    
+						  </md-grid-tile-header>
+						  
+						    <canvas id="doughnutConsultaByModalidad" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
+
+						    
+						     <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+							  <tr>
+							    <th ng-repeat="m in mesesConsultaModa track by $index">{{m}}</th>
+							  </tr>
+							  
+							  <tr ng-repeat="row in dataConsultaModalidadRows track by row.id">
+							    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
+							  </tr>
+						 	 </table>
+									
+		   </md-grid-tile>
+			
+			<md-grid-tile>
+				<canvas id="doughnutEstaPorTema" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
+			</md-grid-tile>
+
+			<md-grid-tile >
+				  
+				<fieldset style="margin-left: 15px;">
+							<legend>Estad&iacute;stica por Temas</legend>
+				
+				  <md-select
+  					    ng-model="filtroesttema.sisAdmin"
+  					    ng-change="onDashEstTemaDashAndTemas(filtroesttema.sisAdmin)" 
+  					    placeholder="Sist. Admin."> 
+  					    <md-option ng-value="0">Todos los Sist. Admin.</md-option>
+  					    <md-option
+  					        ng-repeat="item in listSistAdmin" ng-value="item.sistAdmin">
+  					        {{item.sistAdmin}} 
+  					    </md-option>
+  					</md-select>
+					
+					<br />
+  					
+  					<md-select
+  					    ng-model="filtroesttema.tema"
+  					    ng-change="onDashEstTemaSubTema(filtroesttema.sisAdmin, filtroesttema.tema)" 
+  					    placeholder="Tema"> 
+  					    <md-option ng-value="0">Todos Temas</md-option>
+  					    <md-option
+  					        ng-repeat="item in listTema" ng-value="item.tema">
+  					        {{item.tema}} 
+  					    </md-option>
+  					</md-select>
+					
+					
+					<br />
+					
+					
+						<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+							<tr>
+							       <th>Subtema</th> <!-- Header for labels (subtema) -->
+							       <th>Cantidad Total</th> <!-- Header for data (cantidadTotal) -->
+							   </tr>
+							   <tr ng-repeat="row in subTemas track by $index">
+							       <td>{{row.subtema}}</td> <!-- Display each subtema (label) -->
+							       <td>{{row.cantidadTotal}}</td> <!-- Display corresponding cantidadTotal (data) -->
+							   </tr>
+						   <tr>
+						          <td><strong>Total General</strong></td>
+						          <td><strong>{{totalCantidadTotal}}</strong></td> <!-- Display the sum here -->
+						   </tr>   
+						</table>
+						
+						
+					
+					
+					</fieldset>
+					
+		  	</md-grid-tile>
 			
 			
 			

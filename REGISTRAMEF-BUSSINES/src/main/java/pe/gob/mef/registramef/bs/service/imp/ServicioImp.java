@@ -22712,6 +22712,26 @@ public class ServicioImp implements Servicio, Serializable {
 			List<ReporteAsistencia> lstAsistenciaTecnicaEvolMensual = reporteServicioDao.getResumenAsistenciaTecnicaEvolMensual(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListReporteAsistenciaTecnicaEvolMensual().addAll(lstAsistenciaTecnicaEvolMensual);
 			
+			List<ReporteAsistencia> lstAsistenciaTecnicaSegunTematica = reporteServicioDao.getResumenAsistenciaTecnicaByTematica(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			result.getListReporteAsistenciaTecnicaSegunTematica().addAll(lstAsistenciaTecnicaSegunTematica);
+			
+			List<ReporteAsistencia> lstAsistenciaTecnicaByModalidad = reporteServicioDao.getResumenAsistenciaTecnicaByModalidad(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			result.getListReporteAsistenciaTecnicaModalidad().addAll(lstAsistenciaTecnicaByModalidad);
+			
+			
+			List<ReporteConsulta> lstConsultaEvolMensual = reporteServicioDao.getResumenConsultaEvolMensual(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			result.getLisConsultaEvolMensual().addAll(lstConsultaEvolMensual);
+			
+			List<ReporteConsulta> lstConsultaSegunTematica = reporteServicioDao.getResumenConsultaByTematica(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			result.getListConsultaSegunTematica().addAll(lstConsultaSegunTematica);
+			
+			List<ReporteConsulta> lstConsultaModalidad = reporteServicioDao.getResumenConsultaByModalidad(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			result.getListConsultaModalidad().addAll(lstConsultaModalidad);
+			
+			
+			
+			
+			
 			List<ReporteConsulta> lstEstadisticaPorTema = reporteServicioDao.getResumenEstadisticaPorTema(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListEstadisticaPorTema().addAll(lstEstadisticaPorTema); 
 			
