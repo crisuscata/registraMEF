@@ -29,8 +29,9 @@ public class DtReportResumenDto {
 	
 	
 	private List<ReporteConsulta> 	listEstadisticaPorTema;
-	/*private List<ReporteConsulta> listConsulta;
-	private List<ReporteVisitaDetalle> listVisita;*/
+	
+	private List<ReporteAsistencia> listAsistenciaDentroFueraPlazo;
+	
 	
 	public DtReportResumenDto() {
 		this.listAsistencia = new ArrayList<>();
@@ -47,6 +48,7 @@ public class DtReportResumenDto {
 		this.lisConsultaEvolMensual = new ArrayList<>();	
 		this.listConsultaSegunTematica = new ArrayList<>();
 		this.listConsultaModalidad = new ArrayList<>();
+		this.listAsistenciaDentroFueraPlazo = new ArrayList<>();
 		
 	}
 	
@@ -156,5 +158,13 @@ public class DtReportResumenDto {
 
 	public void setListConsultaModalidad(List<ReporteConsulta> listConsultaModalidad) {
 		this.listConsultaModalidad = listConsultaModalidad;
+	}
+
+	public List<ReporteAsistencia> getListAsistenciaDentroFueraPlazo() {
+		return listAsistenciaDentroFueraPlazo;
+	}
+
+	public void setListAsistenciaDentroFueraPlazo(List<ReporteAsistencia> listAsistenciaDentroFueraPlazo) {
+		this.listAsistenciaDentroFueraPlazo = listAsistenciaDentroFueraPlazo;
 	}
 }

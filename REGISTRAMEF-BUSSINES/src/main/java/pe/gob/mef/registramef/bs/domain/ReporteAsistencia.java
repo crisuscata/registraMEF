@@ -50,6 +50,13 @@ public class ReporteAsistencia implements java.io.Serializable {
 	private Integer totalPresencial;
 	private Integer totalTelefonico;
 	
+	private String descripcion  = null;
+	private String apellidosNombres  = null;
+	private Integer totalFueraPlazo  = null;
+	private Double porcentajeFueraPlazo  = null;
+	private Integer totalDentroPlazo  = null;
+	private Double porcentajeDentroPlazo  = null;
+	
 	
 	public ReporteAsistencia() {
 	}
@@ -347,6 +354,60 @@ public class ReporteAsistencia implements java.io.Serializable {
 
 	public void setTotalTelefonico(Integer totalTelefonico) {
 		this.totalTelefonico = totalTelefonico;
+	}
+
+	@Column(name = "DESCRIPCION", insertable = false, updatable = false)
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	@Column(name = "APELLIDOS_NOMBRES", insertable = false, updatable = false)
+	public String getApellidosNombres() {
+		return apellidosNombres;
+	}
+
+	public void setApellidosNombres(String apellidosNombres) {
+		this.apellidosNombres = apellidosNombres;
+	}
+
+	@Column(name = "TOTAL_FUERA_PLAZO", insertable = false, updatable = false)
+	public Integer getTotalFueraPlazo() {
+		return totalFueraPlazo;
+	}
+
+	public void setTotalFueraPlazo(Integer totalFueraPlazo) {
+		this.totalFueraPlazo = totalFueraPlazo;
+	}
+
+	@Column(name = "PORCENTAJE_FUERA_PLAZO", insertable = false, updatable = false)
+	public Double getPorcentajeFueraPlazo() {
+		return porcentajeFueraPlazo;
+	}
+
+	public void setPorcentajeFueraPlazo(Double porcentajeFueraPlazo) {
+		this.porcentajeFueraPlazo = porcentajeFueraPlazo;
+	}
+
+	@Column(name = "TOTAL_DENTRO_PLAZO", insertable = false, updatable = false)
+	public Integer getTotalDentroPlazo() {
+		return totalDentroPlazo;
+	}
+
+	public void setTotalDentroPlazo(Integer totalDentroPlazo) {
+		this.totalDentroPlazo = totalDentroPlazo;
+	}
+
+	@Column(name = "PORCENTAJE_DENTRO_PLAZO", insertable = false, updatable = false)
+	public Double getPorcentajeDentroPlazo() {
+		return porcentajeDentroPlazo;
+	}
+
+	public void setPorcentajeDentroPlazo(Double porcentajeDentroPlazo) {
+		this.porcentajeDentroPlazo = porcentajeDentroPlazo;
 	}
 
 

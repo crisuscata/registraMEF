@@ -1131,6 +1131,150 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		return lstResult;
 	}
 	
+	public List<ReporteAsistencia> getResumenAsistenciaTecnicaDentroFueraPlazo(Long idEstado, Long idUserInt,
+			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
+			throws Validador {
+		List<ReporteAsistencia> lstResult = new ArrayList<>();
+		StringBuffer sb = new StringBuffer(400);
+		List<Object> hs = new ArrayList<Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sb.append(" SELECT  "
+				+ "    TO_CHAR(TRUNC(a.FECHA_ASISTENCIA, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH') AS Month_Year, "
+				+ "    G.SEDE, "
+				+ "    T.DESCRIPCION, "
+				+ "    (D.NOMBRES || ' ' || D.APELLIDO_PATERNO || ' ' || D.APELLIDO_MATERNO) AS APELLIDOS_NOMBRES, "
+				+ "     "
+				+ "    COALESCE(SUM(CASE  "
+				+ "                 WHEN TRUNC(CAST(TO_TIMESTAMP(A.FECHA_FINALIZACION, 'DD/MM/YY HH:MI:SS,FF AM') AS DATE)) - A.FECHA_ASISTENCIA > 2  "
+				+ "                 THEN 1  "
+				+ "                 ELSE 0  "
+				+ "             END), 0) AS TOTAL_FUERA_PLAZO, "
+				+ "              "
+				+ "    ROUND( "
+				+ "        (COALESCE(SUM(CASE  "
+				+ "                     WHEN TRUNC(CAST(TO_TIMESTAMP(A.FECHA_FINALIZACION, 'DD/MM/YY HH:MI:SS,FF AM') AS DATE)) - A.FECHA_ASISTENCIA > 2  "
+				+ "                     THEN 1  "
+				+ "                     ELSE 0  "
+				+ "                 END), 0) / "
+				+ "        NULLIF( "
+				+ "            COALESCE(SUM(CASE  "
+				+ "                         WHEN TRUNC(CAST(TO_TIMESTAMP(A.FECHA_FINALIZACION, 'DD/MM/YY HH:MI:SS,FF AM') AS DATE)) - A.FECHA_ASISTENCIA <= 2  "
+				+ "                         THEN 1  "
+				+ "                         ELSE 0  "
+				+ "                     END), 0) + "
+				+ "            COALESCE(SUM(CASE  "
+				+ "                         WHEN TRUNC(CAST(TO_TIMESTAMP(A.FECHA_FINALIZACION, 'DD/MM/YY HH:MI:SS,FF AM') AS DATE)) - A.FECHA_ASISTENCIA > 2  "
+				+ "                         THEN 1  "
+				+ "                         ELSE 0  "
+				+ "                     END), 0), 0) * 100), 2) AS PORCENTAJE_FUERA_PLAZO,    "
+				+ "     "
+				+ "    COALESCE(SUM(CASE  "
+				+ "                 WHEN TRUNC(CAST(TO_TIMESTAMP(A.FECHA_FINALIZACION, 'DD/MM/YY HH:MI:SS,FF AM') AS DATE)) - A.FECHA_ASISTENCIA <= 2  "
+				+ "                 THEN 1  "
+				+ "                 ELSE 0  "
+				+ "             END), 0) AS TOTAL_DENTRO_PLAZO, "
+				+ "              "
+				+ "    ROUND( "
+				+ "        (COALESCE(SUM(CASE  "
+				+ "                     WHEN TRUNC(CAST(TO_TIMESTAMP(A.FECHA_FINALIZACION, 'DD/MM/YY HH:MI:SS,FF AM') AS DATE)) - A.FECHA_ASISTENCIA <= 2  "
+				+ "                     THEN 1  "
+				+ "                     ELSE 0  "
+				+ "                 END), 0) / "
+				+ "        NULLIF( "
+				+ "            COALESCE(SUM(CASE  "
+				+ "                         WHEN TRUNC(CAST(TO_TIMESTAMP(A.FECHA_FINALIZACION, 'DD/MM/YY HH:MI:SS,FF AM') AS DATE)) - A.FECHA_ASISTENCIA <= 2  "
+				+ "                         THEN 1  "
+				+ "                         ELSE 0  "
+				+ "                     END), 0) + "
+				+ "            COALESCE(SUM(CASE  "
+				+ "                         WHEN TRUNC(CAST(TO_TIMESTAMP(A.FECHA_FINALIZACION, 'DD/MM/YY HH:MI:SS,FF AM') AS DATE)) - A.FECHA_ASISTENCIA > 2  "
+				+ "                         THEN 1  "
+				+ "                         ELSE 0  "
+				+ "                     END), 0), 0) * 100), 2) AS PORCENTAJE_DENTRO_PLAZO,     "
+				+ "                      "
+				+ "     COALESCE(SUM(CASE  "
+				+ "                 WHEN TRUNC(CAST(TO_TIMESTAMP(A.FECHA_FINALIZACION, 'DD/MM/YY HH:MI:SS,FF AM') AS DATE)) - A.FECHA_ASISTENCIA <= 2  "
+				+ "                 THEN 1  "
+				+ "                 ELSE 0  "
+				+ "             END), 0) + "
+				+ "    COALESCE(SUM(CASE  "
+				+ "                 WHEN TRUNC(CAST(TO_TIMESTAMP(A.FECHA_FINALIZACION, 'DD/MM/YY HH:MI:SS,FF AM') AS DATE)) - A.FECHA_ASISTENCIA > 2  "
+				+ "                 THEN 1  "
+				+ "                 ELSE 0  "
+				+ "             END), 0) AS TOTAL         "
+				+ "              "
+				+ "              "
+				+ "FROM "
+				+ "    REGISTRAMEF.DT_ASISTENCIA A "
+				+ "LEFT JOIN "
+				+ "    REGISTRAMEF.MS_SEDES G ON G.ID_SEDE = A.ID_SEDE "
+				+ "LEFT JOIN "
+				+ "    REGISTRAMEF.MS_USUARIOS D ON D.IDUSUARIO = A.ID_USUINTERNO "
+				+ "LEFT JOIN "
+				+ "    REGISTRAMEF.PRT_PARAMETROS T ON T.IDPARAMETRO = D.ID_CARGO "
+				+ "WHERE "
+				+ "    A.ESTADO =   ").append(estadoFinalizado);
+
+		if (fechaInicio != null && fechaFin != null) {
+			sb.append(" AND TRUNC(A.FECHA_ASISTENCIA) BETWEEN TO_DATE('" + sdf.format(fechaInicio)
+					+ "','DD/MM/YYYY') AND TO_DATE('" + sdf.format(fechaFin) + "','DD/MM/YYYY') ");
+		}
+
+		if (idSede != null && idSede.longValue() > 0) {
+			sb.append(" AND A.ID_SEDE =  ").append(idSede);
+		}
+
+		sb.append(" AND TO_CHAR(A.FECHA_ASISTENCIA, 'DY', 'NLS_DATE_LANGUAGE=ENGLISH') NOT IN ('SAT', 'SUN') "
+				+ "    AND A.FECHA_ASISTENCIA NOT IN (SELECT FE_FECHA FROM TA_FERIADOS) ");
+		
+		sb.append(" GROUP BY  "
+				+ "    TO_CHAR(TRUNC(a.FECHA_ASISTENCIA, 'MM'), 'FMMonth YYYY', 'NLS_DATE_LANGUAGE=SPANISH'), "
+				+ "    G.SEDE, "
+				+ "    T.DESCRIPCION, "
+				+ "    D.NOMBRES, "
+				+ "    D.APELLIDO_PATERNO, "
+				+ "    D.APELLIDO_MATERNO "
+				+ "ORDER BY  "
+				+ "    G.SEDE DESC");
+		
+		Object param[] = new Object[hs.size()];
+		hs.toArray(param);
+		List<Object> lstObject = super.findNative(sb.toString(), param);
+		
+		if(lstObject!=null && !lstObject.isEmpty()) {
+			for (Object result : lstObject) {
+				Object[] object = (Object[]) result;
+				
+				ReporteAsistencia objResult = new ReporteAsistencia();
+				
+				objResult.setMonthYear((String) object[0]);
+				objResult.setSede((String) object[1]);
+				objResult.setDescripcion((String) object[2]);
+				objResult.setApellidosNombres((String) object[3]);
+				
+				BigDecimal totalFueraPlazo = (BigDecimal) object[4];
+				objResult.setTotalFueraPlazo(totalFueraPlazo != null ? totalFueraPlazo.intValue() : null);
+				
+				BigDecimal porcentajeFueraPlazo = (BigDecimal) object[5];
+				objResult.setPorcentajeFueraPlazo(porcentajeFueraPlazo.doubleValue());
+				
+				BigDecimal totalDentroPlazo = (BigDecimal) object[6];
+				objResult.setTotalDentroPlazo(totalDentroPlazo != null ? totalDentroPlazo.intValue() : null);
+				
+				BigDecimal porcentajeDentroPlazo = (BigDecimal) object[7];
+				objResult.setPorcentajeDentroPlazo(porcentajeDentroPlazo.doubleValue());
+				
+				BigDecimal total = (BigDecimal) object[8];
+				objResult.setTotal(total != null ? total.intValue() : null);
+				
+				lstResult.add(objResult);
+			}
+			
+		}
+		
+		return lstResult;
+	}
+	
 	
 	@Override
 	public List<ReporteConsulta> getResumenEstadisticaPorTema(Long idEstado, Long idUserInt,

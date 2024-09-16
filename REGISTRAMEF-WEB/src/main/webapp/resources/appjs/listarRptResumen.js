@@ -580,6 +580,11 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			  monthYearMod:null
 		};
 		
+		$scope.filtroasistecnicaplazo ={
+			  monthYear:null,
+			  monthYearMod:null
+		};
+		
 		$scope.filtroconsulta ={
 			  monthYear:null,
 			  monthYearMod:null
@@ -1614,9 +1619,11 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 				$scope.buildDashboardConsultaPorTematica(res.data);
 				$scope.buildDashboardConsultaByModalidad(res.data);
 				
-				
-				
 				$scope.buildDashboardEstadisticaPorTema(res.data);
+				$scope.buildTableAsistenciaDentroFueraPlazo(res.data);
+				
+				
+				
 				
 				/*if (res.data!=null && res.data.listCapacitacion.length > 0) {
 					$scope.listCapacitacion = res.data.listCapacitacion.filter(c => c.asitio === 'SI' && c.estado === 'FINALIZADO');
@@ -2593,7 +2600,42 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 		}
 		
+		/**
+		 $scope.listAsistenciaTecnicaSegunTematica=[];
+		$scope.listaAsisTecnicaByTematica=[];
+		$scope.buildDashboardAsistenciaTecPorTematica = function(data){
+			$scope.listAsistenciaTecnicaSegunTematica = data.listReporteAsistenciaTecnicaSegunTematica; 
+		 * 
+		 */
 		
+		//ASISTENCIA TECNICA FUERA DE PLAZO
+		
+		$scope.onDashAsistTecnicaPlazo = function(month) {
+			if (month === 0) {
+				$scope.listAsistenciaDentroFueraPlazo = $scope.listAsistenciaDentroFueraPlazoGeneral;
+	        } else {
+	        	$scope.listAsistenciaDentroFueraPlazo = $scope.listAsistenciaDentroFueraPlazoGeneral.filter(item => item.monthYear.includes(month));
+	        }
+	    };
+		
+		$scope.listAsistenciaDentroFueraPlazo=[];
+		$scope.listAsistenciaDentroFueraPlazoGeneral=[];
+		$scope.listaMonthAsistenciaDentroFueraPlazo=[];
+		$scope.buildTableAsistenciaDentroFueraPlazo = function(data){
+			$scope.listAsistenciaDentroFueraPlazoGeneral = data.listAsistenciaDentroFueraPlazo; 
+			
+			$scope.listaMonthAsistenciaDentroFueraPlazo = $scope.listAsistenciaDentroFueraPlazoGeneral.filter((value, index, self) => 
+    		index === self.findIndex((t) => t.monthYear === value.monthYear)
+			);
+			
+			var lastMonth = $scope.findMonthFechaFinal();
+			var lastAnio = $scope.getAnio($scope.filtro.fechaFin);
+			
+			$scope.filtroasistecnicaplazo.monthYearMod = lastMonth + ' '+ lastAnio;
+			
+			$scope.onDashAsistTecnicaPlazo(lastMonth);
+			
+		}
 		
 		
 		

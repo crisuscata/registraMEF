@@ -562,8 +562,58 @@
 					
 		  	</md-grid-tile>
 			
+			<md-grid-tile class="gray" style="padding: 16px;"></md-grid-tile>
 			
-			
+			<md-grid-tile  >
+							  
+				<fieldset style="margin-left: 15px;">
+							<legend>REGISTROS DENTRO Y FUERA DE PLAZO DE ASISTENCIAS T&Eacute;CNICAS</legend>
+							
+							<md-select
+							    ng-model="filtroasistecnicaplazo.monthYearMod"
+							    ng-change="onDashAsistTecnicaPlazo(filtroasistecnicaplazo.monthYearMod)" 
+							    placeholder="Mes"> 
+							    <md-option ng-value="0">Todos los Meses</md-option>
+							    <md-option
+							        ng-repeat="item in listaMonthAsistenciaDentroFueraPlazo" ng-value="item.monthYear">
+							        {{item.monthYear}} 
+							    </md-option>
+							</md-select>
+							
+							<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+							    <tr>
+							        <th rowspan="2">Conectamef</th> 
+							        <th rowspan="2">Especialista/analista/implantador</th>
+							        <th rowspan="2">Apellidos y nombres</th>
+							        <th colspan="2">Registros fuera de plazo</th>
+							        <th colspan="2">Registros dentro de plazo</th>
+							        <th rowspan="2">Total de registros</th>
+							    </tr>
+							    <tr>
+							        <th>N&uacute;mero</th>
+							        <th>Porcentaje (%)</th>
+							        <th>N&uacute;mero</th>
+							        <th>Porcentaje (%)</th>
+							    </tr>
+								<tr ng-repeat="item in listAsistenciaDentroFueraPlazo">
+								        <td>{{item.sede}}</td> 
+								        <td>{{item.descripcion}}</td>
+								        <td>{{item.apellidosNombres}}</td>
+								        <td>{{item.totalFueraPlazo}}</td> 
+								        <td>{{item.porcentajeFueraPlazo}}%</td> 
+								        <td>{{item.totalDentroPlazo}}</td> 
+								        <td>{{item.porcentajeDentroPlazo}}%</td> 
+								        <td>{{item.total}}</td>  
+								    </tr>
+							</table>
+
+							
+							
+							
+
+				</fieldset>
+															
+			</md-grid-tile>
 
 
         
