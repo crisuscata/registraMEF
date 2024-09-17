@@ -168,6 +168,7 @@ import pe.gob.mef.registramef.bs.domain.MsUsuarios;
 import pe.gob.mef.registramef.bs.domain.PrtParametros;
 import pe.gob.mef.registramef.bs.domain.ReporteAsistencia;
 import pe.gob.mef.registramef.bs.domain.ReporteAsistenciaDetallado;
+import pe.gob.mef.registramef.bs.domain.ReporteCapacitacion;
 import pe.gob.mef.registramef.bs.domain.ReporteCapacitacionDetallado;
 import pe.gob.mef.registramef.bs.domain.ReporteConsulta;
 import pe.gob.mef.registramef.bs.domain.ReporteVisitaDetalle;
@@ -22690,50 +22691,80 @@ public class ServicioImp implements Servicio, Serializable {
 				fechaFin = fechaIni;
 			}
 			
+			log.info("ServiceImpl-Invoking getResumenCapacitacion");
 			List<ReporteCapacitacionDetallado> lstCapaEvolMensual = reporteServicioDao.getResumenCapacitacion(idUserInt, idEstado, flagAsis, fechaIni,
 					fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListCapacitacionEvolMensual().addAll(lstCapaEvolMensual);
 			
+			log.info("ServiceImpl-Invoking getResumenCapacitacionUsersByTematica");
 			List<ReporteCapacitacionDetallado> lstCapaUserByTematica = reporteServicioDao.getResumenCapacitacionUsersByTematica(idUserInt, idEstado, flagAsis, fechaIni,
 					fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListCapacitacionUsSegunTematica().addAll(lstCapaUserByTematica);
 			
-			
+			log.info("ServiceImpl-Invoking getResumenCapacitacionByModalidad");
 			List<ReporteCapacitacionDetallado> lstCapaByModalidad = reporteServicioDao.getResumenCapacitacionByModalidad(idUserInt, idEstado, flagAsis, fechaIni,
 					fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListCapacitacionModalidad().addAll(lstCapaByModalidad);
 			
+			log.info("ServiceImpl-Invoking getResumenReunionTrabajoEvolMensual");
 			List<ReporteVisitaDetalle> lstReunionTrabajoByEvolMensual = reporteServicioDao.getResumenReunionTrabajoEvolMensual(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListReunionTrabajoEvolMensual().addAll(lstReunionTrabajoByEvolMensual);
 			
+			log.info("ServiceImpl-Invoking getResumenReunionTrabajoUsersByTematica");
 			List<ReporteVisitaDetalle> lstReunionTrabajoByTematica = reporteServicioDao.getResumenReunionTrabajoUsersByTematica(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListReunionTrabajoUsSegunTematica().addAll(lstReunionTrabajoByTematica);
 			
+			log.info("ServiceImpl-Invoking getResumenAsistenciaTecnicaEvolMensual");
 			List<ReporteAsistencia> lstAsistenciaTecnicaEvolMensual = reporteServicioDao.getResumenAsistenciaTecnicaEvolMensual(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListReporteAsistenciaTecnicaEvolMensual().addAll(lstAsistenciaTecnicaEvolMensual);
 			
+			log.info("ServiceImpl-Invoking getResumenAsistenciaTecnicaByTematica");
 			List<ReporteAsistencia> lstAsistenciaTecnicaSegunTematica = reporteServicioDao.getResumenAsistenciaTecnicaByTematica(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListReporteAsistenciaTecnicaSegunTematica().addAll(lstAsistenciaTecnicaSegunTematica);
 			
+			log.info("ServiceImpl-Invoking getResumenAsistenciaTecnicaByModalidad");
 			List<ReporteAsistencia> lstAsistenciaTecnicaByModalidad = reporteServicioDao.getResumenAsistenciaTecnicaByModalidad(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListReporteAsistenciaTecnicaModalidad().addAll(lstAsistenciaTecnicaByModalidad);
 			
-			
+			log.info("ServiceImpl-Invoking getResumenConsultaEvolMensual");
 			List<ReporteConsulta> lstConsultaEvolMensual = reporteServicioDao.getResumenConsultaEvolMensual(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getLisConsultaEvolMensual().addAll(lstConsultaEvolMensual);
 			
+			log.info("ServiceImpl-Invoking getResumenConsultaByTematica");
 			List<ReporteConsulta> lstConsultaSegunTematica = reporteServicioDao.getResumenConsultaByTematica(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListConsultaSegunTematica().addAll(lstConsultaSegunTematica);
 			
+			log.info("ServiceImpl-Invoking getResumenConsultaByModalidad");
 			List<ReporteConsulta> lstConsultaModalidad = reporteServicioDao.getResumenConsultaByModalidad(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListConsultaModalidad().addAll(lstConsultaModalidad);
 			
-			
+			log.info("ServiceImpl-Invoking getResumenEstadisticaPorTema");
 			List<ReporteConsulta> lstEstadisticaPorTema = reporteServicioDao.getResumenEstadisticaPorTema(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListEstadisticaPorTema().addAll(lstEstadisticaPorTema); 
 			
+			log.info("ServiceImpl-Invoking getResumenAsistenciaTecnicaDentroFueraPlazo");
 			List<ReporteAsistencia> listAsistenciaDentroFueraPlazo = reporteServicioDao.getResumenAsistenciaTecnicaDentroFueraPlazo(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
 			result.getListAsistenciaDentroFueraPlazo().addAll(listAsistenciaDentroFueraPlazo);
+			
+			log.info("ServiceImpl-Invoking getResumenConsultaDentroFueraPlazo");
+			List<ReporteConsulta> listConsultaDentroFueraPlazo = reporteServicioDao.getResumenConsultaDentroFueraPlazo(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			result.getListConsultaDentroFueraPlazo().addAll(listConsultaDentroFueraPlazo);
+			
+			log.info("ServiceImpl-Invoking getResumenCapacitacionDentroFueraPlazo");
+			List<ReporteCapacitacion> listCapacitacionDentroFueraPlazo = reporteServicioDao.getResumenCapacitacionDentroFueraPlazo(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			result.getListCapacitacionDentroFueraPlazo().addAll(listCapacitacionDentroFueraPlazo);
+			
+			log.info("ServiceImpl-Invoking getResumenAsistenciaTecnicaSADentroFueraPlazo");
+			List<ReporteAsistencia> listAsistenciaSADentroFueraPlazo = reporteServicioDao.getResumenAsistenciaTecnicaSADentroFueraPlazo(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			result.getListAsistenciaSADentroFueraPlazo().addAll(listAsistenciaSADentroFueraPlazo);
+			
+			log.info("ServiceImpl-Invoking getResumenConsultaSADentroFueraPlazo");
+			List<ReporteConsulta> listConsultaSADentroFueraPlazo = reporteServicioDao.getResumenConsultaSADentroFueraPlazo(idEstado, idUserInt, fechaIni, fechaFin, idSistAdmin, idSede, maxRegistro, minRegistro);
+			result.getListConsultaSADentroFueraPlazo().addAll(listConsultaSADentroFueraPlazo);
+			
+			
+			
+			
 			
 			
 			return result;

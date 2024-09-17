@@ -5,6 +5,7 @@ import java.util.List;
 
 import pe.gob.mef.registramef.bs.domain.ReporteAsistencia;
 import pe.gob.mef.registramef.bs.domain.ReporteAsistenciaDetallado;
+import pe.gob.mef.registramef.bs.domain.ReporteCapacitacion;
 import pe.gob.mef.registramef.bs.domain.ReporteCapacitacionDetallado;
 import pe.gob.mef.registramef.bs.domain.ReporteConsulta;
 import pe.gob.mef.registramef.bs.domain.ReporteVisitaDetalle;
@@ -31,6 +32,11 @@ public class DtReportResumenDto {
 	private List<ReporteConsulta> 	listEstadisticaPorTema;
 	
 	private List<ReporteAsistencia> listAsistenciaDentroFueraPlazo;
+	private List<ReporteConsulta> listConsultaDentroFueraPlazo;
+	private List<ReporteCapacitacion> listCapacitacionDentroFueraPlazo;
+	
+	private List<ReporteAsistencia> listAsistenciaSADentroFueraPlazo;
+	private List<ReporteConsulta> listConsultaSADentroFueraPlazo;
 	
 	
 	public DtReportResumenDto() {
@@ -49,7 +55,10 @@ public class DtReportResumenDto {
 		this.listConsultaSegunTematica = new ArrayList<>();
 		this.listConsultaModalidad = new ArrayList<>();
 		this.listAsistenciaDentroFueraPlazo = new ArrayList<>();
-		
+		this.listConsultaDentroFueraPlazo = new ArrayList<>();
+		this.listCapacitacionDentroFueraPlazo = new ArrayList<>();
+		this.listAsistenciaSADentroFueraPlazo = new ArrayList<>();
+		this.listConsultaSADentroFueraPlazo = new ArrayList<>();
 	}
 	
 	public List<ReporteAsistenciaDetallado> getListAsistencia() {
@@ -166,5 +175,37 @@ public class DtReportResumenDto {
 
 	public void setListAsistenciaDentroFueraPlazo(List<ReporteAsistencia> listAsistenciaDentroFueraPlazo) {
 		this.listAsistenciaDentroFueraPlazo = listAsistenciaDentroFueraPlazo;
+	}
+
+	public List<ReporteConsulta> getListConsultaDentroFueraPlazo() {
+		return listConsultaDentroFueraPlazo;
+	}
+
+	public void setListConsultaDentroFueraPlazo(List<ReporteConsulta> listConsultaDentroFueraPlazo) {
+		this.listConsultaDentroFueraPlazo = listConsultaDentroFueraPlazo;
+	}
+
+	public List<ReporteCapacitacion> getListCapacitacionDentroFueraPlazo() {
+		return listCapacitacionDentroFueraPlazo;
+	}
+
+	public void setListCapacitacionDentroFueraPlazo(List<ReporteCapacitacion> listCapacitacionDentroFueraPlazo) {
+		this.listCapacitacionDentroFueraPlazo = listCapacitacionDentroFueraPlazo;
+	}
+
+	public List<ReporteAsistencia> getListAsistenciaSADentroFueraPlazo() {
+		return listAsistenciaSADentroFueraPlazo;
+	}
+
+	public void setListAsistenciaSADentroFueraPlazo(List<ReporteAsistencia> listAsistenciaSADentroFueraPlazo) {
+		this.listAsistenciaSADentroFueraPlazo = listAsistenciaSADentroFueraPlazo;
+	}
+
+	public List<ReporteConsulta> getListConsultaSADentroFueraPlazo() {
+		return listConsultaSADentroFueraPlazo;
+	}
+
+	public void setListConsultaSADentroFueraPlazo(List<ReporteConsulta> listConsultaSADentroFueraPlazo) {
+		this.listConsultaSADentroFueraPlazo = listConsultaSADentroFueraPlazo;
 	}
 }

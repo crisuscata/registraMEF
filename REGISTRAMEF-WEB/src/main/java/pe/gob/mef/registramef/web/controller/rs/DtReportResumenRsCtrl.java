@@ -36,6 +36,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import pe.gob.mef.registramef.bs.ctlracceso.Roles;
@@ -55,11 +56,12 @@ import pe.gob.mef.registramef.bs.utils.PropertiesMg;
 import pe.gob.mef.registramef.web.controller.rs.data.RespuestaError;
 import pe.gob.mef.registramef.web.utils.ZipDirectory;
 
+@RestController
 @Path("/ctrlDtReportResumen")
 public class DtReportResumenRsCtrl {
 	
 	@Autowired
-	private Servicio servicio = null;
+	private Servicio servicio;
 	
 	
 	@GET
@@ -386,6 +388,64 @@ public class DtReportResumenRsCtrl {
 					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
 					}).build();
 		}
+	}
+	
+	@GET
+	@Path("/getTotalRegistros")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTotalRegistros(@Context HttpServletRequest req, 
+	                                 @Context HttpServletResponse res,
+	                                 @HeaderParam("authorization") String authString
+	                                 ) throws ParseException, Validador {
+		
+		String sfechaInicio = req.getParameter("fechaInicio");
+		String sfechaFin = req.getParameter("fechaFin");
+		Long idSede = Long.parseLong(req.getParameter("idSede"));
+		Long idSisAdmin = Long.parseLong(req.getParameter("idSisAdmin"));
+		Long idUserInt = Long.parseLong(req.getParameter("idUserInt"));
+		Long idEstado = Long.parseLong(req.getParameter("idEstado"));
+		Long idTipoServicio = Long.parseLong(req.getParameter("idTipoServicio"));
+		boolean flagAsis = Boolean.getBoolean(req.getParameter("flagAsis"));
+		
+		
+	 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	    Date fechaInicio = null;
+	    Date fechaFin = null;
+	    
+	    if (sfechaInicio != null) {
+            fechaInicio = formatter.parse(sfechaInicio);
+        }
+        if (sfechaFin != null) {
+            fechaFin = formatter.parse(sfechaFin);
+        }
+        
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+		Principal usuario = req.getUserPrincipal();
+		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
+		if (msUsuariosBk == null)
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			}).build();
+		
+		if(!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
+			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
+					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
+			}).build();
+		
+        Long totalRegistro=0L;
+		
+		if(idTipoServicio.longValue()==idTipoServicio) {
+			totalRegistro=servicio.getTotalReporteAsistenciaDetalleBkList(fechaInicio, fechaFin, idSisAdmin, idSede, idUserInt, idEstado);
+		} else if(idTipoServicio.longValue()==idTipoServicio) {
+			totalRegistro=servicio.getTotalResumenCapacitacionDetallado(fechaInicio, fechaFin, idSisAdmin, idSede,idUserInt,idEstado,flagAsis);
+		} else if(idTipoServicio.longValue()==idTipoServicio) {
+			totalRegistro=servicio.getTotalResumenConsultas(fechaInicio, fechaFin, idSisAdmin, idSede, idUserInt,idEstado);
+		} else if(idTipoServicio.longValue()==idTipoServicio) {
+			totalRegistro=servicio.getTotalResumenVisitas(fechaInicio, fechaFin, idSisAdmin, idSede, idUserInt,idEstado);
+		}
+		
+		return Response.status(200).entity(totalRegistro).build();
 	}
 	
 	

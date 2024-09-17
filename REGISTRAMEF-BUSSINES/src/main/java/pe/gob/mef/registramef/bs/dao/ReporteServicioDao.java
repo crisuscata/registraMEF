@@ -66,6 +66,26 @@ public interface ReporteServicioDao {
 	List<ReporteAsistencia> getResumenAsistenciaTecnicaDentroFueraPlazo(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
 			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;
 	
+	List<ReporteConsulta> getResumenConsultaDentroFueraPlazo(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;
+	
+	List<ReporteCapacitacion> getResumenCapacitacionDentroFueraPlazo(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;
+	
+	List<ReporteAsistencia> getResumenAsistenciaTecnicaSADentroFueraPlazo(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;
+	
+	List<ReporteConsulta> getResumenConsultaSADentroFueraPlazo(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador;
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	List<ReporteConsulta> getResumenConsultaEvolMensual(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,

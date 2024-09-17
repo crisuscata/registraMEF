@@ -50,7 +50,15 @@ public class ReporteCapacitacion implements java.io.Serializable {
 	private String codEjecut  = null;
 	private String entidad  = null;
 	
+	private String monthYear;
+	private Integer total;
 	
+	private String descripcion  = null;
+	private String apellidosNombres  = null;
+	private Integer totalFueraPlazo  = null;
+	private Double porcentajeFueraPlazo  = null;
+	private Integer totalDentroPlazo  = null;
+	private Double porcentajeDentroPlazo  = null;
 	
 	
 	public ReporteCapacitacion() {
@@ -392,8 +400,77 @@ public class ReporteCapacitacion implements java.io.Serializable {
 	}
 	
 	
+	@Column(name = "DESCRIPCION", insertable = false, updatable = false)
+	public String getDescripcion() {
+		return descripcion;
+	}
 
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
 
+	@Column(name = "APELLIDOS_NOMBRES", insertable = false, updatable = false)
+	public String getApellidosNombres() {
+		return apellidosNombres;
+	}
+
+	public void setApellidosNombres(String apellidosNombres) {
+		this.apellidosNombres = apellidosNombres;
+	}
+
+	@Column(name = "TOTAL_FUERA_PLAZO", insertable = false, updatable = false)
+	public Integer getTotalFueraPlazo() {
+		return totalFueraPlazo;
+	}
+
+	public void setTotalFueraPlazo(Integer totalFueraPlazo) {
+		this.totalFueraPlazo = totalFueraPlazo;
+	}
+
+	@Column(name = "PORCENTAJE_FUERA_PLAZO", insertable = false, updatable = false)
+	public Double getPorcentajeFueraPlazo() {
+		return porcentajeFueraPlazo;
+	}
+
+	public void setPorcentajeFueraPlazo(Double porcentajeFueraPlazo) {
+		this.porcentajeFueraPlazo = porcentajeFueraPlazo;
+	}
+
+	@Column(name = "TOTAL_DENTRO_PLAZO", insertable = false, updatable = false)
+	public Integer getTotalDentroPlazo() {
+		return totalDentroPlazo;
+	}
+
+	public void setTotalDentroPlazo(Integer totalDentroPlazo) {
+		this.totalDentroPlazo = totalDentroPlazo;
+	}
+
+	@Column(name = "PORCENTAJE_DENTRO_PLAZO", insertable = false, updatable = false)
+	public Double getPorcentajeDentroPlazo() {
+		return porcentajeDentroPlazo;
+	}
+
+	public void setPorcentajeDentroPlazo(Double porcentajeDentroPlazo) {
+		this.porcentajeDentroPlazo = porcentajeDentroPlazo;
+	}
+
+	@Column(name = "MONTH_YEAR", insertable = false, updatable = false)
+	public String getMonthYear() {
+		return monthYear;
+	}
+
+	public void setMonthYear(String monthYear) {
+		this.monthYear = monthYear;
+	}
+
+	@Column(name = "TOTAL", insertable = false, updatable = false)
+	public Integer getTotal() {
+		return total;
+	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
 			
 	
 }

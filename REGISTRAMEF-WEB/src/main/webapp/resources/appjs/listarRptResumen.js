@@ -26,6 +26,8 @@ var descargarUrl = contexto+"/rs/ctrldtAsistencia/descargar/";
 var descargarvistaUrl = contexto+"/rs/ctrldtAsistencia/descargarvista";
 var descargarXLSUrl = contexto+"/rs/ctrlDtReportResumen/descargarXLS";
 
+var totalRegistrosUrl = contexto+"/rs/ctrlDtReportResumen/getTotalRegistros";
+
 /*
 var buscarCodEjecUrl = contexto+"/rs/ctrldtAsistencia/buscarcodejec/";
 var listaMsTemaidTemaIdTemaUrl = contexto+"/rs/ctrldtAsistencia/listaMsTemaIdTemaIdTema";
@@ -563,6 +565,22 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			  idEstado: 0,
 			  flagAsis: false
 		}; 
+		
+		$scope.limpiarFiltro = function() {
+		    $scope.filtro = {
+		        fechaInicio: $scope.firstDate(new Date()),
+		        fechaFin: $scope.getLastDayOfMonth(new Date()),
+		        idTipoServicio: null,
+		        idSede: 0,
+		        idSisAdmin: 0,
+		        idUserInt: 0,
+		        idEstado: 0,
+		        flagAsis: false
+		    };
+		    
+		    $scope.showDashboard = 0;
+			$scope.totalRegistros=null;
+		};
 	
 	  
 	  $scope.filtrocapa ={
@@ -581,6 +599,26 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		};
 		
 		$scope.filtroasistecnicaplazo ={
+			  monthYear:null,
+			  monthYearMod:null
+		};
+		
+		$scope.filtroasistecnicasaplazo ={
+			  monthYear:null,
+			  monthYearMod:null
+		};
+		
+		$scope.filtroconsultaplazo ={
+			  monthYear:null,
+			  monthYearMod:null
+		};
+		
+		$scope.filtroconsultasaplazo ={
+			  monthYear:null,
+			  monthYearMod:null
+		};
+		
+		$scope.filtrocapacitacionplazo ={
 			  monthYear:null,
 			  monthYearMod:null
 		};
@@ -693,8 +731,23 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 	        location.href = $scope.descargarXSL();
 	    };*/
 	    
+	    $scope.totalRegistros=null;
 	    $scope.descargarXSL = function(){
 	        return  descargarXLSUrl+$scope.getURLParametros();
+	    };
+	    
+	    $scope.totalRegistrosURLF = function(){
+			
+			$http.get(totalRegistrosUrl+$scope.getURLParametros()).then(function(res){
+				
+				console.log("$scope.totalRegistrosURLF - res.data" + JSON.stringify( res.data ));
+				
+				$scope.totalRegistros = res.data; 
+			},
+			function error(errResponse) {
+				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+			});
+			
 	    };
 	    
 	    $scope.validateDescargaXSL = function(ev){
@@ -711,17 +764,35 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 				);
     			return;
     		}
+    		
+	    	if (!$scope.filtro.fechaInicio || !$scope.filtro.fechaFin) {
+				$mdDialog.show(
+					$mdDialog.alert()
+					.parent(angular.element(document.body))
+					.clickOutsideToClose(true)
+					.title('REPORTE RESUMEN')
+					.textContent("DEBE SELECCIONAR AMBAS FECHAS")
+					.ok('OK')
+				);
+				return;
+			}
+	
+	    	if ($scope.filtro.fechaInicio > $scope.filtro.fechaFin) {
+				$mdDialog.show(
+					$mdDialog.alert()
+					.parent(angular.element(document.body))
+					.clickOutsideToClose(true)
+					.title('REPORTE RESUMEN')
+					.textContent("LA FECHA DE INICIO NO PUEDE SER MAYOR QUE LA FECHA FIN")
+					.ok('OK')
+				);
+				return;
+	    	}
 	    	
 	    	location.href = $scope.descargarXSL();
+	    	
+	    	$scope.totalRegistrosURLF();
 	    }
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
 	    
 	    $scope.dtAsistenciaAnular = {
 				idAsistencia : null,
@@ -1621,7 +1692,10 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 				
 				$scope.buildDashboardEstadisticaPorTema(res.data);
 				$scope.buildTableAsistenciaDentroFueraPlazo(res.data);
-				
+				$scope.buildTableConsultaDentroFueraPlazo(res.data);
+				$scope.buildTableCapacitacionDentroFueraPlazo(res.data);
+				$scope.buildTableAsistenciaSADentroFueraPlazo(res.data);
+				$scope.buildTableConsultaSADentroFueraPlazo(res.data);
 				
 				
 				
@@ -1654,19 +1728,9 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			return year; 
 		}
 		
-		
-		/*
-		$scope.showReportResumen2 = function() {
-			  $scope.meses = [" ", "Enero 2024", "Febrero 2024", "Total"];
-			  $scope.dataRows = [
-			    ["Capacitados", "7000", "8000", "15000"],
-			    ["Some Other Data", "Data1", "Data2", "Data3"]
-			  ];
-			}
-*/
-        
+		$scope.showDashboard = 0;
 		$scope.showReportResumen =function(){
-			
+			$scope.showDashboard = 1;
 			const fechaInicio = new Date($scope.filtro.fechaInicio);
 			const fechaFin = new Date($scope.filtro.fechaFin);
 			
@@ -1733,38 +1797,6 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		    };
 		};
 
-		/*$scope.showReportResumen2 = function() {
-		    var listCapacitacion = [
-		        {
-		            "fechaInic": 1721223000000, // July 2024 (timestamp for a date in July)
-		            "cantParticAsist": 100
-		        },
-		        {
-		            "fechaInic": 1721223000000, // July 2024
-		            "cantParticAsist": 300
-		        },
-		        {
-		            "fechaInic": 1721854800000, // August 2024 (timestamp for a date in August)
-		            "cantParticAsist": 300
-		        },
-		        {
-		            "fechaInic": 1721854800000, // August 2024
-		            "cantParticAsist": 700
-		        }
-		    ];
-
-		    listCapacitacion.forEach(function(event) {
-		        const date = new Date(event.fechaInic);
-		        console.log('Converted Date:', date.toUTCString()); // Print the UTC date
-		    });
-
-		    var result = $scope.buildCapacitacionSummary(listCapacitacion);
-
-		    console.log(JSON.stringify(result));
-		};*/
-
-
-		
 		$scope.buildDashboardCapacitacion =function(data) {
 			
 			var listCapacitacionEvolMensual = data.listCapacitacionEvolMensual; 
@@ -2616,6 +2648,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 	        } else {
 	        	$scope.listAsistenciaDentroFueraPlazo = $scope.listAsistenciaDentroFueraPlazoGeneral.filter(item => item.monthYear.includes(month));
 	        }
+	        
 	    };
 		
 		$scope.listAsistenciaDentroFueraPlazo=[];
@@ -2636,6 +2669,248 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			$scope.onDashAsistTecnicaPlazo(lastMonth);
 			
 		}
+		
+		$scope.getTotalFueraPlazoAsisTec = function(listAsistenciaDentroFueraPlazo) {
+		    let total = 0;
+		    listAsistenciaDentroFueraPlazo.forEach(function(item) {
+		        total += item.totalFueraPlazo;
+		    });
+		    return total;
+		};
+		
+		$scope.getTotalDentroPlazoAsisTec = function(listAsistenciaDentroFueraPlazo) {
+		    let total = 0;
+		    listAsistenciaDentroFueraPlazo.forEach(function(item) {
+		        total += item.totalDentroPlazo;
+		    });
+		    return total;
+		};
+		
+		$scope.getTotalRegistrosAsisTec = function(listAsistenciaDentroFueraPlazo) {
+		    let total = 0;
+		    listAsistenciaDentroFueraPlazo.forEach(function(item) {
+		        total += item.total;
+		    });
+		    return total;
+		};
+		
+		//CONSULTA FUERA DE PLAZO
+		$scope.onDashConsultaPlazo = function(month) {
+			if (month === 0) {
+				$scope.listConsultaDentroFueraPlazo = $scope.listConsultaDentroFueraPlazoGeneral;
+	        } else {
+	        	$scope.listConsultaDentroFueraPlazo = $scope.listConsultaDentroFueraPlazoGeneral.filter(item => item.monthYear.includes(month));
+	        }
+	    };
+		
+		$scope.listConsultaDentroFueraPlazo=[];
+		$scope.listConsultaDentroFueraPlazoGeneral=[];
+		$scope.listaMonthConsultaDentroFueraPlazo=[];
+		$scope.buildTableConsultaDentroFueraPlazo = function(data){
+			$scope.listConsultaDentroFueraPlazoGeneral = data.listConsultaDentroFueraPlazo; 
+			
+			$scope.listaMonthConsultaDentroFueraPlazo = $scope.listConsultaDentroFueraPlazoGeneral.filter((value, index, self) => 
+    		index === self.findIndex((t) => t.monthYear === value.monthYear)
+			);
+			
+			var lastMonth = $scope.findMonthFechaFinal();
+			var lastAnio = $scope.getAnio($scope.filtro.fechaFin);
+			
+			$scope.filtroconsultaplazo.monthYearMod = lastMonth + ' '+ lastAnio;
+			
+			$scope.onDashConsultaPlazo(lastMonth);
+			
+		}
+		
+		$scope.getTotalFueraPlazoConsulta = function(listConsultaDentroFueraPlazo) {
+		    let total = 0;
+		    listConsultaDentroFueraPlazo.forEach(function(item) {
+		        total += item.totalFueraPlazo;
+		    });
+		    return total;
+		};
+		
+		$scope.getTotalDentroPlazoConsulta = function(listConsultaDentroFueraPlazo) {
+		    let total = 0;
+		    listConsultaDentroFueraPlazo.forEach(function(item) {
+		        total += item.totalDentroPlazo;
+		    });
+		    return total;
+		};
+		
+		$scope.getTotalRegistrosConsulta = function(listConsultaDentroFueraPlazo) {
+		    let total = 0;
+		    listConsultaDentroFueraPlazo.forEach(function(item) {
+		        total += item.total;
+		    });
+		    return total;
+		};
+		
+		//CAPACITACION FUERA DE PLAZO
+		
+		$scope.onDashCapacitacionPlazo = function(month) {
+			if (month === 0) {
+				$scope.listCapacitacionDentroFueraPlazo = $scope.listCapacitacionDentroFueraPlazoGeneral;
+	        } else {
+	        	$scope.listCapacitacionDentroFueraPlazo = $scope.listCapacitacionDentroFueraPlazoGeneral.filter(item => item.monthYear.includes(month));
+	        }
+	    };
+		
+		$scope.listCapacitacionDentroFueraPlazo=[];
+		$scope.listCapacitacionDentroFueraPlazoGeneral=[];
+		$scope.listaMonthCapacitacionDentroFueraPlazo=[];
+		$scope.buildTableCapacitacionDentroFueraPlazo = function(data){
+			$scope.listCapacitacionDentroFueraPlazoGeneral = data.listCapacitacionDentroFueraPlazo; 
+			
+			$scope.listaMonthCapacitacionDentroFueraPlazo = $scope.listCapacitacionDentroFueraPlazoGeneral.filter((value, index, self) => 
+    		index === self.findIndex((t) => t.monthYear === value.monthYear)
+			);
+			
+			var lastMonth = $scope.findMonthFechaFinal();
+			var lastAnio = $scope.getAnio($scope.filtro.fechaFin);
+			
+			$scope.filtrocapacitacionplazo.monthYearMod = lastMonth + ' '+ lastAnio;
+			
+			$scope.onDashCapacitacionPlazo(lastMonth);
+			
+		}
+		
+		$scope.getTotalFueraPlazoCapacitacion = function(listCapacitacionDentroFueraPlazo) {
+		    let total = 0;
+		    listCapacitacionDentroFueraPlazo.forEach(function(item) {
+		        total += item.totalFueraPlazo;
+		    });
+		    return total;
+		};
+		
+		$scope.getTotalDentroPlazoCapacitacion = function(listCapacitacionDentroFueraPlazo) {
+		    let total = 0;
+		    listCapacitacionDentroFueraPlazo.forEach(function(item) {
+		        total += item.totalDentroPlazo;
+		    });
+		    return total;
+		};
+		
+		$scope.getTotalRegistrosCapacitacion = function(listCapacitacionDentroFueraPlazo) {
+		    let total = 0;
+		    listCapacitacionDentroFueraPlazo.forEach(function(item) {
+		        total += item.total;
+		    });
+		    return total;
+		};
+		
+		// ASISTENCIA TECNICA SIST ADMINISTRATIVO
+		
+		$scope.onDashAsistTecnicaSAPlazo = function(month) {
+			if (month === 0) {
+				$scope.listAsistenciaSADentroFueraPlazo = $scope.listAsistenciaSADentroFueraPlazo;
+	        } else {
+	        	$scope.listAsistenciaSADentroFueraPlazo = $scope.listAsistenciaSADentroFueraPlazoGeneral.filter(item => item.monthYear.includes(month));
+	        }
+	        
+	    };
+		
+		$scope.listAsistenciaSADentroFueraPlazo=[];
+		$scope.listAsistenciaSADentroFueraPlazoGeneral=[];
+		$scope.listaMonthAsistenciaSADentroFueraPlazo=[];
+		$scope.buildTableAsistenciaSADentroFueraPlazo = function(data){
+			$scope.listAsistenciaSADentroFueraPlazoGeneral = data.listAsistenciaSADentroFueraPlazo; 
+			
+			$scope.listaMonthAsistenciaSADentroFueraPlazo = $scope.listAsistenciaSADentroFueraPlazoGeneral.filter((value, index, self) => 
+    		index === self.findIndex((t) => t.monthYear === value.monthYear)
+			);
+			
+			var lastMonth = $scope.findMonthFechaFinal();
+			var lastAnio = $scope.getAnio($scope.filtro.fechaFin);
+			
+			$scope.filtroasistecnicasaplazo.monthYearMod = lastMonth + ' '+ lastAnio;
+			
+			$scope.onDashAsistTecnicaSAPlazo(lastMonth);
+			
+		}
+		
+		$scope.getTotalFueraPlazoAsisTecSA = function(listAsistenciaSADentroFueraPlazo) {
+		    let total = 0;
+		    listAsistenciaSADentroFueraPlazo.forEach(function(item) {
+		        total += item.totalFueraPlazo;
+		    });
+		    return total;
+		};
+		
+		$scope.getTotalDentroPlazoAsisTecSA = function(listAsistenciaSADentroFueraPlazo) {
+		    let total = 0;
+		    listAsistenciaSADentroFueraPlazo.forEach(function(item) {
+		        total += item.totalDentroPlazo;
+		    });
+		    return total;
+		};
+		
+		$scope.getTotalRegistrosAsisTecSA = function(listAsistenciaSADentroFueraPlazo) {
+		    let total = 0;
+		    listAsistenciaSADentroFueraPlazo.forEach(function(item) {
+		        total += item.total;
+		    });
+		    return total;
+		};
+		
+		//CONSULTA SA FUERA DE PLAZO
+		$scope.onDashConsultaSAPlazo = function(month) {
+			if (month === 0) {
+				$scope.listConsultaSADentroFueraPlazo = $scope.listConsultaSADentroFueraPlazoGeneral;
+	        } else {
+	        	$scope.listConsultaSADentroFueraPlazo = $scope.listConsultaSADentroFueraPlazoGeneral.filter(item => item.monthYear.includes(month));
+	        }
+	    };
+		
+		$scope.listConsultaSADentroFueraPlazo=[];
+		$scope.listConsultaSADentroFueraPlazoGeneral=[];
+		$scope.listaMonthConsultaSADentroFueraPlazo=[];
+		$scope.buildTableConsultaSADentroFueraPlazo = function(data){
+			$scope.listConsultaSADentroFueraPlazoGeneral = data.listConsultaSADentroFueraPlazo; 
+			
+			$scope.listaMonthConsultaSADentroFueraPlazo = $scope.listConsultaSADentroFueraPlazoGeneral.filter((value, index, self) => 
+    		index === self.findIndex((t) => t.monthYear === value.monthYear)
+			);
+			
+			var lastMonth = $scope.findMonthFechaFinal();
+			var lastAnio = $scope.getAnio($scope.filtro.fechaFin);
+			
+			$scope.filtroconsultasaplazo.monthYearMod = lastMonth + ' '+ lastAnio;
+			
+			$scope.onDashConsultaSAPlazo(lastMonth);
+			
+		}
+		
+		$scope.getTotalFueraPlazoConsultaSA = function(listConsultaSADentroFueraPlazo) {
+		    let total = 0;
+		    listConsultaSADentroFueraPlazo.forEach(function(item) {
+		        total += item.totalFueraPlazo;
+		    });
+		    return total;
+		};
+		
+		$scope.getTotalDentroPlazoConsultaSA = function(listConsultaSADentroFueraPlazo) {
+		    let total = 0;
+		    listConsultaSADentroFueraPlazo.forEach(function(item) {
+		        total += item.totalDentroPlazo;
+		    });
+		    return total;
+		};
+		
+		$scope.getTotalRegistrosConsultaSA = function(listConsultaSADentroFueraPlazo) {
+		    let total = 0;
+		    listConsultaSADentroFueraPlazo.forEach(function(item) {
+		        total += item.total;
+		    });
+		    return total;
+		};
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
