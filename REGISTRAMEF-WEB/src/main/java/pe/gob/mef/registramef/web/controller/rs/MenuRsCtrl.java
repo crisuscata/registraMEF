@@ -49,7 +49,11 @@ public class MenuRsCtrl {
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
 		Principal usuario = req.getUserPrincipal();
-		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+//		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+		MsUsuariosBk msUsuariosBk = null;
+		if(servicio!=null && usuario!=null)
+		msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
 
 		if (msUsuariosBk == null)
 			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED)
@@ -63,47 +67,130 @@ public class MenuRsCtrl {
 			MenuaccesosJS menuaccesosJS = new MenuaccesosJS();
 
 			List<String> roles = msUsuariosBk.getRolesSistema();
-
-			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.DTENTIDADES_CREA) || roles.contains(Roles.DTENTIDADES_VE)) {
-				menuaccesosJS.setEntidades(true);
-			}			
+			
+			//MODULO REGISTRO Y PROGRAMACION
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.DTASISTENCIA_VE)  || roles.contains(Roles.DTASISTENCIA_CREA) ) {
+				menuaccesosJS.setProgramacionasistencia(true);
+				menuaccesosJS.setRegistroasistencia(true);
+			}
+			
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.DTCAPACITACION_VE)  || roles.contains(Roles.DTCAPACITACION_CREA) ) {
+				menuaccesosJS.setProgramacioncapacitacion(true);
+				menuaccesosJS.setRegistrocapacitacion(true);
+			}
+			
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.DTVISITAS_VE) ||roles.contains(Roles.DTVISITAS_CREA)) {
+				menuaccesosJS.setProgramacionreunion(true);
+				menuaccesosJS.setRegistroreunion(true);
+			}
+			
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.DTCONSULTAS_VE) ||roles.contains(Roles.DTCONSULTAS_CREA)) {
+				menuaccesosJS.setRegistroconsulta(true);
+			}
+			
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PUBLICA_DTCAPACITACION_CREA) ) {
+				menuaccesosJS.setRegistrocapacitacionpubli(true);
+			}
+			
+			//MODULO REPORTES
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.REPORTE_SERVICIO_RESUMEN) ) {
+				menuaccesosJS.setReporteservicioresumen(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.REPORTE_SERVICIO_SEDE) ) {
+				menuaccesosJS.setReporteserviciosede(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.REPORTE_SERVICIO_REPRESENTANTE) ) {
+				menuaccesosJS.setReporteserviciorepresentante(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.REPORTE_GENERICO) ) {
+				menuaccesosJS.setReportegenerico(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.REPORTE_AVANCE_METAS) ) {
+				menuaccesosJS.setReportemetas(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.REPORTE_ENCUESTAS) ) {
+				menuaccesosJS.setReporteencuestas(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.REPORTE_GEOZONA) ) {
+				menuaccesosJS.setReporteentidadesgeozona(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.REPORTE_COBERTURA) ) {
+				menuaccesosJS.setReporteentidadescobertura(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.REPORTE_DIRECTORIO) ) {
+				menuaccesosJS.setReporteusuariosdirectorio(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.REPORTE_USU_INTERNO) ) {
+				menuaccesosJS.setReporteusuariosinterno(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.REPORTE_USU_EXTERNO) ) {
+				menuaccesosJS.setReporteusuariosexterno(true);
+			}
+			
+			//DATOS SERVICIOS
 			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.MSUSUARIOS_CREA) || roles.contains(Roles.MSUSUARIOS_VE)) {
 				menuaccesosJS.setUsuarios(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.DTUSUARIOEXTERNO_CREA) || roles.contains(Roles.DTUSUARIOEXTERNO_VE)) {
+				menuaccesosJS.setUsuariosexternos(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.MSSISADMISTRATIVO_CREA) || roles.contains(Roles.MSSISADMISTRATIVO_VE)) {
+				menuaccesosJS.setDatossisadministrativo(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.MSTEMA_CREA) || roles.contains(Roles.MSTEMA_VE)) {
+				menuaccesosJS.setDatostemas(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.MSSUBTEMA_CREA) || roles.contains(Roles.MSSUBTEMA_VE)) {
+				menuaccesosJS.setDatossubtemas(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.DTENTIDADES_CREA) || roles.contains(Roles.DTENTIDADES_VE)) {
+				menuaccesosJS.setEntidades(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.MSLOCAL_CREA) || roles.contains(Roles.MSLOCAL_VE)) {
+				menuaccesosJS.setDatolocales(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) ) {
+				menuaccesosJS.setDatogeozona(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.MSSEDES_CREA) || roles.contains(Roles.MSSEDES_VE)) {
+				menuaccesosJS.setDatosede(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.MSMETA_CREA) || roles.contains(Roles.MSMETA_VE)) {
+				menuaccesosJS.setDatometas(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.MSINDICADOR_CREA) || roles.contains(Roles.MSINDICADOR_VE)) {
+				menuaccesosJS.setDatoindicadores(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.DTENCUESTA_CREA) || roles.contains(Roles.DTENCUESTA_VE)) {
+				menuaccesosJS.setDatoencuestas(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.MSPROYECTOINVERSION_CREA) || roles.contains(Roles.MSPROYECTOINVERSION_VE)) {
+				menuaccesosJS.setDatoproyectos(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.DTAMPLIACIONFECHA_CREA) || roles.contains(Roles.DTAMPLIACIONFECHA_VE)) {
+				menuaccesosJS.setDatoampliacion(true);
+			}
+			
+			//CONFIGURACION
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PRTPARAMETROS_CREA) || roles.contains(Roles.PRTPARAMETROS_VE)) {
+				menuaccesosJS.setParametros(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.MSPAISES_CREA) || roles.contains(Roles.MSPAISES_VE)) {
+				menuaccesosJS.setPaises(true);
 			}
 			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.MSUBIGEO_CREA) || roles.contains(Roles.MSUBIGEO_VE)) {
 				menuaccesosJS.setUbigeo(true);
 			}
-			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PRTPARAMETROS_CREA) || roles.contains(Roles.PRTPARAMETROS_VE)) {
-				menuaccesosJS.setParametros(true);
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.TAFERIADOS_CREA) || roles.contains(Roles.TAFERIADOS_VE)) {
+				menuaccesosJS.setFeriados(true);
 			}
-			
-			// PURIBE 04042024 - INICIO-->
-			
-						if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PERFIL_ADMINISTRADOR)|| roles.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT) ||
-								roles.contains(Roles.PERFIL_USU_OGC) || roles.contains(Roles.DTVISITAS_VE) ||roles.contains(Roles.PERFIL_GC)) {
-							menuaccesosJS.setProgramacionreunion(true);
-						}			
-						if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PERFIL_ADMINISTRADOR)|| roles.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT) ||
-								roles.contains(Roles.PERFIL_USU_OGC) || roles.contains(Roles.DTVISITAS_VE) ||roles.contains(Roles.PERFIL_GC)) {
-							menuaccesosJS.setRegistroreunion(true);
-						}
+			if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.MSALERTA_CREA) || roles.contains(Roles.MSALERTA_VE)) {
+				menuaccesosJS.setAlerta(true);
+			}
+			if (roles.contains(Roles.ADMINISTRADOR)) {
+				menuaccesosJS.setMantenimiento(true);
+			}
 					
-						// PURIBE 04042024 - FIN-->
-						
-						if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PERFIL_ADMINISTRADOR)|| roles.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT) ||
-								roles.contains(Roles.PERFIL_USU_OGC) || roles.contains(Roles.DTASISTENCIA_VE)  || roles.contains(Roles.DTASISTENCIA_CREA) || roles.contains(Roles.PERFIL_GC) ) {
-							menuaccesosJS.setRegistroasistencia(true);
-							menuaccesosJS.setProgramacionasistencia(true);
-						}
-						
-						if (roles.contains(Roles.ADMINISTRADOR) || roles.contains(Roles.PERFIL_ADMINISTRADOR)|| roles.contains(Roles.PERFIL_ANALIST_ESPECIALIS_IMPLANT) ||
-								roles.contains(Roles.PERFIL_USU_OGC) || roles.contains(Roles.DTCAPACITACION_VE)  || roles.contains(Roles.DTCAPACITACION_CREA) || roles.contains(Roles.PERFIL_GC) ) {
-							menuaccesosJS.setRegistrocapacitacion(true);
-							menuaccesosJS.setProgramacioncapacitacion(true);
-						}
-						
-						
-			
 			GenericEntity<MenuaccesosJS> registrosx = new GenericEntity<MenuaccesosJS>(menuaccesosJS) {
 			};
 			return Response.status(200).entity(registrosx).build();
@@ -123,7 +210,11 @@ public class MenuRsCtrl {
 			@HeaderParam("authorization") String authString, MsUsuariosPerfilJS msUsuariosPerfilJS) {
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 		Principal usuario = req.getUserPrincipal();
-		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+//		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+		MsUsuariosBk msUsuariosBk = null;
+		if(servicio!=null && usuario!=null)
+		msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
+
 
 		if (msUsuariosBk == null)
 			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(

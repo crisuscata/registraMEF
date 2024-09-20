@@ -267,6 +267,7 @@ myapp.controller('menuCtrl', ['$scope','$mdPanel','$mdDialog','$http', function 
 			      items: [
 			    	  {'name':'Asistencias técnicas','refe':'asistencia/listadtAsistenciaNoProg.html','activo':true},//MPINARES 14022024 - INICIO
 			    	  {'name':'Capacitaciones','refe':'capacitacion/listadtCapacitacionNoProg.html','activo':true},//CUSCATA - 18072024
+			    	  {'name':'Capacitaciones Publicadas','refe':'capacitacion/listadtCapacitacionNoProgPublicadas.html','activo':true},//JPUYEN 30072024
 			    	  {'name':'Reuniones de trabajo','refe':'visitas/listadtVisitasNoProg.html','activo':true},//PURIBE 04042024 - INICIO
 			    	  {'name':'Consultas','refe':'consultas/listadtConsultas.html','activo':true}	//MPINARES 24012023 - INICIO
 			      ]
@@ -399,18 +400,67 @@ myapp.controller('menuCtrl', ['$scope','$mdPanel','$mdDialog','$http', function 
 		    	
 				var surl = perfilMenuUrl;
 				$http.get(surl).then(function(res){
-					var dato = res.data;					
-					$scope.configuracion.items[0].activo = dato.entidades;					
-					$scope.configuracion.items[1].activo = dato.usuarios;
-					$scope.configuracion.items[2].activo = dato.ubigeo;
-					$scope.configuracion.items[3].activo = dato.parametros;
+					var dato = res.data;	
+					
 					$scope.programacion.items[0].activo = dato.programacionasistencia;
 					$scope.programacion.items[1].activo = dato.programacioncapacitacion;
+					$scope.programacion.items[2].activo = dato.programacionreunion;
+					
 					$scope.registro.items[0].activo = dato.registroasistencia;
 					$scope.registro.items[1].activo = dato.registrocapacitacion;
-					//PURIBE 04042024 - INICIO
-					$scope.programacion.items[2].activo = dato.programacionreunion;
-					$scope.registro.items[2].activo = dato.registroreunion;
+					$scope.registro.items[2].activo = dato.registrocapacitacionpubli;
+					$scope.registro.items[3].activo = dato.registroreunion;
+					$scope.registro.items[4].activo = dato.registroconsulta;
+					
+					$scope.reportes.items[0].activo = (dato.reporteservicioresumen || dato.reporteserviciosede || dato.reporteserviciorepresentante);
+					$scope.reportes.items[1].activo = dato.reportegenerico;
+					$scope.reportes.items[2].activo = dato.reportemetas;
+					$scope.reportes.items[3].activo = dato.reporteencuestas;
+					$scope.reportes.items[4].activo = (dato.reporteentidadesgeozona || dato.reporteentidadescobertura) ;
+					$scope.reportes.items[5].activo = (dato.reporteusuariosdirectorio || dato.reporteusuariosinterno || dato.reporteusuariosexterno);
+					
+					$scope.administracion.items[0].activo = (dato.usuarios || dato.usuariosexternos) ;
+					$scope.administracion.items[1].activo = (dato.datossisadministrativo || dato.datostemas || dato.datossubtemas);
+					$scope.administracion.items[2].activo = (dato.entidades || dato.datolocales || dato.datogeozona);
+					$scope.administracion.items[3].activo = dato.datosede;
+					$scope.administracion.items[4].activo = (dato.datometas || dato.datoindicadores) ;
+					$scope.administracion.items[5].activo = dato.datoencuestas;
+					$scope.administracion.items[6].activo = dato.datoproyectos;
+					$scope.administracion.items[7].activo = dato.datoampliacion;
+					
+					$scope.configuracion.items[0].activo = dato.parametros;					
+					$scope.configuracion.items[1].activo = dato.paises;
+					$scope.configuracion.items[2].activo = dato.ubigeo;
+					$scope.configuracion.items[3].activo = dato.feriados;
+					$scope.configuracion.items[4].activo = dato.alerta;
+					$scope.configuracion.items[5].activo = dato.mantenimiento;
+					
+					//SUBMENUS
+					$scope.reporteServicios.items[0].activo = dato.reporteservicioresumen; 
+					$scope.reporteServicios.items[1].activo = dato.reporteserviciosede;
+					$scope.reporteServicios.items[2].activo = dato.reporteserviciorepresentante;
+					
+					$scope.reporteEntidades.items[0].activo = dato.reporteentidadesgeozona; 
+					$scope.reporteEntidades.items[1].activo = dato.reporteentidadescobertura;
+					
+					$scope.reporteUsuarios.items[0].activo = dato.reporteusuariosdirectorio; 
+					$scope.reporteUsuarios.items[1].activo = dato.reporteusuariosinterno;
+					$scope.reporteUsuarios.items[2].activo = dato.reporteusuariosexterno;
+					
+					$scope.usuarios.items[0].activo = dato.usuarios;
+					$scope.usuarios.items[1].activo = dato.usuariosexternos;
+					
+					$scope.datosServicios.items[0].activo = dato.datossisadministrativo; 
+					$scope.datosServicios.items[1].activo = dato.datostemas;
+					$scope.datosServicios.items[2].activo = dato.datossubtemas;
+					
+					$scope.entidadesLocales.items[0].activo = dato.entidades; 
+					$scope.entidadesLocales.items[1].activo = dato.datolocales;
+					$scope.entidadesLocales.items[2].activo = dato.datogeozona;
+					
+					$scope.metasIndicadores.items[0].activo = dato.datometas;
+					$scope.metasIndicadores.items[1].activo = dato.datoindicadores;
+
 					//PURIBE 04042024 - FIN
 					$scope.setPerfil(dato);										
 				},

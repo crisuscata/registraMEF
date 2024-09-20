@@ -1728,32 +1728,76 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			return year; 
 		}
 		
+		$scope.exportToPdf = function() {
+                var element = document.getElementById('idGridList');
+
+                html2canvas(element, { scale: 2 }).then(function(canvas) {
+                    var imgData = canvas.toDataURL('image/png');
+                    const { jsPDF } = window.jspdf;  
+                    var pdf = new jsPDF('p', 'mm', 'a4');
+                    
+                    var imgWidth = 210;
+                    var pageHeight = 297;
+                    var imgHeight = canvas.height * imgWidth / canvas.width;
+                    var heightLeft = imgHeight;
+                    var position = 0;
+
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+
+                    while (heightLeft >= 0) {
+                        position = heightLeft - imgHeight;
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+                    }
+
+                    pdf.save('chart-grid-export.pdf');
+                }).catch(function(error) {
+                    console.error("Error generating PDF:", error);
+                });
+            };
+		
+		
 		$scope.showDashboard = 0;
 		$scope.showReportResumen =function(){
 			$scope.showDashboard = 1;
 			const fechaInicio = new Date($scope.filtro.fechaInicio);
 			const fechaFin = new Date($scope.filtro.fechaFin);
 			
-			console.log("fechaInicio: " + fechaInicio);
+			/*console.log("fechaInicio: " + fechaInicio);
 			console.log("fechaFin: " + fechaFin);
 			
 			const differenceInMilliseconds = fechaFin - fechaInicio;
 			
-			const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
+			const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);*/
 			
-			//if (differenceInDays <= 31) {
-				$scope.loadReporteResumen();
-			/*} else{
+			if (!$scope.filtro.fechaInicio || !$scope.filtro.fechaFin) {
 				$mdDialog.show(
-				         $mdDialog.alert()
-				        .parent(angular.element(document.body))
-				        .clickOutsideToClose(true)
-				        .title('Cargar Reporte')
-				        .textContent("El rango de fecha debe ser menor o igual a 31 dias")
-				        .ariaLabel('ERROR')
-				        .ok('OK')
-				    );
-			}*/
+					$mdDialog.alert()
+					.parent(angular.element(document.body))
+					.clickOutsideToClose(true)
+					.title('REPORTE RESUMEN')
+					.textContent("DEBE SELECCIONAR AMBAS FECHAS")
+					.ok('OK')
+				);
+				return;
+			}
+	
+	    	if ($scope.filtro.fechaInicio > $scope.filtro.fechaFin) {
+				$mdDialog.show(
+					$mdDialog.alert()
+					.parent(angular.element(document.body))
+					.clickOutsideToClose(true)
+					.title('REPORTE RESUMEN')
+					.textContent("LA FECHA DE INICIO NO PUEDE SER MAYOR QUE LA FECHA FIN")
+					.ok('OK')
+				);
+				return;
+	    	}
+			
+			
+			$scope.loadReporteResumen();
 			
 		}
 		
@@ -1810,46 +1854,6 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 			//BUILD DASHBOARD Evolución Mensual
 			$scope.buildDashboardEvolMensual(eventsData, labels, 'mixedChartCapaEvolMensual', 'Capacitación');
-			/*var chartOptions = {
-			        responsive: true,
-			        scales: {
-			            y: {
-			                beginAtZero: true
-			            }
-			        }
-			    };
-
-			    var chartData = {
-			        labels: labels,
-			        datasets: [
-			            {
-			                type: 'bar',
-			                label: 'Participantes',
-			                data: participantsData,
-			                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-			                borderColor: 'rgba(75, 192, 192, 1)',
-			                borderWidth: 1
-			            },
-			            {
-		                    type: 'line',
-		                    label: 'Total',
-		                    data: participantsData,
-		                    borderColor: 'rgba(255, 99, 132, 1)',
-		                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-		                    borderWidth: 2,
-		                    fill: false
-		                }
-			        ]
-			    };
-
-			    angular.element(document).ready(function () {
-			        var ctx = document.getElementById('mixedChartCapaEvolMensual').getContext('2d');
-			        new Chart(ctx, {
-			            type: 'bar',
-			            data: chartData,
-			            options: chartOptions
-			        });
-			    });*/
 			
 			//Build Table
 			$scope.mesesCapacitacion = [" ", ...labels , "Total"];
@@ -1860,17 +1864,6 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			  ];
 			
 		}
-		
-		function getUniqueCapacitacion(list) {
-            const map = new Map();
-            list.forEach(item => {
-                if (!map.has(item.idCapacitacion)) {
-                    map.set(item.idCapacitacion, item);
-                }
-            });
-
-            return Array.from(map.values());
-        }
 		
 		$scope.findMonthFechaFinal = function(){
 		    var monthFechaFinal = $scope.getMonth($scope.filtro.fechaFin);
@@ -1884,18 +1877,21 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		    return monthName;
 		}
 		
+		
 	    $scope.onDashCapaByTematica = function(month) {
-	        if (month === 0) {
-	            var listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica;
-	        } else {
-	            var listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica.filter(item => item.monthYear.includes(month));
-	        }
-	        
-	        var labels = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.abreviaturaAdmin.trim());
-	        var participantsData = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.totalParticipants);
-	        
-	        $scope.showDashboardBar(labels, participantsData, 'barChartCapaByTematica', 'Eventos');
-	    };
+		    var listCapacitacionUsSegunTematicaByLastMonth = null;
+		    
+		    if (month === 0) {
+		        listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica;
+		    } else {
+		        listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica.filter(item => item.monthYear.includes(month));
+		    }
+		    
+		    var labels = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.abreviaturaAdmin.trim());
+		    var participantsData = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.totalParticipants);
+		    
+		    $scope.showDashboardBar(labels, participantsData, 'barChartCapaByTematica', 'Eventos');
+		};
 
 		
 		$scope.listaCapaByTematica=[];
@@ -1916,39 +1912,66 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 		}
 		
-		$scope.showDashboardBar = function(labels, data, idElementHTML, nameSerie){
+		var barInstance = null; 
+		$scope.showDashboardBar = function(labels, data, idElementHTML, nameSerie) {
+			    var series = [nameSerie];
 			
-			var series = [nameSerie];
-	        
-		    var options = {
-		        scales: {
-		            y: {
-		                beginAtZero: true
-		            }
-		        }
-		    };
+			    var options = {
+			        scales: {
+			            y: {
+			                beginAtZero: true
+			            }
+			        },
+			        plugins: {
+			            tooltip: {
+			                enabled: true,
+			                callbacks: {
+			                    label: function(tooltipItem) {
+			                    var value = tooltipItem.raw || 0;
+			                    if (value === 0) {
+			                        return ''; 
+			                    }
+			                    var label = tooltipItem.dataset.label || '';
+			                    return label + ': ' + value;
+			                }
+			                }
+			            }
+			        },
+			        animation: {
+			            duration: 0
+			        }
+			    };
+			
+			    if (barInstance !== null) {
+			        barInstance.destroy();  
+			        barInstance = null;     
+			    }
+			
+			    var canvas = document.getElementById(idElementHTML);
+			    if (canvas) {
+			        var ctx = canvas.getContext('2d');
+			
+			        ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			        barInstance = new Chart(ctx, {
+			            type: 'bar',
+			            data: {
+			                labels: labels,
+			                datasets: [{
+			                    label: series[0],
+			                    data: data,
+			                    backgroundColor: '#08bcac',
+			                    borderColor: 'rgba(75, 192, 192, 1)',
+			                    borderWidth: 1
+			                }]
+			            },
+			            options: options
+			        });
+			    }
+		};
 
-		    angular.element(document).ready(function () {
-		        var ctx = document.getElementById(idElementHTML).getContext('2d');
-		        new Chart(ctx, {
-		            type: 'bar',
-		            data: {
-		                labels: labels,
-		                datasets: series.map(function(series, index) {
-		                    return {
-		                        label: series,
-		                        data: data,
-		                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-		                        borderColor: 'rgba(75, 192, 192, 1)',
-		                        borderWidth: 1
-		                    };
-		                })
-		            },
-		            options: options
-		        });
-		    });
-			
-		}
+
+
 		
 		
 		
@@ -2229,46 +2252,6 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 			//BUILD DASHBOARD Evolución Mensual
 			$scope.buildDashboardEvolMensual(totalData, labels, 'mixedChartReunionTraEvolMensual', 'Reu Trabajo');
-			/*var chartOptions = {
-			        responsive: true,
-			        scales: {
-			            y: {
-			                beginAtZero: true
-			            }
-			        }
-			    };
-
-			    var chartData = {
-			        labels: labels,
-			        datasets: [
-			            {
-			                type: 'bar',
-			                label: 'Total',
-			                data: totalData,
-			                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-			                borderColor: 'rgba(75, 192, 192, 1)',
-			                borderWidth: 1
-			            },
-			            {
-		                    type: 'line',
-		                    label: 'Total',
-		                    data: totalData,
-		                    borderColor: 'rgba(255, 99, 132, 1)',
-		                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-		                    borderWidth: 2,
-		                    fill: false
-		                }
-			        ]
-			    };
-
-			    angular.element(document).ready(function () {
-			        var ctx = document.getElementById('mixedChartReunionTraEvolMensual').getContext('2d');
-			        new Chart(ctx, {
-			            type: 'bar',
-			            data: chartData,
-			            options: chartOptions
-			        });
-			    });*/
 			
 			//Build Table
 			$scope.mesesReunionTra = [" ", ...labels , "Total"];
@@ -2306,33 +2289,40 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			        responsive: true,
 			        scales: {
 			            y: {
-			                beginAtZero: true
+			                beginAtZero: true,
+			                title: {
+			                    display: true,
+			                    text: nameSerie 
+			                }
 			            }
 			        }
 			    };
 
 			    var chartData = {
-			        labels: labels,
-			        datasets: [
-			            {
-			                type: 'bar',
-			                label: 'Total',
-			                data: totalData,
-			                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-			                borderColor: 'rgba(75, 192, 192, 1)',
-			                borderWidth: 1
-			            },
-			            {
-		                    type: 'line',
-		                    label: 'Total',
-		                    data: totalData,
-		                    borderColor: 'rgba(255, 99, 132, 1)',
-		                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-		                    borderWidth: 2,
-		                    fill: false
-		                }
-			        ]
-			    };
+				    labels: labels,
+				    datasets: [
+				        {
+				            type: 'bar',
+				            label: 'Total',
+				            data: totalData,
+				            backgroundColor: '#08bcac',
+				            borderColor: 'rgba(75, 192, 192, 1)',
+				            borderWidth: 1,
+				            order: 2 // Bar will be drawn first (lower order)
+				        },
+				        {
+				            type: 'line',
+				            label: 'Total',
+				            data: totalData,
+				            borderColor: 'rgba(54, 162, 235, 1)', 
+				            backgroundColor: 'rgba(54, 162, 235, 0.2)', 
+				            borderWidth: 2,
+				            fill: false,
+				            order: 1 // Line will be drawn second (higher order)
+				        }
+				    ]
+				};
+
 
 			    angular.element(document).ready(function () {
 			        var ctx = document.getElementById(idElementHTML).getContext('2d');
@@ -2366,20 +2356,10 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 		}
 		
-		/*$scope.onDashReuTrabajByTematica = function(month) {
-	        if (month === 0) {
-	            var listReunionTrabajoUsSegunTematicaByLastMonth = $scope.listReunionTrabajoUsSegunTematica;
-	        } else {
-	            var listReunionTrabajoUsSegunTematicaByLastMonth = $scope.listReunionTrabajoUsSegunTematica.filter(item => item.monthYear.includes(month));
-	        }
-	        
-	        var labels = listReunionTrabajoUsSegunTematica.map(item => item.abreviatura.trim());
-	        var data = listReunionTrabajoUsSegunTematicaByLastMonth.map(item => item.total);
-	        
-	        $scope.showDashboardBar(labels, data, 'barChartReuTrabajoByTematica', 'Usuarios');
-	    };*/
-	    
 	    $scope.onDashReuTrabajByTematica = function(month) {
+			
+			//$scope.clearBarInstance();
+			
 	        let listReunionTrabajoUsSegunTematicaByLastMonth;
 	        
 	        if (month === 0) {
@@ -2438,6 +2418,9 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		//ASIS TECNICA POR TEMA
 		
 		$scope.onDashAsistenciaTecnicaByTematica = function(month) {
+			
+			//$scope.clearBarInstance();
+			
 	        let listAsisteTecnicaSegunTematicaByLastMonth;
 	        
 	        if (month === 0) {
@@ -2475,6 +2458,9 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		//CONSULTA POR TEMA
 		
 		$scope.onDashConsultaByTematica = function(month) {
+			
+			//$scope.clearBarInstance();
+			
 	        let listConsultaByLastMonth;
 	        
 	        if (month === 0) {
@@ -2628,8 +2614,6 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			        });
 			    });
 			    
-			
-			
 		}
 		
 		/**

@@ -23,6 +23,10 @@
 
 <link href="resources/css/angular-chart.css" rel="stylesheet" type="text/css" />
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
 <script src="resources/js/angular.js"></script>
 <script src="resources/js/angular-animate.js"></script>
 <script src="resources/js/angular-aria.js"></script>
@@ -209,8 +213,6 @@
  	
 		<md-tab label="Detalle">
 			
-			
-			
 			<div ng-if="totalRegistros === null" style="display: flex;
 			            justify-content: center; 
 			            align-items: center;     
@@ -221,8 +223,6 @@
 			    </h1>
 			</div>
 
-
-			
 			<div ng-if="totalRegistros != null" style="display: flex;
 						            justify-content: center; 
 						            align-items: center;     
@@ -232,12 +232,11 @@
 						    </h1>
 						</div>
 
-
  		</md-tab>
  		
  		<md-tab label="Dashboard">
-						
-			<div ng-if="totalRegistros === null" style="display: flex;
+			
+			<!--<div ng-if="totalRegistros === null" style="display: flex;
 						            justify-content: center; 
 						            align-items: center;     
 						            height: 100%;">
@@ -245,8 +244,9 @@
 						        <b>Ingresar los filtros de búsqueda.</b><span style="font-weight: normal;"> Para poder cargar dashboard.</span>
 						    </h1>
 						</div>
-			
-		<div ng-if="totalRegistros != null">			
+							
+		<div ng-if="totalRegistros != null">	 -->		
+		<div> 
 			
     <md-content class="md-padding">
         <div style="display: flex;
@@ -260,15 +260,18 @@
                 <md-icon md-font-set="material-icons" style="color: grey;">file_download</md-icon>
                 <span>Cargar reportes con filtros de b&uacute;squedas</span>
             </md-button>
-            
-            
-                 
-            
+			
+			<md-button class="md-raised"
+			                      aria-label="Show Participante"
+			                      ng-click="exportToPdf()">
+			                <md-icon md-font-set="material-icons" style="color: grey;">file_download</md-icon>
+			                <span>GenerarPDF</span>
+			            </md-button>
             
         </div>
         
-        
-      <md-grid-list  md-cols="3" md-gutter="2px" md-row-height="3:2" style="width:90%;">
+       <md-grid-list id="idGridList"  md-cols="3" md-gutter="2px" md-row-height="3:2" style="width:90%;">
+	<!--	<md-grid-list md-cols="3" md-gutter="10px" md-row-height="fit" style="width:90%;">  -->
         
            <md-grid-tile class="gray" style="padding: 16px;" colspan="2">
 			  <md-grid-tile-header>
@@ -599,9 +602,12 @@
 					
 		  	</md-grid-tile>
 			
+			
 			<md-grid-tile class="gray" style="padding: 16px;"></md-grid-tile>
 			
-			<md-grid-tile>
+			
+			
+			<md-grid-tile colspan="2">
 							  
 				<fieldset style="margin-left: 15px;">
 							<legend>REGISTROS DENTRO Y FUERA DE PLAZO DE ASISTENCIAS T&Eacute;CNICAS</legend>
@@ -617,6 +623,7 @@
 							    </md-option>
 							</md-select>
 							
+							<div style="overflow: auto; max-height: 400px; max-width: 100%; margin-top: 20px;">
 							<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
 							    <tr>
 							        <th rowspan="2">Conectamef</th> 
@@ -651,84 +658,30 @@
 								    <td>{{getTotalRegistrosAsisTec(listAsistenciaDentroFueraPlazo)}}</td>
 								</tr>
 							</table>
-
+							</div>
 				</fieldset>
 															
 			</md-grid-tile>
 			
+			<md-grid-tile class="gray" style="padding: 16px;"></md-grid-tile>
 			
-			<md-grid-tile>
-										  
-				<fieldset style="margin-left: 15px;">
-							<legend>REGISTROS DENTRO Y FUERA DE PLAZO CONSULTAS</legend>
-							
-							<md-select
-							    ng-model="filtroconsultaplazo.monthYearMod"
-							    ng-change="onDashConsultaPlazo(filtroconsultaplazo.monthYearMod)" 
-							    placeholder="Mes"> 
-							    <md-option ng-value="0">Todos los Meses</md-option>
-							    <md-option
-							        ng-repeat="item in listaMonthConsultaDentroFueraPlazo" ng-value="item.monthYear">
-							        {{item.monthYear}} 
-							    </md-option>
-							</md-select>
-							
-							<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
-							    <tr>
-							        <th rowspan="2">Conectamef</th> 
-							        <th rowspan="2">Especialista/analista/implantador</th>
-							        <th rowspan="2">Apellidos y nombres</th>
-							        <th colspan="2">Registros fuera de plazo</th>
-							        <th colspan="2">Registros dentro de plazo</th>
-							        <th rowspan="2">Total de registros</th>
-							    </tr>
-							    <tr>
-							        <th>N&uacute;mero</th>
-							        <th>Porcentaje (%)</th>
-							        <th>N&uacute;mero</th>
-							        <th>Porcentaje (%)</th>
-							    </tr>
-								<tr ng-repeat="item in listConsultaDentroFueraPlazo">
-								        <td>{{item.sede}}</td> 
-								        <td>{{item.descripcion}}</td>
-								        <td>{{item.apellidosNombres}}</td>
-								        <td>{{item.totalFueraPlazo}}</td> 
-								        <td>{{item.porcentajeFueraPlazo}}%</td> 
-								        <td>{{item.totalDentroPlazo}}</td> 
-								        <td>{{item.porcentajeDentroPlazo}}%</td> 
-								        <td>{{item.total}}</td>  
-								</tr>
-								<tr>
-								    <td colspan="3"><strong>Total</strong></td>
-								    <td>{{getTotalFueraPlazoConsulta(listConsultaDentroFueraPlazo)}}</td>
-								    <td>{{(getTotalFueraPlazoConsulta(listConsultaDentroFueraPlazo) / getTotalRegistrosConsulta(listConsultaDentroFueraPlazo)) * 100 | number:2}}%</td>
-								    <td>{{getTotalDentroPlazoConsulta(listConsultaDentroFueraPlazo)}}</td>
-								    <td>{{(getTotalDentroPlazoConsulta(listConsultaDentroFueraPlazo) / getTotalRegistrosConsulta(listConsultaDentroFueraPlazo)) * 100 | number:2}}%</td>
-								    <td>{{getTotalRegistrosConsulta(listConsultaDentroFueraPlazo)}}</td>
-								</tr>
-							</table>
-
-				</fieldset>
-															
-			</md-grid-tile>
-			
-			
-			<md-grid-tile>
+			<md-grid-tile colspan="2">
 													  
 							<fieldset style="margin-left: 15px;">
-										<legend>REGISTROS DENTRO Y FUERA DE PLAZO CAPACITACIONES</legend>
+										<legend>REGISTROS DENTRO Y FUERA DE PLAZO CONSULTAS</legend>
 										
 										<md-select
-										    ng-model="filtrocapacitacionplazo.monthYearMod"
-										    ng-change="onDashCapacitacionPlazo(filtrocapacitacionplazo.monthYearMod)" 
+										    ng-model="filtroconsultaplazo.monthYearMod"
+										    ng-change="onDashConsultaPlazo(filtroconsultaplazo.monthYearMod)" 
 										    placeholder="Mes"> 
 										    <md-option ng-value="0">Todos los Meses</md-option>
 										    <md-option
-										        ng-repeat="item in listaMonthCapacitacionDentroFueraPlazo" ng-value="item.monthYear">
+										        ng-repeat="item in listaMonthConsultaDentroFueraPlazo" ng-value="item.monthYear">
 										        {{item.monthYear}} 
 										    </md-option>
 										</md-select>
 										
+										<div style="overflow: auto; max-height: 400px; max-width: 100%; margin-top: 20px;">
 										<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
 										    <tr>
 										        <th rowspan="2">Conectamef</th> 
@@ -744,7 +697,7 @@
 										        <th>N&uacute;mero</th>
 										        <th>Porcentaje (%)</th>
 										    </tr>
-											<tr ng-repeat="item in listCapacitacionDentroFueraPlazo">
+											<tr ng-repeat="item in listConsultaDentroFueraPlazo">
 											        <td>{{item.sede}}</td> 
 											        <td>{{item.descripcion}}</td>
 											        <td>{{item.apellidosNombres}}</td>
@@ -756,129 +709,206 @@
 											</tr>
 											<tr>
 											    <td colspan="3"><strong>Total</strong></td>
-											    <td>{{getTotalFueraPlazoCapacitacion(listCapacitacionDentroFueraPlazo)}}</td>
-											    <td>{{(getTotalFueraPlazoCapacitacion(listCapacitacionDentroFueraPlazo) / getTotalRegistrosCapacitacion(listCapacitacionDentroFueraPlazo)) * 100 | number:2}}%</td>
-											    <td>{{getTotalDentroPlazoCapacitacion(listCapacitacionDentroFueraPlazo)}}</td>
-											    <td>{{(getTotalDentroPlazoCapacitacion(listCapacitacionDentroFueraPlazo) / getTotalRegistrosCapacitacion(listCapacitacionDentroFueraPlazo)) * 100 | number:2}}%</td>
-											    <td>{{getTotalRegistrosCapacitacion(listCapacitacionDentroFueraPlazo)}}</td>
+											    <td>{{getTotalFueraPlazoConsulta(listConsultaDentroFueraPlazo)}}</td>
+											    <td>{{(getTotalFueraPlazoConsulta(listConsultaDentroFueraPlazo) / getTotalRegistrosConsulta(listConsultaDentroFueraPlazo)) * 100 | number:2}}%</td>
+											    <td>{{getTotalDentroPlazoConsulta(listConsultaDentroFueraPlazo)}}</td>
+											    <td>{{(getTotalDentroPlazoConsulta(listConsultaDentroFueraPlazo) / getTotalRegistrosConsulta(listConsultaDentroFueraPlazo)) * 100 | number:2}}%</td>
+											    <td>{{getTotalRegistrosConsulta(listConsultaDentroFueraPlazo)}}</td>
 											</tr>
 										</table>
-
-							</fieldset>
-																		
-			</md-grid-tile>
-
-			
-			<md-grid-tile>
-										  
-							<fieldset style="margin-left: 15px;">
-										<legend>REGISTROS DENTRO Y FUERA DE PLAZO DE ASISTENCIAS T&Eacute;CNICAS POR SISTEMA ADMINISTRATIVO</legend>
-										
-										<md-select
-										    ng-model="filtroasistecnicasaplazo.monthYearMod"
-										    ng-change="onDashAsistTecnicaSAPlazo(filtroasistecnicasaplazo.monthYearMod)" 
-										    placeholder="Mes"> 
-										    <md-option ng-value="0">Todos los Meses</md-option>
-										    <md-option
-										        ng-repeat="item in listaMonthAsistenciaSADentroFueraPlazo" ng-value="item.monthYear">
-										        {{item.monthYear}} 
-										    </md-option>
-										</md-select>
-										
-										<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
-										    <tr>
-										        <th rowspan="2">Conectamef</th> 
-										        <th rowspan="2">Especialista/analista/implantador</th>
-										        <th rowspan="2">Apellidos y nombres</th>
-										        <th colspan="2">Registros fuera de plazo</th>
-										        <th colspan="2">Registros dentro de plazo</th>
-										        <th rowspan="2">Total de registros</th>
-										    </tr>
-										    <tr>
-										        <th>N&uacute;mero</th>
-										        <th>Porcentaje (%)</th>
-										        <th>N&uacute;mero</th>
-										        <th>Porcentaje (%)</th>
-										    </tr>
-											<tr ng-repeat="item in listAsistenciaSADentroFueraPlazo">
-											        <td>{{item.sede}}</td> 
-											        <td>{{item.descripcion}}</td>
-											        <td>{{item.apellidosNombres}}</td>
-											        <td>{{item.totalFueraPlazo}}</td> 
-											        <td>{{item.porcentajeFueraPlazo}}%</td> 
-											        <td>{{item.totalDentroPlazo}}</td> 
-											        <td>{{item.porcentajeDentroPlazo}}%</td> 
-											        <td>{{item.total}}</td>  
-											</tr>
-											<tr>
-											    <td colspan="3"><strong>Total</strong></td>
-											    <td>{{getTotalFueraPlazoAsisTecSA(listAsistenciaDentroFueraPlazo)}}</td>
-											    <td>{{(getTotalFueraPlazoAsisTecSA(listAsistenciaDentroFueraPlazo) / getTotalRegistrosAsisTecSA(listAsistenciaSADentroFueraPlazo)) * 100 | number:2}}%</td>
-											    <td>{{getTotalDentroPlazoAsisTecSA(listAsistenciaDentroFueraPlazo)}}</td>
-											    <td>{{(getTotalDentroPlazoAsisTecSA(listAsistenciaDentroFueraPlazo) / getTotalRegistrosAsisTecSA(listAsistenciaSADentroFueraPlazo)) * 100 | number:2}}%</td>
-											    <td>{{getTotalRegistrosAsisTecSA(listAsistenciaDentroFueraPlazo)}}</td>
-											</tr>
-										</table>
-
-							</fieldset>
-																		
-			</md-grid-tile>
-			
-			<md-grid-tile>
-													  
-							<fieldset style="margin-left: 15px;">
-										<legend>REGISTROS DENTRO Y FUERA DE PLAZO CONSULTAS POR SISTEMA ADMINISTRATIVO</legend>
-										
-										<md-select
-										    ng-model="filtroconsultasaplazo.monthYearMod"
-										    ng-change="onDashConsultaSAPlazo(filtroconsultasaplazo.monthYearMod)" 
-										    placeholder="Mes"> 
-										    <md-option ng-value="0">Todos los Meses</md-option>
-										    <md-option
-										        ng-repeat="item in listaMonthConsultaSADentroFueraPlazo" ng-value="item.monthYear">
-										        {{item.monthYear}} 
-										    </md-option>
-										</md-select>
-										
-										<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
-										    <tr>
-										        <th rowspan="2">Conectamef</th> 
-										        <th rowspan="2">Especialista/analista/implantador</th>
-										        <th rowspan="2">Apellidos y nombres</th>
-										        <th colspan="2">Registros fuera de plazo</th>
-										        <th colspan="2">Registros dentro de plazo</th>
-										        <th rowspan="2">Total de registros</th>
-										    </tr>
-										    <tr>
-										        <th>N&uacute;mero</th>
-										        <th>Porcentaje (%)</th>
-										        <th>N&uacute;mero</th>
-										        <th>Porcentaje (%)</th>
-										    </tr>
-											<tr ng-repeat="item in listConsultaSADentroFueraPlazo">
-											        <td>{{item.sede}}</td> 
-											        <td>{{item.descripcion}}</td>
-											        <td>{{item.apellidosNombres}}</td>
-											        <td>{{item.totalFueraPlazo}}</td> 
-											        <td>{{item.porcentajeFueraPlazo}}%</td> 
-											        <td>{{item.totalDentroPlazo}}</td> 
-											        <td>{{item.porcentajeDentroPlazo}}%</td> 
-											        <td>{{item.total}}</td>  
-											</tr>
-											<tr>
-											    <td colspan="3"><strong>Total</strong></td>
-											    <td>{{getTotalFueraPlazoConsultaSA(listConsultaSADentroFueraPlazo)}}</td>
-											    <td>{{(getTotalFueraPlazoConsultaSA(listConsultaSADentroFueraPlazo) / getTotalRegistrosConsultaSA(listConsultaSADentroFueraPlazo)) * 100 | number:2}}%</td>
-											    <td>{{getTotalDentroPlazoConsultaSA(listConsultaSADentroFueraPlazo)}}</td>
-											    <td>{{(getTotalDentroPlazoConsultaSA(listConsultaSADentroFueraPlazo) / getTotalRegistrosConsultaSA(listConsultaSADentroFueraPlazo)) * 100 | number:2}}%</td>
-											    <td>{{getTotalRegistrosConsultaSA(listConsultaSADentroFueraPlazo)}}</td>
-											</tr>
-										</table>
-
+										</div>
 							</fieldset>
 																		
 						</md-grid-tile>
+			
+			
+						<md-grid-tile colspan="2">
+																			  
+													<fieldset style="margin-left: 15px;">
+																<legend>REGISTROS DENTRO Y FUERA DE PLAZO CAPACITACIONES</legend>
+																
+																<md-select
+																    ng-model="filtrocapacitacionplazo.monthYearMod"
+																    ng-change="onDashCapacitacionPlazo(filtrocapacitacionplazo.monthYearMod)" 
+																    placeholder="Mes"> 
+																    <md-option ng-value="0">Todos los Meses</md-option>
+																    <md-option
+																        ng-repeat="item in listaMonthCapacitacionDentroFueraPlazo" ng-value="item.monthYear">
+																        {{item.monthYear}} 
+																    </md-option>
+																</md-select>
+																
+																<div style="overflow: auto; max-height: 400px; max-width: 100%; margin-top: 20px;">
+																<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+																    <tr>
+																        <th rowspan="2">Conectamef</th> 
+																        <th rowspan="2">Especialista/analista/implantador</th>
+																        <th rowspan="2">Apellidos y nombres</th>
+																        <th colspan="2">Registros fuera de plazo</th>
+																        <th colspan="2">Registros dentro de plazo</th>
+																        <th rowspan="2">Total de registros</th>
+																    </tr>
+																    <tr>
+																        <th>N&uacute;mero</th>
+																        <th>Porcentaje (%)</th>
+																        <th>N&uacute;mero</th>
+																        <th>Porcentaje (%)</th>
+																    </tr>
+																	<tr ng-repeat="item in listCapacitacionDentroFueraPlazo">
+																	        <td>{{item.sede}}</td> 
+																	        <td>{{item.descripcion}}</td>
+																	        <td>{{item.apellidosNombres}}</td>
+																	        <td>{{item.totalFueraPlazo}}</td> 
+																	        <td>{{item.porcentajeFueraPlazo}}%</td> 
+																	        <td>{{item.totalDentroPlazo}}</td> 
+																	        <td>{{item.porcentajeDentroPlazo}}%</td> 
+																	        <td>{{item.total}}</td>  
+																	</tr>
+																	<tr>
+																	    <td colspan="3"><strong>Total</strong></td>
+																	    <td>{{getTotalFueraPlazoCapacitacion(listCapacitacionDentroFueraPlazo)}}</td>
+																	    <td>{{(getTotalFueraPlazoCapacitacion(listCapacitacionDentroFueraPlazo) / getTotalRegistrosCapacitacion(listCapacitacionDentroFueraPlazo)) * 100 | number:2}}%</td>
+																	    <td>{{getTotalDentroPlazoCapacitacion(listCapacitacionDentroFueraPlazo)}}</td>
+																	    <td>{{(getTotalDentroPlazoCapacitacion(listCapacitacionDentroFueraPlazo) / getTotalRegistrosCapacitacion(listCapacitacionDentroFueraPlazo)) * 100 | number:2}}%</td>
+																	    <td>{{getTotalRegistrosCapacitacion(listCapacitacionDentroFueraPlazo)}}</td>
+																	</tr>
+																</table>
+																</div>
+													</fieldset>
+																								
+									</md-grid-tile>
+									
+									
+									<md-grid-tile class="gray" style="padding: 16px;"></md-grid-tile>
+									
+									
+									<md-grid-tile>
+												    <fieldset style="margin-left: 15px; overflow-x: auto;">
+												        <legend>REGISTROS DENTRO Y FUERA DE PLAZO DE ASISTENCIAS T&Eacute;CNICAS POR SISTEMA ADMINISTRATIVO</legend>
 
+												        <md-select
+												            ng-model="filtroasistecnicasaplazo.monthYearMod"
+												            ng-change="onDashAsistTecnicaSAPlazo(filtroasistecnicasaplazo.monthYearMod)" 
+												            placeholder="Mes"> 
+												            <md-option ng-value="0">Todos los Meses</md-option>
+												            <md-option
+												                ng-repeat="item in listaMonthAsistenciaSADentroFueraPlazo" ng-value="item.monthYear">
+												                {{item.monthYear}} 
+												            </md-option>
+												        </md-select>
+
+												       <div style="overflow: auto; max-height: 400px; max-width: 100%; margin-top: 20px;">
+												            <table border="1" style="width: 100%; border-collapse: collapse;">
+												                <tr>
+												                    <th rowspan="2">Conectamef</th> 
+												                    <th rowspan="2">Especialista/analista/implantador</th>
+												                    <th rowspan="2">Apellidos y nombres</th>
+												                    <th colspan="2">Registros fuera de plazo</th>
+												                    <th colspan="2">Registros dentro de plazo</th>
+												                    <th rowspan="2">Total de registros</th>
+												                </tr>
+												                <tr>
+												                    <th>N&uacute;mero</th>
+												                    <th>Porcentaje (%)</th>
+												                    <th>N&uacute;mero</th>
+												                    <th>Porcentaje (%)</th>
+												                </tr>
+												                <tr ng-repeat="item in listAsistenciaSADentroFueraPlazo">
+												                    <td>{{item.sede}}</td> 
+												                    <td>{{item.descripcion}}</td>
+												                    <td>{{item.apellidosNombres}}</td>
+												                    <td>{{item.totalFueraPlazo}}</td> 
+												                    <td>{{item.porcentajeFueraPlazo}}%</td> 
+												                    <td>{{item.totalDentroPlazo}}</td> 
+												                    <td>{{item.porcentajeDentroPlazo}}%</td> 
+												                    <td>{{item.total}}</td>  
+												                </tr>
+												                <tr>
+												                    <td colspan="3"><strong>Total</strong></td>
+												                    <td>{{getTotalFueraPlazoAsisTecSA(listAsistenciaDentroFueraPlazo)}}</td>
+												                    <td>{{(getTotalFueraPlazoAsisTecSA(listAsistenciaDentroFueraPlazo) / getTotalRegistrosAsisTecSA(listAsistenciaSADentroFueraPlazo)) * 100 | number:2}}%</td>
+												                    <td>{{getTotalDentroPlazoAsisTecSA(listAsistenciaDentroFueraPlazo)}}</td>
+												                    <td>{{(getTotalDentroPlazoAsisTecSA(listAsistenciaDentroFueraPlazo) / getTotalRegistrosAsisTecSA(listAsistenciaSADentroFueraPlazo)) * 100 | number:2}}%</td>
+												                    <td>{{getTotalRegistrosAsisTecSA(listAsistenciaDentroFueraPlazo)}}</td>
+												                </tr>
+												            </table>
+												        </div>
+												    </fieldset>
+												</md-grid-tile>
+
+												<md-grid-tile class="gray" style="padding: 16px;"></md-grid-tile>
+												
+												<md-grid-tile>
+																						  
+																<fieldset style="margin-left: 15px; overflow-x: auto;">
+																			<legend>REGISTROS DENTRO Y FUERA DE PLAZO CONSULTAS POR SISTEMA ADMINISTRATIVO</legend>
+																			
+																			<md-select
+																			    ng-model="filtroconsultasaplazo.monthYearMod"
+																			    ng-change="onDashConsultaSAPlazo(filtroconsultasaplazo.monthYearMod)" 
+																			    placeholder="Mes"> 
+																			    <md-option ng-value="0">Todos los Meses</md-option>
+																			    <md-option
+																			        ng-repeat="item in listaMonthConsultaSADentroFueraPlazo" ng-value="item.monthYear">
+																			        {{item.monthYear}} 
+																			    </md-option>
+																			</md-select>
+																			
+																			<div style="overflow: auto; max-height: 400px; max-width: 100%; margin-top: 20px;">
+																			<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+																			    <tr>
+																			        <th rowspan="2">Conectamef</th> 
+																			        <th rowspan="2">Especialista/analista/implantador</th>
+																			        <th rowspan="2">Apellidos y nombres</th>
+																			        <th colspan="2">Registros fuera de plazo</th>
+																			        <th colspan="2">Registros dentro de plazo</th>
+																			        <th rowspan="2">Total de registros</th>
+																			    </tr>
+																			    <tr>
+																			        <th>N&uacute;mero</th>
+																			        <th>Porcentaje (%)</th>
+																			        <th>N&uacute;mero</th>
+																			        <th>Porcentaje (%)</th>
+																			    </tr>
+																				<tr ng-repeat="item in listConsultaSADentroFueraPlazo">
+																				        <td>{{item.sede}}</td> 
+																				        <td>{{item.descripcion}}</td>
+																				        <td>{{item.apellidosNombres}}</td>
+																				        <td>{{item.totalFueraPlazo}}</td> 
+																				        <td>{{item.porcentajeFueraPlazo}}%</td> 
+																				        <td>{{item.totalDentroPlazo}}</td> 
+																				        <td>{{item.porcentajeDentroPlazo}}%</td> 
+																				        <td>{{item.total}}</td>  
+																				</tr>
+																				<tr>
+																				    <td colspan="3"><strong>Total</strong></td>
+																				    <td>{{getTotalFueraPlazoConsultaSA(listConsultaSADentroFueraPlazo)}}</td>
+																				    <td>{{(getTotalFueraPlazoConsultaSA(listConsultaSADentroFueraPlazo) / getTotalRegistrosConsultaSA(listConsultaSADentroFueraPlazo)) * 100 | number:2}}%</td>
+																				    <td>{{getTotalDentroPlazoConsultaSA(listConsultaSADentroFueraPlazo)}}</td>
+																				    <td>{{(getTotalDentroPlazoConsultaSA(listConsultaSADentroFueraPlazo) / getTotalRegistrosConsultaSA(listConsultaSADentroFueraPlazo)) * 100 | number:2}}%</td>
+																				    <td>{{getTotalRegistrosConsultaSA(listConsultaSADentroFueraPlazo)}}</td>
+																				</tr>
+																			</table>
+																			</div>
+																</fieldset>
+																											
+															</md-grid-tile>
+						
+			
+			<!-- 
+			
+			
+			
+
+			
+			
+
+						-->
+						
+						
+						
+						
+						
 						
 </md-grid-list> 
 
