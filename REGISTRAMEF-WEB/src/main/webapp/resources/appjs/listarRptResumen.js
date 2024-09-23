@@ -1878,6 +1878,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		}
 		
 		
+		var barInstanceCapaByTematica = null; 
 	    $scope.onDashCapaByTematica = function(month) {
 		    var listCapacitacionUsSegunTematicaByLastMonth = null;
 		    
@@ -1888,9 +1889,65 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		    }
 		    
 		    var labels = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.abreviaturaAdmin.trim());
-		    var participantsData = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.totalParticipants);
+		    var data = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.totalParticipants);
 		    
-		    $scope.showDashboardBar(labels, participantsData, 'barChartCapaByTematica', 'Eventos');
+		    //$scope.showDashboardBar(labels, participantsData, 'barChartCapaByTematica', 'Eventos');
+		    
+		    var series = ['Eventos'];
+			
+			    var options = {
+			        scales: {
+			            y: {
+			                beginAtZero: true
+			            }
+			        },
+			        plugins: {
+			            tooltip: {
+			                enabled: true,
+			                callbacks: {
+			                    label: function(tooltipItem) {
+			                    var value = tooltipItem.raw || 0;
+			                    if (value === 0) {
+			                        return ''; 
+			                    }
+			                    var label = tooltipItem.dataset.label || '';
+			                    return label + ': ' + value;
+			                }
+			                }
+			            }
+			        },
+			        animation: {
+			            duration: 0
+			        }
+			    };
+			
+			    if (barInstanceCapaByTematica !== null) {
+			        barInstanceCapaByTematica.destroy();  
+			        barInstanceCapaByTematica = null;     
+			    }
+			
+			    var canvas = document.getElementById('barChartCapaByTematica');
+			    if (canvas) {
+			        var ctx = canvas.getContext('2d');
+			
+			        ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			        barInstanceCapaByTematica = new Chart(ctx, {
+			            type: 'bar',
+			            data: {
+			                labels: labels,
+			                datasets: [{
+			                    label: series[0],
+			                    data: data,
+			                    backgroundColor: '#08bcac',
+			                    borderColor: 'rgba(75, 192, 192, 1)',
+			                    borderWidth: 1
+			                }]
+			            },
+			            options: options
+			        });
+			    }
+		    
 		};
 
 		
@@ -1912,7 +1969,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 		}
 		
-		var barInstance = null; 
+		//var barInstance = null; 
 		$scope.showDashboardBar = function(labels, data, idElementHTML, nameSerie) {
 			    var series = [nameSerie];
 			
@@ -2356,6 +2413,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 		}
 		
+		var barInstanceReuTrabajByTematica = null; 
 	    $scope.onDashReuTrabajByTematica = function(month) {
 			
 			//$scope.clearBarInstance();
@@ -2371,7 +2429,65 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 	        var labels = listReunionTrabajoUsSegunTematicaByLastMonth.map(item => item.abreviatura.trim());
 	        var data = listReunionTrabajoUsSegunTematicaByLastMonth.map(item => item.total);
 	        
-	        $scope.showDashboardBar(labels, data, 'barChartReuTrabajoByTematica', 'Usuarios');
+	       // $scope.showDashboardBar(labels, data, 'barChartReuTrabajoByTematica', 'Usuarios');
+	       
+	       
+	        var series = ['Usuarios'];
+			
+			    var options = {
+			        scales: {
+			            y: {
+			                beginAtZero: true
+			            }
+			        },
+			        plugins: {
+			            tooltip: {
+			                enabled: true,
+			                callbacks: {
+			                    label: function(tooltipItem) {
+			                    var value = tooltipItem.raw || 0;
+			                    if (value === 0) {
+			                        return ''; 
+			                    }
+			                    var label = tooltipItem.dataset.label || '';
+			                    return label + ': ' + value;
+			                }
+			                }
+			            }
+			        },
+			        animation: {
+			            duration: 0
+			        }
+			    };
+			
+			    if (barInstanceReuTrabajByTematica !== null) {
+			        barInstanceReuTrabajByTematica.destroy();  
+			        barInstanceReuTrabajByTematica = null;     
+			    }
+			
+			    var canvas = document.getElementById('barChartReuTrabajoByTematica');
+			    if (canvas) {
+			        var ctx = canvas.getContext('2d');
+			
+			        ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			        barInstanceReuTrabajByTematica = new Chart(ctx, {
+			            type: 'bar',
+			            data: {
+			                labels: labels,
+			                datasets: [{
+			                    label: series[0],
+			                    data: data,
+			                    backgroundColor: '#08bcac',
+			                    borderColor: 'rgba(75, 192, 192, 1)',
+			                    borderWidth: 1
+			                }]
+			            },
+			            options: options
+			        });
+			    }
+	       
+	       
 	    };
 
 	    
@@ -2416,7 +2532,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		}
 		
 		//ASIS TECNICA POR TEMA
-		
+		var barInstanceAsistenciaTecnicaByTematica = null; 
 		$scope.onDashAsistenciaTecnicaByTematica = function(month) {
 			
 			//$scope.clearBarInstance();
@@ -2432,7 +2548,64 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 	        var labels = listAsisteTecnicaSegunTematicaByLastMonth.map(item => item.abreviatura.trim());
 	        var data = listAsisteTecnicaSegunTematicaByLastMonth.map(item => item.total);
 	        
-	        $scope.showDashboardBar(labels, data, 'barChartAsistenciaTecnicaByTematica', 'Usuarios');
+	        //$scope.showDashboardBar(labels, data, 'barChartAsistenciaTecnicaByTematica', 'Usuarios');
+	        
+	         var series = ['Usuarios'];
+			
+			    var options = {
+			        scales: {
+			            y: {
+			                beginAtZero: true
+			            }
+			        },
+			        plugins: {
+			            tooltip: {
+			                enabled: true,
+			                callbacks: {
+			                    label: function(tooltipItem) {
+			                    var value = tooltipItem.raw || 0;
+			                    if (value === 0) {
+			                        return ''; 
+			                    }
+			                    var label = tooltipItem.dataset.label || '';
+			                    return label + ': ' + value;
+			                }
+			                }
+			            }
+			        },
+			        animation: {
+			            duration: 0
+			        }
+			    };
+			
+			    if (barInstanceAsistenciaTecnicaByTematica !== null) {
+			        barInstanceAsistenciaTecnicaByTematica.destroy();  
+			        barInstanceAsistenciaTecnicaByTematica = null;     
+			    }
+			
+			    var canvas = document.getElementById('barChartAsistenciaTecnicaByTematica');
+			    if (canvas) {
+			        var ctx = canvas.getContext('2d');
+			
+			        ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			        barInstanceAsistenciaTecnicaByTematica = new Chart(ctx, {
+			            type: 'bar',
+			            data: {
+			                labels: labels,
+			                datasets: [{
+			                    label: series[0],
+			                    data: data,
+			                    backgroundColor: '#08bcac',
+			                    borderColor: 'rgba(75, 192, 192, 1)',
+			                    borderWidth: 1
+			                }]
+			            },
+			            options: options
+			        });
+			    }
+	        
+	        
 	    };
 		
 		
@@ -2456,7 +2629,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		
 		
 		//CONSULTA POR TEMA
-		
+		var barInstanceConsultaByTematica = null; 
 		$scope.onDashConsultaByTematica = function(month) {
 			
 			//$scope.clearBarInstance();
@@ -2472,7 +2645,64 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 	        var labels = listConsultaByLastMonth.map(item => item.abreviatura.trim());
 	        var data = listConsultaByLastMonth.map(item => item.total);
 	        
-	        $scope.showDashboardBar(labels, data, 'barChartConsultaByTematica', 'Consulta');
+	       // $scope.showDashboardBar(labels, data, 'barChartConsultaByTematica', 'Consulta');
+	       
+	        var series = ['Consulta'];
+			
+			    var options = {
+			        scales: {
+			            y: {
+			                beginAtZero: true
+			            }
+			        },
+			        plugins: {
+			            tooltip: {
+			                enabled: true,
+			                callbacks: {
+			                    label: function(tooltipItem) {
+			                    var value = tooltipItem.raw || 0;
+			                    if (value === 0) {
+			                        return ''; 
+			                    }
+			                    var label = tooltipItem.dataset.label || '';
+			                    return label + ': ' + value;
+			                }
+			                }
+			            }
+			        },
+			        animation: {
+			            duration: 0
+			        }
+			    };
+			
+			    if (barInstanceConsultaByTematica !== null) {
+			        barInstanceConsultaByTematica.destroy();  
+			        barInstanceConsultaByTematica = null;     
+			    }
+			
+			    var canvas = document.getElementById('barChartConsultaByTematica');
+			    if (canvas) {
+			        var ctx = canvas.getContext('2d');
+			
+			        ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			        barInstanceConsultaByTematica = new Chart(ctx, {
+			            type: 'bar',
+			            data: {
+			                labels: labels,
+			                datasets: [{
+			                    label: series[0],
+			                    data: data,
+			                    backgroundColor: '#08bcac',
+			                    borderColor: 'rgba(75, 192, 192, 1)',
+			                    borderWidth: 1
+			                }]
+			            },
+			            options: options
+			        });
+			    }
+	       
+	       
 	    };
 		
 		
