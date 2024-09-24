@@ -556,8 +556,8 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		  
 		
 	  $scope.filtro ={
-			  fechaInicio:$scope.firstDate(new Date()),
-			  fechaFin: $scope.getLastDayOfMonth(new Date()),
+			  fechaInicio:null,
+			  fechaFin: null,
 			  idTipoServicio: null,
 			  idSede: 0,
 			  idSisAdmin: 0,
@@ -568,8 +568,8 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		
 		$scope.limpiarFiltro = function() {
 		    $scope.filtro = {
-		        fechaInicio: $scope.firstDate(new Date()),
-		        fechaFin: $scope.getLastDayOfMonth(new Date()),
+		        fechaInicio:null,
+			  	fechaFin: null,
 		        idTipoServicio: null,
 		        idSede: 0,
 		        idSisAdmin: 0,
@@ -578,7 +578,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		        flagAsis: false
 		    };
 		    
-		    $scope.showDashboard = 0;
+		    $scope.showDashboard = false;
 			$scope.totalRegistros=null;
 		};
 	
@@ -759,7 +759,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 						.parent(angular.element(document.body))
 						.clickOutsideToClose(true)
 						.title('REPORTE RESUMEN')
-						.textContent("DEBE SELECCIONAR EL TIPO DE SERVICIO PARA LA CONSULTA")
+						.textContent("INGRESAR LOS FILTROS DE BÚSQUEDA PARA PODER DESCARGAR EL ARCHIVO")
 						.ok('OK')
 				);
     			return;
@@ -771,7 +771,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 					.parent(angular.element(document.body))
 					.clickOutsideToClose(true)
 					.title('REPORTE RESUMEN')
-					.textContent("DEBE SELECCIONAR AMBAS FECHAS")
+					.textContent("INGRESAR LOS FILTROS DE BÚSQUEDA PARA PODER DESCARGAR EL ARCHIVO")
 					.ok('OK')
 				);
 				return;
@@ -1636,17 +1636,6 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			});
 		};
 		
-		/*$scope.listaIDValorMsUserTemaCapaBySedeBySisAdm=[];
-		$scope.loadlistaIDValorMsUserTemaCapaBySedeBySisAdm=function(){
-			$http.get(listaIDValorMsUserTemaCapaBySedeBySisAdmUrl).then(function(res){
-				$scope.listaIDValorMsUserTemaCapaBySedeBySisAdm = res.data; 
-			},
-			function error(errResponse) {
-				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
-			});
-		};*/
-		
-		
 		$scope.listaIDValorMsUserBySedeBySisAdm=[];
 		$scope.loadllistaIDValorMsUserBySedeBySisAdm=function(){
 			$http.get(listaIDValorMsUserBySedeBySisAdmUrl).then(function(res){
@@ -1671,6 +1660,13 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		$scope.reportecapacitacionResumen=[];
 		$scope.listCapacitacion=[];
 		$scope.loadReporteResumen=function(){
+			
+			$scope.isLoading = true;
+			
+			if ($scope.reportecapacitacionResumen != null && Object.keys($scope.reportecapacitacionResumen).length > 0) {
+				$scope.showDashboard = false;
+			}
+			
 			$http.get(cargarReporteUrl+$scope.getURLParametros()).then(function(res){
 				
 				//$scope.listCapacitacionEvolMensual = res.data.listCapacitacionEvolMensual; 
@@ -1697,7 +1693,8 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 				$scope.buildTableAsistenciaSADentroFueraPlazo(res.data);
 				$scope.buildTableConsultaSADentroFueraPlazo(res.data);
 				
-				
+				$scope.showDashboard = true;
+				$scope.isLoading = false;
 				
 				/*if (res.data!=null && res.data.listCapacitacion.length > 0) {
 					$scope.listCapacitacion = res.data.listCapacitacion.filter(c => c.asitio === 'SI' && c.estado === 'FINALIZADO');
@@ -1759,18 +1756,10 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
             };
 		
 		
-		$scope.showDashboard = 0;
+		//$scope.showDashboard = 0;
+		$scope.isLoading = false;
 		$scope.showReportResumen =function(){
-			$scope.showDashboard = 1;
-			const fechaInicio = new Date($scope.filtro.fechaInicio);
-			const fechaFin = new Date($scope.filtro.fechaFin);
-			
-			/*console.log("fechaInicio: " + fechaInicio);
-			console.log("fechaFin: " + fechaFin);
-			
-			const differenceInMilliseconds = fechaFin - fechaInicio;
-			
-			const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);*/
+			//$scope.showDashboard = 1;
 			
 			if (!$scope.filtro.fechaInicio || !$scope.filtro.fechaFin) {
 				$mdDialog.show(
@@ -1795,9 +1784,19 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 				);
 				return;
 	    	}
+	    	
+	    	// $scope.isLoading = true;
 			
+			 $scope.loadReporteResumen();
 			
-			$scope.loadReporteResumen();
+			// $scope.isLoading = false;
+			 
+			 
+			
+			/*$scope.loadReporteResumen().finally(function () {
+		        $scope.isLoading = false;
+		    });*/
+			
 			
 		}
 		

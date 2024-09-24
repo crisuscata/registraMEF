@@ -1,0 +1,21 @@
+/*ELEMENTS OF HTML COMPONENTES */
+.md-select-value > span:not(.md-select-icon) .md-text {
+    display: inline;
+    color: #191717; 
+}
+
+.tamaDivFiltro {
+    height: auto; /* Adjust this if needed */
+    display: flex;
+    align-items: center; /* Ensures that all items are aligned vertically */
+    padding: 0 10px !important; /* Internal padding */
+    margin-right: 20px; /* Space between elements */
+}
+
+
+.md-input-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}

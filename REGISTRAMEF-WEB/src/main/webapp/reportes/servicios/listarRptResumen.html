@@ -22,6 +22,7 @@
 <link href="resources/appcss/strength.css" rel="stylesheet" type="text/css" />
 
 <link href="resources/css/angular-chart.css" rel="stylesheet" type="text/css" />
+<link href="resources/css/report-resumen-servicio.css" rel="stylesheet" type="text/css" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -89,7 +90,9 @@
     
 <!-- Filtro -->
 <md-toolbar class="md-toolbar-filtro-size">
-	<div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="space-between center">
+<!--	<div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="space-between center"> -->
+	<div class="md-toolbar-tools md-toolbar-tools-size md-toolbar-font-size" layout="row" layout-align="start center" style="gap: 20px;">
+
 	
      		<div class="tamaDivFiltro">
             <md-input-container class="container_margen-top" style="margin-top: 42px;"> 
@@ -197,7 +200,7 @@
 			</div>
 			
 			<div class="tamaDivFiltro" style="font-size: 14px;" ng-if="filtro.idTipoServicio === 133" >
-				<label>Asisti&oacute;</label>
+				<label style="color:#191717">Asisti&oacute;</label>
 				<input type="checkbox" ng-model="filtro.flagAsis">
 			</div>
 	
@@ -255,23 +258,43 @@
 			    align-items: center;     
 			    height: 100%; ">
 			    
-            <md-button class="md-raised"
-                      aria-label="Show Participante"
-                      ng-click="showReportResumen()">
-                <md-icon md-font-set="material-icons" style="color: grey;">file_download</md-icon>
-                <span>Cargar reportes con filtros de b&uacute;squedas</span>
-            </md-button>
+				<md-button class="md-raised"
+				           aria-label="Show Participante"
+				           ng-click="showReportResumen()" 
+				           ng-disabled="isLoading"> <!-- Disable button during loading -->
+				    <md-icon md-font-set="material-icons" style="color: grey;">
+				        file_download
+				    </md-icon>
+				    <span>Cargar reportes con filtros de b&uacute;squedas</span>
+
+				   
+				</md-button>
+				
+			    
 			
-			<md-button class="md-raised"
-			                      aria-label="Show Participante"
-			                      ng-click="exportToPdf()">
-			                <md-icon md-font-set="material-icons" style="color: grey;">file_download</md-icon>
-			                <span>GenerarPDF</span>
-			            </md-button>
+				<md-button class="md-raised"
+	                      aria-label="Show Participante"
+	                      ng-click="exportToPdf()">
+	                <md-icon md-font-set="material-icons" style="color: grey;">file_download</md-icon>
+	                <span>GenerarPDF</span>
+	            </md-button>
             
         </div>
+		
+		<div ng-if="isLoading" 
+						 style="display: flex;
+					    justify-content: center; 
+					    align-items: center;     
+					    height: 100%; ">
+				<md-progress-circular 
+			        md-mode="indeterminate" 
+			        md-diameter="20" 
+			        class="md-accent">
+			    </md-progress-circular>
+		</div>
+		
         
-       <md-grid-list id="idGridList"  md-cols="3" md-gutter="2px" md-row-height="3:2" style="width:90%;">
+       <md-grid-list id="idGridList"  md-cols="3" md-gutter="2px" md-row-height="3:2" style="width:90%;" ng-if="showDashboard">
 	<!--	<md-grid-list md-cols="3" md-gutter="10px" md-row-height="fit" style="width:90%;">  -->
         
            <md-grid-tile class="gray" style="padding: 16px;" colspan="2">
@@ -557,7 +580,7 @@
   					    ng-model="filtroesttema.sisAdmin"
   					    ng-change="onDashEstTemaDashAndTemas(filtroesttema.sisAdmin)" 
   					    placeholder="Sist. Admin."> 
-  					    <md-option ng-value="0">Todos los Sist. Admin.</md-option>
+  					    <md-option ng-value="0">Seleccionar Sist. Admin.</md-option>
   					    <md-option
   					        ng-repeat="item in listSistAdmin" ng-value="item.sistAdmin">
   					        {{item.sistAdmin}} 
@@ -570,7 +593,7 @@
   					    ng-model="filtroesttema.tema"
   					    ng-change="onDashEstTemaSubTema(filtroesttema.sisAdmin, filtroesttema.tema)" 
   					    placeholder="Tema"> 
-  					    <md-option ng-value="0">Todos Temas</md-option>
+  					    <md-option ng-value="0">Seleccionar Temas</md-option>
   					    <md-option
   					        ng-repeat="item in listTema" ng-value="item.tema">
   					        {{item.tema}} 
