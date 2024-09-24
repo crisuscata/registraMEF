@@ -2845,14 +2845,6 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			    
 		}
 		
-		/**
-		 $scope.listAsistenciaTecnicaSegunTematica=[];
-		$scope.listaAsisTecnicaByTematica=[];
-		$scope.buildDashboardAsistenciaTecPorTematica = function(data){
-			$scope.listAsistenciaTecnicaSegunTematica = data.listReporteAsistenciaTecnicaSegunTematica; 
-		 * 
-		 */
-		
 		//ASISTENCIA TECNICA FUERA DE PLAZO
 		
 		$scope.onDashAsistTecnicaPlazo = function(month) {
@@ -2907,6 +2899,28 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		    return total;
 		};
 		
+		$scope.exportTableToExcelRegAsistTecnica = function() {
+		    var table = document.getElementById('tblRegDentroFueraPlazoAsisTecnica'); 
+		    var tableHTML = table.outerHTML;
+		
+		    var utf8EncodedTable = '\uFEFF' + tableHTML; 
+		
+		    var blob = new Blob([utf8EncodedTable], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+		
+		    var filename = 'tblRegDentroFueraPlazoAsisTecnica.xls';
+		
+		    var downloadLink = document.createElement('a');
+		    var url = URL.createObjectURL(blob);
+		
+		    downloadLink.href = url;
+		    downloadLink.download = filename;
+		
+		    document.body.appendChild(downloadLink);
+		    downloadLink.click();
+		
+		    document.body.removeChild(downloadLink);
+		};
+
 		//CONSULTA FUERA DE PLAZO
 		$scope.onDashConsultaPlazo = function(month) {
 			if (month === 0) {
@@ -2957,6 +2971,28 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		        total += item.total;
 		    });
 		    return total;
+		};
+		
+		$scope.exportTableToExcelDentroFueraPlazoConsultas = function() {
+		    var table = document.getElementById('tblregDentroFueraPlazoConsultas'); 
+		    var tableHTML = table.outerHTML;
+		
+		    var utf8EncodedTable = '\uFEFF' + tableHTML; 
+		
+		    var blob = new Blob([utf8EncodedTable], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+		
+		    var filename = 'tblregDentroFueraPlazoConsultas.xls';
+		
+		    var downloadLink = document.createElement('a');
+		    var url = URL.createObjectURL(blob);
+		
+		    downloadLink.href = url;
+		    downloadLink.download = filename;
+		
+		    document.body.appendChild(downloadLink);
+		    downloadLink.click();
+		
+		    document.body.removeChild(downloadLink);
 		};
 		
 		//CAPACITACION FUERA DE PLAZO
@@ -3010,6 +3046,28 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		        total += item.total;
 		    });
 		    return total;
+		};
+		
+		$scope.exportTableToExcelDentroFueraPlazoCapacitaciones = function() {
+		    var table = document.getElementById('tblRegDentroFueraPlazoCapacitaciones'); 
+		    var tableHTML = table.outerHTML;
+		
+		    var utf8EncodedTable = '\uFEFF' + tableHTML; 
+		
+		    var blob = new Blob([utf8EncodedTable], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+		
+		    var filename = 'tblRegDentroFueraPlazoCapacitaciones.xls';
+		
+		    var downloadLink = document.createElement('a');
+		    var url = URL.createObjectURL(blob);
+		
+		    downloadLink.href = url;
+		    downloadLink.download = filename;
+		
+		    document.body.appendChild(downloadLink);
+		    downloadLink.click();
+		
+		    document.body.removeChild(downloadLink);
 		};
 		
 		// ASISTENCIA TECNICA SIST ADMINISTRATIVO
@@ -3066,6 +3124,29 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		    return total;
 		};
 		
+		$scope.exportTableToExcelDentroFueraPlazoAsisTecnicaPorSistAdm = function() {
+		    var table = document.getElementById('tblRegDentroFueraPlazoAsisTecnicaPorSistAdm'); 
+		    var tableHTML = table.outerHTML;
+		
+		    var utf8EncodedTable = '\uFEFF' + tableHTML; 
+		
+		    var blob = new Blob([utf8EncodedTable], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+		
+		    var filename = 'tblRegDentroFueraPlazoAsisTecnicaPorSistAdm.xls';
+		
+		    var downloadLink = document.createElement('a');
+		    var url = URL.createObjectURL(blob);
+		
+		    downloadLink.href = url;
+		    downloadLink.download = filename;
+		
+		    document.body.appendChild(downloadLink);
+		    downloadLink.click();
+		
+		    document.body.removeChild(downloadLink);
+		};
+		
+		
 		//CONSULTA SA FUERA DE PLAZO
 		$scope.onDashConsultaSAPlazo = function(month) {
 			if (month === 0) {
@@ -3119,143 +3200,27 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		};
 		
 		
+		$scope.exportTableToExcelDentroFueraPlazoConsultaPorSistAdm = function() {
+		    var table = document.getElementById('tblRegDentroFueraPlazoConsultaPorSisteAdm'); 
+		    var tableHTML = table.outerHTML;
 		
+		    var utf8EncodedTable = '\uFEFF' + tableHTML; 
 		
+		    var blob = new Blob([utf8EncodedTable], { type: 'application/vnd.ms-excel;charset=utf-8;' });
 		
+		    var filename = 'tblRegDentroFueraPlazoConsultaPorSisteAdm.xls';
 		
+		    var downloadLink = document.createElement('a');
+		    var url = URL.createObjectURL(blob);
 		
+		    downloadLink.href = url;
+		    downloadLink.download = filename;
 		
+		    document.body.appendChild(downloadLink);
+		    downloadLink.click();
 		
-		
-		
-		 //DASHBOARD
-		 // Define your chart data REDONDO EXAMPLE
-		/* 
-		    $scope.canalesV = [10, 	  20, 		30];
-		    $scope.canalesL = ['Red', 'Blue', 'Yellow'];
-		    $scope.coloursCanales = [
-		        {
-		            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-		        }
-		    ];
-
-		    // Define chart options
-		    $scope.optionsCanalesChart = {
-		        responsive: true,
-		        maintainAspectRatio: false
-		    };
-		  */  
-		    
-		    
-		 /////  
-		    
-		    
-		    
-		    
-		    /*
-		    $scope.chartData = [
-		        [65, 59, 80, 81, 56, 55, 40], // Dataset 1
-		        [28, 48, 40, 19, 86, 27, 90]  // Dataset 2 (if needed)
-		    ];
-		    
-		 // Define chart labels
-		    $scope.chartLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-		    // Define chart options
-		    $scope.chartOptions = {
-		        scales: {
-		            x: {
-		                beginAtZero: true
-		            }
-		        }
-		    };
-
-		    // Define chart colors
-		    $scope.chartColors = ['#FF6384', '#36A2EB'];
-
-		    // Set up chart type
-		    $scope.chartType = 'horizontalBar'; // Use 'bar' for vertical bars
-		    */
-		    
-		    
-		    /*
-		 // Bar Chart
-		    $scope.barChartData = [65, 59, 80, 81, 56, 55, 40];
-		    $scope.barChartLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-		    $scope.barChartOptions = { scales: { x: { beginAtZero: true } } };
-		    $scope.barChartColors = ['#FF6384', '#36A2EB', '#FFCE56'];
-
-		    // Line Chart
-		    $scope.lineChartData = [
-		        { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-		        { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' }
-		    ];
-		    $scope.lineChartLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-		    $scope.lineChartOptions = { responsive: true };
-		    
-		    // Pie Chart
-		    $scope.pieChartData = [300, 50, 100];
-		    $scope.pieChartLabels = ['Red', 'Blue', 'Yellow'];
-		    $scope.pieChartOptions = { responsive: true };
-
-		    // Doughnut Chart
-		    $scope.doughnutChartData = [300, 50, 100];
-		    $scope.doughnutChartLabels = ['Red', 'Blue', 'Yellow'];
-		    $scope.doughnutChartOptions = { responsive: true };
-		    
-		    // Radar Chart
-		    $scope.radarChartData = [
-		        { data: [65, 59, 90, 81, 56, 55], label: 'Series A' }
-		    ];
-		    $scope.radarChartLabels = ['January', 'February', 'March', 'April', 'May', 'June'];
-		    $scope.radarChartOptions = { responsive: true };
-		    
-		    // Polar Area Chart
-		    $scope.polarAreaChartData = [11, 16, 7, 25];
-		    $scope.polarAreaChartLabels = ['Red', 'Green', 'Yellow', 'Blue'];
-		    $scope.polarAreaChartOptions = { responsive: true };
-		    
-		    // Bubble Chart
-		    $scope.bubbleChartData = [
-		        {
-		            data: [
-		                { x: 10, y: 20, r: 15 },
-		                { x: 15, y: 25, r: 10 }
-		            ],
-		            label: 'Series A'
-		        }
-		    ];
-		    $scope.bubbleChartOptions = { responsive: true };
-
-		    // Scatter Chart
-		    $scope.scatterChartData = [
-		        {
-		            data: [
-		                { x: 10, y: 20 },
-		                { x: 15, y: 25 }
-		            ],
-		            label: 'Series A'
-		        }
-		    ];
-		    $scope.scatterChartOptions = { responsive: true };
-		    
-		    */
-		 //FIN DASHBOARD  
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		    document.body.removeChild(downloadLink);
+		};
 		
 //DESCARGAR
     	$scope.descargar = function(){
@@ -3266,7 +3231,6 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			$mdDialog.hide($scope.usuarioModelo);
 			$scope.agregarUsuario();
 		};
-    	
     	
     	$scope.showConfirmFinalizar = function(ev) {
     		

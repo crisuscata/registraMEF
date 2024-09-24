@@ -294,15 +294,17 @@
 		</div>
 		
         
-       <md-grid-list id="idGridList"  md-cols="3" md-gutter="2px" md-row-height="3:2" style="width:90%;" ng-if="showDashboard">
+    <!--   <md-grid-list id="idGridList"  md-cols="3" md-gutter="2px" md-row-height="3:2" style="width:90%;" ng-if="showDashboard"> -->
+		<md-grid-list id="idGridList"  md-cols="3" md-gutter="2px" md-row-height="3:2" style="width:90%;"> 
+		
+		
 	<!--	<md-grid-list md-cols="3" md-gutter="10px" md-row-height="fit" style="width:90%;">  -->
         
            <md-grid-tile class="gray" style="padding: 16px;" colspan="2">
-			  <md-grid-tile-header>
-			    <h3>Evolución Mensual</h3>
-			  </md-grid-tile-header>
 			
-			  <!-- Canvas for the chart -->
+			<fieldset style="margin-left: 15px; overflow-x: auto;">
+				<legend>Evolución Mensual</legend>
+			
 			  <canvas id="mixedChartCapaEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas><!-- //MPINARES 21082024 - INICIO - SE EDITA STYLE -->
 			
 			  <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
@@ -315,17 +317,20 @@
 				  </tr>
 			  </table>
 			 
+			  </fieldset>
+			  
 			</md-grid-tile>
 			
 			
 			<md-grid-tile class="gray" style="padding: 16px;">
-			  <md-grid-tile-header>
-			    <h3>Usuarios capacitados seg&uacute;n tem&aacute;tica</h3>
-			    
+				<fieldset style="margin-left: 15px; overflow-x: auto;">
+					<legend>Usuarios capacitados seg&uacute;n tem&aacute;tica</legend>
+				
 			    <md-select
 				    ng-model="filtrocapa.monthYear"
 				    ng-change="onDashCapaByTematica(filtrocapa.monthYear)" 
-				    placeholder="Mes"> 
+					placeholder="Mes" 
+					style="margin-bottom: 20px;">
 				    <md-option ng-value="0">Todos los Meses</md-option>
 				    <md-option
 				        ng-repeat="item in listaCapaByTematica" ng-value="item.monthYear">
@@ -333,53 +338,50 @@
 				    </md-option>
 				</md-select>
 			    
-			  </md-grid-tile-header>
-			
 			  <canvas id="barChartCapaByTematica" width="400" height="200"></canvas>
 			
+			  </fieldset>
 			</md-grid-tile>
 			
 			
 			<md-grid-tile class="gray" style="padding: 16px;">
-			  <md-grid-tile-header>
-			    <h3>Usuarios capacitados seg&uacute;n modalidad</h3>
-			    
-			    <md-select
-				    ng-model="filtrocapa.monthYearMod"
-				    ng-change="onDashCapaByModalidad(filtrocapa.monthYearMod)" 
-				    placeholder="Mes"> 
-				    <md-option ng-value="0">Todos los Meses</md-option>
-				    <md-option
-				        ng-repeat="item in listaMonthCapaByModalidad" ng-value="item.monthYear">
-				        {{item.monthYear}} 
-				    </md-option>
-				</md-select>
-			    
-			  </md-grid-tile-header>
-			  
-			    <canvas id="doughnutByModalidad" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
+			    <fieldset style="margin-left: 15px; overflow-x: hidden;"> 
+			        <legend>Usuarios capacitados seg&uacute;n modalidad</legend>
 
-			    
-			     <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
-				  <tr>
-				    <th ng-repeat="m in mesesCapaModa track by $index">{{m}}</th>
-				  </tr>
-				  
-				  <tr ng-repeat="row in dataCapacitacionModalidadRows track by row.id">
-				    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
-				  </tr>
-			 	 </table>
+			        <md-select
+			            ng-model="filtrocapa.monthYearMod"
+			            ng-change="onDashCapaByModalidad(filtrocapa.monthYearMod)" 
+			            placeholder="Mes" 
+			            style="margin-bottom: 20px;">
+			            <md-option ng-value="0">Todos los Meses</md-option>
+			            <md-option
+			                ng-repeat="item in listaMonthCapaByModalidad" ng-value="item.monthYear">
+			                {{item.monthYear}} 
+			            </md-option>
+			        </md-select>
 
-			
+			        <canvas id="doughnutByModalidad" 
+			                ng-style="{'width': canvasWidth, 'height': canvasHeight}" 
+			                style="max-width: 300px; max-height: 200px;"></canvas>
+
+			        <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+			            <tr>
+			                <th ng-repeat="m in mesesCapaModa track by $index">{{m}}</th>
+			            </tr>
+			            <tr ng-repeat="row in dataCapacitacionModalidadRows track by row.id">
+			                <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
+			            </tr>
+			        </table>
+			    </fieldset>
 			</md-grid-tile>
+
+
 			
 			
 			<md-grid-tile class="gray" style="padding: 16px;" colspan="2">
-			  <md-grid-tile-header>
-			    <h3>Evoluci&oacute;n Mensual Reuni&oacute;n de trabajo</h3>
-			  </md-grid-tile-header>
-			
-			  <!-- Canvas for the chart -->
+				<fieldset style="margin-left: 15px; overflow-x: hidden;"> 
+					<legend>Evoluci&oacute;n Mensual Reuni&oacute;n de trabajo</legend>
+					
 			  <canvas id="mixedChartReunionTraEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
 			
 			   <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
@@ -392,17 +394,19 @@
 				  </tr>
 			  </table>
 			  
+			  </fieldset>
 			</md-grid-tile>
 			
 			
 			<md-grid-tile class="gray" style="padding: 16px;">
-			  <md-grid-tile-header>
-			    <h3>Usuarios externos seg&uacute;n tem&aacute;tica</h3>
+				<fieldset style="margin-left: 15px; overflow-x: auto;">
+						<legend>Usuarios capacitados seg&uacute;n tem&aacute;tica</legend>
 			    
 			    <md-select
 				    ng-model="filtroreutrabajo.monthYear"
 				    ng-change="onDashReuTrabajByTematica(filtroreutrabajo.monthYear)" 
-				    placeholder="Mes"> 
+					placeholder="Mes" 
+					style="margin-bottom: 20px;">
 				    <md-option ng-value="0">Todos los Meses</md-option>
 				    <md-option
 				        ng-repeat="item in listaReuTrabByTematica" ng-value="item.monthYear">
@@ -410,22 +414,18 @@
 				    </md-option>
 				</md-select>
 			    
-			  </md-grid-tile-header>
 			
 			  <canvas id="barChartReuTrabajoByTematica" width="400" height="200"></canvas>
 			
+			  </fieldset>
 			</md-grid-tile>
 			
 			<md-grid-tile class="gray" style="padding: 16px;"></md-grid-tile>
 			
-			
-			
 			<md-grid-tile class="gray" style="padding: 16px;" colspan="2">
-				  <md-grid-tile-header>
-				    <h3>Evolución Mensual Asis.Tec</h3>
-				  </md-grid-tile-header>
+				<fieldset style="margin-left: 15px; overflow-x: auto;">
+					<legend>Evolución Mensual Asis.Tec</legend>
 				
-				  <!-- Canvas for the chart -->
 				  <canvas id="mixedChartAsisTecnicaEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
 				
 				  <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
@@ -437,16 +437,19 @@
 					    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
 					  </tr>
 				  </table>
+				  
+				</fieldset>
 			</md-grid-tile>
 			
 			<md-grid-tile class="gray" style="padding: 16px;">
-			  <md-grid-tile-header>
-			    <h3>Asistencia T&eacute;cnica seg&uacute;n tem&aacute;tica</h3>
-			    
+				<fieldset style="margin-left: 15px; overflow-x: auto;">
+					<legend>Asistencia T&eacute;cnica seg&uacute;n tem&aacute;tica</legend>
+				
 			    <md-select
 				    ng-model="filtroasistecnica.monthYear"
 				    ng-change="onDashAsistenciaTecnicaByTematica(filtroasistecnica.monthYear)" 
-				    placeholder="Mes"> 
+					placeholder="Mes" 
+					style="margin-bottom: 20px;">
 				    <md-option ng-value="0">Todos los Meses</md-option>
 				    <md-option
 				        ng-repeat="item in listaAsisTecnicaByTematica" ng-value="item.monthYear">
@@ -454,21 +457,19 @@
 				    </md-option>
 				</md-select>
 			    
-			  </md-grid-tile-header>
-			
 			  <canvas id="barChartAsistenciaTecnicaByTematica" width="400" height="200"></canvas>
-			
+				</fieldset>
 			</md-grid-tile>
 			
 			
-			<md-grid-tile class="gray" style="padding: 16px;">
-						  <md-grid-tile-header>
-						    <h3>Asistencia t&eacute;cnica seg&uacute;n modalidad</h3>
-						    
+		<!-- 	<md-grid-tile class="gray" style="padding: 16px;">
+				<fieldset style="margin-left: 15px; overflow-x: auto;">
+					<legend>Asistencia t&eacute;cnica seg&uacute;n modalidad</legend>
 						    <md-select
 							    ng-model="filtroasistecnica.monthYearMod"
 							    ng-change="onDashAsistTecnicaByModalidad(filtroasistecnica.monthYearMod)" 
-							    placeholder="Mes"> 
+								placeholder="Mes" 
+								style="margin-bottom: 20px;">
 							    <md-option ng-value="0">Todos los Meses</md-option>
 							    <md-option
 							        ng-repeat="item in listaMonthAsisTecByModalidad" ng-value="item.monthYear">
@@ -476,11 +477,8 @@
 							    </md-option>
 							</md-select>
 						    
-						  </md-grid-tile-header>
-						  
 						    <canvas id="doughnutAsisTecByModalidad" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
 
-						    
 						     <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
 							  <tr>
 							    <th ng-repeat="m in mesesAsisTecModa track by $index">{{m}}</th>
@@ -490,16 +488,49 @@
 							    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
 							  </tr>
 						 	 </table>
-						
+				</fieldset>	
+			</md-grid-tile> -->
+			
+			
+			<md-grid-tile class="gray" style="padding: 16px;">
+			    <fieldset style="margin-left: 15px; overflow-x: hidden;">
+			        <legend>Usuarios capacitados seg&uacute;n modalidad</legend>
+
+			        <md-select
+					ng-model="filtroasistecnica.monthYearMod"
+					ng-change="onDashAsistTecnicaByModalidad(filtroasistecnica.monthYearMod)" 
+			            placeholder="Mes" 
+			            style="margin-bottom: 20px;">
+			            <md-option ng-value="0">Todos los Meses</md-option>
+			            <md-option
+			                ng-repeat="item in listaMonthAsisTecByModalidad" ng-value="item.monthYear">
+			                {{item.monthYear}} 
+			            </md-option>
+			        </md-select>
+
+			        <canvas id="doughnutAsisTecByModalidad" 
+			                ng-style="{'width': canvasWidth, 'height': canvasHeight}" 
+			                style="max-width: 300px; max-height: 200px;"></canvas>
+
+					<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+					  <tr>
+					    <th ng-repeat="m in mesesAsisTecModa track by $index">{{m}}</th>
+					  </tr>
+					  
+					  <tr ng-repeat="row in dataAsisTecModalidadRows track by row.id">
+					    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
+					  </tr>
+				 	 </table>
+			    </fieldset>
 			</md-grid-tile>
 			
 			
+
+			
 			<md-grid-tile class="gray" style="padding: 16px;" colspan="2">
-							  <md-grid-tile-header>
-							    <h3>Evolución Mensual Consultas</h3>
-							  </md-grid-tile-header>
-							
-							  <!-- Canvas for the chart -->
+				<fieldset style="margin-left: 15px; overflow-x: auto;">
+											<legend>Evolución Mensual Consultas</legend>
+							  
 							  <canvas id="mixedChartConsultaEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
 							
 							  <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
@@ -511,17 +542,19 @@
 								    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
 								  </tr>
 							  </table>
+							  
+							  </fieldset>
 			</md-grid-tile>
 			
 			
 			<md-grid-tile class="gray" style="padding: 16px;">
-						  <md-grid-tile-header>
-						    <h3>Consulta seg&uacute;n tem&aacute;tica</h3>
-						    
+				<fieldset style="margin-left: 15px; overflow-x: auto;">
+							<legend>Consulta seg&uacute;n tem&aacute;tica</legend>
 						    <md-select
 							    ng-model="filtroconsulta.monthYear"
 							    ng-change="onDashConsultaByTematica(filtroconsulta.monthYear)" 
-							    placeholder="Mes"> 
+								placeholder="Mes" 
+								style="margin-bottom: 20px;">
 							    <md-option ng-value="0">Todos los Meses</md-option>
 							    <md-option
 							        ng-repeat="item in listaConsultaByTematica" ng-value="item.monthYear">
@@ -529,20 +562,20 @@
 							    </md-option>
 							</md-select>
 						    
-						  </md-grid-tile-header>
-						
 						  <canvas id="barChartConsultaByTematica" width="400" height="200"></canvas>
-						
+						  </fieldset>	
 			</md-grid-tile>
 			
+			<!-- 
 			<md-grid-tile class="gray" style="padding: 16px;">
-						  <md-grid-tile-header>
-						    <h3>Consulta seg&uacute;n modalidad</h3>
-						    
+				<fieldset style="margin-left: 15px; overflow-x: auto;">
+					<legend>Consulta seg&uacute;n modalidad</legend>
+					
 						    <md-select
 							    ng-model="filtroconsulta.monthYearMod"
 							    ng-change="onDashConsultaByModalidad(filtroconsulta.monthYearMod)" 
-							    placeholder="Mes"> 
+								placeholder="Mes" 
+								style="margin-bottom: 20px;">
 							    <md-option ng-value="0">Todos los Meses</md-option>
 							    <md-option
 							        ng-repeat="item in listaMonthConsultaByModalidad" ng-value="item.monthYear">
@@ -550,7 +583,6 @@
 							    </md-option>
 							</md-select>
 						    
-						  </md-grid-tile-header>
 						  
 						    <canvas id="doughnutConsultaByModalidad" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
 
@@ -564,8 +596,42 @@
 							    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
 							  </tr>
 						 	 </table>
-									
-		   </md-grid-tile>
+				</fieldset>				
+		   </md-grid-tile> -->
+		   
+		   <md-grid-tile class="gray" style="padding: 16px;">
+		   			    <fieldset style="margin-left: 15px; overflow-x: hidden;">
+		   			        <legend>Consulta seg&uacute;n modalidad</legend>
+
+		   			        <md-select
+							ng-model="filtroconsulta.monthYearMod"
+							 ng-change="onDashConsultaByModalidad(filtroconsulta.monthYearMod)"  
+		   			            placeholder="Mes" 
+		   			            style="margin-bottom: 20px;">
+		   			            <md-option ng-value="0">Todos los Meses</md-option>
+								<md-option
+							        ng-repeat="item in listaMonthConsultaByModalidad" ng-value="item.monthYear">
+							        {{item.monthYear}} 
+							    </md-option>
+		   			        </md-select>
+
+		   			        <canvas id="doughnutConsultaByModalidad" 
+		   			                ng-style="{'width': canvasWidth, 'height': canvasHeight}" 
+		   			                style="max-width: 300px; max-height: 200px;"></canvas>
+
+							<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+							  <tr>
+							    <th ng-repeat="m in mesesConsultaModa track by $index">{{m}}</th>
+							  </tr>
+							  
+							  <tr ng-repeat="row in dataConsultaModalidadRows track by row.id">
+							    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
+							  </tr>
+						 	 </table>
+		   			    </fieldset>
+		   	</md-grid-tile>
+		   
+		   
 			
 			<md-grid-tile>
 				<canvas id="doughnutEstaPorTema" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
@@ -647,8 +713,15 @@
 							    </md-option>
 							</md-select>
 							
+							<md-button class="md-raised"
+							           aria-label="Export to Excel"
+							           ng-click="exportTableToExcelRegAsistTecnica()">
+							    <md-icon md-font-set="material-icons" style="color: grey;">file_download</md-icon>
+							    <span>Exportar a Excel</span>
+							</md-button>
+							
 							<div style="overflow: auto; max-height: 400px; max-width: 100%; margin-top: 20px;">
-							<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+							<table id="tblRegDentroFueraPlazoAsisTecnica" border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
 							    <tr>
 							        <th rowspan="2">Conectamef</th> 
 							        <th rowspan="2">Especialista/analista/implantador</th>
@@ -705,8 +778,15 @@
 										    </md-option>
 										</md-select>
 										
+										<md-button class="md-raised"
+										           aria-label="Export to Excel"
+										           ng-click="exportTableToExcelDentroFueraPlazoConsultas()">
+										    <md-icon md-font-set="material-icons" style="color: grey;">file_download</md-icon>
+										    <span>Exportar a Excel</span>
+										</md-button>
+										
 										<div style="overflow: auto; max-height: 400px; max-width: 100%; margin-top: 20px;">
-										<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+										<table id="tblregDentroFueraPlazoConsultas" border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
 										    <tr>
 										        <th rowspan="2">Conectamef</th> 
 										        <th rowspan="2">Especialista/analista/implantador</th>
@@ -762,8 +842,15 @@
 																    </md-option>
 																</md-select>
 																
+																<md-button class="md-raised"
+																           aria-label="Export to Excel"
+																           ng-click="exportTableToExcelDentroFueraPlazoCapacitaciones()">
+																    <md-icon md-font-set="material-icons" style="color: grey;">file_download</md-icon>
+																    <span>Exportar a Excel</span>
+																</md-button>
+																
 																<div style="overflow: auto; max-height: 400px; max-width: 100%; margin-top: 20px;">
-																<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+																<table id="tblRegDentroFueraPlazoCapacitaciones" border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
 																    <tr>
 																        <th rowspan="2">Conectamef</th> 
 																        <th rowspan="2">Especialista/analista/implantador</th>
@@ -820,9 +907,16 @@
 												                {{item.monthYear}} 
 												            </md-option>
 												        </md-select>
+														
+														<md-button class="md-raised"
+														           aria-label="Export to Excel"
+														           ng-click="exportTableToExcelDentroFueraPlazoAsisTecnicaPorSistAdm()">
+														    <md-icon md-font-set="material-icons" style="color: grey;">file_download</md-icon>
+														    <span>Exportar a Excel</span>
+														</md-button>
 
 												       <div style="overflow: auto; max-height: 400px; max-width: 100%; margin-top: 20px;">
-												            <table border="1" style="width: 100%; border-collapse: collapse;">
+												            <table id="tblRegDentroFueraPlazoAsisTecnicaPorSistAdm" border="1" style="width: 100%; border-collapse: collapse;">
 												                <tr>
 												                    <th rowspan="2">Conectamef</th> 
 												                    <th rowspan="2">Especialista/analista/implantador</th>
@@ -878,8 +972,15 @@
 																			    </md-option>
 																			</md-select>
 																			
+																			<md-button class="md-raised"
+																			           aria-label="Export to Excel"
+																			           ng-click="exportTableToExcelDentroFueraPlazoConsultaPorSistAdm()">
+																			    <md-icon md-font-set="material-icons" style="color: grey;">file_download</md-icon>
+																			    <span>Exportar a Excel</span>
+																			</md-button>
+																			
 																			<div style="overflow: auto; max-height: 400px; max-width: 100%; margin-top: 20px;">
-																			<table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+																			<table id="tblRegDentroFueraPlazoConsultaPorSisteAdm" border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
 																			    <tr>
 																			        <th rowspan="2">Conectamef</th> 
 																			        <th rowspan="2">Especialista/analista/implantador</th>
@@ -917,21 +1018,6 @@
 																</fieldset>
 																											
 															</md-grid-tile>
-						
-			
-			<!-- 
-			
-			
-			
-
-			
-			
-
-						-->
-						
-						
-						
-						
 						
 						
 </md-grid-list> 
