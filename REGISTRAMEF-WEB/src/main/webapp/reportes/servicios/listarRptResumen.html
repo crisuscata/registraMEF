@@ -240,7 +240,7 @@
  		
  		<md-tab label="Dashboard">
 			
-			<div ng-if="totalRegistros === null" style="display: flex;
+			<!--<div ng-if="totalRegistros === null" style="display: flex;
 						            justify-content: center; 
 						            align-items: center;     
 						            height: 100%;">
@@ -249,8 +249,8 @@
 						    </h1>
 						</div>
 							
-		<div ng-if="totalRegistros != null">			
-		<!--<div>  -->
+		<div ng-if="totalRegistros != null">	-->		
+		<div>  
 			
     <md-content class="md-padding">
         <div style="display: flex;
@@ -298,30 +298,31 @@
 				
 		</div>
 		
-        
-    <!--   <md-grid-list id="idGridList"  md-cols="3" md-gutter="2px" md-row-height="3:2" style="width:90%;" ng-if="showDashboard"> -->
 		<md-grid-list id="idGridList"  md-cols="2" md-gutter="2px" md-row-height="3:2" style="width:90%;" ng-if="showDashboard"> 
-		
-		
-	<!--	<md-grid-list md-cols="3" md-gutter="10px" md-row-height="fit" style="width:90%;">  -->
         
            <md-grid-tile class="gray" style="padding: 16px;" >
 			
 			<fieldset style="margin-left: 15px; overflow-x: auto;">
 				<legend>Evolución Mensual</legend>
 			
-			  <canvas id="mixedChartCapaEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas><!-- //MPINARES 21082024 - INICIO - SE EDITA STYLE -->
-			
-			  <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
-				  <tr>
-				    <th ng-repeat="m in mesesCapacitacion track by $index">{{m}}</th>
-				  </tr>
+				<div ng-if="reportecapacitacionResumen.listCapacitacionEvolMensual.length > 0">
+				  <canvas id="mixedChartCapaEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
+				
+				  <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+					  <tr>
+					    <th ng-repeat="m in mesesCapacitacion track by $index">{{m}}</th>
+					  </tr>
+					  
+					  <tr ng-repeat="row in dataCapacitacionEventoRows track by row.id">
+					    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
+					  </tr>
+				  </table>
+				</div>
 				  
-				  <tr ng-repeat="row in dataCapacitacionEventoRows track by row.id">
-				    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
-				  </tr>
-			  </table>
-			 
+				<h3 ng-if="reportecapacitacionResumen.listCapacitacionEvolMensual && reportecapacitacionResumen.listCapacitacionEvolMensual.length === 0">
+					No se encontraron resultados para este gr&aacute;fico
+				</h3>
+				
 			  </fieldset>
 			  
 			</md-grid-tile>
@@ -331,19 +332,25 @@
 				<fieldset style="margin-left: 15px; overflow-x: auto;">
 					<legend>Usuarios capacitados seg&uacute;n tem&aacute;tica</legend>
 				
-			    <md-select
-				    ng-model="filtrocapa.monthYear"
-				    ng-change="onDashCapaByTematica(filtrocapa.monthYear)" 
-					placeholder="Mes" 
-					style="margin-bottom: 20px;">
-				    <md-option ng-value="0">Todos los Meses</md-option>
-				    <md-option
-				        ng-repeat="item in listaCapaByTematica" ng-value="item.monthYear">
-				        {{item.monthYear}} 
-				    </md-option>
-				</md-select>
-			    
-			  <canvas id="barChartCapaByTematica" width="400" height="200"></canvas>
+					<div ng-if="reportecapacitacionResumen.listCapacitacionUsSegunTematica.length > 0">
+					    <md-select
+						    ng-model="filtrocapa.monthYear"
+						    ng-change="onDashCapaByTematica(filtrocapa.monthYear)" 
+							placeholder="Mes" 
+							style="margin-bottom: 20px;">
+						    <md-option ng-value="0">Todos los Meses</md-option>
+						    <md-option
+						        ng-repeat="item in listaCapaByTematica" ng-value="item.monthYear">
+						        {{item.monthYear}} 
+						    </md-option>
+						</md-select>
+					    
+					  <canvas id="barChartCapaByTematica" width="400" height="200"></canvas>
+					</div>
+					  
+					<h3 ng-if="reportecapacitacionResumen.listCapacitacionUsSegunTematica && reportecapacitacionResumen.listCapacitacionUsSegunTematica.length === 0">
+								No se encontraron resultados para este gr&aacute;fico
+					</h3>
 			
 			  </fieldset>
 			</md-grid-tile>
@@ -352,7 +359,8 @@
 			<md-grid-tile class="gray" style="padding: 16px;">
 			    <fieldset style="margin-left: 15px; overflow-x: hidden;"> 
 			        <legend>Usuarios capacitados seg&uacute;n modalidad</legend>
-
+					
+					<div ng-if="reportecapacitacionResumen.listCapacitacionModalidad.length > 0">
 			        <md-select
 			            ng-model="filtrocapa.monthYearMod"
 			            ng-change="onDashCapaByModalidad(filtrocapa.monthYearMod)" 
@@ -377,6 +385,12 @@
 			                <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
 			            </tr>
 			        </table>
+					</div>
+					
+					<h3 ng-if="reportecapacitacionResumen.listCapacitacionModalidad && reportecapacitacionResumen.listCapacitacionModalidad.length === 0">
+													No se encontraron resultados para este gr&aacute;fico
+					</h3>
+					
 			    </fieldset>
 			</md-grid-tile>
 
@@ -387,17 +401,24 @@
 				<fieldset style="margin-left: 15px; overflow-x: hidden;"> 
 					<legend>Evoluci&oacute;n Mensual Reuni&oacute;n de trabajo</legend>
 					
-			  <canvas id="mixedChartReunionTraEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
-			
-			   <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
-				  <tr>
-				    <th ng-repeat="m in mesesReunionTra track by $index">{{m}}</th>
-				  </tr>
-				  
-				  <tr ng-repeat="row in dataReunTrabajRows track by row.id">
-				    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
-				  </tr>
-			  </table>
+					
+					<div ng-if="reportecapacitacionResumen.listReunionTrabajoEvolMensual.length > 0">
+					  <canvas id="mixedChartReunionTraEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
+					
+					   <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+						  <tr>
+						    <th ng-repeat="m in mesesReunionTra track by $index">{{m}}</th>
+						  </tr>
+						  
+						  <tr ng-repeat="row in dataReunTrabajRows track by row.id">
+						    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
+						  </tr>
+					  </table>
+					</div>  
+					
+					<h3 ng-if="reportecapacitacionResumen.listReunionTrabajoEvolMensual && reportecapacitacionResumen.listReunionTrabajoEvolMensual.length === 0">
+							 No se encontraron resultados para este gr&aacute;fico
+					</h3>
 			  
 			  </fieldset>
 			</md-grid-tile>
@@ -407,6 +428,7 @@
 				<fieldset style="margin-left: 15px; overflow-x: auto;">
 						<legend>Usuarios externos seg&uacute;n tem&aacute;tica</legend>
 			    
+				<div ng-if="reportecapacitacionResumen.listReunionTrabajoUsSegunTematica.length > 0">
 			    <md-select
 				    ng-model="filtroreutrabajo.monthYear"
 				    ng-change="onDashReuTrabajByTematica(filtroreutrabajo.monthYear)" 
@@ -419,8 +441,13 @@
 				    </md-option>
 				</md-select>
 			    
-			
-			  <canvas id="barChartReuTrabajoByTematica" width="400" height="200"></canvas>
+			    <canvas id="barChartReuTrabajoByTematica" width="400" height="200"></canvas>
+				
+				</div>
+				
+				<h3 ng-if="reportecapacitacionResumen.listReunionTrabajoUsSegunTematica && reportecapacitacionResumen.listReunionTrabajoUsSegunTematica.length === 0">
+						 No se encontraron resultados para este gr&aacute;fico
+				</h3>
 			
 			  </fieldset>
 			</md-grid-tile>
@@ -431,17 +458,23 @@
 				<fieldset style="margin-left: 15px; overflow-x: auto;">
 					<legend>Evolución Mensual Asis.Tec</legend>
 				
-				  <canvas id="mixedChartAsisTecnicaEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
-				
-				  <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
-					  <tr>
-					    <th ng-repeat="m in mesesAsistenciaTec track by $index">{{m}}</th>
-					  </tr>
-					  
-					  <tr ng-repeat="row in dataAsistenciaTecRows track by row.id">
-					    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
-					  </tr>
-				  </table>
+				  <div ng-if="reportecapacitacionResumen.listReporteAsistenciaTecnicaEvolMensual.length > 0">	
+					  <canvas id="mixedChartAsisTecnicaEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
+					
+					  <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
+						  <tr>
+						    <th ng-repeat="m in mesesAsistenciaTec track by $index">{{m}}</th>
+						  </tr>
+						  
+						  <tr ng-repeat="row in dataAsistenciaTecRows track by row.id">
+						    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
+						  </tr>
+					  </table>
+				  </div>
+				  
+				  <h3 ng-if="reportecapacitacionResumen.listReporteAsistenciaTecnicaEvolMensual && reportecapacitacionResumen.listReporteAsistenciaTecnicaEvolMensual.length === 0">
+				  		 No se encontraron resultados para este gr&aacute;fico
+				  </h3>
 				  
 				</fieldset>
 			</md-grid-tile>
@@ -450,57 +483,36 @@
 				<fieldset style="margin-left: 15px; overflow-x: auto;">
 					<legend>Asistencia T&eacute;cnica seg&uacute;n tem&aacute;tica</legend>
 				
-			    <md-select
-				    ng-model="filtroasistecnica.monthYear"
-				    ng-change="onDashAsistenciaTecnicaByTematica(filtroasistecnica.monthYear)" 
-					placeholder="Mes" 
-					style="margin-bottom: 20px;">
-				    <md-option ng-value="0">Todos los Meses</md-option>
-				    <md-option
-				        ng-repeat="item in listaAsisTecnicaByTematica" ng-value="item.monthYear">
-				        {{item.monthYear}} 
-				    </md-option>
-				</md-select>
-			    
-			  <canvas id="barChartAsistenciaTecnicaByTematica" width="400" height="200"></canvas>
+				<div ng-if="reportecapacitacionResumen.listReporteAsistenciaTecnicaSegunTematica.length > 0">	
+					
+				    <md-select
+					    ng-model="filtroasistecnica.monthYear"
+					    ng-change="onDashAsistenciaTecnicaByTematica(filtroasistecnica.monthYear)" 
+						placeholder="Mes" 
+						style="margin-bottom: 20px;">
+					    <md-option ng-value="0">Todos los Meses</md-option>
+					    <md-option
+					        ng-repeat="item in listaAsisTecnicaByTematica" ng-value="item.monthYear">
+					        {{item.monthYear}} 
+					    </md-option>
+					</md-select>
+				    
+				  	<canvas id="barChartAsistenciaTecnicaByTematica" width="400" height="200"></canvas>
+				
+				</div>
+			  
+				<h3 ng-if="reportecapacitacionResumen.listReporteAsistenciaTecnicaSegunTematica && reportecapacitacionResumen.listReporteAsistenciaTecnicaSegunTematica.length === 0">
+								  		 No se encontraron resultados para este gr&aacute;fico
+                </h3>
+			  
 				</fieldset>
 			</md-grid-tile>
 			
-			
-		<!-- 	<md-grid-tile class="gray" style="padding: 16px;">
-				<fieldset style="margin-left: 15px; overflow-x: auto;">
-					<legend>Asistencia t&eacute;cnica seg&uacute;n modalidad</legend>
-						    <md-select
-							    ng-model="filtroasistecnica.monthYearMod"
-							    ng-change="onDashAsistTecnicaByModalidad(filtroasistecnica.monthYearMod)" 
-								placeholder="Mes" 
-								style="margin-bottom: 20px;">
-							    <md-option ng-value="0">Todos los Meses</md-option>
-							    <md-option
-							        ng-repeat="item in listaMonthAsisTecByModalidad" ng-value="item.monthYear">
-							        {{item.monthYear}} 
-							    </md-option>
-							</md-select>
-						    
-						    <canvas id="doughnutAsisTecByModalidad" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
-
-						     <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
-							  <tr>
-							    <th ng-repeat="m in mesesAsisTecModa track by $index">{{m}}</th>
-							  </tr>
-							  
-							  <tr ng-repeat="row in dataAsisTecModalidadRows track by row.id">
-							    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
-							  </tr>
-						 	 </table>
-				</fieldset>	
-			</md-grid-tile> -->
-			
-			
 			<md-grid-tile class="gray" style="padding: 16px;">
 			    <fieldset style="margin-left: 15px; overflow-x: hidden;">
-			        <legend>Usuarios capacitados seg&uacute;n modalidad</legend>
-
+			        <legend>Asistencias t&eacute;cnicas seg&uacute;n modalidad</legend>
+				
+				  <div ng-if="reportecapacitacionResumen.listReporteAsistenciaTecnicaModalidad.length > 0">	
 			        <md-select
 					ng-model="filtroasistecnica.monthYearMod"
 					ng-change="onDashAsistTecnicaByModalidad(filtroasistecnica.monthYearMod)" 
@@ -525,16 +537,22 @@
 					  <tr ng-repeat="row in dataAsisTecModalidadRows track by row.id">
 					    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
 					  </tr>
-				 	 </table>
+				 	</table>
+				   </div>
+				   
+				   <h3 ng-if="reportecapacitacionResumen.listReporteAsistenciaTecnicaModalidad && reportecapacitacionResumen.listReporteAsistenciaTecnicaModalidad.length === 0">
+				   				 No se encontraron resultados para este gr&aacute;fico
+				   </h3>
+					 
+					 
 			    </fieldset>
 			</md-grid-tile>
 			
-			
-
-			
 			<md-grid-tile class="gray" style="padding: 16px;" >
 				<fieldset style="margin-left: 15px; overflow-x: auto;">
-											<legend>Evolución Mensual Consultas</legend>
+							  <legend>Evolución Mensual Consultas</legend>
+							  
+							  <div ng-if="reportecapacitacionResumen.lisConsultaEvolMensual.length > 0">	
 							  
 							  <canvas id="mixedChartConsultaEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
 							
@@ -548,66 +566,51 @@
 								  </tr>
 							  </table>
 							  
-							  </fieldset>
+							  </div>
+							  
+							  <h3 ng-if="reportecapacitacionResumen.lisConsultaEvolMensual && reportecapacitacionResumen.lisConsultaEvolMensual.length === 0">
+							  		 No se encontraron resultados para este gr&aacute;fico
+							  </h3>
+							  
+				</fieldset>
 			</md-grid-tile>
 			
 			
 			<md-grid-tile class="gray" style="padding: 16px;">
 				<fieldset style="margin-left: 15px; overflow-x: auto;">
 							<legend>Consulta seg&uacute;n tem&aacute;tica</legend>
-						    <md-select
-							    ng-model="filtroconsulta.monthYear"
-							    ng-change="onDashConsultaByTematica(filtroconsulta.monthYear)" 
-								placeholder="Mes" 
-								style="margin-bottom: 20px;">
-							    <md-option ng-value="0">Todos los Meses</md-option>
-							    <md-option
-							        ng-repeat="item in listaConsultaByTematica" ng-value="item.monthYear">
-							        {{item.monthYear}} 
-							    </md-option>
-							</md-select>
-						    
-						  <canvas id="barChartConsultaByTematica" width="400" height="200"></canvas>
-						  </fieldset>	
+							
+							<div ng-if="reportecapacitacionResumen.listConsultaSegunTematica.length > 0">
+							
+							    <md-select
+								    ng-model="filtroconsulta.monthYear"
+								    ng-change="onDashConsultaByTematica(filtroconsulta.monthYear)" 
+									placeholder="Mes" 
+									style="margin-bottom: 20px;">
+								    <md-option ng-value="0">Todos los Meses</md-option>
+								    <md-option
+								        ng-repeat="item in listaConsultaByTematica" ng-value="item.monthYear">
+								        {{item.monthYear}} 
+								    </md-option>
+								</md-select>
+							    
+							    <canvas id="barChartConsultaByTematica" width="400" height="200"></canvas>
+						  
+							</div>
+							
+							<h3 ng-if="reportecapacitacionResumen.listConsultaSegunTematica && reportecapacitacionResumen.listConsultaSegunTematica.length === 0">
+									 No se encontraron resultados para este gr&aacute;fico
+							</h3>
+							
+			    </fieldset>	
 			</md-grid-tile>
 			
-			<!-- 
-			<md-grid-tile class="gray" style="padding: 16px;">
-				<fieldset style="margin-left: 15px; overflow-x: auto;">
-					<legend>Consulta seg&uacute;n modalidad</legend>
-					
-						    <md-select
-							    ng-model="filtroconsulta.monthYearMod"
-							    ng-change="onDashConsultaByModalidad(filtroconsulta.monthYearMod)" 
-								placeholder="Mes" 
-								style="margin-bottom: 20px;">
-							    <md-option ng-value="0">Todos los Meses</md-option>
-							    <md-option
-							        ng-repeat="item in listaMonthConsultaByModalidad" ng-value="item.monthYear">
-							        {{item.monthYear}} 
-							    </md-option>
-							</md-select>
-						    
-						  
-						    <canvas id="doughnutConsultaByModalidad" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
-
-						    
-						     <table border="1" style="width: 80%; margin-top: 20px; margin-left: 0; border-collapse: collapse;">
-							  <tr>
-							    <th ng-repeat="m in mesesConsultaModa track by $index">{{m}}</th>
-							  </tr>
-							  
-							  <tr ng-repeat="row in dataConsultaModalidadRows track by row.id">
-							    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
-							  </tr>
-						 	 </table>
-				</fieldset>				
-		   </md-grid-tile> -->
-		   
 		   <md-grid-tile class="gray" style="padding: 16px;">
 		   			    <fieldset style="margin-left: 15px; overflow-x: hidden;">
 		   			        <legend>Consulta seg&uacute;n modalidad</legend>
-
+							
+							<div ng-if="listaMonthConsultaByModalidad.length > 0">
+							
 		   			        <md-select
 							ng-model="filtroconsulta.monthYearMod"
 							 ng-change="onDashConsultaByModalidad(filtroconsulta.monthYearMod)"  
@@ -633,6 +636,13 @@
 							    <td ng-repeat="cell in row.cells track by $index">{{cell}}</td>
 							  </tr>
 						 	 </table>
+							 
+							 </div>
+							 
+							 <h3 ng-if="listaMonthConsultaByModalidad && listaMonthConsultaByModalidad.length === 0">
+							 		 No se encontraron resultados para este gr&aacute;fico
+							 </h3>
+							 
 		   			    </fieldset>
 		   	</md-grid-tile>
 		   
@@ -642,7 +652,7 @@
 				<canvas id="doughnutEstaPorTema" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
 			</md-grid-tile>
 
-			<md-grid-tile >
+			<md-grid-tile>
 				  
 				<fieldset style="margin-left: 15px;">
 							<legend>Estad&iacute;stica por Temas</legend>
@@ -703,6 +713,8 @@
 				<fieldset style="margin-left: 15px;">
 							<legend>REGISTROS DENTRO Y FUERA DE PLAZO DE ASISTENCIAS T&Eacute;CNICAS</legend>
 							
+							<div ng-if="listAsistenciaDentroFueraPlazo.length > 0">
+							
 							<md-select
 							    ng-model="filtroasistecnicaplazo.monthYearMod"
 							    ng-change="onDashAsistTecnicaPlazo(filtroasistecnicaplazo.monthYearMod)" 
@@ -757,6 +769,13 @@
 								</tr>
 							</table>
 							</div>
+							
+							</div>
+							
+							<h3 ng-if="listAsistenciaDentroFueraPlazo && listAsistenciaDentroFueraPlazo.length === 0">
+												No se encontraron resultados para esta tabla
+							</h3>
+							
 				</fieldset>
 															
 			</md-grid-tile>
@@ -766,6 +785,8 @@
 													  
 							<fieldset style="margin-left: 15px;">
 										<legend>REGISTROS DENTRO Y FUERA DE PLAZO CONSULTAS</legend>
+										
+										<div ng-if="listConsultaDentroFueraPlazo.length > 0">
 										
 										<md-select
 										    ng-model="filtroconsultaplazo.monthYearMod"
@@ -821,6 +842,13 @@
 											</tr>
 										</table>
 										</div>
+										
+										</div>
+										
+										<h3 ng-if="listConsultaDentroFueraPlazo && listConsultaDentroFueraPlazo.length === 0">
+												No se encontraron resultados para esta tabla
+										</h3>
+										
 							</fieldset>
 																		
 						</md-grid-tile>
@@ -830,6 +858,8 @@
 																			  
 													<fieldset style="margin-left: 15px;">
 																<legend>REGISTROS DENTRO Y FUERA DE PLAZO CAPACITACIONES</legend>
+																
+																<div ng-if="listCapacitacionDentroFueraPlazo.length > 0">
 																
 																<md-select
 																    ng-model="filtrocapacitacionplazo.monthYearMod"
@@ -885,6 +915,14 @@
 																	</tr>
 																</table>
 																</div>
+																
+																</div>
+																
+																<h3 ng-if="listCapacitacionDentroFueraPlazo && listCapacitacionDentroFueraPlazo.length === 0">
+																			No se encontraron resultados para esta tabla
+																</h3>
+																
+																
 													</fieldset>
 																								
 									</md-grid-tile>
@@ -893,7 +931,9 @@
 									<md-grid-tile class="gray" style="padding: 16px; margin-bottom: 10px;"> 
 												    <fieldset style="margin-left: 15px; overflow-x: auto;">
 												        <legend>REGISTROS DENTRO Y FUERA DE PLAZO DE ASISTENCIAS T&Eacute;CNICAS POR SISTEMA ADMINISTRATIVO</legend>
-
+														
+														<div ng-if="listAsistenciaSADentroFueraPlazo.length > 0">
+														
 												        <md-select
 												            ng-model="filtroasistecnicasaplazo.monthYearMod"
 												            ng-change="onDashAsistTecnicaSAPlazo(filtroasistecnicasaplazo.monthYearMod)" 
@@ -948,6 +988,14 @@
 												                </tr>
 												            </table>
 												        </div>
+														
+														</div>
+														
+														<h3 ng-if="listAsistenciaSADentroFueraPlazo && listAsistenciaSADentroFueraPlazo.length === 0">
+																	No se encontraron resultados para esta tabla
+														</h3>
+														
+														
 												    </fieldset>
 												</md-grid-tile>
 
@@ -955,6 +1003,8 @@
 																						  
 																<fieldset style="margin-left: 15px; overflow-x: auto;">
 																			<legend>REGISTROS DENTRO Y FUERA DE PLAZO CONSULTAS POR SISTEMA ADMINISTRATIVO</legend>
+																			
+																			<div ng-if="listConsultaSADentroFueraPlazo.length > 0">	
 																			
 																			<md-select
 																			    ng-model="filtroconsultasaplazo.monthYearMod"
@@ -1010,6 +1060,14 @@
 																				</tr>
 																			</table>
 																			</div>
+																			
+																			</div>
+																			
+																			<h3 ng-if="listConsultaSADentroFueraPlazo && listConsultaSADentroFueraPlazo.length === 0">
+																						No se encontraron resultados para esta tabla
+																			</h3>
+																			
+																			
 																</fieldset>
 																											
 															</md-grid-tile>

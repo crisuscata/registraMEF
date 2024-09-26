@@ -1844,7 +1844,6 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 			var listCapacitacionEvolMensual = data.listCapacitacionEvolMensual; 
 			
-			
 			console.log("listCapacitacionEvolMensual :" + JSON.stringify(listCapacitacionEvolMensual));
 			
 			var labels = listCapacitacionEvolMensual.map(item => item.monthYear.trim());
@@ -1853,61 +1852,6 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 			//BUILD DASHBOARD Evolución Mensual
 			$scope.buildDashboardEvolMensual(eventsData, labels, 'mixedChartCapaEvolMensual', 'Usuarios capacitados');
-			/*
-			    var chartOptions = {
-				    responsive: true,
-				    scales: {
-				        yAxes: [{
-				            ticks: {
-				                beginAtZero: true
-				            },
-				            scaleLabel: {
-				                display: true, 
-				                labelString: 'Usuarios capacitados', 
-				                fontColor: '#000', 
-				                fontSize: 14 
-				            }
-				        }]
-				    }
-				};
-
-
-			    var chartData = {
-				    labels: labels,
-				    datasets: [
-				        {
-				            type: 'bar',
-				            label: 'Total',
-				            data: eventsData,
-				            backgroundColor: '#08bcac',
-				            borderColor: 'rgba(75, 192, 192, 1)',
-				            borderWidth: 1,
-				            order: 2 
-				        },
-				        {
-				            type: 'line',
-				            label: 'Total',
-				            data: eventsData,
-				            borderColor: 'rgba(54, 162, 235, 1)', 
-				            backgroundColor: 'rgba(54, 162, 235, 0.2)', 
-				            borderWidth: 2,
-				            fill: false,
-				            order: 1 
-				        }
-				    ]
-				};
-
-
-			    angular.element(document).ready(function () {
-			        var ctx = document.getElementById('mixedChartCapaEvolMensual').getContext('2d');
-			        new Chart(ctx, {
-			            type: 'bar',
-			            data: chartData,
-			            options: chartOptions
-			        });
-			    });
-			*/
-			
 			
 			//Build Table
 			$scope.mesesCapacitacion = [" ", ...labels , "Total"];
@@ -1934,62 +1878,61 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		
 		var barInstanceCapaByTematica = null; 
 	    $scope.onDashCapaByTematica = function(month) {
-    var listCapacitacionUsSegunTematicaByLastMonth = null;
+    		var listCapacitacionUsSegunTematicaByLastMonth = null;
 
-    if (month === 0) {
-        listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica;
-    } else {
-        listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica.filter(item => item.monthYear.includes(month));
-    }
+		    if (month === 0) {
+		        listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica;
+		    } else {
+		        listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica.filter(item => item.monthYear.includes(month));
+		    }
+		
+		    var labels = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.abreviaturaAdmin.trim());
+		    var data = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.totalParticipants);
+		
+		    var options = {
+		        scales: {
+		            yAxes: [{
+		                ticks: {
+		                    beginAtZero: true 
+		                },
+		                scaleLabel: {
+		                    display: true,  
+		                    labelString: 'Usuarios Capacitados',  
+		                    fontColor: '#000', 
+		                    fontSize: 14 
+		                }
+		            }]
+		        },
+		        animation: {
+		            duration: 0 
+		        }
+		    };
 
-    var labels = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.abreviaturaAdmin.trim());
-    var data = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.totalParticipants);
-
-    var options = {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true 
-                },
-                scaleLabel: {
-                    display: true,  
-                    labelString: 'Usuarios Capacitados',  
-                    fontColor: '#000', 
-                    fontSize: 14 
-                }
-            }]
-        },
-        animation: {
-            duration: 0 
-        }
-    };
-
-    // Destroy existing instance if it exists
-    if (barInstanceCapaByTematica !== null) {
-        barInstanceCapaByTematica.destroy();  
-        barInstanceCapaByTematica = null;     
-    }
-
-    var canvas = document.getElementById('barChartCapaByTematica');
-    if (canvas) {
-        var ctx = canvas.getContext('2d');
-
-        // Create the new chart instance
-        barInstanceCapaByTematica = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Eventos',
-                    data: data,
-                    backgroundColor: '#08bcac',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: options
-        });
-    }
+		    if (barInstanceCapaByTematica !== null) {
+		        barInstanceCapaByTematica.destroy();  
+		        barInstanceCapaByTematica = null;     
+		    }
+		
+		    var canvas = document.getElementById('barChartCapaByTematica');
+		    if (canvas) {
+		        var ctx = canvas.getContext('2d');
+		
+		        // Create the new chart instance
+		        barInstanceCapaByTematica = new Chart(ctx, {
+		            type: 'bar',
+		            data: {
+		                labels: labels,
+		                datasets: [{
+		                    label: 'Eventos',
+		                    data: data,
+		                    backgroundColor: '#08bcac',
+		                    borderColor: 'rgba(75, 192, 192, 1)',
+		                    borderWidth: 1
+		                }]
+		            },
+		            options: options
+		        });
+		    }
 };
 
 
