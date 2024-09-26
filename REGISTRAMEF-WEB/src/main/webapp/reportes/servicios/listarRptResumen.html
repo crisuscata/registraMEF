@@ -240,7 +240,7 @@
  		
  		<md-tab label="Dashboard">
 			
-			<!--<div ng-if="totalRegistros === null" style="display: flex;
+			<div ng-if="totalRegistros === null" style="display: flex;
 						            justify-content: center; 
 						            align-items: center;     
 						            height: 100%;">
@@ -249,8 +249,8 @@
 						    </h1>
 						</div>
 							
-		<div ng-if="totalRegistros != null">	 -->		
-		<div> 
+		<div ng-if="totalRegistros != null">			
+		<!--<div>  -->
 			
     <md-content class="md-padding">
         <div style="display: flex;
@@ -286,21 +286,26 @@
 					    justify-content: center; 
 					    align-items: center;     
 					    height: 100%; ">
+						<!--
 				<md-progress-circular 
 			        md-mode="indeterminate" 
 			        md-diameter="20" 
 			        class="md-accent">
 			    </md-progress-circular>
+				-->
+				<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+				<span style="margin-left: 10px;">Obteniendo Informaci&oacute;n...</span>
+				
 		</div>
 		
         
     <!--   <md-grid-list id="idGridList"  md-cols="3" md-gutter="2px" md-row-height="3:2" style="width:90%;" ng-if="showDashboard"> -->
-		<md-grid-list id="idGridList"  md-cols="3" md-gutter="2px" md-row-height="3:2" style="width:90%;"> 
+		<md-grid-list id="idGridList"  md-cols="2" md-gutter="2px" md-row-height="3:2" style="width:90%;" ng-if="showDashboard"> 
 		
 		
 	<!--	<md-grid-list md-cols="3" md-gutter="10px" md-row-height="fit" style="width:90%;">  -->
         
-           <md-grid-tile class="gray" style="padding: 16px;" colspan="2">
+           <md-grid-tile class="gray" style="padding: 16px;" >
 			
 			<fieldset style="margin-left: 15px; overflow-x: auto;">
 				<legend>Evolución Mensual</legend>
@@ -378,7 +383,7 @@
 
 			
 			
-			<md-grid-tile class="gray" style="padding: 16px;" colspan="2">
+			<md-grid-tile class="gray" style="padding: 16px;" >
 				<fieldset style="margin-left: 15px; overflow-x: hidden;"> 
 					<legend>Evoluci&oacute;n Mensual Reuni&oacute;n de trabajo</legend>
 					
@@ -400,7 +405,7 @@
 			
 			<md-grid-tile class="gray" style="padding: 16px;">
 				<fieldset style="margin-left: 15px; overflow-x: auto;">
-						<legend>Usuarios capacitados seg&uacute;n tem&aacute;tica</legend>
+						<legend>Usuarios externos seg&uacute;n tem&aacute;tica</legend>
 			    
 			    <md-select
 				    ng-model="filtroreutrabajo.monthYear"
@@ -422,7 +427,7 @@
 			
 			<md-grid-tile class="gray" style="padding: 16px;"></md-grid-tile>
 			
-			<md-grid-tile class="gray" style="padding: 16px;" colspan="2">
+			<md-grid-tile class="gray" style="padding: 16px;" >
 				<fieldset style="margin-left: 15px; overflow-x: auto;">
 					<legend>Evolución Mensual Asis.Tec</legend>
 				
@@ -527,7 +532,7 @@
 			
 
 			
-			<md-grid-tile class="gray" style="padding: 16px;" colspan="2">
+			<md-grid-tile class="gray" style="padding: 16px;" >
 				<fieldset style="margin-left: 15px; overflow-x: auto;">
 											<legend>Evolución Mensual Consultas</legend>
 							  
@@ -693,11 +698,7 @@
 		  	</md-grid-tile>
 			
 			
-			<md-grid-tile class="gray" style="padding: 16px;"></md-grid-tile>
-			
-			
-			
-			<md-grid-tile colspan="2">
+			<md-grid-tile class="gray" style="padding: 16px; margin-bottom: 10px;"> 
 							  
 				<fieldset style="margin-left: 15px;">
 							<legend>REGISTROS DENTRO Y FUERA DE PLAZO DE ASISTENCIAS T&Eacute;CNICAS</legend>
@@ -760,9 +761,8 @@
 															
 			</md-grid-tile>
 			
-			<md-grid-tile class="gray" style="padding: 16px;"></md-grid-tile>
 			
-			<md-grid-tile colspan="2">
+			<md-grid-tile class="gray" style="padding: 16px; margin-bottom: 10px;"> 
 													  
 							<fieldset style="margin-left: 15px;">
 										<legend>REGISTROS DENTRO Y FUERA DE PLAZO CONSULTAS</legend>
@@ -826,7 +826,7 @@
 						</md-grid-tile>
 			
 			
-						<md-grid-tile colspan="2">
+						<md-grid-tile class="gray" style="padding: 16px; margin-bottom: 10px;"> 
 																			  
 													<fieldset style="margin-left: 15px;">
 																<legend>REGISTROS DENTRO Y FUERA DE PLAZO CAPACITACIONES</legend>
@@ -890,10 +890,7 @@
 									</md-grid-tile>
 									
 									
-									<md-grid-tile class="gray" style="padding: 16px;"></md-grid-tile>
-									
-									
-									<md-grid-tile>
+									<md-grid-tile class="gray" style="padding: 16px; margin-bottom: 10px;"> 
 												    <fieldset style="margin-left: 15px; overflow-x: auto;">
 												        <legend>REGISTROS DENTRO Y FUERA DE PLAZO DE ASISTENCIAS T&Eacute;CNICAS POR SISTEMA ADMINISTRATIVO</legend>
 
@@ -954,9 +951,7 @@
 												    </fieldset>
 												</md-grid-tile>
 
-												<md-grid-tile class="gray" style="padding: 16px;"></md-grid-tile>
-												
-												<md-grid-tile>
+												<md-grid-tile class="gray" style="padding: 16px; margin-bottom: 10px;"> 
 																						  
 																<fieldset style="margin-left: 15px; overflow-x: auto;">
 																			<legend>REGISTROS DENTRO Y FUERA DE PLAZO CONSULTAS POR SISTEMA ADMINISTRATIVO</legend>

@@ -1852,7 +1852,62 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			var eventsData = listCapacitacionEvolMensual.map(item => item.totalEvents);
 			
 			//BUILD DASHBOARD Evolución Mensual
-			$scope.buildDashboardEvolMensual(eventsData, labels, 'mixedChartCapaEvolMensual', 'Capacitación');
+			$scope.buildDashboardEvolMensual(eventsData, labels, 'mixedChartCapaEvolMensual', 'Usuarios capacitados');
+			/*
+			    var chartOptions = {
+				    responsive: true,
+				    scales: {
+				        yAxes: [{
+				            ticks: {
+				                beginAtZero: true
+				            },
+				            scaleLabel: {
+				                display: true, 
+				                labelString: 'Usuarios capacitados', 
+				                fontColor: '#000', 
+				                fontSize: 14 
+				            }
+				        }]
+				    }
+				};
+
+
+			    var chartData = {
+				    labels: labels,
+				    datasets: [
+				        {
+				            type: 'bar',
+				            label: 'Total',
+				            data: eventsData,
+				            backgroundColor: '#08bcac',
+				            borderColor: 'rgba(75, 192, 192, 1)',
+				            borderWidth: 1,
+				            order: 2 
+				        },
+				        {
+				            type: 'line',
+				            label: 'Total',
+				            data: eventsData,
+				            borderColor: 'rgba(54, 162, 235, 1)', 
+				            backgroundColor: 'rgba(54, 162, 235, 0.2)', 
+				            borderWidth: 2,
+				            fill: false,
+				            order: 1 
+				        }
+				    ]
+				};
+
+
+			    angular.element(document).ready(function () {
+			        var ctx = document.getElementById('mixedChartCapaEvolMensual').getContext('2d');
+			        new Chart(ctx, {
+			            type: 'bar',
+			            data: chartData,
+			            options: chartOptions
+			        });
+			    });
+			*/
+			
 			
 			//Build Table
 			$scope.mesesCapacitacion = [" ", ...labels , "Total"];
@@ -1879,75 +1934,64 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		
 		var barInstanceCapaByTematica = null; 
 	    $scope.onDashCapaByTematica = function(month) {
-		    var listCapacitacionUsSegunTematicaByLastMonth = null;
-		    
-		    if (month === 0) {
-		        listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica;
-		    } else {
-		        listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica.filter(item => item.monthYear.includes(month));
-		    }
-		    
-		    var labels = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.abreviaturaAdmin.trim());
-		    var data = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.totalParticipants);
-		    
-		    //$scope.showDashboardBar(labels, participantsData, 'barChartCapaByTematica', 'Eventos');
-		    
-		    var series = ['Eventos'];
-			
-			    var options = {
-			        scales: {
-			            y: {
-			                beginAtZero: true
-			            }
-			        },
-			        plugins: {
-			            tooltip: {
-			                enabled: true,
-			                callbacks: {
-			                    label: function(tooltipItem) {
-			                    var value = tooltipItem.raw || 0;
-			                    if (value === 0) {
-			                        return ''; 
-			                    }
-			                    var label = tooltipItem.dataset.label || '';
-			                    return label + ': ' + value;
-			                }
-			                }
-			            }
-			        },
-			        animation: {
-			            duration: 0
-			        }
-			    };
-			
-			    if (barInstanceCapaByTematica !== null) {
-			        barInstanceCapaByTematica.destroy();  
-			        barInstanceCapaByTematica = null;     
-			    }
-			
-			    var canvas = document.getElementById('barChartCapaByTematica');
-			    if (canvas) {
-			        var ctx = canvas.getContext('2d');
-			
-			        ctx.clearRect(0, 0, canvas.width, canvas.height);
-			
-			        barInstanceCapaByTematica = new Chart(ctx, {
-			            type: 'bar',
-			            data: {
-			                labels: labels,
-			                datasets: [{
-			                    label: series[0],
-			                    data: data,
-			                    backgroundColor: '#08bcac',
-			                    borderColor: 'rgba(75, 192, 192, 1)',
-			                    borderWidth: 1
-			                }]
-			            },
-			            options: options
-			        });
-			    }
-		    
-		};
+    var listCapacitacionUsSegunTematicaByLastMonth = null;
+
+    if (month === 0) {
+        listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica;
+    } else {
+        listCapacitacionUsSegunTematicaByLastMonth = $scope.listCapacitacionUsSegunTematica.filter(item => item.monthYear.includes(month));
+    }
+
+    var labels = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.abreviaturaAdmin.trim());
+    var data = listCapacitacionUsSegunTematicaByLastMonth.map(item => item.totalParticipants);
+
+    var options = {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true 
+                },
+                scaleLabel: {
+                    display: true,  
+                    labelString: 'Usuarios Capacitados',  
+                    fontColor: '#000', 
+                    fontSize: 14 
+                }
+            }]
+        },
+        animation: {
+            duration: 0 
+        }
+    };
+
+    // Destroy existing instance if it exists
+    if (barInstanceCapaByTematica !== null) {
+        barInstanceCapaByTematica.destroy();  
+        barInstanceCapaByTematica = null;     
+    }
+
+    var canvas = document.getElementById('barChartCapaByTematica');
+    if (canvas) {
+        var ctx = canvas.getContext('2d');
+
+        // Create the new chart instance
+        barInstanceCapaByTematica = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Eventos',
+                    data: data,
+                    backgroundColor: '#08bcac',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: options
+        });
+    }
+};
+
 
 		
 		$scope.listaCapaByTematica=[];
@@ -2307,7 +2351,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 			
 			//BUILD DASHBOARD Evolución Mensual
-			$scope.buildDashboardEvolMensual(totalData, labels, 'mixedChartReunionTraEvolMensual', 'Reu Trabajo');
+			$scope.buildDashboardEvolMensual(totalData, labels, 'mixedChartReunionTraEvolMensual', 'Reuniones de trabajo');
 			
 			//Build Table
 			$scope.mesesReunionTra = [" ", ...labels , "Total"];
@@ -2328,7 +2372,7 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			var totalData = listReporteAsistenciaTecnicaEvolMensual.map(item => item.total);
 			
 			//BUILD DASHBOARD Evolución Mensual
-			$scope.buildDashboardEvolMensual(totalData, labels, 'mixedChartAsisTecnicaEvolMensual', 'Asistencias');
+			$scope.buildDashboardEvolMensual(totalData, labels, 'mixedChartAsisTecnicaEvolMensual', 'Asistencias técnicas');
 			
 			//Build Table
 			$scope.mesesAsistenciaTec = [" ", ...labels , "Total"];
@@ -2341,18 +2385,23 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 		
 		$scope.buildDashboardEvolMensual = function(totalData, labels, idElementHTML, nameSerie) {
 			
-			var chartOptions = {
-			        responsive: true,
-			        scales: {
-			            y: {
-			                beginAtZero: true,
-			                title: {
-			                    display: true,
-			                    text: nameSerie 
-			                }
-			            }
-			        }
-			    };
+			    var chartOptions = {
+				    responsive: true,
+				    scales: {
+				        yAxes: [{
+				            ticks: {
+				                beginAtZero: true
+				            },
+				            scaleLabel: {
+				                display: true, 
+				                labelString: nameSerie, 
+				                fontColor: '#000', 
+				                fontSize: 14 
+				            }
+				        }]
+				    }
+				};
+			    
 
 			    var chartData = {
 				    labels: labels,
@@ -2435,9 +2484,17 @@ myapp.controller('ctrlRptResumen', ['$mdEditDialog', '$scope', '$timeout', '$htt
 			
 			    var options = {
 			        scales: {
-			            y: {
-			                beginAtZero: true
-			            }
+			            yAxes: [{
+			                ticks: {
+			                    beginAtZero: true 
+			                },
+			                scaleLabel: {
+			                    display: true,  
+			                    labelString: 'Usuarios Externos',  
+			                    fontColor: '#000', 
+			                    fontSize: 14 
+			                }
+			            }]
 			        },
 			        plugins: {
 			            tooltip: {
