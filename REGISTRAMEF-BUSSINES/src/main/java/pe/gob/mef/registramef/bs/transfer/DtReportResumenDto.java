@@ -14,31 +14,120 @@ public class DtReportResumenDto {
 	
 	private List<ReporteAsistenciaDetallado> listAsistencia;
 	private List<ReporteCapacitacionDetallado> listCapacitacion;
-	private List<ReporteCapacitacionDetallado> listCapacitacionEvolMensual;
-	private List<ReporteCapacitacionDetallado> listCapacitacionUsSegunTematica;
-	private List<ReporteCapacitacionDetallado> listCapacitacionModalidad;
-	private List<ReporteVisitaDetalle> listReunionTrabajoEvolMensual;
-	private List<ReporteVisitaDetalle> listReunionTrabajoUsSegunTematica;
+	private List<ReportDashboardDto> listCapacitacionEvolMensual;
+	private List<ReportDashboardDto> listCapacitacionUsSegunTematica;
+	private List<ReportDashboardDto> listCapacitacionModalidad;
+	private List<ReportDashboardDto> listReunionTrabajoEvolMensual;
+	private List<ReportDashboardDto> listReunionTrabajoUsSegunTematica;
 	
-	private List<ReporteAsistencia> listReporteAsistenciaTecnicaEvolMensual;
-	private List<ReporteAsistencia> listReporteAsistenciaTecnicaSegunTematica;
-	private List<ReporteAsistencia> listReporteAsistenciaTecnicaModalidad;
+	private List<ReportDashboardDto> listReporteAsistenciaTecnicaEvolMensual;
+	private List<ReportDashboardDto> listReporteAsistenciaTecnicaSegunTematica;
+	private List<ReportDashboardDto> listReporteAsistenciaTecnicaModalidad;
 	
-	private List<ReporteConsulta> lisConsultaEvolMensual;
-	private List<ReporteConsulta> listConsultaSegunTematica;
-	private List<ReporteConsulta> listConsultaModalidad;
-	
-	
-	private List<ReporteConsulta> 	listEstadisticaPorTema;
-	
-	private List<ReporteAsistencia> listAsistenciaDentroFueraPlazo;
-	private List<ReporteConsulta> listConsultaDentroFueraPlazo;
-	private List<ReporteCapacitacion> listCapacitacionDentroFueraPlazo;
-	
-	private List<ReporteAsistencia> listAsistenciaSADentroFueraPlazo;
-	private List<ReporteConsulta> listConsultaSADentroFueraPlazo;
+	private List<ReportDashboardDto> lisConsultaEvolMensual;
+	private List<ReportDashboardDto> listConsultaSegunTematica;
+	private List<ReportDashboardDto> listConsultaModalidad;
 	
 	
+	private List<ReportDashboardDto> 	listEstadisticaPorTema;
+	
+	private List<ReportDashboardDto> listAsistenciaDentroFueraPlazo;
+	private List<ReportDashboardDto> listConsultaDentroFueraPlazo;
+	private List<ReportDashboardDto> listCapacitacionDentroFueraPlazo;
+	
+	private List<ReportDashboardDto> listAsistenciaSADentroFueraPlazo;
+	private List<ReportDashboardDto> listConsultaSADentroFueraPlazo;
+	
+	
+	public List<ReportDashboardDto> getListReporteAsistenciaTecnicaSegunTematica() {
+		return listReporteAsistenciaTecnicaSegunTematica;
+	}
+
+	public void setListReporteAsistenciaTecnicaSegunTematica(
+			List<ReportDashboardDto> listReporteAsistenciaTecnicaSegunTematica) {
+		this.listReporteAsistenciaTecnicaSegunTematica = listReporteAsistenciaTecnicaSegunTematica;
+	}
+
+	public List<ReportDashboardDto> getListReporteAsistenciaTecnicaModalidad() {
+		return listReporteAsistenciaTecnicaModalidad;
+	}
+
+	public void setListReporteAsistenciaTecnicaModalidad(List<ReportDashboardDto> listReporteAsistenciaTecnicaModalidad) {
+		this.listReporteAsistenciaTecnicaModalidad = listReporteAsistenciaTecnicaModalidad;
+	}
+
+	public List<ReportDashboardDto> getLisConsultaEvolMensual() {
+		return lisConsultaEvolMensual;
+	}
+
+	public void setLisConsultaEvolMensual(List<ReportDashboardDto> lisConsultaEvolMensual) {
+		this.lisConsultaEvolMensual = lisConsultaEvolMensual;
+	}
+
+	public List<ReportDashboardDto> getListConsultaSegunTematica() {
+		return listConsultaSegunTematica;
+	}
+
+	public void setListConsultaSegunTematica(List<ReportDashboardDto> listConsultaSegunTematica) {
+		this.listConsultaSegunTematica = listConsultaSegunTematica;
+	}
+
+	public List<ReportDashboardDto> getListConsultaModalidad() {
+		return listConsultaModalidad;
+	}
+
+	public void setListConsultaModalidad(List<ReportDashboardDto> listConsultaModalidad) {
+		this.listConsultaModalidad = listConsultaModalidad;
+	}
+
+	public List<ReportDashboardDto> getListEstadisticaPorTema() {
+		return listEstadisticaPorTema;
+	}
+
+	public void setListEstadisticaPorTema(List<ReportDashboardDto> listEstadisticaPorTema) {
+		this.listEstadisticaPorTema = listEstadisticaPorTema;
+	}
+
+	public List<ReportDashboardDto> getListAsistenciaDentroFueraPlazo() {
+		return listAsistenciaDentroFueraPlazo;
+	}
+
+	public void setListAsistenciaDentroFueraPlazo(List<ReportDashboardDto> listAsistenciaDentroFueraPlazo) {
+		this.listAsistenciaDentroFueraPlazo = listAsistenciaDentroFueraPlazo;
+	}
+
+	public List<ReportDashboardDto> getListConsultaDentroFueraPlazo() {
+		return listConsultaDentroFueraPlazo;
+	}
+
+	public void setListConsultaDentroFueraPlazo(List<ReportDashboardDto> listConsultaDentroFueraPlazo) {
+		this.listConsultaDentroFueraPlazo = listConsultaDentroFueraPlazo;
+	}
+
+	public List<ReportDashboardDto> getListCapacitacionDentroFueraPlazo() {
+		return listCapacitacionDentroFueraPlazo;
+	}
+
+	public void setListCapacitacionDentroFueraPlazo(List<ReportDashboardDto> listCapacitacionDentroFueraPlazo) {
+		this.listCapacitacionDentroFueraPlazo = listCapacitacionDentroFueraPlazo;
+	}
+
+	public List<ReportDashboardDto> getListAsistenciaSADentroFueraPlazo() {
+		return listAsistenciaSADentroFueraPlazo;
+	}
+
+	public void setListAsistenciaSADentroFueraPlazo(List<ReportDashboardDto> listAsistenciaSADentroFueraPlazo) {
+		this.listAsistenciaSADentroFueraPlazo = listAsistenciaSADentroFueraPlazo;
+	}
+
+	public List<ReportDashboardDto> getListConsultaSADentroFueraPlazo() {
+		return listConsultaSADentroFueraPlazo;
+	}
+
+	public void setListConsultaSADentroFueraPlazo(List<ReportDashboardDto> listConsultaSADentroFueraPlazo) {
+		this.listConsultaSADentroFueraPlazo = listConsultaSADentroFueraPlazo;
+	}
+
 	public DtReportResumenDto() {
 		this.listAsistencia = new ArrayList<>();
 		this.listCapacitacion = new ArrayList<>();
@@ -73,139 +162,52 @@ public class DtReportResumenDto {
 	public void setListCapacitacion(List<ReporteCapacitacionDetallado> listCapacitacion) {
 		this.listCapacitacion = listCapacitacion;
 	}
-	public List<ReporteCapacitacionDetallado> getListCapacitacionEvolMensual() {
+	public List<ReportDashboardDto> getListCapacitacionEvolMensual() {
 		return listCapacitacionEvolMensual;
 	}
 
-	public void setListCapacitacionEvolMensual(List<ReporteCapacitacionDetallado> listCapacitacionEvolMensual) {
+	public void setListCapacitacionEvolMensual(List<ReportDashboardDto> listCapacitacionEvolMensual) {
 		this.listCapacitacionEvolMensual = listCapacitacionEvolMensual;
 	}
 
-	public List<ReporteCapacitacionDetallado> getListCapacitacionUsSegunTematica() {
+	public List<ReportDashboardDto> getListCapacitacionUsSegunTematica() {
 		return listCapacitacionUsSegunTematica;
 	}
 
-	public void setListCapacitacionUsSegunTematica(List<ReporteCapacitacionDetallado> listCapacitacionUsSegunTematica) {
+	public void setListCapacitacionUsSegunTematica(List<ReportDashboardDto> listCapacitacionUsSegunTematica) {
 		this.listCapacitacionUsSegunTematica = listCapacitacionUsSegunTematica;
 	}
 
-	public List<ReporteCapacitacionDetallado> getListCapacitacionModalidad() {
+	public List<ReportDashboardDto> getListCapacitacionModalidad() {
 		return listCapacitacionModalidad;
 	}
 
-	public void setListCapacitacionModalidad(List<ReporteCapacitacionDetallado> listCapacitacionModalidad) {
+	public void setListCapacitacionModalidad(List<ReportDashboardDto> listCapacitacionModalidad) {
 		this.listCapacitacionModalidad = listCapacitacionModalidad;
 	}
 
-	public List<ReporteVisitaDetalle> getListReunionTrabajoEvolMensual() {
+	public List<ReportDashboardDto> getListReunionTrabajoEvolMensual() {
 		return listReunionTrabajoEvolMensual;
 	}
 
-	public void setListReunionTrabajoEvolMensual(List<ReporteVisitaDetalle> listReunionTrabajoEvolMensual) {
+	public void setListReunionTrabajoEvolMensual(List<ReportDashboardDto> listReunionTrabajoEvolMensual) {
 		this.listReunionTrabajoEvolMensual = listReunionTrabajoEvolMensual;
 	}
 
-	public List<ReporteVisitaDetalle> getListReunionTrabajoUsSegunTematica() {
+	public List<ReportDashboardDto> getListReunionTrabajoUsSegunTematica() {
 		return listReunionTrabajoUsSegunTematica;
 	}
 
-	public void setListReunionTrabajoUsSegunTematica(List<ReporteVisitaDetalle> listReunionTrabajoUsSegunTematica) {
+	public void setListReunionTrabajoUsSegunTematica(List<ReportDashboardDto> listReunionTrabajoUsSegunTematica) {
 		this.listReunionTrabajoUsSegunTematica = listReunionTrabajoUsSegunTematica;
 	}
 
-	public List<ReporteAsistencia> getListReporteAsistenciaTecnicaEvolMensual() {
+	public List<ReportDashboardDto> getListReporteAsistenciaTecnicaEvolMensual() {
 		return listReporteAsistenciaTecnicaEvolMensual;
 	}
 
-	public void setListReporteAsistenciaTecnicaEvolMensual(List<ReporteAsistencia> listReporteAsistenciaTecnicaEvolMensual) {
+	public void setListReporteAsistenciaTecnicaEvolMensual(List<ReportDashboardDto> listReporteAsistenciaTecnicaEvolMensual) {
 		this.listReporteAsistenciaTecnicaEvolMensual = listReporteAsistenciaTecnicaEvolMensual;
 	}
 
-	public List<ReporteConsulta> getListEstadisticaPorTema() {
-		return listEstadisticaPorTema;
-	}
-
-	public void setListEstadisticaPorTema(List<ReporteConsulta> listEstadisticaPorTema) {
-		this.listEstadisticaPorTema = listEstadisticaPorTema;
-	}
-
-	public List<ReporteAsistencia> getListReporteAsistenciaTecnicaSegunTematica() {
-		return listReporteAsistenciaTecnicaSegunTematica;
-	}
-
-	public void setListReporteAsistenciaTecnicaSegunTematica(List<ReporteAsistencia> listReporteAsistenciaTecnicaSegunTematica) {
-		this.listReporteAsistenciaTecnicaSegunTematica = listReporteAsistenciaTecnicaSegunTematica;
-	}
-
-	public List<ReporteAsistencia> getListReporteAsistenciaTecnicaModalidad() {
-		return listReporteAsistenciaTecnicaModalidad;
-	}
-
-	public void setListReporteAsistenciaTecnicaModalidad(List<ReporteAsistencia> listReporteAsistenciaTecnicaModalidad) {
-		this.listReporteAsistenciaTecnicaModalidad = listReporteAsistenciaTecnicaModalidad;
-	}
-
-	public List<ReporteConsulta> getLisConsultaEvolMensual() {
-		return lisConsultaEvolMensual;
-	}
-
-	public void setLisConsultaEvolMensual(List<ReporteConsulta> lisConsultaEvolMensual) {
-		this.lisConsultaEvolMensual = lisConsultaEvolMensual;
-	}
-
-	public List<ReporteConsulta> getListConsultaSegunTematica() {
-		return listConsultaSegunTematica;
-	}
-
-	public void setListConsultaSegunTematica(List<ReporteConsulta> listConsultaSegunTematica) {
-		this.listConsultaSegunTematica = listConsultaSegunTematica;
-	}
-
-	public List<ReporteConsulta> getListConsultaModalidad() {
-		return listConsultaModalidad;
-	}
-
-	public void setListConsultaModalidad(List<ReporteConsulta> listConsultaModalidad) {
-		this.listConsultaModalidad = listConsultaModalidad;
-	}
-
-	public List<ReporteAsistencia> getListAsistenciaDentroFueraPlazo() {
-		return listAsistenciaDentroFueraPlazo;
-	}
-
-	public void setListAsistenciaDentroFueraPlazo(List<ReporteAsistencia> listAsistenciaDentroFueraPlazo) {
-		this.listAsistenciaDentroFueraPlazo = listAsistenciaDentroFueraPlazo;
-	}
-
-	public List<ReporteConsulta> getListConsultaDentroFueraPlazo() {
-		return listConsultaDentroFueraPlazo;
-	}
-
-	public void setListConsultaDentroFueraPlazo(List<ReporteConsulta> listConsultaDentroFueraPlazo) {
-		this.listConsultaDentroFueraPlazo = listConsultaDentroFueraPlazo;
-	}
-
-	public List<ReporteCapacitacion> getListCapacitacionDentroFueraPlazo() {
-		return listCapacitacionDentroFueraPlazo;
-	}
-
-	public void setListCapacitacionDentroFueraPlazo(List<ReporteCapacitacion> listCapacitacionDentroFueraPlazo) {
-		this.listCapacitacionDentroFueraPlazo = listCapacitacionDentroFueraPlazo;
-	}
-
-	public List<ReporteAsistencia> getListAsistenciaSADentroFueraPlazo() {
-		return listAsistenciaSADentroFueraPlazo;
-	}
-
-	public void setListAsistenciaSADentroFueraPlazo(List<ReporteAsistencia> listAsistenciaSADentroFueraPlazo) {
-		this.listAsistenciaSADentroFueraPlazo = listAsistenciaSADentroFueraPlazo;
-	}
-
-	public List<ReporteConsulta> getListConsultaSADentroFueraPlazo() {
-		return listConsultaSADentroFueraPlazo;
-	}
-
-	public void setListConsultaSADentroFueraPlazo(List<ReporteConsulta> listConsultaSADentroFueraPlazo) {
-		this.listConsultaSADentroFueraPlazo = listConsultaSADentroFueraPlazo;
-	}
 }

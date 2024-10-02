@@ -22,6 +22,7 @@ import pe.gob.mef.registramef.bs.domain.ReporteConsulta;
 import pe.gob.mef.registramef.bs.domain.ReporteVisita;
 import pe.gob.mef.registramef.bs.domain.ReporteVisitaDetalle;
 import pe.gob.mef.registramef.bs.exception.Validador;
+import pe.gob.mef.registramef.bs.transfer.ReportDashboardDto;
 import pe.gob.mef.registramef.bs.utils.PropertiesMg;
 
 @Repository
@@ -711,10 +712,10 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		return lista;
 	}
 	
-	public List<ReporteCapacitacionDetallado> getResumenCapacitacion(Long idUserInt, Long idEstado,
+	public List<ReportDashboardDto> getResumenCapacitacion(Long idUserInt, Long idEstado,
 			boolean flagAsis, Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro,
 			Integer minRegistro) throws Validador {
-		List<ReporteCapacitacionDetallado> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -767,7 +768,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteCapacitacionDetallado objResult = new ReporteCapacitacionDetallado();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setId(i);
 				
@@ -789,10 +790,10 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		return lstResult;
 	}
 	
-	public List<ReporteCapacitacionDetallado> getResumenCapacitacionUsersByTematica(Long idUserInt, Long idEstado,
+	public List<ReportDashboardDto> getResumenCapacitacionUsersByTematica(Long idUserInt, Long idEstado,
 			boolean flagAsis, Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro,
 			Integer minRegistro) throws Validador {
-		List<ReporteCapacitacionDetallado> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -848,7 +849,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteCapacitacionDetallado objResult = new ReporteCapacitacionDetallado();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setId(i);
 				
@@ -869,10 +870,10 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 	}
 	
 	
-	public List<ReporteCapacitacionDetallado> getResumenCapacitacionByModalidad(Long idUserInt, Long idEstado,
+	public List<ReportDashboardDto> getResumenCapacitacionByModalidad(Long idUserInt, Long idEstado,
 			boolean flagAsis, Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro,
 			Integer minRegistro) throws Validador {
-		List<ReporteCapacitacionDetallado> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -917,7 +918,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteCapacitacionDetallado objResult = new ReporteCapacitacionDetallado();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setId(i);
 				
@@ -940,12 +941,12 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 	}
 	
 	@Override
-	public List<ReporteAsistencia> getResumenAsistenciaTecnicaEvolMensual(Long idEstado, Long idUserInt,
+	public List<ReportDashboardDto> getResumenAsistenciaTecnicaEvolMensual(Long idEstado, Long idUserInt,
 																			Date fechaInicio, Date fechaFin, 
 																			Long idSistAdmin, Long idSede, 
 																			Integer maxRegistro, Integer minRegistro)
 																			throws Validador {
-		List<ReporteAsistencia> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
@@ -987,7 +988,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteAsistencia objResult = new ReporteAsistencia();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setMonthYear((String) object[0]);
 				
@@ -1003,10 +1004,10 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		return lstResult;
 	}
 	
-	public List<ReporteAsistencia> getResumenAsistenciaTecnicaByTematica(Long idEstado, Long idUserInt,
+	public List<ReportDashboardDto> getResumenAsistenciaTecnicaByTematica(Long idEstado, Long idUserInt,
 			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
 			throws Validador {
-		List<ReporteAsistencia> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -1045,7 +1046,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteAsistencia objResult = new ReporteAsistencia();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setMonthYear((String) object[0]);
 				objResult.setAbreviatura((String) object[1]);
@@ -1061,10 +1062,10 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		return lstResult;
 	}
 	
-	public List<ReporteAsistencia> getResumenAsistenciaTecnicaByModalidad(Long idEstado, Long idUserInt,
+	public List<ReportDashboardDto> getResumenAsistenciaTecnicaByModalidad(Long idEstado, Long idUserInt,
 			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
 			throws Validador {
-		List<ReporteAsistencia> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -1109,7 +1110,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteAsistencia objResult = new ReporteAsistencia();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setMonthYear((String) object[0]);
 				
@@ -1131,10 +1132,10 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		return lstResult;
 	}
 	
-	public List<ReporteAsistencia> getResumenAsistenciaTecnicaDentroFueraPlazo(Long idEstado, Long idUserInt,
+	public List<ReportDashboardDto> getResumenAsistenciaTecnicaDentroFueraPlazo(Long idEstado, Long idUserInt,
 			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
 			throws Validador {
-		List<ReporteAsistencia> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -1247,7 +1248,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteAsistencia objResult = new ReporteAsistencia();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setMonthYear((String) object[0]);
 				objResult.setSede((String) object[1]);
@@ -1278,10 +1279,10 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 	}
 	
 	
-	public List<ReporteConsulta> getResumenConsultaDentroFueraPlazo(Long idEstado, Long idUserInt,
+	public List<ReportDashboardDto> getResumenConsultaDentroFueraPlazo(Long idEstado, Long idUserInt,
 			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
 			throws Validador {
-		List<ReporteConsulta> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -1394,7 +1395,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteConsulta objResult = new ReporteConsulta();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setMonthYear((String) object[0]);
 				objResult.setSede((String) object[1]);
@@ -1424,10 +1425,10 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		return lstResult;
 	}
 	
-	public List<ReporteConsulta> getResumenConsultaSADentroFueraPlazo(Long idEstado, Long idUserInt,
+	public List<ReportDashboardDto> getResumenConsultaSADentroFueraPlazo(Long idEstado, Long idUserInt,
 			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
 			throws Validador {
-		List<ReporteConsulta> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -1536,7 +1537,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteConsulta objResult = new ReporteConsulta();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setMonthYear((String) object[0]);
 				objResult.setSede((String) object[1]);
@@ -1566,10 +1567,10 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		return lstResult;
 	}
 
-	public List<ReporteCapacitacion> getResumenCapacitacionDentroFueraPlazo(Long idEstado, Long idUserInt,
+	public List<ReportDashboardDto> getResumenCapacitacionDentroFueraPlazo(Long idEstado, Long idUserInt,
 			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
 			throws Validador {
-		List<ReporteCapacitacion> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -1681,7 +1682,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteCapacitacion objResult = new ReporteCapacitacion();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setMonthYear((String) object[0]);
 				objResult.setSede((String) object[1]);
@@ -1712,12 +1713,12 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 	}
 	
 	@Override
-	public List<ReporteConsulta> getResumenEstadisticaPorTema(Long idEstado, Long idUserInt,
+	public List<ReportDashboardDto> getResumenEstadisticaPorTema(Long idEstado, Long idUserInt,
 																			Date fechaInicio, Date fechaFin, 
 																			Long idSistAdmin, Long idSede, 
 																			Integer maxRegistro, Integer minRegistro)
 																			throws Validador {
-		List<ReporteConsulta> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
@@ -1838,7 +1839,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteConsulta objResult = new ReporteConsulta();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setSistAdmin((String) object[0]);
 				objResult.setTema((String) object[1]);
@@ -1855,10 +1856,10 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		return lstResult;
 	}
 	
-	public List<ReporteAsistencia> getResumenAsistenciaTecnicaSADentroFueraPlazo(Long idEstado, Long idUserInt,
+	public List<ReportDashboardDto> getResumenAsistenciaTecnicaSADentroFueraPlazo(Long idEstado, Long idUserInt,
 			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
 			throws Validador {
-		List<ReporteAsistencia> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -1966,7 +1967,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteAsistencia objResult = new ReporteAsistencia();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setMonthYear((String) object[0]);
 				objResult.setSede((String) object[1]);
@@ -2103,9 +2104,9 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		return lista;
 	}
 
-	public List<ReporteVisitaDetalle> getResumenReunionTrabajoEvolMensual(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+	public List<ReportDashboardDto> getResumenReunionTrabajoEvolMensual(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
 			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador {
-		List<ReporteVisitaDetalle> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(500);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -2150,7 +2151,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteVisitaDetalle objResult = new ReporteVisitaDetalle();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setId(i);
 				objResult.setMonthYear((String) object[0]);
@@ -2168,9 +2169,9 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 		return lstResult;
 	}
 	
-	public List<ReporteVisitaDetalle> getResumenReunionTrabajoUsersByTematica(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
+	public List<ReportDashboardDto> getResumenReunionTrabajoUsersByTematica(Long idEstado, Long idUserInt, Date fechaInicio, Date fechaFin,
 			Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro) throws Validador {
-		List<ReporteVisitaDetalle> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(500);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -2219,7 +2220,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteVisitaDetalle objResult = new ReporteVisitaDetalle();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setId(i);
 				objResult.setMonthYear((String) object[0]);
@@ -2240,12 +2241,12 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 	
 	
 	@Override
-	public List<ReporteConsulta> getResumenConsultaEvolMensual(Long idEstado, Long idUserInt,
+	public List<ReportDashboardDto> getResumenConsultaEvolMensual(Long idEstado, Long idUserInt,
 																			Date fechaInicio, Date fechaFin, 
 																			Long idSistAdmin, Long idSede, 
 																			Integer maxRegistro, Integer minRegistro)
 																			throws Validador {
-		List<ReporteConsulta> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
@@ -2287,7 +2288,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteConsulta objResult = new ReporteConsulta();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setMonthYear((String) object[0]);
 				
@@ -2304,10 +2305,10 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 	}
 	
 	
-	public List<ReporteConsulta> getResumenConsultaByTematica(Long idEstado, Long idUserInt,
+	public List<ReportDashboardDto> getResumenConsultaByTematica(Long idEstado, Long idUserInt,
 			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
 			throws Validador {
-		List<ReporteConsulta> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -2348,7 +2349,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteConsulta objResult = new ReporteConsulta();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setMonthYear((String) object[0]);
 				objResult.setAbreviatura((String) object[1]);
@@ -2366,10 +2367,10 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 	
 	
 	
-	public List<ReporteConsulta> getResumenConsultaByModalidad(Long idEstado, Long idUserInt,
+	public List<ReportDashboardDto> getResumenConsultaByModalidad(Long idEstado, Long idUserInt,
 			Date fechaInicio, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro, Integer minRegistro)
 			throws Validador {
-		List<ReporteConsulta> lstResult = new ArrayList<>();
+		List<ReportDashboardDto> lstResult = new ArrayList<>();
 		StringBuffer sb = new StringBuffer(400);
 		List<Object> hs = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -2414,7 +2415,7 @@ public class ReporteServicioDaoImp extends AbstractJpaCRUDDao<Object, Long>
 			for (Object result : lstObject) {
 				Object[] object = (Object[]) result;
 				
-				ReporteConsulta objResult = new ReporteConsulta();
+				ReportDashboardDto objResult = new ReportDashboardDto();
 				
 				objResult.setMonthYear((String) object[0]);
 				

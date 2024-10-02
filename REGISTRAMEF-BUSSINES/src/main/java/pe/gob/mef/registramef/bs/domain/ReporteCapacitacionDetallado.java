@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @Entity
 public class ReporteCapacitacionDetallado implements java.io.Serializable {
@@ -84,12 +85,11 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 	private String flagEjecucion;
 	// SPRINT02 FIN
 	
-	private String monthYear;
+	/*private String monthYear;
 	private Integer totalParticipants;
 	private Integer totalEvents;
-	
 	private Integer totalVirtual;
-	private Integer totalPresencial;
+	private Integer totalPresencial;*/
 
 	@Column(name = "FECHA_INI_PROGRAMADA", length = 7)
 	public Timestamp getFechaInicRepro() {
@@ -314,14 +314,6 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 		this.subtema = subtema;
 	}
 
-	// @Column(name = "ESTADO_TEMA", insertable=false, updatable=false)
-	// public String getEstadoTema() {
-	// return estadoTema;
-	// }
-	//
-	// public void setEstadoTema(String estadoTema) {
-	// this.estadoTema = estadoTema;
-	// }
 	@Column(name = "USUARIO_CREA", insertable = false, updatable = false)
 	public String getUserCrea() {
 		return userCrea;
@@ -367,14 +359,6 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	// @Column(name = "ESTADO_ID", insertable=false, updatable=false)
-	// public Integer getIdEstado() {
-	// return idEstado;
-	// }
-	//
-	// public void setIdEstado(Integer idEstado) {
-	// this.idEstado = idEstado;
-	// }
 	@Column(name = "IDCAPA_PADRE", insertable = false, updatable = false)
 	public Long getIdCapaPadre() {
 		return idCapaPadre;
@@ -411,7 +395,6 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 		this.cargo = cargo;
 	}
 
-	// @Column(name = "TELEFONO_FIJO", insertable=false, updatable=false)
 	@Column(name = "OTRO_TELEFONO", insertable = false, updatable = false)
 	public String getTelefonoFijo() {
 		return telefonoFijo;
@@ -421,7 +404,6 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 		this.telefonoFijo = telefonoFijo;
 	}
 
-	// @Column(name = "TELEFONO_CELULAR", insertable=false, updatable=false)
 	@Column(name = "OTRO_CELULAR", insertable = false, updatable = false)
 	public String getTelefonoCelular() {
 		return telefonoCelular;
@@ -431,7 +413,6 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 		this.telefonoCelular = telefonoCelular;
 	}
 
-	// @Column(name = "OTRO_CELULAR", insertable=false, updatable=false)
 	@Column(name = "TELEFONO_CELULAR", insertable = false, updatable = false)
 	public String getOtroCelular() {
 		return otroCelular;
@@ -441,7 +422,6 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 		this.otroCelular = otroCelular;
 	}
 
-	// @Column(name = "OTRO_TELEFONO", insertable=false, updatable=false)
 	@Column(name = "TELEFONO_FIJO", insertable = false, updatable = false)
 	public String getOtroTelefono() {
 		return otroTelefono;
@@ -505,14 +485,6 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 		this.confirmar = confirmar;
 	}
 
-	// @Column(name = "INSCRIPCION_VIRTUAL", insertable=false, updatable=false)
-	// public String getInscripcionVirtual() {
-	// return inscripcionVirtual;
-	// }
-	//
-	// public void setInscripcionVirtual(String inscripcionVirtual) {
-	// this.inscripcionVirtual = inscripcionVirtual;
-	// }
 	@Column(name = "ENLACE_CONECCION_VIRTUAL", insertable = false, updatable = false)
 	public String getEnlaceConeVirtual() {
 		return enlaceConeVirtual;
@@ -548,16 +520,7 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 	public void setFechaFinalizacion(Timestamp fechaFinalizacion) {
 		this.fechaFinalizacion = fechaFinalizacion;
 	}
-	// @Column(name = "ESTADO_PARTI", insertable=false, updatable=false)
-	// public String getEstadoParti() {
-	// return estadoParti;
-	// }
-	//
-	// public void setEstadoParti(String estadoParti) {
-	// this.estadoParti = estadoParti;
-	// }
 
-	// SPRINT01 INICIO
 	@Column(name = "FECHA_SOLI", length = 7)
 	public Date getFechaSoli() {
 		return fechaSoli;
@@ -567,8 +530,6 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 		this.fechaSoli = fechaSoli;
 	}
 
-	// SPRINT01 FIN
-	// SPRINT02 INICIO
 	@Column(name = "HOJA_RUTA", insertable = false, updatable = false)
 	public String getHojaRuta() {
 		return hojaRuta;
@@ -604,7 +565,6 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 	public void setFlagEjecucion(String flagEjecucion) {
 		this.flagEjecucion = flagEjecucion;
 	}
-	// SPRINT02 FIN
 	
 	@Column(name = "ID_SIST_ADMI", insertable = false, updatable = false)
 	public Long getIdSistAdmin() {
@@ -623,8 +583,8 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 	public void setAbreviaturaAdmin(String abreviaturaAdmin) {
 		this.abreviaturaAdmin = abreviaturaAdmin;
 	}
-
-	@Column(name = "MONTH_YEAR", insertable = false, updatable = false)
+/*
+	//@Column(name = "MONTH_YEAR", insertable = false, updatable = false)
 	public String getMonthYear() {
 		return monthYear;
 	}
@@ -633,7 +593,7 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 		this.monthYear = monthYear;
 	}
 
-	@Column(name = "TOTAL_PARTICIPANTS", insertable = false, updatable = false)
+	//@Column(name = "TOTAL_PARTICIPANTS", insertable = false, updatable = false)
 	public Integer getTotalParticipants() {
 		return totalParticipants;
 	}
@@ -642,7 +602,7 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 		this.totalParticipants = totalParticipants;
 	}
 
-	@Column(name = "TOTAL_EVENTS", insertable = false, updatable = false)
+	//@Column(name = "TOTAL_EVENTS", insertable = false, updatable = false)
 	public Integer getTotalEvents() {
 		return totalEvents;
 	}
@@ -651,7 +611,7 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 		this.totalEvents = totalEvents;
 	}
 
-	@Column(name = "TOTAL_VIRTUAL", insertable = false, updatable = false)
+	//@Column(name = "TOTAL_VIRTUAL", insertable = false, updatable = false)
 	public Integer getTotalVirtual() {
 		return totalVirtual;
 	}
@@ -660,7 +620,7 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 		this.totalVirtual = totalVirtual;
 	}
 
-	@Column(name = "TOTAL_PRESENCIAL", insertable = false, updatable = false)
+	//@Column(name = "TOTAL_PRESENCIAL", insertable = false, updatable = false)
 	public Integer getTotalPresencial() {
 		return totalPresencial;
 	}
@@ -668,4 +628,5 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 	public void setTotalPresencial(Integer totalPresencial) {
 		this.totalPresencial = totalPresencial;
 	}
+	*/
 }

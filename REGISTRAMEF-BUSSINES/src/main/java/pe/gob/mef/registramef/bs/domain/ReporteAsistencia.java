@@ -41,7 +41,7 @@ public class ReporteAsistencia implements java.io.Serializable {
 	private String dni  = null;
 	private String cargo  = null;
 	private String correo  = null;
-	
+	/*
 	private String monthYear;
 	private Integer total;
 	
@@ -56,7 +56,7 @@ public class ReporteAsistencia implements java.io.Serializable {
 	private Double porcentajeFueraPlazo  = null;
 	private Integer totalDentroPlazo  = null;
 	private Double porcentajeDentroPlazo  = null;
-	
+	*/
 	
 	public ReporteAsistencia() {
 	}
@@ -302,7 +302,7 @@ public class ReporteAsistencia implements java.io.Serializable {
 	public void setCorreo(String correo) {
 		this.correo = correo;
 	}
-
+/*
 	@Column(name = "MONTH_YEAR", insertable = false, updatable = false)
 	public String getMonthYear() {
 		return monthYear;
@@ -410,7 +410,7 @@ public class ReporteAsistencia implements java.io.Serializable {
 		this.porcentajeDentroPlazo = porcentajeDentroPlazo;
 	}
 
-
+*/
 	
 	
 			

@@ -75,7 +75,7 @@
   
 <md-toolbar style="background: rgb(0, 125, 175);" class="md-toolbar-size"><!-- //MPINARES 20082024 - INICIO - SE CAMBIA MDCOLORS -->
 	<div class="md-toolbar-tools md-toolbar-tools-size">
-	<h2 flex md-truncate md-colors="{color: 'background-A100'}" style="font-size: 17px;">Lista de capacitaciones programadas</h2>
+	<h2 flex md-truncate md-colors="{color: 'background-A100'}" style="font-size: 17px;">Reporte de resumen de servicios</h2>
 	
 		<md-button class="md-button-borde md-sm" ng-click="limpiarFiltro()" aria-label="Limpiar">
 		         <md-icon md-font-set="material-icons" style="color: rgb(255,255,255);font-size: 19px;line-height: normal;">delete_forever</md-icon>
@@ -303,7 +303,7 @@
            <md-grid-tile class="gray" style="padding: 16px;" >
 			
 			<fieldset style="margin-left: 15px; overflow-x: auto;">
-				<legend>Evolución Mensual</legend>
+				<legend>Capacitaciones - Evoluci&oacute;n mensual</legend>
 			
 				<div ng-if="reportecapacitacionResumen.listCapacitacionEvolMensual.length > 0">
 				  <canvas id="mixedChartCapaEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
@@ -330,7 +330,7 @@
 			
 			<md-grid-tile class="gray" style="padding: 16px;">
 				<fieldset style="margin-left: 15px; overflow-x: auto;">
-					<legend>Usuarios capacitados seg&uacute;n tem&aacute;tica</legend>
+					<legend>Capacitaciones - Usuarios capacitados seg&uacute;n tem&aacute;tica</legend>
 				
 					<div ng-if="reportecapacitacionResumen.listCapacitacionUsSegunTematica.length > 0">
 					    <md-select
@@ -358,7 +358,7 @@
 			
 			<md-grid-tile class="gray" style="padding: 16px;">
 			    <fieldset style="margin-left: 15px; overflow-x: hidden;"> 
-			        <legend>Usuarios capacitados seg&uacute;n modalidad</legend>
+			        <legend>Capacitaciones - Usuarios capacitados seg&uacute;n modalidad</legend>
 					
 					<div ng-if="reportecapacitacionResumen.listCapacitacionModalidad.length > 0">
 			        <md-select
@@ -373,7 +373,7 @@
 			            </md-option>
 			        </md-select>
 
-			        <canvas id="doughnutByModalidad" 
+			        <canvas id="doughnutCapaByModalidad" 
 			                ng-style="{'width': canvasWidth, 'height': canvasHeight}" 
 			                style="max-width: 300px; max-height: 200px;"></canvas>
 
@@ -394,12 +394,9 @@
 			    </fieldset>
 			</md-grid-tile>
 
-
-			
-			
 			<md-grid-tile class="gray" style="padding: 16px;" >
 				<fieldset style="margin-left: 15px; overflow-x: hidden;"> 
-					<legend>Evoluci&oacute;n Mensual Reuni&oacute;n de trabajo</legend>
+					<legend>Reuniones de trabajo - Evoluci&oacute;n mensual</legend>
 					
 					
 					<div ng-if="reportecapacitacionResumen.listReunionTrabajoEvolMensual.length > 0">
@@ -426,9 +423,9 @@
 			
 			<md-grid-tile class="gray" style="padding: 16px;">
 				<fieldset style="margin-left: 15px; overflow-x: auto;">
-						<legend>Usuarios externos seg&uacute;n tem&aacute;tica</legend>
+						<legend>Reuniones de trabajo - Usuarios externos seg&uacute;n tem&aacute;tica</legend>
 			    
-				<div ng-if="reportecapacitacionResumen.listReunionTrabajoUsSegunTematica.length > 0">
+				
 			    <md-select
 				    ng-model="filtroreutrabajo.monthYear"
 				    ng-change="onDashReuTrabajByTematica(filtroreutrabajo.monthYear)" 
@@ -440,12 +437,12 @@
 				        {{item.monthYear}} 
 				    </md-option>
 				</md-select>
-			    
+				<div ng-if="listReunionTrabajoUsSegunTematicaByLastMonth.length > 0">
 			    <canvas id="barChartReuTrabajoByTematica" width="400" height="200"></canvas>
 				
 				</div>
 				
-				<h3 ng-if="reportecapacitacionResumen.listReunionTrabajoUsSegunTematica && reportecapacitacionResumen.listReunionTrabajoUsSegunTematica.length === 0">
+				<h3 ng-if="listReunionTrabajoUsSegunTematicaByLastMonth && listReunionTrabajoUsSegunTematicaByLastMonth.length === 0">
 						 No se encontraron resultados para este gr&aacute;fico
 				</h3>
 			
@@ -456,7 +453,7 @@
 			
 			<md-grid-tile class="gray" style="padding: 16px;" >
 				<fieldset style="margin-left: 15px; overflow-x: auto;">
-					<legend>Evolución Mensual Asis.Tec</legend>
+					<legend>Asistencias t&eacute;cnicas - Evoluci&oacute;n mensual</legend>
 				
 				  <div ng-if="reportecapacitacionResumen.listReporteAsistenciaTecnicaEvolMensual.length > 0">	
 					  <canvas id="mixedChartAsisTecnicaEvolMensual" style="display: block; margin: 0 auto;margin-top: 70px;" width="400" height="150"></canvas>
@@ -480,8 +477,8 @@
 			</md-grid-tile>
 			
 			<md-grid-tile class="gray" style="padding: 16px;">
-				<fieldset style="margin-left: 15px; overflow-x: auto;">
-					<legend>Asistencia T&eacute;cnica seg&uacute;n tem&aacute;tica</legend>
+				<fieldset style="margin-left: 15px; overflow-x: hidden;">
+					<legend>Asistencias t&eacute;cnicas - Seg&uacute;n tem&aacute;tica</legend>
 				
 				<div ng-if="reportecapacitacionResumen.listReporteAsistenciaTecnicaSegunTematica.length > 0">	
 					
@@ -497,7 +494,7 @@
 					    </md-option>
 					</md-select>
 				    
-				  	<canvas id="barChartAsistenciaTecnicaByTematica" width="400" height="200"></canvas>
+					<canvas id="barChartAsistenciaTecnicaByTematica" ng-style="{'width': canvasWidth, 'height': canvasHeight}"  style="max-width: 400px; max-height: 200px;"></canvas>
 				
 				</div>
 			  
@@ -510,7 +507,7 @@
 			
 			<md-grid-tile class="gray" style="padding: 16px;">
 			    <fieldset style="margin-left: 15px; overflow-x: hidden;">
-			        <legend>Asistencias t&eacute;cnicas seg&uacute;n modalidad</legend>
+			        <legend>Asistencias t&eacute;cnicas - Seg&uacute;n modalidad</legend>
 				
 				  <div ng-if="reportecapacitacionResumen.listReporteAsistenciaTecnicaModalidad.length > 0">	
 			        <md-select
@@ -550,7 +547,7 @@
 			
 			<md-grid-tile class="gray" style="padding: 16px;" >
 				<fieldset style="margin-left: 15px; overflow-x: auto;">
-							  <legend>Evolución Mensual Consultas</legend>
+							  <legend>Consultas - Evoluci&oacute;n mensual</legend>
 							  
 							  <div ng-if="reportecapacitacionResumen.lisConsultaEvolMensual.length > 0">	
 							  
@@ -577,8 +574,8 @@
 			
 			
 			<md-grid-tile class="gray" style="padding: 16px;">
-				<fieldset style="margin-left: 15px; overflow-x: auto;">
-							<legend>Consulta seg&uacute;n tem&aacute;tica</legend>
+				<fieldset style="margin-left: 15px; overflow-x: hidden;">
+							<legend>Consultas - Seg&uacute;n tem&aacute;tica</legend>
 							
 							<div ng-if="reportecapacitacionResumen.listConsultaSegunTematica.length > 0">
 							
@@ -594,8 +591,8 @@
 								    </md-option>
 								</md-select>
 							    
-							    <canvas id="barChartConsultaByTematica" width="400" height="200"></canvas>
-						  
+								<canvas id="barChartConsultaByTematica" ng-style="{'width': canvasWidth, 'height': canvasHeight}"  style="max-width: 400px; max-height: 200px;"></canvas>
+								
 							</div>
 							
 							<h3 ng-if="reportecapacitacionResumen.listConsultaSegunTematica && reportecapacitacionResumen.listConsultaSegunTematica.length === 0">
@@ -607,7 +604,7 @@
 			
 		   <md-grid-tile class="gray" style="padding: 16px;">
 		   			    <fieldset style="margin-left: 15px; overflow-x: hidden;">
-		   			        <legend>Consulta seg&uacute;n modalidad</legend>
+		   			        <legend>Consultas - Seg&uacute;n modalidad</legend>
 							
 							<div ng-if="listaMonthConsultaByModalidad.length > 0">
 							
@@ -649,7 +646,7 @@
 		   
 			
 			<md-grid-tile>
-				<canvas id="doughnutEstaPorTema" width="200" height="150" style="max-width: 100%; height: auto;"></canvas>
+				<canvas id="doughnutEstaPorTema" ng-style="{'width': canvasWidth, 'height': canvasHeight}"  style="max-width: 600px; max-height: 400px;"></canvas>
 			</md-grid-tile>
 
 			<md-grid-tile>

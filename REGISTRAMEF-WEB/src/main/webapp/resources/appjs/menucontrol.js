@@ -278,7 +278,7 @@ myapp.controller('menuCtrl', ['$scope','$mdPanel','$mdDialog','$http', function 
 		  		      items: [
 		  		    	  {'name':'Resumen','refe':'reportes/servicios/listarRptResumen.html','activo':true},
 		  		    	  {'name':'Por sede','refe':'paginas/listatConstruccion.html','activo':true},
-		  		    	  {'name':'Por representantes técnicos','refe':'paginas/listatConstruccion.html','activo':true}
+		  		    	  {'name':'Por representantes técnicos','refe':'reportes/servicios/listarRptRepreTecnicos.html','activo':true}
 		  		      ]
 		  		    };
 	      

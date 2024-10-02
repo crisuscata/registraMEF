@@ -4119,6 +4119,88 @@ $scope.dtCapacitacionModelo.dtCapaPublicoBkJSss= [];
 			});	
 			
 		}
+		
+		$scope.finalizarDtCapacitacion = function(ev) {
+        var confirm = $mdDialog.confirm()
+            .title('Confirmar Finalización')
+            .textContent('Esta Seguro que desa finalizar la capacitación?')
+            .ariaLabel('Confirmation')
+            .targetEvent(ev)
+            .ok('Si')  
+            .cancel('No');  
+
+        $mdDialog.show(confirm).then(function() {
+			
+            $scope.uploadFileTotdAnexoJsModel();
+		
+		  if($scope.isArray($scope.datoCapaPublico)){
+				if($scope.datoCapaPublico.length>0){
+					$scope.dtCapacitacionModelo.dtCapaPublicoBkJSss = $scope.datoCapaPublico;
+				}};
+		  if($scope.isArray($scope.datoCapaEntidades)){
+				if($scope.datoCapaEntidades.length>0){
+					$scope.dtCapacitacionModelo.dtCapaEntidadesBkJSss = $scope.datoCapaEntidades;
+				}};
+				
+				$scope.addTemaAndUsers();
+				
+				    ev.target.disabled = true;
+				    var datainsert = angular.toJson($scope.dtCapacitacionModelo);
+		 			console.log("datainsert = "+datainsert);	
+		        		$http.post(finalizardtCapacitacionNoProgUrl,datainsert,{headers: {'Content-Type': 'application/json'}}).then(function(res){
+							var dato = res.data;
+
+//		    				$scope.datos.push(dato); 
+		    				$scope.total = $scope.datos.length;
+		    				
+		    				$scope.setDtCapacitacionModelo(dato);
+		    				
+		    				$mdDialog.show(
+							         $mdDialog.alert()
+							        .parent(angular.element(document.body))
+							        .clickOutsideToClose(true)
+							        .title('Guardar capacitaciones')
+							        .textContent("Capacitaciones se finalizó correctamente.")
+							        .ariaLabel('ERROR')
+							        .ok('ACEPTAR')
+							        .targetEvent(ev)
+							    );
+		    				
+		    				$scope.nuevo = false;
+						},
+						function error(errResponse) {
+				            var dato;
+			if(errResponse && errResponse.data){
+			   console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
+			   dato = errResponse.data;
+			}
+			if(errResponse.message){ 
+				console.log("Message " + errResponse.message);
+				dato = errResponse.message;
+			}			
+			if(typeof(dato) != 'undefined'){
+				            	$mdDialog.show(
+								         $mdDialog.alert()
+								        .parent(angular.element(document.body))
+								        .clickOutsideToClose(true)
+								        .title('Guardar capacitaciones')
+								        .textContent(dato.message)
+								        .ariaLabel('ERROR')
+								        .ok('ACEPTAR')
+								        .targetEvent(ev)
+								    );
+				            }
+				        });		
+		        			        	
+		        	ev.target.disabled = false;
+            
+        }, function() {
+			
+            console.log("Canceled!");
+            
+        });
+    };
+		
     	
 ///FIN ADICIONALES			 			 
 	// ////////////////////////////////////////////////////////////////

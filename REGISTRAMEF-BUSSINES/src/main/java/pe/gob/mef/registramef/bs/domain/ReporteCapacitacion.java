@@ -50,7 +50,7 @@ public class ReporteCapacitacion implements java.io.Serializable {
 	private String codEjecut  = null;
 	private String entidad  = null;
 	
-	private String monthYear;
+	/*private String monthYear;
 	private Integer total;
 	
 	private String descripcion  = null;
@@ -58,7 +58,7 @@ public class ReporteCapacitacion implements java.io.Serializable {
 	private Integer totalFueraPlazo  = null;
 	private Double porcentajeFueraPlazo  = null;
 	private Integer totalDentroPlazo  = null;
-	private Double porcentajeDentroPlazo  = null;
+	private Double porcentajeDentroPlazo  = null;*/
 	
 	
 	public ReporteCapacitacion() {
@@ -399,7 +399,7 @@ public class ReporteCapacitacion implements java.io.Serializable {
 		this.entidad = entidad;
 	}
 	
-	
+	/*
 	@Column(name = "DESCRIPCION", insertable = false, updatable = false)
 	public String getDescripcion() {
 		return descripcion;
@@ -471,6 +471,6 @@ public class ReporteCapacitacion implements java.io.Serializable {
 	public void setTotal(Integer total) {
 		this.total = total;
 	}
-			
+		*/	
 	
 }

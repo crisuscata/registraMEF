@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
@@ -46,8 +45,6 @@ import pe.gob.mef.registramef.bs.domain.ReporteConsulta;
 import pe.gob.mef.registramef.bs.domain.ReporteVisitaDetalle;
 import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.service.Servicio;
-import pe.gob.mef.registramef.bs.transfer.DtReportResumenDto;
-import pe.gob.mef.registramef.bs.transfer.IDValorDto;
 import pe.gob.mef.registramef.bs.transfer.bk.MsSedesBk;
 import pe.gob.mef.registramef.bs.transfer.bk.MsSisAdmistrativoBk;
 import pe.gob.mef.registramef.bs.transfer.bk.MsUsuariosBk;
@@ -57,356 +54,15 @@ import pe.gob.mef.registramef.web.controller.rs.data.RespuestaError;
 import pe.gob.mef.registramef.web.utils.ZipDirectory;
 
 @RestController
-@Path("/ctrlDtReportResumen")
-public class DtReportResumenRsCtrl {
+@Path("/ctrlDtReportRepreTecnico")
+public class DtReportRepreTecnicoRsCtrl {
 	
 	@Autowired
 	private Servicio servicio;
 	
 	
-	@GET
-	@Path("/listaParametrosXIdPadreToIdParamTipoServicio")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response listaParametrosXIdPadreToIdParamTipoServicio(@Context HttpServletRequest req, 
-																@Context HttpServletResponse res,
-																@HeaderParam("authorization") String authString) {
-		
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-
-		Principal usuario = req.getUserPrincipal();
-		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
-
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		try {			
-			List<IDValorDto> datos = servicio.getIDValorPrtParametrosXIdPadreToIdParamTipoServicio();		
-			   GenericEntity<List<IDValorDto>> registrosx = new GenericEntity<List<IDValorDto>>(datos){
-			};
-			return Response.status(200).entity(registrosx).build();
-		} catch (Exception e) {
-			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
-			System.out.println("ERROR: " + mensaje);
-			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
-					}).build();
-		}
-	}
 	
-	
-	@GET
-	@Path("/listaIDValorMsSisAdmiTemaCapa")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response listaIDValorMsSisAdmiTemaCapa(@Context HttpServletRequest req, 
-																@Context HttpServletResponse res,
-																@HeaderParam("authorization") String authString) {
-		
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
-		Principal usuario = req.getUserPrincipal();
-		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
-
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		try {			
-			List<IDValorDto> datos = servicio.getIDValorMsSisAdmiTemaCapa();		
-			   GenericEntity<List<IDValorDto>> registrosx = new GenericEntity<List<IDValorDto>>(datos){
-			};
-			return Response.status(200).entity(registrosx).build();
-		} catch (Exception e) {
-			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
-			System.out.println("ERROR: " + mensaje);
-			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
-					}).build();
-		}
-	}
-	
-	
-	@GET
-	@Path("/listaIDValorMsSisAdmiBksss")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response listaIDValorMsSisAdmiBksss(@Context HttpServletRequest req, 
-																@Context HttpServletResponse res,
-																@HeaderParam("authorization") String authString) {
-		
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-
-		Principal usuario = req.getUserPrincipal();
-		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
-
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		try {			
-			List<IDValorDto> datos = servicio.getIDValorMsSisAdmiBksss();		
-			   GenericEntity<List<IDValorDto>> registrosx = new GenericEntity<List<IDValorDto>>(datos){
-			};
-			return Response.status(200).entity(registrosx).build();
-		} catch (Exception e) {
-			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
-			System.out.println("ERROR: " + mensaje);
-			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
-					}).build();
-		}
-	}
-	
-	
-	@GET
-	@Path("/listaIDValorMsUserTemaCapaBySedeBySisAdm/{idSede}/{idSistAdm}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response listaIDValorMsUserTemaCapaBySedeBySisAdm(@Context HttpServletRequest req, 
-																@Context HttpServletResponse res,
-																@HeaderParam("authorization") String authString, 
-																@PathParam("idSede") Long idSede,
-																@PathParam("idSistAdm") Long idSistAdm) {
-		
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-
-		Principal usuario = req.getUserPrincipal();
-		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
-
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		try {			
-			List<IDValorDto> datos = servicio.getIDValorMsUserTemaCapaBySedeBySisAdm(idSede, idSistAdm);
-			   GenericEntity<List<IDValorDto>> registrosx = new GenericEntity<List<IDValorDto>>(datos){
-			};
-			return Response.status(200).entity(registrosx).build();
-		} catch (Exception e) {
-			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
-			System.out.println("ERROR: " + mensaje);
-			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
-					}).build();
-		}
-	}
-	
-	
-	@GET
-	@Path("/listaIDValorMsUserBySedeBySisAdm/{idSede}/{idSistAdm}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response listaIDValorMsUserBySedeBySisAdm(@Context HttpServletRequest req, 
-																@Context HttpServletResponse res,
-																@HeaderParam("authorization") String authString, 
-																@PathParam("idSede") Long idSede,
-																@PathParam("idSistAdm") Long idSistAdm) {
-		
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-
-		Principal usuario = req.getUserPrincipal();
-		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
-
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		try {			
-			List<IDValorDto> datos = servicio.getIDValorMsUserBySedeBySisAdm(idSede, idSistAdm);
-			   GenericEntity<List<IDValorDto>> registrosx = new GenericEntity<List<IDValorDto>>(datos){
-			};
-			return Response.status(200).entity(registrosx).build();
-		} catch (Exception e) {
-			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
-			System.out.println("ERROR: " + mensaje);
-			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
-					}).build();
-		}
-	}
-	
-	
-	@GET
-	@Path("/listaMsEstado")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response listaMsEstado(@Context HttpServletRequest req, 
-																@Context HttpServletResponse res,
-																@HeaderParam("authorization") String authString) {
-		
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-
-		Principal usuario = req.getUserPrincipal();
-		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
-
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		try {			
-			List<IDValorDto> datos = servicio.getParametroPorIdPadreToCombo(1L);		
-			   GenericEntity<List<IDValorDto>> registrosx = new GenericEntity<List<IDValorDto>>(datos){
-			};
-			return Response.status(200).entity(registrosx).build();
-		} catch (Exception e) {
-			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
-			System.out.println("ERROR: " + mensaje);
-			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
-					}).build();
-		}
-	}
-	
-	@GET
-	@Path("/cargarReporte")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response cargarReporte(@Context HttpServletRequest req, 
-																@Context HttpServletResponse res,
-																@HeaderParam("authorization") String authString) {
-		
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-
-		Principal usuario = req.getUserPrincipal();
-		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
-
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		if (!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-
-		try {	
-			
-			String sfechaInicio = req.getParameter("fechaInicio");
-			String sfechaFin = req.getParameter("fechaFin");
-			//Long idTipoServicio = Long.parseLong(req.getParameter("idTipoServicio"));
-			Long idSede = Long.parseLong(req.getParameter("idSede"));
-			Long idSisAdmin = Long.parseLong(req.getParameter("idSisAdmin"));
-			Long idUserInt = Long.parseLong(req.getParameter("idUserInt"));
-			Long idEstado = Long.parseLong(req.getParameter("idEstado"));
-			boolean flagAsis = Boolean.getBoolean(req.getParameter("flagAsis"));
-			
-			
-		 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		    Date fechaInicio = null;
-		    Date fechaFin = null;
-		    
-		    if (sfechaInicio != null) {
-	            fechaInicio = formatter.parse(sfechaInicio);
-	        }
-	        if (sfechaFin != null) {
-	            fechaFin = formatter.parse(sfechaFin);
-	        }
-	        
-			DtReportResumenDto datos = servicio.getResumenReport(idUserInt, idEstado, flagAsis, fechaInicio, fechaFin, idSisAdmin, idSede, 0, 0);
-					
-			GenericEntity<DtReportResumenDto> registrosx = new GenericEntity<DtReportResumenDto>(datos){};
-			   
-			return Response.status(200).entity(registrosx).build();
-		} catch (Exception e) {
-			String mensaje = e.getMessage().toUpperCase().charAt(0) + e.getMessage().substring(1, e.getMessage().length()).toLowerCase();
-			System.out.println("ERROR: " + mensaje);
-			return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-					.entity(new GenericEntity<RespuestaError>(new RespuestaError(mensaje, HttpURLConnection.HTTP_BAD_REQUEST)) {
-					}).build();
-		}
-	}
-	
-	@GET
-	@Path("/getTotalRegistros")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getTotalRegistros(@Context HttpServletRequest req, 
-	                                 @Context HttpServletResponse res,
-	                                 @HeaderParam("authorization") String authString
-	                                 ) throws ParseException, Validador {
-		
-		String sfechaInicio = req.getParameter("fechaInicio");
-		String sfechaFin = req.getParameter("fechaFin");
-		Long idSede = Long.parseLong(req.getParameter("idSede"));
-		Long idSisAdmin = Long.parseLong(req.getParameter("idSisAdmin"));
-		Long idUserInt = Long.parseLong(req.getParameter("idUserInt"));
-		Long idEstado = Long.parseLong(req.getParameter("idEstado"));
-		Long idTipoServicio = Long.parseLong(req.getParameter("idTipoServicio"));
-		boolean flagAsis = Boolean.getBoolean(req.getParameter("flagAsis"));
-		
-		
-	 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-	    Date fechaInicio = null;
-	    Date fechaFin = null;
-	    
-	    if (sfechaInicio != null) {
-            fechaInicio = formatter.parse(sfechaInicio);
-        }
-        if (sfechaFin != null) {
-            fechaFin = formatter.parse(sfechaFin);
-        }
-        
-        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-		Principal usuario = req.getUserPrincipal();
-		MsUsuariosBk msUsuariosBk = servicio.getMsUsuariosBkXUsername(usuario.getName());
-
-		if (msUsuariosBk == null)
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN A REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-		
-		if(!req.isUserInRole(Roles.ADMINISTRADOR) && !req.isUserInRole(Roles.DTASISTENCIA_CREA))
-			return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(new GenericEntity<RespuestaError>(
-					new RespuestaError("ERROR NO TIENE AUTORIZACIÓN PARA REALIZAR ESTA OPERACIÓN.", HttpURLConnection.HTTP_UNAUTHORIZED)) {
-			}).build();
-		
-        Long totalRegistro=0L;
-		
-		if(idTipoServicio.longValue()==idTipoServicio) {
-			totalRegistro=servicio.getTotalReporteAsistenciaDetalleBkList(fechaInicio, fechaFin, idSisAdmin, idSede, idUserInt, idEstado);
-		} else if(idTipoServicio.longValue()==idTipoServicio) {
-			totalRegistro=servicio.getTotalResumenCapacitacionDetallado(fechaInicio, fechaFin, idSisAdmin, idSede,idUserInt,idEstado,flagAsis);
-		} else if(idTipoServicio.longValue()==idTipoServicio) {
-			totalRegistro=servicio.getTotalResumenConsultas(fechaInicio, fechaFin, idSisAdmin, idSede, idUserInt,idEstado);
-		} else if(idTipoServicio.longValue()==idTipoServicio) {
-			totalRegistro=servicio.getTotalResumenVisitas(fechaInicio, fechaFin, idSisAdmin, idSede, idUserInt,idEstado);
-		}
-		
-		return Response.status(200).entity(totalRegistro).build();
-	}
-	
-	
 	@GET
 	@Path("/descargarXLS")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -480,16 +136,16 @@ public class DtReportResumenRsCtrl {
 			String nombrePlantilla="";
 			String nombreServicio="";
 			if(idTipoServicio.longValue()==idAsistencia.longValue()){
-				nombrePlantilla="PLANTILLA_RESU_ASIS.xlsx";
+				nombrePlantilla="PLANTILLA_REPRE_TEC_ASIS.xlsx";
 				nombreServicio="Asistencia";
 			}else if(idTipoServicio.longValue()==idCapacitacion.longValue()){
-				nombrePlantilla="PLANTILLA_RESU_CAPA.xlsx";
+				nombrePlantilla="PLANTILLA_REPRE_TEC_CAPA.xlsx";
 				nombreServicio="Capacitacion";
 			}else if(idTipoServicio.longValue()==idConsulta.longValue()){
-				nombrePlantilla="PLANTILLA_RESU_CONSUL.xlsx";
+				nombrePlantilla="PLANTILLA_REPRE_TEC_CONSUL.xlsx";
 				nombreServicio="Consulta";
 			}else if(idTipoServicio.longValue()==idVisita.longValue()){
-				nombrePlantilla="PLANTILLA_RESU_VISITA.xlsx";
+				nombrePlantilla="PLANTILLA_REPRE_TEC_VISITA.xlsx";
 				nombreServicio="Visita";
 			}
 			
@@ -544,16 +200,12 @@ public class DtReportResumenRsCtrl {
 			
 			
 			String zipFile = nuevoDirectorio+System.getProperty("file.separator")+directorio+ ".zip";
-			//File fileAux2 = new File(zipFile);			
-			//InputStream in = new FileInputStream(fileAux2);
-			//StreamedContent file = new DefaultStreamedContent(in,"application/zip", (directorio+ ".zip"));
 			
 			File fileAux2 = new File(zipFile);
 			InputStream in = new FileInputStream(fileAux2);
 			
 			Response response = null;
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			
 			
 			int nRead;
 			byte[] data = new byte[16384];
@@ -584,89 +236,7 @@ public class DtReportResumenRsCtrl {
 		
 	}
 	
-	private List<ReporteAsistenciaDetallado> getListAsistencia(
-			  Date fechaInicio,
-			  Date fechaFin,
-			  Long idTipoServicio,
-			  Long idSede,
-			  Long idSisAdmin,
-			  Long idUserInt,
-			  Long idEstado) {
-		
-		List<ReporteAsistenciaDetallado> reporteList=new ArrayList<ReporteAsistenciaDetallado>();
-		try {
-			
-			reporteList=servicio.getReporteAsistenciaDetalleBkList(idEstado,idUserInt,fechaInicio, fechaFin, idSisAdmin, idSede,  0, 0);
-			
-		} catch (Exception e) {
-			System.out.println("Error getListAsistencia:" + e.getMessage());
-		}
-		
-		return reporteList;
-	}
-	
-	/*private List<ReporteCapacitacionDetallado> getListCapacitacionEvolMensual(
-			  Date fechaInicio,
-			  Date fechaFin,
-			  Long idTipoServicio,
-			  Long idSede,
-			  Long idSisAdmin,
-			  Long idUserInt,
-			  Long idEstado,
-			  boolean flagAsis) {
-		
-		List<ReporteCapacitacionDetallado> reporteList=new ArrayList<ReporteCapacitacionDetallado>();
-		try {
-			reporteList=servicio.getResumenCapacitacion(idUserInt, idEstado, flagAsis, fechaInicio, fechaFin, idSisAdmin, idSede, 0, 0);
-		} catch (Exception e) {
-			System.out.println("Error getListCapacitacion:" + e.getMessage());
-		}
-		
-		return reporteList;
-	}*/
-	
-	private List<ReporteConsulta> getListConsulta(
-			  Date fechaInicio,
-			  Date fechaFin,
-			  Long idTipoServicio,
-			  Long idSede,
-			  Long idSisAdmin,
-			  Long idUserInt,
-			  Long idEstado) {
-		
-		List<ReporteConsulta> reporteList=new ArrayList<ReporteConsulta>();
-		try {
-			
-			reporteList=servicio.getResumenConsultas(idEstado, idUserInt, fechaInicio, fechaFin, idSisAdmin, idSede, 0, 0);
-			
-		} catch (Exception e) {
-			System.out.println("Error getListAsistencia:" + e.getMessage());
-		}
-		
-		return reporteList;
-	}
-	
-	private List<ReporteVisitaDetalle> getListVisita(
-			  Date fechaInicio,
-			  Date fechaFin,
-			  Long idTipoServicio,
-			  Long idSede,
-			  Long idSisAdmin,
-			  Long idUserInt,
-			  Long idEstado) {
-		
-		List<ReporteVisitaDetalle> reporteList=new ArrayList<ReporteVisitaDetalle>();
-		try {
-			
-			reporteList=servicio.getResumenVisitas(idEstado, idUserInt, fechaInicio, fechaFin, idSisAdmin, idSede, 0, 0);
-			
-		} catch (Exception e) {
-			System.out.println("Error getListAsistencia:" + e.getMessage());
-		}
-		
-		return reporteList;
-	}
-	
+
 	private void generarReporteAsistencia(FileInputStream filePlantilla, 
 										  Integer maxRegistro, 
 										  String nuevoDirectorio,
@@ -2333,10 +1903,5 @@ public class DtReportResumenRsCtrl {
 		}
 		return newRow;
 	}
-	
-	
-	
-	
-	
 
 }
