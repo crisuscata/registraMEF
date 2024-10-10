@@ -22627,8 +22627,10 @@ public class ServicioImp implements Servicio, Serializable {
 		}
 		
 		public List<ReporteCapacitacionDetallado> getResumenCapacitacionDetallado(Long idUserInt, Long idEstado,
-				boolean flagAsis, Date fechaIni, Date fechaFin, Long idSistAdmin, Long idSede, Integer maxRegistro,
-				Integer minRegistro) throws Validador {
+																				  boolean flagAsis, Date fechaIni, 
+																				  Date fechaFin, Long idSistAdmin, 
+																				  Long idSede, Integer maxRegistro,
+																				  Integer minRegistro) throws Validador {
 
 			if (fechaIni != null && fechaFin != null) {
 				if (fechaIni.after(fechaFin)) {

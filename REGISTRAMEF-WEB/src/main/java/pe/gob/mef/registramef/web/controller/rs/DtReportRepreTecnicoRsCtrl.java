@@ -1,21 +1,23 @@
 package pe.gob.mef.registramef.web.controller.rs;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,8 +44,6 @@ import pe.gob.mef.registramef.bs.ctlracceso.Roles;
 import pe.gob.mef.registramef.bs.domain.ReporteAsistenciaDetallado;
 import pe.gob.mef.registramef.bs.domain.ReporteCapacitacionDetallado;
 import pe.gob.mef.registramef.bs.domain.ReporteConsulta;
-import pe.gob.mef.registramef.bs.domain.ReporteVisitaDetalle;
-import pe.gob.mef.registramef.bs.exception.Validador;
 import pe.gob.mef.registramef.bs.service.Servicio;
 import pe.gob.mef.registramef.bs.transfer.bk.MsSedesBk;
 import pe.gob.mef.registramef.bs.transfer.bk.MsSisAdmistrativoBk;
@@ -51,7 +51,6 @@ import pe.gob.mef.registramef.bs.transfer.bk.MsUsuariosBk;
 import pe.gob.mef.registramef.bs.utils.FuncionesStaticas;
 import pe.gob.mef.registramef.bs.utils.PropertiesMg;
 import pe.gob.mef.registramef.web.controller.rs.data.RespuestaError;
-import pe.gob.mef.registramef.web.utils.ZipDirectory;
 
 @RestController
 @Path("/ctrlDtReportRepreTecnico")
@@ -171,60 +170,35 @@ public class DtReportRepreTecnicoRsCtrl {
 			}
 			
 			ClassLoader classLoader = this.getClass().getClassLoader();
-			//String rutaDocumentos = servletContext.getRealPath("/WEB-INF/reportes/");
-			//File filePlantilla = new File(classLoader.getResource(nombrePlantilla).getFile());
 			
 			FileInputStream filePlantilla = new FileInputStream(classLoader.getResource(nombrePlantilla).getFile());
 			
-			
-			//Date fechaInicio = new Date();
-			//Date fechaFin = new Date();
+			String rutaArchivo = "";
+			String nombreArchivo="";
 			
 			if(idTipoServicio.longValue()==idAsistencia.longValue()) {
 				
-				this.generarReporteAsistencia(filePlantilla, maxRegistro, nuevoDirectorio, fechaInicio, fechaFin, idTipoServicio, idSede, idSisAdmin, idUserInt, idEstado, msUsuariosBk.getIdusuario());
+				rutaArchivo = this.generarReporteAsistencia(filePlantilla, maxRegistro, nuevoDirectorio, fechaInicio, fechaFin, idTipoServicio, idSede, idSisAdmin, idUserInt, idEstado, msUsuariosBk.getIdusuario());
+				nombreArchivo = "ReporteRepresentantesTecnicos_AsistenciasTecnicas.xls";
 				
 			} else if(idTipoServicio.longValue()==idCapacitacion.longValue()) {
 				
-				this.generarReporteCapacitacion(filePlantilla,maxRegistro,nuevoDirectorio, fechaInicio, fechaFin, idTipoServicio, idSede, idSisAdmin, idUserInt, idEstado, msUsuariosBk.getIdusuario(), flagAsis);
+				rutaArchivo = this.generarReporteCapacitacion(filePlantilla,maxRegistro,nuevoDirectorio, fechaInicio, fechaFin, idTipoServicio, idSede, idSisAdmin, idUserInt, idEstado, msUsuariosBk.getIdusuario(), flagAsis);
+				nombreArchivo = "ReporteRepresentantesTecnicos_Capacitaciones.xls";
 				
 			} else if(idTipoServicio.longValue()==idConsulta.longValue()) {
 				
-				this.generarReporteConsulta(filePlantilla,maxRegistro,nuevoDirectorio, fechaInicio, fechaFin, idTipoServicio, idSede, idSisAdmin, idUserInt, idEstado, msUsuariosBk.getIdusuario() );
+				rutaArchivo = this.generarReporteConsulta(filePlantilla,maxRegistro,nuevoDirectorio, fechaInicio, fechaFin, idTipoServicio, idSede, idSisAdmin, idUserInt, idEstado, msUsuariosBk.getIdusuario());
+				nombreArchivo = "ReporteRepresentantesTecnicos_Consultas.xls";
 				
-			} else if(idTipoServicio.longValue()==idVisita.longValue()) {
-				
-				this.generarReporteVisita(filePlantilla,maxRegistro,nuevoDirectorio, fechaInicio, fechaFin, idTipoServicio, idSede, idSisAdmin, idUserInt, idEstado, msUsuariosBk.getIdusuario());
-				
-			}
+			} 
 			
-			
-			String zipFile = nuevoDirectorio+System.getProperty("file.separator")+directorio+ ".zip";
-			
-			File fileAux2 = new File(zipFile);
-			InputStream in = new FileInputStream(fileAux2);
-			
-			Response response = null;
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			
-			int nRead;
-			byte[] data = new byte[16384];
-
-			while ((nRead = in.read(data, 0, data.length)) != -1) {
-				bos.write(data, 0, nRead);
-			}
-			
-			in.close();
-			bos.close();
-			
-			ResponseBuilder rb = Response.ok(bos.toByteArray());
-			rb.header("Content-Disposition", "attachment; filename=" + (directorio+ ".zip"));
-			response = rb.build();
+			ResponseBuilder rb = Response.ok(new File(rutaArchivo));
+			rb.header("Content-Disposition", "attachment; filename= "+ nombreArchivo );
+			Response response = rb.build();
 			
 			return response;
 			
-			
-		
 		} catch (Exception e) {
 			String mensaje = e.getMessage();
 			System.out.println("ERROR: " + mensaje);
@@ -237,7 +211,7 @@ public class DtReportRepreTecnicoRsCtrl {
 	}
 	
 
-	private void generarReporteAsistencia(FileInputStream filePlantilla, 
+	private String generarReporteAsistencia(FileInputStream filePlantilla, 
 										  Integer maxRegistro, 
 										  String nuevoDirectorio,
 										  Date fechaInicio,
@@ -256,25 +230,12 @@ public class DtReportRepreTecnicoRsCtrl {
 		try{
 			totalRegistro=servicio.getTotalReporteAsistenciaDetalleBkList(fechaInicio, fechaFin, idSisAdmin, idSede, idUserInt, idEstado);
 			
-		}catch (Validador v) {
-			//file=null;
-			//generaExcel=false; 
-			//JSFUtil.showMessageError(Messages.getStringToKey("reporteController.error.general"),"ERROR AL GENERAR REPORTE");				
-			return ;
 		}catch (Exception e) {
 			e.printStackTrace();
-			//log.error("Error: "+e.getMessage());
-			return ;
 		}
 		
-		if(totalRegistro==null || totalRegistro.longValue()<1){
-			//file=null;
-			//generaExcel=false; 
-			//JSFUtil.showMessageError(Messages.getStringToKey("reporteController.cantidad.cero.busqueda"),"ERROR AL GENERAR REPORTE");
-			return;
-		}
 		
-		String nombrearchivo;
+		String nombrearchivo = null;
 		
 		SimpleDateFormat sdf = null;	
 		SimpleDateFormat sdFH = null;
@@ -310,15 +271,8 @@ public class DtReportRepreTecnicoRsCtrl {
 			try{
 //				reporteList=servicio.getReporteAsistenciaDetalleBkList(fechaInicio, fechaFin, idSisAdmin, idSede,  (y == (numVuelta - 1) ? total - (y * cantMax) : cantMax),y * cantMax);
 				reporteList=servicio.getReporteAsistenciaDetalleBkList(idEstado,idUserInt,fechaInicio, fechaFin, idSisAdmin, idSede,  (y == (numVuelta - 1) ? total - (y * cantMax) : cantMax),y * cantMax);//SPRINT_8.3
-			}catch (Validador v) {
-				//file=null;
-				//generaExcel=false; 				
-				//JSFUtil.showMessageError(Messages.getStringToKey("reporteController.error.general"),"ERROR AL GENERAR REPORTE");				
-				return ;
-			}catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
-				//log.error("Error: "+e.getMessage());
-				return ;
 			}
 			
 			
@@ -648,24 +602,124 @@ public class DtReportRepreTecnicoRsCtrl {
 				items++;
 				i++;
 			}		
-				
-				
-				//inputfile.close();
 				filePlantilla.close();
 				output_file= new FileOutputStream(nombrearchivo);
-				//fileAux=null;
 				wb.write(output_file);
 				output_file.close(); 	
 			
 			}
-		
-				new ZipDirectory(nuevoDirectorio);	
 				reporteList=null;
 				
-				
+			return nombrearchivo;	
+	}
+	
+	private List<ReporteCapacitacionDetallado> getListCapa(List<ReporteCapacitacionDetallado> reporteList){
+		
+		List<ReporteCapacitacionDetallado> detailedReportList = reporteList.stream()
+			    .collect(Collectors.groupingBy(
+			        ReporteCapacitacionDetallado::getIdCapacitacion,  
+			        Collectors.mapping(                               
+			            r -> new AbstractMap.SimpleEntry<>(r.getTema(), r),  
+			            Collectors.toSet()  
+			        )
+			    ))
+			    .entrySet().stream()
+			    .map(entry -> {
+			        Long idCapacitacion = entry.getKey();
+
+			        Map<String, Set<ReporteCapacitacionDetallado>> temasWithDetails = entry.getValue().stream()
+			            .collect(Collectors.groupingBy(
+			                Map.Entry::getKey,  
+			                Collectors.mapping(Map.Entry::getValue, Collectors.toSet()) 
+			            ));
+
+			        String temasConcatenated = temasWithDetails.keySet().stream()
+			            .collect(Collectors.joining(", "));  
+
+			        String subtemasConcatenated = temasWithDetails.values().stream()
+			            .flatMap(set -> set.stream().map(ReporteCapacitacionDetallado::getSubtema)) 
+			            .distinct()  
+			            .collect(Collectors.joining(", ")); 
+
+			        String sistAdminConcatenated = temasWithDetails.values().stream()
+			            .flatMap(set -> set.stream().map(ReporteCapacitacionDetallado::getSistAdmin))  
+			            .distinct()  
+			            .collect(Collectors.joining(", "));  
+
+			        String gestEspImplConcatenated = temasWithDetails.values().stream()
+			            .flatMap(set -> set.stream().map(ReporteCapacitacionDetallado::getGestEspImpl))  
+			            .distinct()  
+			            .collect(Collectors.joining(", "));  
+
+			        ReporteCapacitacionDetallado representative = temasWithDetails.values().stream()
+			            .flatMap(Set::stream)
+			            .findFirst()
+			            .orElse(null); 
+
+			        return new ReporteCapacitacionDetallado(
+			        	    idCapacitacion,                  
+			        	    temasConcatenated,               
+			        	    subtemasConcatenated,            
+			        	    sistAdminConcatenated,           
+			        	    gestEspImplConcatenated,         
+
+			        	    representative.getNomEvento(),       // nomEvento
+			        	    representative.getFechaInic(),       // fechaInic
+			        	    representative.getFechaFin(),        // fechaFin
+			        	    representative.getOrigen(),          // origen
+			        	    representative.getModo(),            // modo
+			        	    representative.getProgramacion(),    // programacion
+			        	    representative.getFinanciamiento(),  // financiamiento
+			        	    representative.getLocal(),           // local
+			        	    representative.getCantPartic(),      // cantPartic
+			        	    representative.getCantParticAsist(), // cantParticAsist
+			        	    representative.getNivel(),           // nivel
+			        	    representative.getPrestacion(),      // prestacion
+			        	    representative.getTipo(),            // tipo
+			        	    representative.getSisAdmPonente(),   // sisAdmPonente
+			        	    representative.getUserCrea(),        // userCrea
+			        	    representative.getSede(),            // sede
+			        	    representative.getIdSistAdmin(),     // idSistAdmin
+			        	    representative.getAbreviaturaAdmin(),// abreviaturaAdmin
+			        	    representative.getFechaCrea(),       // fechaCrea
+			        	    representative.getEstado(),          // estado
+			        	    representative.getIdCapaPadre(),     // idCapaPadre
+			        	    representative.getParticipante(),    // participante
+			        	    representative.getDni(),             // dni
+			        	    representative.getCargo(),           // cargo
+			        	    representative.getTelefonoFijo(),    // telefonoFijo
+			        	    representative.getTelefonoCelular(), // telefonoCelular
+			        	    representative.getOtroCelular(),     // otroCelular
+			        	    representative.getOtroTelefono(),    // otroTelefono
+			        	    representative.getEntidad(),         // entidad
+			        	    representative.getCodEjecut(),       // codEjecut
+			        	    representative.getIdUsuExtern(),     // idUsuExtern
+			        	    representative.getCorreoParti(),     // correoParti
+			        	    representative.getAsitio(),          // asitio
+			        	    representative.getConfirmar(),       // confirmar
+			        	    representative.getEnlaceConeVirtual(),// enlaceConeVirtual
+			        	    representative.getPublicado(),       // publicado
+			        	    representative.getModalidad(),       // modalidad
+			        	    representative.getFechaFinalizacion(),// fechaFinalizacion
+			        	    representative.getDepartamentoEnt(),  // departamentoEnt
+			        	    representative.getProvinciaEnt(),     // provinciaEnt
+			        	    representative.getDistritoEnt(),      // distritoEnt
+			        	    representative.getFechaInicRepro(),   // fechaInicRepro
+			        	    representative.getFechaFinRepro(),    // fechaFinRepro
+			        	    representative.getFechaSoli(),        // fechaSoli
+			        	    representative.getHojaRuta(),         // hojaRuta
+			        	    representative.getModalidadIng(),     // modalidadIng
+			        	    representative.getMotivoEjecucion(),  // motivoEjecucion
+			        	    representative.getFlagEjecucion()     // flagEjecucion
+			        	);
+
+			    })
+			    .collect(Collectors.toList());
+		
+		return detailedReportList;
 	}
 		
-	private void generarReporteCapacitacion(FileInputStream filePlantilla, Integer maxRegistro, String nuevoDirectorio, Date fechaInicio,
+	private String generarReporteCapacitacion(FileInputStream filePlantilla, Integer maxRegistro, String nuevoDirectorio, Date fechaInicio,
 			  Date fechaFin,
 			  Long idTipoServicio,
 			  Long idSede,
@@ -676,21 +730,17 @@ public class DtReportRepreTecnicoRsCtrl {
 
 		List<ReporteCapacitacionDetallado> reporteList=new ArrayList<ReporteCapacitacionDetallado>();
 		Long totalRegistro=0L;
-		try{
+		
+		try{		
 			totalRegistro=servicio.getTotalResumenCapacitacionDetallado(fechaInicio, fechaFin, idSisAdmin, idSede,idUserInt,idEstado,flagAsis);
-		}catch (Validador v) {
-			return ;
 		}catch (Exception e) {
 			e.printStackTrace();
-			return ;
 		}
 		
-		if(totalRegistro==null  || totalRegistro.longValue()<1){
-			return;
-		}
+		
 		
 
-		String nombrearchivo;
+		String nombrearchivo="";
 		
 		SimpleDateFormat sdf = null;	
 		SimpleDateFormat sdFH = null;
@@ -708,7 +758,7 @@ public class DtReportRepreTecnicoRsCtrl {
 		String fecha;
 		String hora ;		
 		int cantMax=maxRegistro.intValue();
-		FileOutputStream output_file ;		
+		FileOutputStream output_file =null;		
 		int total = totalRegistro.intValue();
 
 		int numVuelta=0;
@@ -721,25 +771,20 @@ public class DtReportRepreTecnicoRsCtrl {
 			numVuelta = 1;
 		
 				
-		for(int y=0;y<numVuelta;y++){		
+		for(int y=0;y<numVuelta;y++){
 		
 			try{			
-				reporteList=servicio.getResumenCapacitacionDetallado(idUserInt,idEstado,flagAsis,fechaInicio, fechaFin, idSisAdmin, idSede, (y == (numVuelta - 1) ? total - (y * cantMax) : cantMax),y * cantMax);//SPRINT_8
-			
-			}catch (Validador v) {
-				return ;
+				reporteList=servicio.getResumenCapacitacionDetallado(idUserInt,idEstado,flagAsis,fechaInicio, fechaFin, idSisAdmin, idSede, (y == (numVuelta - 1) ? total - (y * cantMax) : cantMax),y * cantMax);
+				
+				reporteList =	this.getListCapa(reporteList);
+				
 			}catch (Exception e) {
 				e.printStackTrace();
-				return ;
 			}
 		
 		
 		sdf = new SimpleDateFormat("yyyyMMddmmss");		
 		nombrearchivo= nuevoDirectorio+ System.getProperty("file.separator")+ "Resu_part_"+(y+1)+"_de_"+numVuelta+"_" +kyUsuarioMod+ sdf.format(new Date())+".xlsx";
-		//File fileAux = new File(nombrearchivo);
-		//FuncionesStaticas.copyFile(filePlantilla, fileAux);
-				
-
 
 		hoy = new Timestamp(System.currentTimeMillis());
 		sdf = new SimpleDateFormat("dd/MM/yyyy");		
@@ -1140,17 +1185,16 @@ public class DtReportRepreTecnicoRsCtrl {
 				
 				filePlantilla.close();
 				output_file= new FileOutputStream(nombrearchivo);
-				//fileAux=null;
 				wb.write(output_file);
 				output_file.close(); 	
 			
 			}
-			new ZipDirectory(nuevoDirectorio);	
 			reporteList=null;
 		
+			return nombrearchivo;
 	}
 	
-	private void generarReporteConsulta(FileInputStream filePlantilla, Integer maxRegistro, String nuevoDirectorio, Date fechaInicio,
+	private String generarReporteConsulta(FileInputStream filePlantilla, Integer maxRegistro, String nuevoDirectorio, Date fechaInicio,
 			  Date fechaFin,
 			  Long idTipoServicio,
 			  Long idSede,
@@ -1158,25 +1202,17 @@ public class DtReportRepreTecnicoRsCtrl {
 			  Long idUserInt,
 			  Long idEstado,
 			  Long kyUsuarioMod) throws IOException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		//file=null; 
 
 		List<ReporteConsulta> reporteList=new ArrayList<ReporteConsulta>();
 		Long totalRegistro=0L;
 		try{
 			totalRegistro=servicio.getTotalResumenConsultas(fechaInicio, fechaFin, idSisAdmin, idSede, idUserInt,idEstado);//SPRINT_8.3
 			
-		}catch (Validador v) {
-			return ;
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			return ;
 		}
 		
-		if(totalRegistro==null  || totalRegistro.longValue()<1){
-			return;
-		}
-
-		String nombrearchivo;
+		String nombrearchivo="";
 		
 		SimpleDateFormat sdf = null;	
 		SimpleDateFormat sdFH = null;
@@ -1213,11 +1249,8 @@ public class DtReportRepreTecnicoRsCtrl {
 			try{
 				reporteList=servicio.getResumenConsultas(idEstado,idUserInt, fechaInicio, fechaFin, idSisAdmin, idSede,  (y == (numVuelta - 1) ? total - (y * cantMax) : cantMax),y * cantMax);
 								
-			}catch (Validador v) {
-				return ;
-			}catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
-				return ;
 			}
 			
 		sdf = new SimpleDateFormat("yyyyMMddmmss");		
@@ -1476,387 +1509,14 @@ public class DtReportRepreTecnicoRsCtrl {
 				items++;
 				i++;
 			}					
-			//inputfile.close();
 			output_file= new FileOutputStream(nombrearchivo);
-			//fileAux=null;
 			wb.write(output_file);
 			output_file.close(); 	
 		
 		}
-			new ZipDirectory(nuevoDirectorio);	
-			reporteList=null;
-			
-	}
-	
-	private void generarReporteVisita(FileInputStream filePlantilla, Integer maxRegistro, String nuevoDirectorio, Date fechaInicio,
-			  Date fechaFin,
-			  Long idTipoServicio,
-			  Long idSede,
-			  Long idSisAdmin,
-			  Long idUserInt,
-			  Long idEstado,
-			  Long kyUsuarioMod) throws IOException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		//file=null; 
-
-		List<ReporteVisitaDetalle> reporteList=new ArrayList<ReporteVisitaDetalle>();
-		Long totalRegistro=0L;
-		try{
-//			totalRegistro=servicio.getTotalResumenVisitas(fechaInicio, fechaFin, idSisAdmin, idSede);
-			totalRegistro=servicio.getTotalResumenVisitas(fechaInicio, fechaFin, idSisAdmin, idSede, idUserInt,idEstado);//SPRINT_8.3
-			
-		}catch (Validador v) {
-			//file=null;
-			//generaExcel=false; 
-			//JSFUtil.showMessageError(Messages.getStringToKey("reporteController.error.general"),"ERROR AL GENERAR REPORTE");			
-			return ;
-		}catch (Exception e) {
-			e.printStackTrace();
-			//log.error("Error: "+e.getMessage());
-			return ;
-		}
 		
-		if(totalRegistro==null  || totalRegistro.longValue()<1){
-			//file=null;
-			//generaExcel=false; 
-			//JSFUtil.showMessageError(Messages.getStringToKey("reporteController.cantidad.cero.busqueda"),"ERROR AL GENERAR REPORTE");
-			return;
-		}
-		
-		
-		String nombrearchivo;
-		
-		SimpleDateFormat sdf = null;	
-		SimpleDateFormat sdFH = null;
-		String sfechaini = null;
-		String sfechafin = null;
-		Timestamp hoy = null;
-		XSSFRow filaExcel = null;
-		XSSFCell celdaExcel = null;	
-		XSSFWorkbook wb;
-		XSSFSheet sheet;
-		MsSisAdmistrativoBk   msSisAdm;
-		MsSedesBk sedeBk;
-		String strCriterioBusqueda;
-		String fecha;
-		String hora ;
-		FileOutputStream output_file ;		
-		int cantMax=maxRegistro.intValue();			
-		int total = totalRegistro.intValue();
-		int numVuelta=0;
-		
-		if (total > cantMax) {
-			numVuelta = total / cantMax;
-			if ((total % cantMax) > 0)
-				numVuelta = numVuelta + 1;
-		} else
-			numVuelta = 1;
-		
-				
-		for(int y=0;y<numVuelta;y++){		
+			return nombrearchivo;
 			
-			try{
-				reporteList=servicio.getResumenVisitas(idEstado,idUserInt, fechaInicio, fechaFin, idSisAdmin, idSede, (y == (numVuelta - 1) ? total - (y * cantMax) : cantMax),y * cantMax);//SPRINT_8.3
-							
-			}catch (Validador v) {
-				return ;
-			}catch (Exception e) {
-				e.printStackTrace();
-				//log.error("Error: "+e.getMessage());
-				return ;
-			}
-			
-		
-		sdf = new SimpleDateFormat("yyyyMMddmmss");		
-		nombrearchivo= nuevoDirectorio+ System.getProperty("file.separator")+ "Resu_part_"+(y+1)+"_de_"+numVuelta+"_" +kyUsuarioMod+ sdf.format(new Date())+".xlsx";
-		
-		hoy = new Timestamp(System.currentTimeMillis());
-		sdf = new SimpleDateFormat("dd/MM/yyyy");		
-		sfechaini = fechaInicio != null ? sdf.format(fechaInicio) : "";
-		sfechafin = fechaFin != null ? sdf.format(fechaFin) : "";
-						
-		
-
-			 wb = new XSSFWorkbook(filePlantilla);
-			int sheetIndxConsolidado = wb.getSheetIndex("DATO");
-			 sheet = wb.getSheetAt(sheetIndxConsolidado);
-		
-			
-			 fecha = sdf.format(hoy);
-			sdf = new SimpleDateFormat("HH:mm:ss");
-			 hora = sdf.format(hoy);
-
-			int row = 0;
-			int col = 20;
-			
-			filaExcel = sheet.getRow(row);
-			celdaExcel = filaExcel.getCell(col);
-			if(celdaExcel==null)
-				celdaExcel=filaExcel.createCell(col);
-			celdaExcel.setCellValue(fecha);
-			
-			filaExcel = sheet.getRow(++row);
-			celdaExcel = filaExcel.getCell(col);
-			if(celdaExcel==null)
-				celdaExcel=filaExcel.createCell(col);
-			celdaExcel.setCellValue(hora);
-				
-
-			
-			if (idSisAdmin!=null && idSisAdmin.longValue()>0)
-				msSisAdm= this.servicio.getMsSisAdmistrativoBkXid(idSisAdmin);
-			else 
-				msSisAdm=null;
-			
-			if (idSede!=null && idSede.longValue()>0)
-				sedeBk = this.servicio.getMsSedesBkXid(idSede);
-			else
-				sedeBk=null;
-			
-			
-			 strCriterioBusqueda= "DEL "+sfechaini+" AL "+sfechafin+" - " +(sedeBk!=null?sedeBk.getSede().toUpperCase():" TODAS LAS SEDES ")+
-			" - "+(msSisAdm!=null?msSisAdm.getDescripcion().toUpperCase():" TODOS LOS SISTEMAS ADMINISTATIVOS ")+" - USUARIO EXTERNO ";
-			
-			row=3;
-			col = 0;
-			
-			filaExcel = sheet.getRow(row);
-			celdaExcel = filaExcel.getCell(col);
-			if(celdaExcel==null)
-				celdaExcel=filaExcel.createCell(col);
-			celdaExcel.setCellValue(strCriterioBusqueda);
-						
-		
-			int i = 5;//fila		
-			int dcount = 0; // columnas
-			int items = 1;// correlativo
-
-			sdf = new SimpleDateFormat("dd/MM/yyyy");
-			sdFH = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			
-			for (ReporteVisitaDetalle reporteBk: reporteList ) {
-			
-			
-				filaExcel = sheet.getRow(i);
-				if (filaExcel == null && i!=5)
-					filaExcel = copyRowXYStyle(wb, sheet, 5, i, null);
-			
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getIdVisita() == null ? "": reporteBk.getIdVisita().toString()));
-				
-				//SPRINT_4 INICIO
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getDepartamentoEnt() == null ? "": reporteBk.getDepartamentoEnt()));
-				
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getProvinciaEnt() == null ? "": reporteBk.getProvinciaEnt()));
-				
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getDistritoEnt() == null ? "": reporteBk.getDistritoEnt()));
-				
-				//SPRINT_4 FIN
-				
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getCodEjecutora() == null ? "": reporteBk.getCodEjecutora()));
-				
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getEntidad() == null ? "": reporteBk.getEntidad()));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getTipoEntidad() == null ? "" : reporteBk.getTipoEntidad()));
-				
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getGeoZona() == null ? "" : reporteBk.getGeoZona()));
-				
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getFechaVisita() == null ? "" : sdf.format( reporteBk.getFechaVisita())));
-				
-				//SPRINT_4 INICIO
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getFechaVisita() == null ? "" : FuncionesStaticas.getMonthName(reporteBk.getFechaVisita(),false)));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getFechaVisitaRepro() == null ? "" : sdf.format( reporteBk.getFechaVisitaRepro())));
-
-				//SPRINT_4 FIN
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getLugarReu() == null ? "" : reporteBk.getLugarReu()));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getOrigen() == null ? "" :  reporteBk.getOrigen()));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getProgramacion() == null ? "" : reporteBk.getProgramacion()));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getFinanciamiento() == null ? "" : reporteBk.getFinanciamiento()));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getGestEspImp() == null ? "" : reporteBk.getGestEspImp()));
-				
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getSistAdminCrea() == null ? "" : reporteBk.getSistAdminCrea()));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getSistAdminGestor() == null ? "" : reporteBk.getSistAdminGestor()));
-
-								
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getTema() == null ? "" : reporteBk.getTema()));
-				
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getUserCrea() == null ? "" : reporteBk.getUserCrea()));
-				
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getSede() == null ? "" : reporteBk.getSede()));
-				
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getFechaCrea()== null ? "" :sdFH.format( reporteBk.getFechaCrea())));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getEstado() == null ? "" : reporteBk.getEstado()));				
-
-				
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getParticipante() == null ? "" : reporteBk.getParticipante()));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getDni() == null ? "" : reporteBk.getDni()));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getCargo() == null ? "" : reporteBk.getCargo()));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getCorreo() == null ? "" : reporteBk.getCorreo()));
-
-				
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getTelefonoFijo() == null ? "" : reporteBk.getTelefonoFijo()));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getTelefonoCelular() == null ? "" : reporteBk.getTelefonoCelular()));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getOtroCelular() == null ? "" : reporteBk.getOtroCelular()));
-
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getOtroTelefono() == null ? "" : reporteBk.getOtroTelefono()));
-
-						
-				dcount++;
-				celdaExcel = filaExcel.getCell(dcount);
-				if(celdaExcel==null)
-					celdaExcel=filaExcel.createCell(dcount);
-				celdaExcel.setCellValue((reporteBk.getFechaFinalizacion() == null ? "" : sdFH.format(reporteBk.getFechaFinalizacion())));
-				
-				
-				dcount = 0;
-								
-				items++;
-				i++;
-			}					
-			
-			filePlantilla.close();
-			output_file= new FileOutputStream(nombrearchivo);
-			//fileAux=null;
-			wb.write(output_file);
-			output_file.close(); 	
-		}
-		new ZipDirectory(nuevoDirectorio);
-		reporteList=null;
-		
 	}
 	
 	private XSSFRow copyRowXYStyle(XSSFWorkbook workbook, XSSFSheet worksheet, int sourceRowNum, int destinationRowNum, XSSFCellStyle newCellStyleComun) {

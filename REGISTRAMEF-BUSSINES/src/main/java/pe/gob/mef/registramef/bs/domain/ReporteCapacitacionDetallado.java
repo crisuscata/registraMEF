@@ -6,7 +6,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Transient;
 
 @Entity
 public class ReporteCapacitacionDetallado implements java.io.Serializable {
@@ -85,12 +84,128 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 	private String flagEjecucion;
 	// SPRINT02 FIN
 	
-	/*private String monthYear;
-	private Integer totalParticipants;
-	private Integer totalEvents;
-	private Integer totalVirtual;
-	private Integer totalPresencial;*/
-
+	/*public ReporteCapacitacionDetallado(Long idCapacitacion, String tema, String subtema, String sistAdmin, String gestEspImpl) {
+        this.idCapacitacion = idCapacitacion;
+        this.tema = tema;
+        this.subtema = subtema;
+        this.sistAdmin = sistAdmin;
+        this.gestEspImpl = gestEspImpl;
+    }*/
+	
+	public ReporteCapacitacionDetallado( 
+			Long idCapacitacion, 
+			String tema, 
+			String subtema, 
+			String sistAdmin,
+			String gestEspImpl, 
+			
+			String nomEvento, 
+			Timestamp fechaInic,
+			Timestamp fechaFin, 
+			String origen, 
+			String modo, 
+			String programacion, 
+			String financiamiento, 
+			String local,
+			Integer cantPartic, 
+			Integer cantParticAsist, 
+			String nivel, 
+			String prestacion, 
+			String tipo,
+			String sisAdmPonente,
+			String userCrea, 
+			String sede,
+			Long idSistAdmin, 
+			String abreviaturaAdmin, 
+			Timestamp fechaCrea, 
+			String estado,
+			Long idCapaPadre, 
+			String participante, 
+			String dni, 
+			String cargo, 
+			String telefonoFijo,
+			String telefonoCelular, 
+			String otroCelular, 
+			String otroTelefono, 
+			String entidad, 
+			String codEjecut,
+			Long idUsuExtern, 
+			String correoParti, 
+			String asitio, 
+			String confirmar,
+			String enlaceConeVirtual,
+			String publicado, 
+			String modalidad, 
+			Timestamp fechaFinalizacion, 
+			String departamentoEnt,
+			String provinciaEnt, 
+			String distritoEnt, 
+			Timestamp fechaInicRepro, 
+			Timestamp fechaFinRepro, 
+			Date fechaSoli,
+			String hojaRuta, 
+			String modalidadIng, 
+			String motivoEjecucion, 
+			String flagEjecucion) {
+		
+		this.idCapacitacion = idCapacitacion;
+		
+		
+		this.nomEvento = nomEvento;
+		this.fechaInic = fechaInic;
+		this.fechaFin = fechaFin;
+		this.origen = origen;
+		this.modo = modo;
+		this.programacion = programacion;
+		this.financiamiento = financiamiento;
+		this.local = local;
+		this.cantPartic = cantPartic;
+		this.cantParticAsist = cantParticAsist;
+		this.nivel = nivel;
+		this.prestacion = prestacion;
+		this.tipo = tipo;
+		this.gestEspImpl = gestEspImpl;
+		this.sisAdmPonente = sisAdmPonente;
+		this.tema = tema;
+		this.subtema = subtema;
+		this.userCrea = userCrea;
+		this.sede = sede;
+		this.idSistAdmin = idSistAdmin;
+		this.sistAdmin = sistAdmin;
+		this.abreviaturaAdmin = abreviaturaAdmin;
+		this.fechaCrea = fechaCrea;
+		this.estado = estado;
+		this.idCapaPadre = idCapaPadre;
+		this.participante = participante;
+		this.dni = dni;
+		this.cargo = cargo;
+		this.telefonoFijo = telefonoFijo;
+		this.telefonoCelular = telefonoCelular;
+		this.otroCelular = otroCelular;
+		this.otroTelefono = otroTelefono;
+		this.entidad = entidad;
+		this.codEjecut = codEjecut;
+		this.idUsuExtern = idUsuExtern;
+		this.correoParti = correoParti;
+		this.asitio = asitio;
+		this.confirmar = confirmar;
+		this.enlaceConeVirtual = enlaceConeVirtual;
+		this.publicado = publicado;
+		this.modalidad = modalidad;
+		this.fechaFinalizacion = fechaFinalizacion;
+		this.departamentoEnt = departamentoEnt;
+		this.provinciaEnt = provinciaEnt;
+		this.distritoEnt = distritoEnt;
+		this.fechaInicRepro = fechaInicRepro;
+		this.fechaFinRepro = fechaFinRepro;
+		this.fechaSoli = fechaSoli;
+		this.hojaRuta = hojaRuta;
+		this.modalidadIng = modalidadIng;
+		this.motivoEjecucion = motivoEjecucion;
+		this.flagEjecucion = flagEjecucion;
+	}
+	
+	
 	@Column(name = "FECHA_INI_PROGRAMADA", length = 7)
 	public Timestamp getFechaInicRepro() {
 		return fechaInicRepro;
@@ -583,50 +698,5 @@ public class ReporteCapacitacionDetallado implements java.io.Serializable {
 	public void setAbreviaturaAdmin(String abreviaturaAdmin) {
 		this.abreviaturaAdmin = abreviaturaAdmin;
 	}
-/*
-	//@Column(name = "MONTH_YEAR", insertable = false, updatable = false)
-	public String getMonthYear() {
-		return monthYear;
-	}
 
-	public void setMonthYear(String monthYear) {
-		this.monthYear = monthYear;
-	}
-
-	//@Column(name = "TOTAL_PARTICIPANTS", insertable = false, updatable = false)
-	public Integer getTotalParticipants() {
-		return totalParticipants;
-	}
-
-	public void setTotalParticipants(Integer totalParticipants) {
-		this.totalParticipants = totalParticipants;
-	}
-
-	//@Column(name = "TOTAL_EVENTS", insertable = false, updatable = false)
-	public Integer getTotalEvents() {
-		return totalEvents;
-	}
-
-	public void setTotalEvents(Integer totalEvents) {
-		this.totalEvents = totalEvents;
-	}
-
-	//@Column(name = "TOTAL_VIRTUAL", insertable = false, updatable = false)
-	public Integer getTotalVirtual() {
-		return totalVirtual;
-	}
-
-	public void setTotalVirtual(Integer totalVirtual) {
-		this.totalVirtual = totalVirtual;
-	}
-
-	//@Column(name = "TOTAL_PRESENCIAL", insertable = false, updatable = false)
-	public Integer getTotalPresencial() {
-		return totalPresencial;
-	}
-
-	public void setTotalPresencial(Integer totalPresencial) {
-		this.totalPresencial = totalPresencial;
-	}
-	*/
 }

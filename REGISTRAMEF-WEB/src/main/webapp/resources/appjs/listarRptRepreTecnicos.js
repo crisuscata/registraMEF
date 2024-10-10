@@ -1583,10 +1583,21 @@ myapp.controller('ctrlRptRepreTecnico', ['$mdEditDialog', '$scope', '$timeout', 
 			});
 		};
 		
+		/*$scope.removeParamWithId134 = function() {
+		    $scope.listarParametrosXIdPadreToIdParamTipoServicio = $scope.listarParametrosXIdPadreToIdParamTipoServicio.filter(function(param) {
+		        return param.id !== 134; 
+		    });
+		};*/
+		
 		$scope.listarParametrosXIdPadreToIdParamTipoServicio=[];
 		$scope.loadListarParametrosXIdPadreToIdParamTipoServicio=function(){
 			$http.get(listaParametrosXIdPadreToIdParamTipoServicioUrl).then(function(res){
 				$scope.listarParametrosXIdPadreToIdParamTipoServicio = res.data; 
+				
+				$scope.listarParametrosXIdPadreToIdParamTipoServicio = $scope.listarParametrosXIdPadreToIdParamTipoServicio.filter(function(param) {
+			        return param.id !== 134; // Keep all items except the one with id 134
+			    });
+
 			},
 			function error(errResponse) {
 				console.log("data " + errResponse.data + " status " + errResponse.status + " headers " + errResponse.headers + "config " + errResponse.config + " statusText " + errResponse + " xhrStat " + errResponse.xhrStatus);
